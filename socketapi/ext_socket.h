@@ -1,5 +1,5 @@
 /*
- *  $Id: ext_socket.h,v 1.10 2003/07/09 15:49:47 dreibh Exp $
+ *  $Id: ext_socket.h,v 1.11 2003/07/16 14:29:33 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -276,9 +276,9 @@ struct sctp_setpeerprim
 struct sctp_setstrm_timeout
 {
    sctp_assoc_t ssto_assoc_id;
-   u_int32_t    ssto_timeout;
-   u_int16_t    ssto_streamid_start;
-   u_int16_t    ssto_streamid_end;
+   uint32_t     ssto_timeout;
+   uint16_t     ssto_streamid_start;
+   uint16_t     ssto_streamid_end;
 };
 
 
@@ -319,14 +319,14 @@ struct sctp_status
 
 struct sctp_event_subscribe
 {
-   u_int8_t sctp_data_io_event;
-   u_int8_t sctp_association_event;
-   u_int8_t sctp_address_event;
-   u_int8_t sctp_send_failure_event;
-   u_int8_t sctp_peer_error_event;
-   u_int8_t sctp_shutdown_event;
-   u_int8_t sctp_partial_delivery_event;
-   u_int8_t sctp_adaption_layer_event;
+   uint8_t sctp_data_io_event;
+   uint8_t sctp_association_event;
+   uint8_t sctp_address_event;
+   uint8_t sctp_send_failure_event;
+   uint8_t sctp_peer_error_event;
+   uint8_t sctp_shutdown_event;
+   uint8_t sctp_partial_delivery_event;
+   uint8_t sctp_adaption_layer_event;
 };
 
 
