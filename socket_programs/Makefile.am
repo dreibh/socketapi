@@ -23,6 +23,6 @@ newexample1to1_CFLAGS =  -I../socketapi
 newexample1to1_LDADD = ../socketapi/libsctpsocket.la -lstdc++
 
 
-#t2_SOURCES = t2.c
-#t2_CFLAGS =  -I../socketapi
-#t2_LDADD = ../socketapi/libsctpsocket.la
+#t3_SOURCES = t3.cc
+#t3_CFLAGS =  -I../socketapi
+#t3_LDADD = ../socketapi/libsctpsocket.la

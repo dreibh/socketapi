@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.27 2004/11/23 10:13:45 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.28 2005/03/04 13:22:14 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -274,7 +274,7 @@ int SCTPSocket::bind(const unsigned short    localPort,
    for(unsigned int i = 0;i < NoOfLocalAddresses;i++) {
       cout << " " << LocalAddressList[i] << " ";
    }
-   cout << "}." << endl;
+   cout << "}, port " << LocalPort << "." << endl;
 #endif
    if(NoOfLocalAddresses < 1) {
 #ifndef DISABLE_WARNINGS
