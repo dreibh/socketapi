@@ -46,7 +46,9 @@ AC_SUBST(all_libraries)
 
 AC_SUBST(AUTODIRS)
 
-
+# Achtung! Wenn LDFLAGS nicht gesetzt wird, verwendet der Linker die
+# Option -s => Alle Debug-Symbole werden entfernt!
+LDFLAGS=""
 CFLAGS="$CFLAGS -D_REENTRANT -D_THREAD_SAFE"
 CXXFLAGS="$CXXFLAGS -D_REENTRANT -D_THREAD_SAFE"
 
@@ -75,8 +77,8 @@ linux*)
     #CC="/opt/gcc3.1/bin/gcc"
     #CPP="/opt/gcc3.1/bin/gcc -E"
     #CXX="/opt/gcc3.1/bin/g++"
-    #CFLAGS="$CFLAGS -O0 -g -Wall -DLINUX"
-    #CXXFLAGS="$CXXFLAGS -Wall -O0 -g -DLINUX"
+    CFLAGS="$CFLAGS -O0 -g -Wall -DLINUX"
+    CXXFLAGS="$CXXFLAGS -Wall -O0 -g -DLINUX"
     CFLAGS="$CFLAGS -O0 -g -Wall -DLINUX"
     CXXFLAGS="$CXXFLAGS -O0 -g -Wall -DLINUX"
     thread_LIBS="-lpthread"

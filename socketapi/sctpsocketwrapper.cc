@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.22 2004/07/22 15:13:39 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.23 2004/07/25 16:55:19 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -350,6 +350,7 @@ static int getAddressParams(ExtSocketDescriptor* tdSocket,
       ok = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->getPathParameters(assocID,address,parameters);
    }
 
+   delete address;
    return((ok == false) ? -EIO : 0);
 }
 
@@ -375,6 +376,7 @@ static int setAddressParams(ExtSocketDescriptor*    tdSocket,
       ok = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->setPathParameters(assocID,address,newParameters);
    }
 
+   delete address;
    return((ok == false) ? -EIO : 0);
 }
 
