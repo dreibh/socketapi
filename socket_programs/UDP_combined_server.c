@@ -27,6 +27,7 @@ int main (int argc, const char * argv[]) {
   fd_set rset;
   time_t now;
   char *time_as_string;
+  struct sctp_event_subscribe evnts;
   
   /* get sockets */
   if ((chargen_fd = ext_socket(PF_INET, SOCK_SEQPACKET, IPPROTO_SCTP)) < 0)
@@ -59,7 +60,7 @@ int main (int argc, const char * argv[]) {
         perror("bind call failed");
 
   /* make the sockets 'active' */
-  backlog = 0; /* it is ignored */
+  backlog = 1; 
   if (ext_listen(chargen_fd, backlog) < 0)
     perror("listen call failed");
   if (ext_listen(daytime_fd, backlog) < 0)
@@ -68,7 +69,22 @@ int main (int argc, const char * argv[]) {
     perror("listen call failed");
   if (ext_listen(echo_fd, backlog) < 0)
     perror("listen call failed");
-  	
+   
+  /* disable all event notifications */
+  bzero(&evnts, sizeof(evnts));
+  evnts.sctp_data_io_event = 1;
+  if (ext_setsockopt(chargen_fd,IPPROTO_SCTP, SCTP_EVENTS, &evnts, sizeof(evnts)) != 0)
+    perror("setsockopt");
+
+  if (ext_setsockopt(daytime_fd,IPPROTO_SCTP, SCTP_EVENTS, &evnts, sizeof(evnts)) != 0)
+    perror("setsockopt");
+
+  if (ext_setsockopt(discard_fd,IPPROTO_SCTP, SCTP_EVENTS, &evnts, sizeof(evnts)) != 0)
+    perror("setsockopt");
+
+  if (ext_setsockopt(echo_fd,IPPROTO_SCTP, SCTP_EVENTS, &evnts, sizeof(evnts)) != 0)
+    perror("setsockopt");
+ 	
   /* set autoclose feature: close idle assocs after 5 seconds */
   idle_time = 5;
   if (ext_setsockopt(chargen_fd, IPPROTO_SCTP, SCTP_AUTOCLOSE, &idle_time, sizeof(idle_time)) < 0)

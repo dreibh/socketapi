@@ -284,7 +284,7 @@ init_server(struct sockaddr_in local_addr, int port, void *(connection_handler (
     if(ext_bind(fd, (struct sockaddr *)&local_addr, sizeof(local_addr)) < 0)
         perror("bind call failed");
 
-    if(ext_listen(fd, 0) < 0)
+    if(ext_listen(fd, 1) < 0)
         perror("listen call failed");
         
     server_data_p = malloc(sizeof(struct server_data));
