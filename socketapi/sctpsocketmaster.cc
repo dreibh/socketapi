@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.19 2005/03/11 09:51:20 dreibh Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.20 2005/03/11 10:23:05 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -573,20 +573,24 @@ void SCTPSocketMaster::networkStatusChangeNotif(unsigned int assocID,
 #else
 #error Wrong sctplib version!
 #endif
+   if(ok != 0) {
+#ifndef DISABLE_WARNINGS
+      cerr << "INTERNAL ERROR: SCTPSocketMaster::networkStatusChangeNotif() - sctp_getPathStatus() failed!" << endl;
+#endif
+      return;
+   }
 
 
    // ====== Get new destination address ====================================
    SocketAddress* destination = NULL;
-   if(ok == 0) {
-      destination = SocketAddress::createSocketAddress(
+   destination = SocketAddress::createSocketAddress(
                                       SocketAddress::PF_HidePort,
                                       (char*)&pathStatus.destinationAddress);
-      if(destination == NULL) {
+   if(destination == NULL) {
 #ifndef DISABLE_WARNINGS
-         cerr << "INTERNAL ERROR: SCTPSocketMaster::networkStatusChangeNotif() - Bad destination address!" << endl;
+      cerr << "INTERNAL ERROR: SCTPSocketMaster::networkStatusChangeNotif() - Bad destination address!" << endl;
 #endif
-         return;
-      }
+      return;
    }
 
    // ====== Generate "Network Status Change" notification ==================
