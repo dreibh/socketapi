@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.cc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: sctpassociation.cc,v 1.2 2003/06/01 17:40:54 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -38,7 +38,7 @@
 
 
 
-// #define PRINT_SHUTDOWN
+#define PRINT_SHUTDOWN
 // #define PRINT_RTOMAX
 
 
@@ -353,18 +353,19 @@ void SCTPAssociation::abort()
 
 
 // ###### Get association parameters ########################################
-bool SCTPAssociation::getAssociationParameters(
-                         SCTP_Association_Status& associationParameters)
+bool SCTPAssociation::getAssocStatus(
+                         SCTP_Association_Status& assocStatus)
 {
-   const bool result = Socket->getAssociationParameters(AssociationID,associationParameters);
+printf("G*** Assoc=%d\n",AssociationID);
+   const bool result = Socket->getAssocStatus(AssociationID,assocStatus);
    if(result) {
       if(RTOMaxIsInitTimeout) {
 #ifdef PRINT_RTOMAX
          char str[256];
-         snprintf((char*)&str,sizeof(str),"getAssociationParameters() - Replying RTOMax=%d instead of InitTimeout=%d\n",associationParameters.rtoMax,RTOMax);
+         snprintf((char*)&str,sizeof(str),"getAssocStatus() - Replying RTOMax=%d instead of InitTimeout=%d\n",assocStatus.rtoMax,RTOMax);
          cerr << str << endl;
 #endif
-         associationParameters.rtoMax = RTOMax;
+         assocStatus.rtoMax = RTOMax;
       }
    }
    return(result);
@@ -372,20 +373,21 @@ bool SCTPAssociation::getAssociationParameters(
 
 
 // ###### Set association parameters ########################################
-bool SCTPAssociation::setAssociationParameters(
-                         const SCTP_Association_Status& associationParameters)
+bool SCTPAssociation::setAssocStatus(
+                         const SCTP_Association_Status& assocStatus)
 {
-   SCTP_Association_Status newStatus = associationParameters;
+printf("S*** Assoc=%d\n",AssociationID);
+   SCTP_Association_Status newStatus = assocStatus;
    if(RTOMaxIsInitTimeout) {
 #ifdef PRINT_RTOMAX
       char str[256];
-      snprintf((char*)&str,sizeof(str),"setAssociationParameters() - Saving RTOMax=%d, using InitTimeout=%d\n",associationParameters.rtoMax,InitTimeout);
+      snprintf((char*)&str,sizeof(str),"setAssocStatus() - Saving RTOMax=%d, using InitTimeout=%d\n",assocStatus.rtoMax,InitTimeout);
       cerr << str << endl;
 #endif
       newStatus.rtoMax = InitTimeout;
-      RTOMax = associationParameters.rtoMax;
+      RTOMax = assocStatus.rtoMax;
    }
-   return(Socket->setAssociationParameters(AssociationID,associationParameters));
+   return(Socket->setAssocStatus(AssociationID,assocStatus));
 }
 
 
@@ -599,7 +601,7 @@ bool SCTPAssociation::setTrafficClass(const card8 trafficClass,
 
 
 // ###### Get default settings ##############################################
-void SCTPAssociation::getAssociationDefaults(struct AssociationDefaults& defaults)
+void SCTPAssociation::getAssocIODefaults(struct AssocIODefaults& defaults)
 {
    SCTPSocketMaster::MasterInstance.lock();
    defaults = Defaults;
@@ -608,7 +610,7 @@ void SCTPAssociation::getAssociationDefaults(struct AssociationDefaults& default
 
 
 // ###### Set default settings ##############################################
-void SCTPAssociation::setAssociationDefaults(const struct AssociationDefaults& defaults)
+void SCTPAssociation::setAssocIODefaults(const struct AssocIODefaults& defaults)
 {
    SCTPSocketMaster::MasterInstance.lock();
    Defaults = defaults;

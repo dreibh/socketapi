@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.2 2003/06/01 17:40:54 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -41,8 +41,9 @@
 
 
 
-// #define PRINT_NOTIFICATIONS
-// #define PRINT_ARRIVENOTIFICATION
+#define PRINT_NOTIFICATIONS
+#define PRINT_ARRIVENOTIFICATION
+
 // #define PRINT_PIPE
 // #define PRINT_GC
 // #define PRINT_ASSOC_USECOUNT
@@ -641,7 +642,7 @@ void* SCTPSocketMaster::communicationUpNotif(unsigned int   assocID,
          // ====== Correct RTOMax ============================================
          if(association->RTOMaxIsInitTimeout) {
             SCTP_Association_Status status;
-            if(socket->getAssociationParameters(assocID,status)) {
+            if(socket->getAssocStatus(assocID,status)) {
 #ifdef PRINT_RTOMAXRESTORE
                char str[256];
                snprintf((char*)&str,sizeof(str),
@@ -649,7 +650,7 @@ void* SCTPSocketMaster::communicationUpNotif(unsigned int   assocID,
                cerr << str << endl;
 #endif
                status.rtoMax = association->RTOMax;
-               socket->setAssociationParameters(assocID,status);
+               socket->setAssocStatus(assocID,status);
             }
             association->RTOMaxIsInitTimeout = false;
          }
@@ -754,7 +755,7 @@ void SCTPSocketMaster::communicationLostNotif(unsigned int assocID,
          // ====== Correct RTOMax ============================================
          if(association->RTOMaxIsInitTimeout) {
             SCTP_Association_Status status;
-            if(socket->getAssociationParameters(assocID,status)) {
+            if(socket->getAssocStatus(assocID,status)) {
 #ifdef PRINT_RTOMAXRESTORE
                char str[256];
                snprintf((char*)&str,sizeof(str),
@@ -762,7 +763,7 @@ void SCTPSocketMaster::communicationLostNotif(unsigned int assocID,
                cerr << str << endl;
 #endif
                status.rtoMax = association->RTOMax;
-               socket->setAssociationParameters(assocID,status);
+               socket->setAssocStatus(assocID,status);
             }
             association->RTOMaxIsInitTimeout = false;
          }
@@ -1017,7 +1018,7 @@ void SCTPSocketMaster::userCallback(int        fileDescriptor,
       }
       else {
 #ifdef PRINT_PIPE
-         cout << "Break via break pipe received" << endl;
+         cout << getpid() << ": Break via break pipe received" << endl;
 #endif
          ssize_t received = read(BreakPipe[0],(char*)&str,sizeof(str));
          while(received > 0) {

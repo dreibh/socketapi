@@ -1,0 +1,12 @@
+ChangeLog:
+- SCTPSocket::getLocalAddresses()
+   - Fixes and workarounds
+- SCTPSocket::internalReceiver()
+   - association->ReadReady = (association->hasData() || (getErrorCode(association->AssociationID) < 0));
+     ReadReady has to be set in case of error (Shutdown or Abort)
+     -> ext_select() will return and recv*() will then return 0
+        Otherwise: blocking!
+   - Call queue.signal() if notification is left in queue.
+- SCTPSocket::setAssocStatus()
+   const int ok = sctp_setAssocStatus(assocID,
+                                      (SCTP_Association_Status*)&associationParameters);

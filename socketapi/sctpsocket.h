@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.h,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: sctpsocket.h,v 1.2 2003/06/01 17:40:54 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -123,15 +123,15 @@ class SCTPSocket
      * @param noOfOutStreams Number of outgoing streams.
      * @param maxAttempts Maximum number of INIT attempts.
      * @param maxInitTimeout Maximum init timeout.
-     * @param destinationAddress Destination address.
+     * @param destinationAddressList Destination address list.
      * @param blocking true to wait for establishment (default); false otherwise.
      * @return Association or NULL in case of failure.
      */
-   SCTPAssociation* associate(const unsigned short    noOfOutStreams,
-                              const unsigned short    maxAttempts,
-                              const unsigned short    maxInitTimeout,
-                              const SocketAddress&    destinationAddress,
-                              const bool              blocking = true);
+   SCTPAssociation* associate(const unsigned short  noOfOutStreams,
+                              const unsigned short  maxAttempts,
+                              const unsigned short  maxInitTimeout,
+                              const SocketAddress** destinationAddressList,
+                              const bool            blocking = true);
 
    /**
      * Set socket to listen mode: accept new incoming assocations.
@@ -304,20 +304,20 @@ class SCTPSocket
 
    // ====== Instance and association parameters ============================
    /**
-     * Get instance parameters.
+     * Get assoc defaults.
      *
-     * @param instanceParameters Reference to store instance parameters.
+     * @param assocDefaults Reference to store assoc defaults.
      * @return true, if successful; false otherwise.
      */
-   bool getInstanceParameters(SCTP_Instance_Parameters& instanceParameters);
+   bool getAssocDefaults(SCTP_Instance_Parameters& assocDefaults);
 
    /**
-     * Set instance parameters.
+     * Set assoc defaults.
      *
-     * @param instanceParameters Instance parameters.
+     * @param assocDefaults assoc defaults.
      * @return true, if successful; false otherwise.
      */
-   bool setInstanceParameters(const SCTP_Instance_Parameters& instanceParameters);
+   bool setAssocDefaults(const SCTP_Instance_Parameters& assocDefaults);
 
    /**
      * Get association defaults.
@@ -326,8 +326,8 @@ class SCTPSocket
      * @param defaults Reference to store association defaults to.
      * @return true, if successful; false otherwise.
      */
-   bool getAssociationDefaults(const unsigned int          assocID,
-                               struct AssociationDefaults& defaults);
+   bool getAssocIODefaults(const unsigned int      assocID,
+                           struct AssocIODefaults& defaults);
 
     /**
      * Set association defaults.
@@ -336,8 +336,8 @@ class SCTPSocket
      * @param defaults Association defaults.
      * @return true, if successful; false otherwise.
      */
-   bool setAssociationDefaults(const unsigned int                assocID,
-                               const struct AssociationDefaults& defaults);
+   bool setAssocIODefaults(const unsigned int            assocID,
+                           const struct AssocIODefaults& defaults);
 
    /**
      * Set stream default timeouts.
@@ -372,8 +372,8 @@ class SCTPSocket
      * @param associationParameters Reference to store association parameters.
      * @return true, if successful; false otherwise.
      */
-   bool getAssociationParameters(const unsigned int       assocID,
-                                 SCTP_Association_Status& associationParameters);
+   bool getAssocStatus(const unsigned int       assocID,
+                       SCTP_Association_Status& associationParameters);
 
    /**
      * Set association parameters.
@@ -382,8 +382,8 @@ class SCTPSocket
      * @param associationParameters Association parameters.
      * @return true, if successful; false otherwise.
      */
-   bool setAssociationParameters(const unsigned int             assocID,
-                                 const SCTP_Association_Status& associationParameters);
+   bool setAssocStatus(const unsigned int             assocID,
+                       const SCTP_Association_Status& associationParameters);
 
 
    // ====== Path parameters ================================================

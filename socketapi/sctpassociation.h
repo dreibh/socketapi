@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.h,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: sctpassociation.h,v 1.2 2003/06/01 17:40:54 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -49,7 +49,7 @@
 /**
   * This structure contains defaults for an association.
   */
-struct AssociationDefaults
+struct AssocIODefaults
 {
    /**
      * Default stream ID.
@@ -240,14 +240,14 @@ class SCTPAssociation
      *
      * @param defaults Reference to store association defaults to.
      */
-   void getAssociationDefaults(struct AssociationDefaults& defaults);
+   void getAssocIODefaults(struct AssocIODefaults& defaults);
 
     /**
      * Set association defaults.
      *
      * @param defaults Association defaults.
      */
-   void setAssociationDefaults(const struct AssociationDefaults& defaults);
+   void setAssocIODefaults(const struct AssocIODefaults& defaults);
 
    /**
      * Set stream default timeouts.
@@ -272,18 +272,18 @@ class SCTPAssociation
    /**
      * Get association parameters.
      *
-     * @param associationParameters Reference to store association parameters.
+     * @param assocStatus Reference to store association parameters.
      * @return true, if successful; false otherwise.
      */
-   bool getAssociationParameters(SCTP_Association_Status& associationParameters);
+   bool getAssocStatus(SCTP_Association_Status& assocStatus);
 
    /**
      * Set association parameters.
      *
-     * @param associationParameters Association parameters.
+     * @param assocStatus Association parameters.
      * @return true, if successful; false otherwise.
      */
-   bool setAssociationParameters(const SCTP_Association_Status& associationParameters);
+   bool setAssocStatus(const SCTP_Association_Status& assocStatus);
 
 
    // ====== Path parameters ================================================
@@ -425,7 +425,7 @@ class SCTPAssociation
 
    unsigned int          AssociationID;
    unsigned int          NotificationFlags;
-   AssociationDefaults   Defaults;
+   AssocIODefaults   Defaults;
 
    struct StreamDefaultTimeout {
       bool         Valid;

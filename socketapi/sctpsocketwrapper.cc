@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.2 2003/05/23 15:42:58 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.3 2003/06/01 17:40:54 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -220,14 +220,14 @@ static int getAssocParams(ExtSocketDescriptor*     tdSocket,
 {
    if((tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr != NULL) && (tdSocket->Socket.SCTPSocketDesc.ConnectionOriented)) {
       if(tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->
-            getAssociationParameters(parameters)) {
+            getAssocStatus(parameters)) {
          assocID = tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->getID();
          return(0);
       }
    }
    else if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
       if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->
-            getAssociationParameters(assocID,parameters)) {
+            getAssocStatus(assocID, parameters)) {
          return(0);
       }
    }
@@ -242,13 +242,13 @@ static int setAssocParams(ExtSocketDescriptor*           tdSocket,
 {
    if((tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr != NULL) && (tdSocket->Socket.SCTPSocketDesc.ConnectionOriented)) {
       if(tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->
-            setAssociationParameters(parameters)) {
+            setAssocStatus(parameters)) {
          return(0);
       }
    }
    else if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
       if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->
-            setAssociationParameters(assocID,parameters)) {
+            setAssocStatus(assocID, parameters)) {
          return(0);
       }
    }
@@ -713,6 +713,7 @@ int ext_accept(int sockfd, struct sockaddr* addr, socklen_t* addrlen)
                      }
 
                      ExtSocketDescriptor newExtSocketDescriptor = *tdSocket;
+                     newExtSocketDescriptor.Socket.SCTPSocketDesc.ConnectionOriented = true;
                      newExtSocketDescriptor.Socket.SCTPSocketDesc.SCTPSocketPtr      = NULL;
                      newExtSocketDescriptor.Socket.SCTPSocketDesc.SCTPAssociationPtr = association;
                      newExtSocketDescriptor.Socket.SCTPSocketDesc.Parent             = sockfd;
@@ -974,7 +975,7 @@ static int getRTOInfo(ExtSocketDescriptor* tdSocket,
 
 
 // ###### Get RTO info ######################################################
-static int getAssocMaxRxt(ExtSocketDescriptor* tdSocket,
+static int getAssocInfo(ExtSocketDescriptor* tdSocket,
                           void* optval, socklen_t* optlen)
 {
    if((optval == NULL) || (*optlen < sizeof(sctp_assocparams))) {
@@ -1138,7 +1139,7 @@ int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* 
                             }
                           break;
                          case SCTP_ASSOCINFO:
-                            return(getAssocMaxRxt(tdSocket,optval,optlen));
+                            return(getAssocInfo(tdSocket,optval,optlen));
                           break;
 
                          /* ---- Start of deprecated block ------------------------------ */
@@ -1280,7 +1281,7 @@ static int setDefaultSendParams(ExtSocketDescriptor* tdSocket,
    }
 
    sctp_sndrcvinfo*    sndrcvinfo = (sctp_sndrcvinfo*)optval;
-   AssociationDefaults defaults;
+   AssocIODefaults defaults;
 
    defaults.StreamID   = sndrcvinfo->sinfo_stream;
    defaults.ProtoID    = sndrcvinfo->sinfo_ppid;
@@ -1289,11 +1290,11 @@ static int setDefaultSendParams(ExtSocketDescriptor* tdSocket,
 
    bool result = false;
    if((tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr != NULL) && (tdSocket->Socket.SCTPSocketDesc.ConnectionOriented)) {
-      tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->setAssociationDefaults(defaults);
+      tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->setAssocIODefaults(defaults);
       result = true;
    }
    else if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
-      result = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->setAssociationDefaults(sndrcvinfo->sinfo_assoc_id,defaults);
+      result = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->setAssocIODefaults(sndrcvinfo->sinfo_assoc_id,defaults);
    }
 
    if(result == true) {
@@ -1407,13 +1408,15 @@ static int setRTOInfo(ExtSocketDescriptor* tdSocket,
       result = setAssocParams(tdSocket,assocID,parameters);
    }
    SCTPSocketMaster::MasterInstance.unlock();
+
    errno_return(result);
 }
 
 
-// ###### Set association RTX info ##########################################
-static int setAssocMaxRxt(ExtSocketDescriptor* tdSocket,
-                          const void* optval, const socklen_t optlen)
+// ###### Set association info ##############################################
+static int setAssocInfo(ExtSocketDescriptor* tdSocket,
+                        const void*          optval,
+                        const socklen_t      optlen)
 {
    if((optval == NULL) || (optlen < sizeof(sctp_assocparams))) {
       errno_return(-EINVAL);
@@ -1530,10 +1533,10 @@ static void setInitMsg(SCTPSocket* sctpSocket, struct sctp_initmsg* initmsg)
    bool                     result = false;
 
    SCTPSocketMaster::MasterInstance.lock();
-   if(sctpSocket->getInstanceParameters(parameters)) {
+   if(sctpSocket->getAssocDefaults(parameters)) {
       parameters.outStreams = initmsg->sinit_num_ostreams;
       parameters.inStreams  = initmsg->sinit_max_instreams;
-      if(sctpSocket->setInstanceParameters(parameters)) {
+      if(sctpSocket->setAssocDefaults(parameters)) {
          result = true;
       }
    }
@@ -1620,7 +1623,7 @@ int ext_setsockopt(int sockfd, int level, int optname, const void* optval, sockl
                             return(setRTOInfo(tdSocket,optval,optlen));
                           break;
                          case SCTP_ASSOCINFO:
-                            return(setAssocMaxRxt(tdSocket,optval,optlen));
+                            return(setAssocInfo(tdSocket,optval,optlen));
                           break;
                          case SCTP_SET_EVENTS:
                             return(setEvents(tdSocket,optval,optlen));
@@ -1752,6 +1755,18 @@ int ext_shutdown(int sockfd, int how)
 // ###### connect() wrapper #################################################
 int ext_connect(int sockfd, const struct sockaddr* serv_addr, socklen_t addrlen)
 {
+   struct sockaddr_storage addressArray[1];
+   memcpy((char*)&addressArray[0], serv_addr, min(sizeof(sockaddr_storage), addrlen));
+   return(ext_connectx(sockfd, (sockaddr_storage*)&addressArray, 1, 0));
+}
+
+
+// ###### connectx() wrapper ################################################
+int ext_connectx(int                      sockfd,
+                 struct sockaddr_storage* addrs,
+                 int                      addrcnt,
+                 int                      flags)
+{
    ExtSocketDescriptor* tdSocket = ExtSocketDescriptorMaster::getSocket(sockfd);
    if(tdSocket != NULL) {
       switch(tdSocket->Type) {
@@ -1762,34 +1777,44 @@ int ext_connect(int sockfd, const struct sockaddr* serv_addr, socklen_t addrlen)
                   errno_return(-EISCONN);
                }
                if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
-                  SocketAddress* address = SocketAddress::createSocketAddress(
-                                              0,(sockaddr*)serv_addr,addrlen);
-                  if(address != NULL) {
-                     tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr =
-                        tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->associate(
-                           tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_num_ostreams,
-                           tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_attempts,
-                           tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_init_timeo,
-                           *address,
-                           !(tdSocket->Socket.SCTPSocketDesc.Flags & O_NONBLOCK));
-                     delete address;
-                     if(tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr == NULL) {
-                        errno_return(-EIO);
+                  const SocketAddress* addressArray[addrcnt + 1];
+                  for(int i = 0;i < addrcnt;i++) {
+                     addressArray[i] = SocketAddress::createSocketAddress(
+                                          0, (sockaddr*)&addrs[i], sizeof(sockaddr_storage));
+                     if(addressArray[i] == NULL) {
+                        for(int j = i - 1;j > 0;j--) {
+                           delete addressArray[j];
+                           errno_return(-EINVAL);
+                        }
                      }
-                     else if(tdSocket->Socket.SCTPSocketDesc.Flags & O_NONBLOCK) {
-                        errno_return(-EINPROGRESS);
-                     }
-                     errno_return(0);
                   }
-                  else {
-                     errno_return(-EADDRNOTAVAIL);
+                  addressArray[addrcnt] = NULL;
+
+                  tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr =
+                     tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->associate(
+                        tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_num_ostreams,
+                        tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_attempts,
+                        tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_init_timeo,
+                        (const SocketAddress**)&addressArray,
+                        !(tdSocket->Socket.SCTPSocketDesc.Flags & O_NONBLOCK));
+
+                  for(int i = 0;i < addrcnt;i++) {
+                     delete addressArray[i];
+                     addressArray[i] = NULL;
                   }
+                  if(tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr == NULL) {
+                     errno_return(-EIO);
+                  }
+                  else if(tdSocket->Socket.SCTPSocketDesc.Flags & O_NONBLOCK) {
+                     errno_return(-EINPROGRESS);
+                  }
+                  errno_return(0);
                }
                errno_return(-EBADF);
             }
           break;
          case ExtSocketDescriptor::ESDT_System:
-            return(connect(tdSocket->Socket.SystemSocketID,(struct sockaddr*)serv_addr,addrlen));
+            return(-EOPNOTSUPP);
           break;
       }
       errno_return(-ENXIO);
@@ -2117,17 +2142,20 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                            if(tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr != NULL) {
                               errno_return(-EBUSY);
                            }
-                           SocketAddress* address = SocketAddress::createSocketAddress(
-                                                       0,(sockaddr*)msg->msg_name,msg->msg_namelen);
-                           if(address != NULL) {
+                           const SocketAddress* addressArray[2];
+                           addressArray[0] = SocketAddress::createSocketAddress(
+                                                0, (sockaddr*)msg->msg_name, msg->msg_namelen);
+                           addressArray[1] = NULL;
+                           if(addressArray[0] != NULL) {
                               tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr =
                                  tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->associate(
                                     initmsg->sinit_num_ostreams,
                                     initmsg->sinit_max_attempts,
                                     initmsg->sinit_max_init_timeo,
-                                    *address,
+                                    (const SocketAddress**)&addressArray,
                                     !(tdSocket->Socket.SCTPSocketDesc.Flags & O_NONBLOCK));
-                              delete address;
+                              delete addressArray[0];
+                              addressArray[0] = NULL;
                               if(tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr == NULL) {
                                  errno_return(-ENOTCONN);
                               }
@@ -2972,7 +3000,7 @@ int sctp_opt_info(int sd, sctp_assoc_t assocID,
        return(ext_setsockopt(sd,IPPROTO_SCTP,opt,arg,*size));
     }
     else {
-       errno_return(-ENOTSUP);
+       errno_return(-EOPNOTSUPP);
     }
 }
 

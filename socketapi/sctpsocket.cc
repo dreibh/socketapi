@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.2 2003/06/01 17:40:54 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -38,7 +38,7 @@
 #include "sctpsocketmaster.h"
 
 
-/*
+
 #define PRINT_BIND
 #define PRINT_UNBIND
 #define PRINT_ADDIP
@@ -48,8 +48,9 @@
 #define PRINT_SHUTDOWNS
 #define PRINT_PRSCTP
 #define PRINT_DATA
+#define PRINT_RECVSTATUS
 #define PRINT_SETPRIMARY
-*/
+
 
 // #define PRINT_AUTOCLOSE_TIMEOUT
 // #define PRINT_AUTOCLOSE_CHECK
@@ -146,7 +147,7 @@ bool SCTPSocket::getLocalAddresses(SocketAddress**& addressArray)
 
    // ====== Get local addresses ============================================
    SCTPSocketMaster::MasterInstance.lock();
-   if(getInstanceParameters(parameters)) {
+   if(getAssocDefaults(parameters)) {
       const unsigned int localAddresses = parameters.noOfLocalAddresses;
       addressArray = SocketAddress::newAddressList(localAddresses);
       if(addressArray != NULL) {
@@ -450,17 +451,17 @@ SCTPAssociation* SCTPSocket::accept(SocketAddress*** addressArray,
 
 
 // ###### Establish new association #########################################
-SCTPAssociation* SCTPSocket::associate(const unsigned short noOfOutStreams,
-                                       const unsigned short maxAttempts,
-                                       const unsigned short maxInitTimeout,
-                                       const SocketAddress& destinationAddress,
-                                       const bool           blocking)
+SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
+                                       const unsigned short  maxAttempts,
+                                       const unsigned short  maxInitTimeout,
+                                       const SocketAddress** destinationAddressList,
+                                       const bool            blocking)
 {
    // ====== Establish new association ======================================
    SCTPSocketMaster::MasterInstance.lock();
    SCTP_Instance_Parameters oldParameters;
    SCTP_Instance_Parameters newParameters;
-   if(getInstanceParameters(oldParameters)) {
+   if(getAssocDefaults(oldParameters)) {
       newParameters = oldParameters;
       newParameters.maxInitRetransmits = maxAttempts;
       if(newParameters.maxInitRetransmits > 0) {
@@ -470,7 +471,7 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short noOfOutStreams,
          newParameters.maxInitRetransmits = 1;
       }
       newParameters.rtoMax = maxInitTimeout;
-      if(!setInstanceParameters(newParameters)) {
+      if(!setAssocDefaults(newParameters)) {
 #ifndef DISABLE_WARNINGS
          cerr << "WARNING: SCTPSocket::associate() - Unable to set new instance parameters!" << endl;
 #endif
@@ -482,21 +483,46 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short noOfOutStreams,
 #endif
    }
 
-   const unsigned int assocID = sctp_associate(InstanceName,
-                                               (noOfOutStreams < 1) ? 1 : noOfOutStreams,
-                                               (unsigned char*)destinationAddress.getAddressString(SocketAddress::PF_HidePort|SocketAddress::PF_Address|SocketAddress::PF_Legacy).getData(),
-                                               destinationAddress.getPort(),
-                                               NULL);
+   unsigned int  destinationAddresses = 0;
+   unsigned char addressArray[destinationAddresses][SCTP_MAX_IP_LEN];
+   while(destinationAddressList[destinationAddresses] != NULL) {
+      destinationAddresses++;
+   }
 
-   if(!setInstanceParameters(oldParameters)) {
+   unsigned int assocID = 0;
+   if(destinationAddresses > 0) {
+      for(unsigned int i = 0;i < destinationAddresses;i++) {
+         snprintf((char*)&addressArray[i], SCTP_MAX_IP_LEN, "%s",
+                  destinationAddressList[i]->getAddressString(SocketAddress::PF_HidePort|SocketAddress::PF_Address|SocketAddress::PF_Legacy).getData());
+      }
+      assocID = sctp_associate (InstanceName,
+                                (noOfOutStreams < 1) ? 1 : noOfOutStreams,
+                                addressArray[0],
+                                destinationAddressList[0]->getPort(),
+                                NULL);
+   }
+   else {
+#ifndef DISABLE_WARNINGS
+      cerr << "ERROR: SCTPSocket::associate() - No destination addresses given?!" << endl;
+#endif
+   }
+
+   if(!setAssocDefaults(oldParameters)) {
 #ifndef DISABLE_WARNINGS
       cerr << "WARNING: SCTPSocket::associate() - Unable to restore old instance parameters!" << endl;
 #endif
    }
 
 #ifdef PRINT_ASSOCIATE
-   cout << "Association to " << destinationAddress.getAddressString(SocketAddress::PF_Address|SocketAddress::PF_Legacy) << " => ID #"
-        << assocID << "." << endl;
+   cout << "Association to { ";
+   for(unsigned int i = 0;i < destinationAddresses;i++) {
+      cout << addressArray[i];
+      if(i < (destinationAddresses - 1)) {
+         cout << ", ";
+      }
+   }
+   cout << " }, port " << destinationAddressList[0]->getPort()
+        << " => ID #" << assocID << "." << endl;
 #endif
 
 
@@ -773,8 +799,10 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
          result = (int)bufferSize;
       }
       else {
+#ifndef DISABLE_WARNINGS
+            cout << "WARNING: Skipping " << header->sn_length << " bytes notification data from association " << assocID << ", stream " << streamID << ":" << endl;
+#endif
 #ifdef PRINT_DATA
-            cout << "***Skipping*** " << header->sn_length << " bytes notification data from association " << assocID << ", stream " << streamID << ":" << endl;
             for(size_t i = 0;i < header->sn_length;i++) {
                char str[32];
                snprintf((char*)&str,sizeof(str),"%02x ",((unsigned char*)&notification.Content)[i]);
@@ -809,10 +837,17 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
             exit(1);
          }
 #endif
-         association->ReadReady = association->hasData();
+         association->ReadReady = (association->hasData() || (getErrorCode(association->AssociationID) < 0));
+#ifdef PRINT_RECVSTATUS
+         cout << "Association " << association->AssociationID << ": ReadReady=" << association->ReadReady
+                                << " ErrorCode=" << getErrorCode(association->AssociationID) << endl;
+#endif
       }
       else {
          ReadReady = hasData() || (ConnectionRequests != NULL);
+#ifdef PRINT_RECVSTATUS
+         cout << "Instance " << InstanceName << ": ReadReady=" << ReadReady << endl;
+#endif
       }
    }
 
@@ -1098,9 +1133,12 @@ int SCTPSocket::sendTo(const char*          buffer,
            << destinationAddress->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
            << "..." << endl;
 #endif
+      const SocketAddress* destinationAddressList[2];
+      destinationAddressList[0] = destinationAddress;
+      destinationAddressList[1] = NULL;
       association = associate(noOfOutgoingStreams,
                               maxAttempts, maxInitTimeout,
-                              *destinationAddress,
+                              (const SocketAddress**)&destinationAddressList,
                               (flags & MSG_DONTWAIT) ? false : true);
       if(association != NULL) {
 #ifdef PRINT_NEW_ASSOCIATIONS
@@ -1267,45 +1305,48 @@ SCTPAssociation* SCTPSocket::peelOff(const unsigned int assocID)
 
 
 // ###### Get instance parameters ###########################################
-bool SCTPSocket::getInstanceParameters(SCTP_Instance_Parameters& instanceParameters)
+bool SCTPSocket::getAssocDefaults(SCTP_Instance_Parameters& assocDefaults)
 {
    SCTPSocketMaster::MasterInstance.lock();
-   const int ok = sctp_getAssocDefaults(InstanceName,&instanceParameters);
+   const int ok = sctp_getAssocDefaults(InstanceName,&assocDefaults);
    SCTPSocketMaster::MasterInstance.unlock();
    return(ok == 0);
 }
 
 
 // ###### Set instance parameters ###########################################
-bool SCTPSocket::setInstanceParameters(const SCTP_Instance_Parameters& instanceParameters)
+bool SCTPSocket::setAssocDefaults(const SCTP_Instance_Parameters& assocDefaults)
 {
    SCTPSocketMaster::MasterInstance.lock();
    const int ok = sctp_setAssocDefaults(InstanceName,
-                                        (SCTP_Instance_Parameters*)&instanceParameters);
+                                        (SCTP_Instance_Parameters*)&assocDefaults);
    SCTPSocketMaster::MasterInstance.unlock();
    return(ok == 0);
 }
 
 
 // ###### Get association parameters ########################################
-bool SCTPSocket::getAssociationParameters(const unsigned int       assocID,
-                                          SCTP_Association_Status& associationParameters)
+bool SCTPSocket::getAssocStatus(const unsigned int       assocID,
+                                SCTP_Association_Status& associationParameters)
 {
    SCTPSocketMaster::MasterInstance.lock();
-   const int ok = sctp_getAssocStatus(assocID,&associationParameters);
+printf("G--- Assoc=%d\n",assocID);
+   const int ok = sctp_getAssocStatus(assocID, &associationParameters);
    SCTPSocketMaster::MasterInstance.unlock();
    return(ok == 0);
 }
 
 
 // ###### Set association parameters ########################################
-bool SCTPSocket::setAssociationParameters(const unsigned int             assocID,
-                                          const SCTP_Association_Status& associationParameters)
+bool SCTPSocket::setAssocStatus(const unsigned int             assocID,
+                                const SCTP_Association_Status& associationParameters)
 {
    SCTPSocketMaster::MasterInstance.lock();
-   const int ok = sctp_setAssocStatus(InstanceName,
+printf("S--- Assoc=%d\n",assocID);
+   const int ok = sctp_setAssocStatus(assocID,
                                       (SCTP_Association_Status*)&associationParameters);
    SCTPSocketMaster::MasterInstance.unlock();
+printf("ok = %d\n",ok);
    return(ok == 0);
 }
 
@@ -1410,15 +1451,15 @@ bool SCTPSocket::setPathParameters(const unsigned int          assocID,
 
 
 // ###### Get default settings ##############################################
-bool SCTPSocket::getAssociationDefaults(const unsigned int          assocID,
-                                        struct AssociationDefaults& defaults)
+bool SCTPSocket::getAssocIODefaults(const unsigned int          assocID,
+                                    struct AssocIODefaults& defaults)
 {
    SCTPSocketMaster::MasterInstance.lock();
    multimap<unsigned int, SCTPAssociation*>::iterator iterator =
       ConnectionlessAssociationList.begin();
    if(iterator != ConnectionlessAssociationList.end()) {
       SCTPAssociation* association = iterator->second;
-      association->getAssociationDefaults(defaults);
+      association->getAssocIODefaults(defaults);
       return(true);
    }
    return(false);
@@ -1426,15 +1467,15 @@ bool SCTPSocket::getAssociationDefaults(const unsigned int          assocID,
 
 
 // ###### Set default settings ##############################################
-bool SCTPSocket::setAssociationDefaults(const unsigned int                assocID,
-                                        const struct AssociationDefaults& defaults)
+bool SCTPSocket::setAssocIODefaults(const unsigned int                assocID,
+                                    const struct AssocIODefaults& defaults)
 {
    SCTPSocketMaster::MasterInstance.lock();
    multimap<unsigned int, SCTPAssociation*>::iterator iterator =
       ConnectionlessAssociationList.begin();
    if(iterator != ConnectionlessAssociationList.end()) {
       SCTPAssociation* association = iterator->second;
-      association->setAssociationDefaults(defaults);
+      association->setAssocIODefaults(defaults);
       return(true);
    }
    return(false);
