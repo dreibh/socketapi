@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.2 2003/06/01 17:40:54 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.3 2003/06/01 22:45:45 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -483,21 +483,24 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
 #endif
    }
 
-   unsigned int  destinationAddresses = 0;
-   unsigned char addressArray[destinationAddresses][SCTP_MAX_IP_LEN];
+   unsigned int destinationAddresses = 0;
    while(destinationAddressList[destinationAddresses] != NULL) {
       destinationAddresses++;
    }
 
-   unsigned int assocID = 0;
+   unsigned int  assocID = 0;
+   unsigned char addressArray[destinationAddresses][SCTP_MAX_IP_LEN];
    if(destinationAddresses > 0) {
       for(unsigned int i = 0;i < destinationAddresses;i++) {
+cout << "Addr" << i << "=" << *(destinationAddressList[i]) << endl;
          snprintf((char*)&addressArray[i], SCTP_MAX_IP_LEN, "%s",
                   destinationAddressList[i]->getAddressString(SocketAddress::PF_HidePort|SocketAddress::PF_Address|SocketAddress::PF_Legacy).getData());
       }
-      assocID = sctp_associate (InstanceName,
+      assocID = sctp_associatex(InstanceName,
                                 (noOfOutStreams < 1) ? 1 : noOfOutStreams,
-                                addressArray[0],
+                                addressArray,
+                                destinationAddresses,
+                                SCTP_MAX_NUM_ADDRESSES,
                                 destinationAddressList[0]->getPort(),
                                 NULL);
    }
@@ -1330,7 +1333,6 @@ bool SCTPSocket::getAssocStatus(const unsigned int       assocID,
                                 SCTP_Association_Status& associationParameters)
 {
    SCTPSocketMaster::MasterInstance.lock();
-printf("G--- Assoc=%d\n",assocID);
    const int ok = sctp_getAssocStatus(assocID, &associationParameters);
    SCTPSocketMaster::MasterInstance.unlock();
    return(ok == 0);
@@ -1342,11 +1344,9 @@ bool SCTPSocket::setAssocStatus(const unsigned int             assocID,
                                 const SCTP_Association_Status& associationParameters)
 {
    SCTPSocketMaster::MasterInstance.lock();
-printf("S--- Assoc=%d\n",assocID);
    const int ok = sctp_setAssocStatus(assocID,
                                       (SCTP_Association_Status*)&associationParameters);
    SCTPSocketMaster::MasterInstance.unlock();
-printf("ok = %d\n",ok);
    return(ok == 0);
 }
 

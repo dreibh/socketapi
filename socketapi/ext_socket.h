@@ -1,5 +1,5 @@
 /*
- *  $Id: ext_socket.h,v 1.3 2003/06/01 17:40:54 dreibh Exp $
+ *  $Id: ext_socket.h,v 1.4 2003/06/01 22:45:45 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -466,6 +466,7 @@ int ext_connectx(int                      sockfd,
                  struct sockaddr_storage* addrs,
                  int                      addrcnt,
                  int                      flags);
+#define sctp_connectx ext_connectx
 
 int sctp_peeloff(int sockfd, sctp_assoc_t* id, struct sockaddr* addr, socklen_t* addrlen);
 

@@ -1,5 +1,5 @@
 /*
- *  $Id: tdsocket.cc,v 1.2 2003/05/15 12:05:09 dreibh Exp $
+ *  $Id: tdsocket.cc,v 1.3 2003/06/01 22:45:45 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -591,6 +591,38 @@ bool Socket::connect(const SocketAddress& address, const card8 trafficClass)
 
    // ====== Connect ========================================================
    int result = ext_connect(SocketDescriptor,(sockaddr*)socketAddress,socketAddressLength);
+   if(result != 0) {
+      LastError = errno;
+      if(LastError != EINPROGRESS) {
+         SendFlow = 0;
+      }
+      return(false);
+   }
+   return(true);
+}
+
+
+// ###### Connect to socket address list ####################################
+bool Socket::connectx(const SocketAddress** addressArray,
+                      const size_t          addresses)
+{
+   // ====== Get address ====================================================
+   sockaddr_storage socketAddressArray[addresses];
+   socklen_t        socketAddressLength[addresses];
+
+   for(cardinal i = 0;i < addresses;i++) {
+      socketAddressLength[i] =
+         addressArray[i]->getSystemAddress((sockaddr*)&socketAddressArray[i],
+                                           sizeof(socketAddressArray[addresses]),
+                                           CommunicationDomain);
+   }
+   Destination = NULL;
+
+   // ====== Connect ========================================================
+   int result = ext_connectx(SocketDescriptor,
+                             (sockaddr_storage*)&socketAddressArray,
+                             addresses,
+                             0);
    if(result != 0) {
       LastError = errno;
       if(LastError != EINPROGRESS) {

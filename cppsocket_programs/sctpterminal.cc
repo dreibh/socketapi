@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpterminal.cc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: sctpterminal.cc,v 1.2 2003/06/01 22:45:45 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -302,9 +302,11 @@ int main(int argc, char** argv)
    cardinal        instreams          = 1;
    cardinal        outstreams         = 1;
    cardinal        localAddresses     = 0;
+   cardinal        remoteAddresses    = 0;
    cardinal        unreliable         = 0;
    SocketAddress** localAddressArray  = SocketAddress::newAddressList(SCTP_MAXADDRESSES);
-   if(localAddressArray == NULL) {
+   SocketAddress** remoteAddressArray = SocketAddress::newAddressList(SCTP_MAXADDRESSES);
+   if((localAddressArray == NULL) || (remoteAddressArray == NULL)) {
       cerr << "ERROR: Out of memory!" << endl;
       exit(1);
    }
@@ -328,28 +330,16 @@ int main(int argc, char** argv)
    // ====== Get arguments ==================================================
    if(argc < 2) {
       cerr << "Usage: " << argv[0] << " "
-           << "[Remote address] {-force-ipv4|-use-ipv6} {-local=address1} ... {-local=addressN} {-in=instreams} {-out=outstreams} {-nocolor} {-color} {-control|-nocontrol} {-notif|-nonotif}"
+           << "[Remote address 1] {{Remote address 2} ...} {-force-ipv4|-use-ipv6} {-local=address1} ... {-local=addressN} {-in=instreams} {-out=outstreams} {-nocolor} {-color} {-control|-nocontrol} {-notif|-nonotif}"
            << endl;
       exit(1);
    }
-   for(unsigned int i = 2;i < (cardinal)argc;i++) {
-      if(!(strcasecmp(argv[i],"-force-ipv4")))    optForceIPv4 = true;
-      else if(!(strcasecmp(argv[i],"-use-ipv6"))) optForceIPv4 = false;
-      else if(!(strncasecmp(argv[i],"-local=",7))) {
-         if(localAddresses < SCTP_MAXADDRESSES) {
-            localAddressArray[localAddresses] =
-               SocketAddress::createSocketAddress(SocketAddress::PF_HidePort,
-                                                  &argv[i][7]);
-            if(localAddressArray[localAddresses] == NULL) {
-               cerr << "ERROR: Argument #" << i << " is an invalid address!" << endl;
-               exit(1);
-            }
-            localAddresses++;
-         }
-         else {
-            cerr << "ERROR: Too many local addresses!" << endl;
-            exit(1);
-         }
+   for(unsigned int i = 1;i < (cardinal)argc;i++) {
+      if(!(strcasecmp(argv[i],"-force-ipv4"))) {
+         optForceIPv4 = true;
+      }
+      else if(!(strcasecmp(argv[i],"-use-ipv6"))) {
+         optForceIPv4 = false;
       }
       else if(!(strncasecmp(argv[i],"-in=",4))) {
          instreams = atol(&argv[i][4]);
@@ -390,17 +380,47 @@ int main(int argc, char** argv)
       else if(!(strcasecmp(argv[i],"-nonotif"))) {
          PrintNotifications = false;
       }
+      else if(!(strncasecmp(argv[i],"-local=",7))) {
+         if(localAddresses < SCTP_MAXADDRESSES) {
+            localAddressArray[localAddresses] =
+               SocketAddress::createSocketAddress(SocketAddress::PF_HidePort,
+                                                  &argv[i][7]);
+            if(localAddressArray[localAddresses] == NULL) {
+               cerr << "ERROR: Argument \"" << argv[i] << "\" specifies an invalid local address!" << endl;
+               exit(1);
+            }
+            localAddresses++;
+         }
+         else {
+            cerr << "ERROR: Too many local addresses!" << endl;
+            exit(1);
+         }
+      }
       else {
-         cerr << "ERROR: Bad parameter " << argv[i] << "!" << endl;
-         exit(1);
+         if(remoteAddresses < SCTP_MAXADDRESSES) {
+            remoteAddressArray[remoteAddresses] =
+               SocketAddress::createSocketAddress(0, argv[i]);
+            if(remoteAddressArray[remoteAddresses] == NULL) {
+               cerr << "ERROR: Argument \"" << argv[i] << "\" is an invalid remote address!" << endl;
+               exit(1);
+            }
+            remoteAddresses++;
+         }
+         else {
+            cerr << "ERROR: Too many remote addresses!" << endl;
+            exit(1);
+         }
       }
    }
    if(optForceIPv4) {
       InternetAddress::UseIPv6 = false;
    }
-   SocketAddress* remoteAddress = SocketAddress::createSocketAddress(0,argv[1]);
-   if(remoteAddress == NULL) {
-      cerr << "ERROR: Bad remote address! Use <address>:<port> format." << endl;
+   if(remoteAddresses < 1) {
+      cerr << "ERROR: No remote addresses given!" << endl;
+      exit(1);
+   }
+   if(remoteAddressArray[0]->getPort() == 0) {
+      cerr << "ERROR: No remote port number is given with first remote address!" << endl;
       exit(1);
    }
    if(localAddresses < 1) {
@@ -429,7 +449,7 @@ int main(int argc, char** argv)
 
 
    // ====== Print information ==============================================
-   cout << "SCTP Terminal - Copyright (C) 2001-2002 Thomas Dreibholz" << endl;
+   cout << "SCTP Terminal - Copyright (C) 2001-2003 Thomas Dreibholz" << endl;
    cout << "--------------------------------------------------------" << endl;
    cout << "Version:               " << __DATE__ << ", " << __TIME__ << endl;
    localAddressArray[0]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_HidePort);
@@ -438,8 +458,11 @@ int main(int argc, char** argv)
       localAddressArray[i]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_HidePort);
       cout << "                       " << *(localAddressArray[i]) << endl;
    }
-   remoteAddress->setPrintFormat(SocketAddress::PF_Address);
-   cout << "Remote Address:        " << *remoteAddress << endl;
+   cout << "Remote Addresses:       " << *(remoteAddressArray[0]) << endl;
+   for(cardinal i = 1;i < remoteAddresses;i++) {
+      remoteAddressArray[i]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_HidePort);
+      cout << "                       " << *(remoteAddressArray[i]) << endl;
+   }
    cout << "Outgoing Streams:      " << outstreams     << endl;
    cout << "Max. Incoming Streams: " << instreams      << endl;
    cout << "Unreliable:            " << unreliable     << endl;
@@ -474,9 +497,10 @@ int main(int argc, char** argv)
 
    cout << "Connecting... ";
    cout.flush();
-   if(clientSocket.connect(*remoteAddress) == false) {
+   if(clientSocket.connectx((const SocketAddress**)remoteAddressArray,
+                            remoteAddresses) == false) {
       cout << "failed!" << endl;
-      cerr << "ERROR: Unable to connect to remote address!" << endl;
+      cerr << "ERROR: Unable to connect to remote address(es)!" << endl;
       exit(1);
    }
    cout << "done. Use Ctrl-D to end transmission." << endl << endl;
@@ -498,8 +522,8 @@ int main(int argc, char** argv)
    Thread::delay(500000);
    copy.stop();
    echo.stop();
-   delete remoteAddress;
    SocketAddress::deleteAddressList(localAddressArray);
+   SocketAddress::deleteAddressList(remoteAddressArray);
    cout << "\x1b[" << getANSIColor(0) << "mTerminated!" << endl;
    return 0;
 }

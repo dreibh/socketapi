@@ -1,5 +1,5 @@
 /*
- *  $Id: tdsocket.h,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: tdsocket.h,v 1.2 2003/06/01 22:45:45 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -237,7 +237,7 @@ class Socket
    bool bind(const SocketAddress& address = InternetAddress());
 
    /**
-     * Bind socket to one or more given addresses. If no addresses are given,
+O     * Bind socket to one or more given addresses. If no addresses are given,
      * INADDR_ANY and an automatically selected port will be used.
      *
      * @param addressArray Array of socket addresses.
@@ -276,6 +276,9 @@ class Socket
      */
    bool connect(const SocketAddress& address, const card8 trafficClass = 0);
 
+   /* ????? */
+   bool connectx(const SocketAddress** addressArray,
+                 const size_t          addresses);
 
    // ====== Error code =====================================================
    /**

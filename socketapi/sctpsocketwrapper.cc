@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.3 2003/06/01 17:40:54 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.4 2003/06/01 22:45:45 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -46,7 +46,7 @@
 // Print note, if no SCTP is available in kernel.
 // #define PRINT_NOSCTP_NOTE
 // #define PRINT_SELECT
-// #define PRINT_RANDOM_PORTSELECTION
+#define PRINT_RANDOM_PORTSELECTION
 
 // Do not receive notifications with recv() and recvfrom(). Note: The user
 // has to decide whether the data is user data or notification!
