@@ -376,3 +376,13 @@ AC_ARG_PROGRAM
 
 dnl add here all your Makefiles. These will be created by configure
 AC_OUTPUT(Makefile socketapi/Makefile cppsocketapi/Makefile socket_programs/Makefile cppsocket_programs/Makefile )
+
+
+echo ""
+echo "The socketapi package has been configured with the following options:"
+echo "   sctplib libraries   : $sctplib_LIBS"
+echo "   socketapi libraries : $socketapi_LIBS"
+echo "   thread libraries    : $thread_LIBS"
+echo "   CFLAGS              : $CFLAGS"
+echo "   CXXFLAGS            : $CXXFLAGS"
+echo "   LDFLAGS             : $LDFLAGS"
