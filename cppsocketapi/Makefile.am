@@ -13,7 +13,7 @@ libcppsctpsocket_la_LDFLAGS = \
    -release $(SOCKETAPI_RELEASE)
 
 
-INCLUDES = -I../sctp -I../socketapi
+INCLUDES = -I../socketapi 
 
 
 noinst_PROGRAMS =
