@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.cc,v 1.5 2003/07/11 09:45:02 dreibh Exp $
+ *  $Id: sctpassociation.cc,v 1.6 2003/07/14 12:41:11 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -243,59 +243,41 @@ int SCTPAssociation::receive(char*           buffer,
                              uint16_t&       ssn,
                              uint32_t&       tsn)
 {
+   // ====== Receive data ===================================================
    unsigned int assocID = AssociationID;
    streamID             = (unsigned short)-1;
-   SCTPNotification notification;
 
-   const int result = Socket->internalReceive(
-                                 InQueue,
-                                 buffer, bufferSize,
-                                 flags,
-                                 assocID, streamID, protoID,
-                                 ssn, tsn,
-                                 notification,
-                                 NotificationFlags);
+   const int result = Socket->internalReceive(InQueue,
+                                              buffer, bufferSize,
+                                              flags,
+                                              assocID, streamID, protoID,
+                                              ssn, tsn,
+                                              NULL,
+                                              NotificationFlags);
    return(result);
 }
 
 
 // ###### Receive ###########################################################
-int SCTPAssociation::receiveFrom(char*             buffer,
-                                 size_t&           bufferSize,
-                                 int&              flags,
-                                 unsigned short&   streamID,
-                                 unsigned int&     protoID,
-                                 uint16_t&         ssn,
-                                 uint32_t&         tsn,
-                                 SocketAddress***  addressArray,
-                                 SCTPNotification& notification)
+int SCTPAssociation::receiveFrom(char*           buffer,
+                                 size_t&         bufferSize,
+                                 int&            flags,
+                                 unsigned short& streamID,
+                                 unsigned int&   protoID,
+                                 uint16_t&       ssn,
+                                 uint32_t&       tsn,
+                                 SocketAddress** address)
 {
    // ====== Receive data ===================================================
    unsigned int assocID = AssociationID;
    streamID             = (unsigned short)-1;
-   const int result = Socket->internalReceive(
-                         InQueue,
-                         buffer, bufferSize,
-                         flags,
-                         assocID, streamID, protoID,
-                         ssn, tsn,
-                         notification,
-                         NotificationFlags);
-
-   // ====== Extract sender's addresses =====================================
-   if((bufferSize > 0) && (addressArray != NULL)) {
-      unsigned int i;
-      *addressArray = SocketAddress::newAddressList(notification.RemoteAddresses);
-      if(*addressArray != NULL) {
-         for(i = 0;i < notification.RemoteAddresses;i++) {
-            (*addressArray)[i] = SocketAddress::createSocketAddress(
-                                    0,
-                                    (char*)&notification.RemoteAddress[i],
-                                    notification.RemotePort);
-         }
-      }
-   }
-
+   const int result = Socket->internalReceive(InQueue,
+                                              buffer, bufferSize,
+                                              flags,
+                                              assocID, streamID, protoID,
+                                              ssn, tsn,
+                                              address,
+                                              NotificationFlags);
    return(result);
 }
 

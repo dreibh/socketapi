@@ -1,5 +1,5 @@
 /*
- *  $Id: tdsystem.h,v 1.2 2003/06/26 10:10:10 dreibh Exp $
+ *  $Id: tdsystem.h,v 1.3 2003/07/14 12:41:11 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -130,19 +130,12 @@ using namespace std;
 #if (SYSTEM == OS_Linux)
  #include <endian.h>
  #include <stdint.h>
- #define CPU_BYTEORDER __BYTE_ORDER
 #elif (SYSTEM == OS_FreeBSD)
  #include <machine/endian.h>
  #include <sys/inttypes.h>
- #define CPU_BYTEORDER BYTE_ORDER
 #elif (SYSTEM == OS_Darwin)
  #include <machine/endian.h>
  #include <stdint.h>
- #define CPU_BYTEORDER BYTE_ORDER
-#endif
-
-#if ((CPU_BYTEORDER != BIG_ENDIAN) && (CPU_BYTEORDER != LITTLE_ENDIAN))
- #error "CPU_BYTEORDER is not set correctly! Check tdsystem.h!"
 #endif
 
 

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.h,v 1.4 2003/07/11 09:45:02 dreibh Exp $
+ *  $Id: sctpassociation.h,v 1.5 2003/07/14 12:41:11 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -162,19 +162,17 @@ class SCTPAssociation
      * @param protoID Variable to store protocol ID to.
      * @param ssn Variable to store SSN to.
      * @param tsn Variable to store TSN to.
-     * @param addressArray Reference to store NULL-terminated array of peer addresses. The addresses are allocated automatically and have to be freed using deleteAddressList(). Set NULL to skip creation of the address array.
-     * @param status Variable to store SCTPNotification data to.
+     * @param address Reference to store the destination addresses to. The address is allocated automatically and has to be freed using delete operator. Set NULL to skip creation of the address.
      * @return error code (0 for success).
      */
-   int receiveFrom(char*             buffer,
-                   size_t&           bufferSize,
-                   int&              flags,
-                   unsigned short&   streamID,
-                   unsigned int&     protoID,
-                   uint16_t&         ssn,
-                   uint32_t&         tsn,
-                   SocketAddress***  addressArray,
-                   SCTPNotification& notification);
+   int receiveFrom(char*           buffer,
+                   size_t&         bufferSize,
+                   int&            flags,
+                   unsigned short& streamID,
+                   unsigned int&   protoID,
+                   uint16_t&       ssn,
+                   uint32_t&       tsn,
+                   SocketAddress** address);
 
 
    /**

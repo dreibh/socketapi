@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.14 2003/07/11 15:25:50 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.15 2003/07/14 12:41:11 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -1892,14 +1892,13 @@ static int ext_recvmsg_singlebuffer(int sockfd, struct msghdr* msg, int flags,
 {
    ExtSocketDescriptor* tdSocket = ExtSocketDescriptorMaster::getSocket(sockfd);
    if(tdSocket != NULL) {
-      unsigned int     assocID            = 0;
-      unsigned short   streamID           = 0;
-      unsigned int     protoID            = 0;
-      uint16_t         ssn                = 0;
-      uint32_t         tsn                = 0;
-      unsigned int     notificationFlags  = 0;
-      SocketAddress**  remoteAddressArray = NULL;
-      SCTPNotification notification;
+      unsigned int   assocID           = 0;
+      unsigned short streamID          = 0;
+      unsigned int   protoID           = 0;
+      uint16_t       ssn               = 0;
+      uint32_t       tsn               = 0;
+      unsigned int   notificationFlags = 0;
+      SocketAddress* remoteAddress     = NULL;
       int result = -EOPNOTSUPP;
       switch(tdSocket->Type) {
          case ExtSocketDescriptor::ESDT_SCTP:
@@ -1937,8 +1936,9 @@ static int ext_recvmsg_singlebuffer(int sockfd, struct msghdr* msg, int flags,
                else if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
                   const size_t oldSize = msg->msg_iov->iov_len;
                   do {
-                     if(remoteAddressArray != NULL) {
-                        SocketAddress::deleteAddressList(remoteAddressArray);
+                     if(remoteAddress != NULL) {
+                        delete remoteAddress;
+                        remoteAddress = NULL;
                      }
                      msg->msg_iov->iov_len = oldSize;
                      result = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->receiveFrom(
@@ -1947,8 +1947,7 @@ static int ext_recvmsg_singlebuffer(int sockfd, struct msghdr* msg, int flags,
                                  msg->msg_flags,
                                  assocID, streamID, protoID,
                                  ssn, tsn,
-                                 &remoteAddressArray,
-                                 notification);
+                                 &remoteAddress);
                   } while((result == -EAGAIN) && !(msg->msg_flags & MSG_DONTWAIT));
                   notificationFlags = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->getNotificationFlags();
                }
@@ -1972,13 +1971,12 @@ static int ext_recvmsg_singlebuffer(int sockfd, struct msghdr* msg, int flags,
       }
 
       if(result >= 0) {
-         if((msg->msg_name != NULL)      &&
-            (remoteAddressArray != NULL) &&
-            (remoteAddressArray[0] != NULL)) {
-            msg->msg_namelen = remoteAddressArray[0]->getSystemAddress(
-               (sockaddr*)msg->msg_name,
-               (socklen_t)msg->msg_namelen,
-               tdSocket->Socket.SCTPSocketDesc.Domain);
+         if((msg->msg_name != NULL) &&
+            (remoteAddress != NULL)) {
+            msg->msg_namelen = remoteAddress->getSystemAddress(
+                                  (sockaddr*)msg->msg_name,
+                                  (socklen_t)msg->msg_namelen,
+                                  tdSocket->Socket.SCTPSocketDesc.Domain);
          }
          else {
             msg->msg_namelen = 0;
@@ -2014,8 +2012,9 @@ static int ext_recvmsg_singlebuffer(int sockfd, struct msghdr* msg, int flags,
          msg->msg_control    = NULL;
       }
 
-      SocketAddress::deleteAddressList(remoteAddressArray);
-
+      if(remoteAddress != NULL) {
+         delete remoteAddress;
+      }
       errno_return(result);
    }
    errno_return(-EBADF);

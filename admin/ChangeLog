@@ -1,748 +1,779 @@
-2000-11-30  David Faure  <faure@kde.org>
+2002-01-10  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: Added kde_moduledir which points to $prefix/lib/kde2/
+	* config.guess: Update Per Bothner's mail address.
 
-2000-07-24  Alex Zepeda  <jazepeda@pacbell.net>
+2002-01-02  Douglas B. Rupp  <rupp@gnat.com>
 
-	* acinclude.m4.in: Remove the test for malloc.h
-
-2000-04-05  Michael Matz  <matz@ifh.de>
-
-        * config.pl : added kludge for compiling regexp's even if
-	perl < 5.005 is installed
-	* conf.change.pl : added support for autoconf 2.14.1
-
-2000-03-27  David Faure  <faure@kde.org>
-
-	* acinclude.m4.in, Makefile.common: changed inst-apps semantics
-	If present, only the subdirs it lists will be configured and compiled.
-	If absent, then subdirs is used (and inst-apps isn't generated anymore)
-
-2000-03-22  David Faure  <faure@kde.org>
-
-	* am_edit: Added support for KDE_ICON = AUTO
-
-2000-03-18  David Faure  <faure@kde.org>
-
-	* Makefile.common: Rewrote the list-of-Makefiles generation to make it
-	simpler and nicer, using create_makefiles' way of doing it.
-	Added support for COMPILE_LAST and COMPILE_FIRST in toplevel Makefile.am
-
-2000-01-05  David Faure  <faure@kde.org>
-
-	* Makefile.common: hacked around autoconf bug (setting INSTALL to ".."
-	when calling a subconfigure and INSTALL is already set).
-
-1999-12-15  Waldo Bastian  <bastian@kde.org>
-
-        * acinclude.m4.in: Test whether Qt compiles AND LINKS without flags.
-
-1999-06-24  Stephan Kulow  <coolo@kde.org>
-
-	* am_edit: generate correct Makefile entries for kde-i18n toplevel directories
-	* am_edit:
-
-1999-06-14  Stephan Kulow  <coolo@kde.org>
-
-	* am_edit: remove idl generated files on make clean
-
-1999-06-09  Stephan Kulow  <coolo@kde.org>
-
-	* am_edit: skipping programs with variables in sources for final
-
-1999-06-07  Stephan Kulow  <coolo@kde.org>
-
-	* am_edit: added support for idl files
-
-1999-06-02  Stephan Kulow  <coolo@kde.org>
-
-	* Makefile.common: preserve comments in .pot files to make it
-		possible for programmers and translators to comment them
-
-1999-06-02  Simon Hausmann <hausmann@kde.org>
-
-        * acinclude.m4.in: added kde_servicetypesdir
-
-1999-06-02  David Faure  <faure@kde.org>
-
-	* acinclude.m4.in: removed LIB_KFM and LIB_KDEUTIL aliases
-
-1999-05-28  Simon Hausmann <hausmann@kde.org>
-
-	* acinclude.m4.in: added kde_servicesdir
-
-1999-05-27  Stephan Kulow  <coolo@kde.org>
-
-	* am_edit: lots of changes for better support of --enable-final
-
-1999-05-22  Stephan Kulow  <coolo@kde.org>
-
-	* acinclude.m4.in: added support for --with-dmalloc
-
-1999-05-19  Stephan Kulow  <coolo@kde.org>
-
-	* acinclude.m4.in: added support for --enable-final
-
-	* am_edit: added support for --enable-final
+	* config.sub (alpha64*): New basic_machine.
 	
-1999-05-06  Stephan Kulow  <coolo@kde.org>
+2002-01-02  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: change the meaning of --disable-debug
+	From Sigbjorn Skjaeret <cisc@c2i.net>.
+	* config.guess: Add detection for MorphOS.
+	* config.sub: Handle morphos*.
 
-1999-05-04  Helge Deller <deller@gmx.de>
+2002-01-02  H.J. Lu  <hjl@gnu.org>
 
-	* acinclude.m4.in: the test for the X-includes/directories failed,
-	when compile & link work without special directories (as on HP-UX).
+	* config.guess (mips:Linux:*:*): Undef CPU, mips and mipsel first.
 
-1999-04-20  Stephan Kulow  <coolo@kde.org>
+2001-12-13  Douglas B. Rupp  <rupp@gnat.com>
 
-	* am_edit: adding DESTDIR replacement for rm and uninstall-local
-	too. Seems very useless, but makes testing for uninstall easier
+	* config.guess: Recognize x86 Interix version 3.
 
-1999-04-01  David Faure  <faure@kde.org>
+2001-12-12  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: Added -lkfile to $(LIB_KIO)
+	* config.guess (i*86:Linux:*:*): Minor simplification: have the
+	preprocessor emit shell assignments and just eval the output.
 
-1999-03-30  David Faure  <faure@kde.org>
+2001-12-12  H.J. Lu  <hjl@gnu.org>
 
-	* acinclude.m4.in: Added AC_CHECK_KDEMAXPATHLEN, which defines KDEMAXPATHLEN.
+	* config.guess (mips:Linux:*:*): Re-work.
 
-1999-03-29  David Faure  <faure@kde.org>
+2001-12-12  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: added LIB_X11 to XPMLIB and GLLIB, because
-	on SCO, they need it _after_ themselves.
+	* config.guess (i*86:Linux:*:*): Speed up detection of x86 Linux
+	systems by using just the C preprocessor rather than assembling
+	and linking a final executable.
 
-1999-03-28  David Faure  <faure@kde.org>
+2001-12-12  Jason Thorpe  <thorpej@wasabisystems.com>
 
-	* acinclude.m4.in: added LIB_KFM to LIB_KAB alias
+	* config.guess: Simplify assignment of machine for NetBSD targets,
+	and make it match the convention that NetBSD uses.  List all
+	NetBSD architectures that require "elf" at the end of the OS name.
 
-1999-03-26  David Faure  <faure@kde.org>
+2001-12-10  Lars Brinkhoff  <lars@nocrew.org>
 
-	* acinclude.m4.in: made LIB_KFILE use LIB_KIO instead of LIB_KFM
-	added LIB_KFORMULA
+	* config.sub: Recognize a few PDP-10 aliases.
 
-1999-03-20  Stephan Kulow  <coolo@kde.org>
+2001-12-03  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: check for libXext - for Russel :)
+	* config.sub: Recognise the Nucleus family of operating systems.
+	From <Takahiko_Kawasaki@cii.csk.co.jp>.
 
-1999-03-16  Stephan Kulow  <coolo@kde.org>
+2001-12-03  Bob Wilson  <bwilson@tensilica.com>
 
-	* acinclud3.m4.in: extend the MICO test with a list of possible
-	places where to find CORBA.h
+	* config.sub: Add support for Xtensa targets. 
 
-1999-03-15  Stephan Kulow  <coolo@kde.org>
+2001-11-30  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: move $QTINC and $QTLIB in search path
+	* config.sub: Recognise NEC v850e. From Miles Bader
+	<miles@lsi.nec.co.jp>.
 
-1999-03-14  Stephan Kulow  <coolo@kde.org>
+2001-11-26  Ben Elliston  <bje@redhat.com>
 
-	* am_edit: install-root is obsolute. Use DESTDIR always
+	* config.guess (nsr-tandem-nsk): Detect all known NSR processor
+	types. Contributed by Kjetil Barvik <kjetil.barvik@bbs.no>.
 
-1999-03-03  Stephan Kulow  <coolo@kde.org>
+2001-11-16  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: fixing a bug, that $QTDIR was taken before --with-qt*
-	* acinclude.m4.in: added KDE_USE_QT, that you can choose if to
-	use QT 2.0 or KDE 1.0
-	
-	* Makefile.common: added target package-merge
+	* config.sub: Accept "-atheos*" as a valid OS.
+	From Taco Witte <T.C.Witte@phys.uu.nl>.
 
-	* am_edit: many fixes to the POFILES handeling of am_edit
+2001-11-08  Ben Elliston  <bje@redhat.com>
 
-1999-03-02  Stephan Kulow  <coolo@kde.org>
+	* config.guess: Handle 3487/3488 machines for NCR SysV UNIX.
+	Contributed by Melvin M. Bagaforo <mbagaforo@makro.com.ph>. 
 
-	* acinclude.m4.in: first look at libjpeg6b (from kdesupport) then
-	for libjpeg
+2001-11-07  Adrian von Bidder  <avbidder@acter.ch>
 
-	* config.*, libtool.*: update to the latest FSF tools
+	* config.sub: Accept "-uclinux*" as a valid OS.
 
-1999-02-23  Stephan Kulow  <coolo@kde.org>
+2001-11-07  D.J. Barrow  <djbarrow@de.ibm.com>
 
-	* acinclude.m4.in: error when Sparc CC is used. Better use it in
-	configure and tell him the story then letting him find it while
-	compiling
+        * config.sub: Added S/390 31 and 64 bit target. 
 
-	* acinclude.m4.in: adding KDE_CHECK_EXTRA_LIBS to all possible tests,
-	so that --with-extra-includes is used when needed.
+2001-11-06  John Marshall  <jmarshall@acm.org>
 
-	* acinclude.m4.in: configure looks for giflib30, so it should say so
+	* config.sub: Accept "-palmos*" as a valid OS.
 
-	* acinclude.m4.in: don't overwrite x include parameters. Patch by
-	Ari Lemmke <ari.lemmke@regex.fi> (bug report 741)
-	
-1999-02-20  Stephan Kulow <coolo@kde.org>
+2001-11-07  Geoffrey Keating  <geoffk@redhat.com>
 
-	* acinclude.m4.in: fixing KDE_CHECK_PATHS for rechecking. In case
-	of defaults (kdelibs) configure didn't cache the results
+	* config.sub: Change 'stormy16' to 'xstormy16' in the two places
+	it appears.
 
-1999-02-18  David Faure  <faure@kde.org>
+2001-10-05  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: added AC_CHECK_S_ISSOCK, to fix #706.
+	* config.guess: Add "SKA40" as a machine type for NCR SysV UNIX.
+	From Rudi Heitbaum <rheitbaum@tattersalls.com.au>.
 
-1999-02-17  David Faure  <faure@kde.org>
+2001-10-05  Rodney Brown  <rbrown64@csc.com.au> 
 
-	* acinclude.m4.in: added AC_CHECK_RANDOM, just like
-	AC_CHECK_USLEEP, to enable the fake if necessary.
+	* config.guess (9000/[34678]??:HP-UX:*:*): Unconditionally try
+	/usr/bin/getconf which is available on HP-UX 10.20. Reindent.
 
-1999-02-13  Kurt Granroth <granroth@kde.org>
+2001-10-04  Ben Elliston  <bje@redhat.com>
 
-        * acinclude.m4.in: look for QT-2.0
+	* config.sub: Handle viac3 as an i586-class CPU.
 
-1999-02-05  Stephan Kulow  <coolo@kde.org>
+	* config.sub: Handle simso-wrs (Wind River's VxWorks Solaris
+	simulator target). From dpovey@dstc.qut.edu.au.
 
-	* acinclude.m4.in: in macro KDE_FIND_PATH treat user given dirs
-	and $PATH dirs the same. Added seperate test for to find binary
-	($5) to replace findperl
+2001-09-14  H.J. Lu  <hjl@gnu.org>
 
-1999-01-28  Stephan Kulow  <coolo@kde.org>
+	* config.sub: Support avr-vendor-*.
 
-	* automoc: added patch by jbb to be a little bit more precise about
-	the number of sourcefiles that include the moc file if it's != 1.
-	Besides that automoc will fail with exit code, so the Makefile.cvs
-	process does stop in case a problem accoured.
+2001-09-13  Ben Elliston  <bje@redhat.com>
 
-	* automoc: don't hardcode header suffix, but allow *.h, *.hh and *.H
-	
-1999-01-27  Stephan Kulow  <coolo@kde.org>
+	* config.guess (*-*-openbsd): Reorganise and clean up.
+	Contributed by brad@openbsd.org.
 
-	* acinclude.m4.in: try qobjcoll.h and qapplication.h before saying
-	OK to qt headers. (I could kill SuSE for splitting into qt-dev
-	and qt-compat)
+2001-09-12  Ben Elliston  <bje@redhat.com>
 
-1991-01-23  Stephan Kulow  <coolo@kde.org>
+	* config.guess (sparc*-*-netbsd): Properly match 32-bit NetBSD/sparc64
+	as sparc-unknown-netbsd. From Matthew Green <mrg@eterna.com.au>.
 
-	* automoc: added fixes by JB <jb.nz@writeme.com>
+2001-09-07  Ben Elliston  <bje@redhat.com>
 
-1999-01-21  Stephan Kulow  <coolo@kde.org>
+	* config.sub: Add mipseb-* alias (whoops).
 
-	* automoc: added --help and --path (for use in dist-hook)
+2001-09-04  Ben Elliston  <bje@redhat.com>
 
-1999-01-20  Alex Zepeda  <garbanzo@hooked.net>
-	
-	* ltconfig: added entries for FreeBSD 4.x
+	* config.sub: Add mipseb alias.
 
-1999-01-19  Stephan Kulow  <coolo@kde.org>
+2001-09-04  Eric Christopher  <echristo@redhat.com>
+	    Jason Eckhardt  <jle@redhat.com> 
 
-	* automoc: added a distclean-metasources target which deletes all
-	moc files and let distclean depend on it
+	* config.sub: Add support for mipsisa32.
 
-1999-01-18  Stephan Kulow  <coolo@kde.org>
+2001-09-04  Ben Elliston  <bje@redhat.com>
 
-        * automoc: several fixes (ignore comment lines + join lines
-         with \ )
-	
-	* automoc: support META_INCLUDES in case the header files are
-	not in the same dir as the sources.
+	* config.guess: Move eval $set_cc_for_build in most cases, to
+	prevent this script fragment from cloberring a previously
+	constructed C program in $dummy.c.
 
-1999-01-17  Stephan Kulow  <coolo@kde.org>
+2001-08-23  Ben Elliston  <bje@redhat.com>
 
-	* automoc: several fixes.
+	* config.guess: Detect AtheOS on x86 systems.
+	Based on info provided by Taco Witte <tcwitte@wish.net>.
 
-1999-01-16  Stephan Kulow  <coolo@kde.org>
+2001-08-23  Geoffrey Keating  <geoffk@redhat.com>
 
-	* automoc: added support for included MOC files.
+	* config.sub: Add stormy16-elf.
 
-	* acinclude.m4.in: use srcdir for the subdirs stuff as well
+2001-08-21  matthew green  <mrg@eterna.com.au>
 
-	* automoc: added better command line parsing and some preparation
-	for handling "normal" moc files
+	* config.guess (sparc*:NetBSD:*): Use $MACHINE_ARCH, not $MACHINE.
 
-	* acinclude.m4.in: added aliases for libkio and libkdeutil
+2001-08-13  Ben Elliston  <bje@redhat.com>
 
-1999-01-15  Harri Porten  <porten@kde.org>
+	* config.sub: Handle complete system name for elxsi.
+	From Zack Weinberg <zackw@panix.com>.
 
-	* automoc: Carved in stone syntax for Makefile.in:
-	{program}_METASOURCES = USE_AUTOMOC [{suffix}]
+2001-08-09  Ben Elliston  <bje@redhat.com>
 
-1999-01-15  Stephan Kulow  <coolo@kde.org>
+	* config.guess: Detect Alpha ev68 on OSF/1 and Linux.
+	From Ken Whaley <ken@believe.com>.
+ 
+2001-08-04  Darrell Hamilton  <Darrell_Hamilton@labcorp.com>
 
-	* Makefile.common: set top_srcdir to .
+	* config.guess: Unisys places the host id in ${UNAME_SYSTEM}
+	which is too unique to flag this system.  Detect it with *
+	instead.
 
-1999-01-14  Stephan Kulow  <coolo@kde.org>
+2001-08-02  Alan Modra  <amodra@bigpond.net.au>
 
-	* acinclude.m4.in: don't use config.h.bot any longer
+	* config.sub: Sort basic cpu patterns.  Combine hppa patterns.
 
-1999-01-08  Stephan Kulow  <coolo@kde.org>
+2001-08-01  Alan Modra  <amodra@bigpond.net.au>
 
-	* acinclude.m4.in: added KDE_CHECK_NEWLIBS
+	* config.sub: Recognise powerpc64, powerpc64le, ppc64 variations.
 
-	* acinclude.m4.in: test for Qt even if both --with-qt-headers and
-	--with-qt-libraries are given. They may be wrong.
-	
-1999-01-06  Stephan Kulow  <coolo@kde.org>
+2001-07-31  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: change the MOC test so it can be used for other
-	tools as well
+	* config.guess: Detect Stratus VOS operating system.
+	* config.sub: Handle aliases for such.
 
-1998-12-28  Stephan Kulow  <coolo@kde.org>
+2001-07-30  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: look for QT-1.42 since kpanel needs it
+	* config.guess: Detect STOP operating system on x86 CPUs.
+	From Hans Edwards <Hans.Edwards@getronicsgov.com>.
 
-1998-12-27  Stephan Kulow  <coolo@kde.org>
+2001-07-27  Niibe Yutaka  <gniibe@m17n.org>
+ 
+        * config.sub: Recognize sh3eb and sh4eb (big endian) aliases.
 
-	* acinclude.m4.in: added /usr/lib for libpython test
-	
-	* acinclude.m4.in: take my email address out of it and added a
-	reference to www.kde.org/faq
+2001-07-19  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: use Qt >= 1.4
+	* config.guess: Detect Linux on the PPC64 architecture.
 
-	* acinclude.m4.in: added KDE_CHECK_NAMESPACES
-	
-1998-12-18  Stephan Kulow  <coolo@kde.org>
+2001-07-12  Keith Thompson  <kst@sdsc.edu>
 
-	* acinclude.m4.in: test for directories to exist before saying yes
-	to compilation :)
+	* config.guess: Strip trailing sub-version number from
+	$UNAME_RELEASE on Cray YMP or Cray [A-Z]90 models.
 
-1998-12-14  Stephan Kulow  <coolo@kde.org>
+2001-07-09  Mark Klein  <mklein@dis.com>
 
-	* acinclude.m4.in: added CPLUSPLUS for the kimgio test. It's
-	only important for shaman right now, but at least there it is :)
+	* config.guess: Update MPE/iX to handle A and N class HPe3000.
 
-1998-12-12  Stephan Kulow  <coolo@kde.org>
+2001-07-02  Graham Stott  <grahams@redhat.com>
+ 
+	* config.sub (basic_machine): Fix typo for mips64vr5000el.
 
-	* Makefile.cvs: added common Makefile.cvs
+2001-06-29  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: Thomas.Schwarz@pro-sieben.de reported a very ugly
-	bug in AC_PROG_CXXCPP, so I added my own version
-	
-	* acinclude.m4.in: added KDE_CREATE_SUBDIRS_LIST to simplify
-	most toplevel configures
+	* config.guess: Remove stale libc1 tests on PowerPC Linux.
 
-1998-12-11  Stephan Kulow  <coolo@kde.org>
+2001-06-29  John Wolfe  <jlw@sco.com>
 
-	* acinclude.m4.in: added call to AC_PROG_CXXCPP. Not really sure why
-	it never caused problems
+	* config.guess: Correct UnixWare 7 and Open UNIX 8.0 change;
+	test for i586 must be a string that ends with "Pentium".
 
-	* acinclude.m4.in: moved LIBTIFF alias
+2001-06-28  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: only test for the existance of libkimgio if the
-	user wants to. For 99% of the applications it doesn't matter if
-	configure can find libkimgio :)
-	
-1998-12-10  Stephan Kulow  <coolo@kde.org>
+	* config.guess: On Alpha Linux, use /proc/cpuinfo to determine
+	the CPU model, rather than assembling a small test program.
 
-	* acinclude.m4.in: some changes to the python check to handle $LIBDL
+2001-06-27  Ben Elliston  <bje@redhat.com>
 
-1998-12-09  Stephan Kulow  <coolo@kde.org>
+	* config.guess: Do not unconditionally run the script fragment
+	to set $CC_FOR_BUILD. Put the script in the shell variable
+	$set_cc_for_build and only evaluate it before $CC_FOR_BUILD is
+	referenced. (Poor man's function inlining!)
 
-	* acinclude.m4.in: make Alex's tiff test a real one
-	
-	* acinclude.m4.in: fix the LIB_TIFF alias to really expand
+	In future, the goal will be to reduce the dependence on a C
+	compiler to detect system types by utilising other means.
 
-1998-12-08  Alex Zepeda  <garbanzo@hooked.net>
+2001-06-26  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: Fix tiff test to use libtiff34 if it exists.
-	This is what the FreeBSD port installs to for whatever reason.
+	* config.guess: On MIPS Linux, use /proc/cpuinfo to determine
+	the endian mode of the CPU, rather than compiling and running
+	a small C program.
 
-	* acinclude.m4.in: s/kde/KDE/ (at least in some of the
-	descriptions, obviously no variable names were touched.
+2001-06-12  John Wolfe  <jlw@sco.com>
 
-1998-12-08  Stephan Kulow  <coolo@kde.org>
+	* config.guess: Standardize triplet for UnixWare 7 and Open
+	UNIX 8.0, improve processor detection and maintain "sysv5"
+	prefix on third segment.
 
-	* acinclude.m4.in: moved the LIB_QT alias to the Qt check
-	
-	* acinclude.m4.in: unset KDEDIR before running conftest
-	
-	* acinclude.m4.in: fixed mean typo
-	
-	* acinclude.m4.in: added the copyright header for the gettext
-	tests, so that people know we're legal ;)
+2001-06-08  Christopher Faylor  <cgf@redhat.com>
 
-	* acinclude.m4.in: set language to C++ before testing QIMGIO	
+	* config.sub: Add support for Sun Chorus.
 
-1998-12-07  Alex Zepeda  <garbanzo@hooked.net>
+2001-06-05  Tomislav Greguric  <greguric@stud.uni-frankfurt.de>
 
-	* acinclude.m4.in: Fix PNG test to use correct ANSI C code, and
-	not trip up gcc.
+	* config.guess: Add 2001 to copyright notice issued for -v.
 
-1998-12-07  Stephan Kulow  <coolo@kde.org>
+2001-06-01  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: don't hardcode -ldl
-	
-	* acinclude.m4.in: move the LIB_X11 alias to the X test to make it
-	useful for kdesupport as well
-	
-	* acinclude.m4.in: give the word CHECK_KIMGIO a meaning in really
-	checking for it
+	* config.guess (i*86:Linux:*:*): Examine the list of supported
+	targets, not the list of supported emulations when capturing
+	the output of "ld --help".  This causes problems on systems
+	where GNU ld is built with support for all targets. Adjust
+	cases in the switch accordingly.
 
-	* acinclude.m4.in: simple fix to prevent kimgio test from compiling
-	KDE application in kdelibs
+	* config.guess: Other small Linux cleanups. Remove unnecessary
+	logic for setting $VENDOR, since UNAME_MACHINE will always be
+	i*86 in this case.
 
-1998-12-05  Stephan Kulow  <coolo@kde.org>
+2001-05-30  Mo DeJong  <mdejong@redhat.com>
 
-	* acinclude.m4.in: let KDE_CHECK_KIMGIO depend on AC_PATH_KDE,
-	otherwise most tests fail. It didn't mean anything to 90% of the
-	packages since they test for KDE before kimgio, but for shaman
-	it does
+	* config.sub: Handle windows32 and runtimes.
 
-	* ltconfig: the real fix for the Solaris && gcc problem.
-	Thanks Kurt for reporting it and Alexandre for fixing it :)
+2001-05-24  Ben Elliston  <bje@redhat.com>
 
-1998-12-04  Stephan Kulow  <coolo@kde.org>
+	* config.sub: Remove duplicate z8k entry.
 
-	* libtool.*: update again
+2001-05-11  Yaegashi Takeshi  <t@keshi.org>
 
-	* acinclude.m4.in: changed the function to test for libnsl to
-	inet_ntoa since UnixWare 7's version did not have gethostbyname,
-	but needs libnsl
+	* config.sub: Handle sh[34]-* and sh[34]eb-*.
 
-1998-12-02  Stephan Kulow  <coolo@kde.org>
+2001-05-09  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: fixed the MOC test (again) to use the PATH variable
-	correctly (with the correct seperator)
+	* config.sub: Handle z8k-coff.
+	From Christian Groessler <cpg@aladdin.de>.
 
-	* config.guess: update from the soon to be released autoconf-2.13
+2001-04-20  Ben Elliston  <bje@redhat.com>
 
-1998-12-01  Stephan Kulow  <coolo@kde.org>
+	* config.sub: Handle sparcv9b.
+	From Dave Miller <davem@redhat.com>.
 
-	* acinclude.m4.in: fixes for the MOC test. Use PATH now when found
+	* config.guess: Detect PowerMAX OS on PowerPC.
 
-1998-11-30  Stephan Kulow  <coolo@kde.org>
+2001-04-20  Tyson Dowd  <trd@cs.mu.oz.au>
+	    Fergus Henderson  <fjh@cs.mu.oz.au>
 
-	* acinclude.m4.in: extended the MOC test. It checks now for the
-	first line of the output of "moc --help" and looks for Qt in it.
+	* config.guess: Replace i?86 with i*86 to match newer Pentiums.
+	* config.sub: Likewise.
 
-1998-11-27  Stephan Kulow  <coolo@kde.org>
+2001-03-30  Peter Buckingham  <pbuckingham@lnxw.com>
 
-	* ltconfig: another libtool update. Fixes an ugly bug on Solaris,
-	when GNU ld is in path before Solaris ld, but gcc uses the later
+	* config.guess: Update LynxOS version numbers.
 
-1998-11-26  Stephan Kulow  <coolo@kde.org>
+2001-03-30  Alexandre Oliva  <aoliva@redhat.com>
 
-	* acinclude.m4.in: made the Qt test more advance to check for qt
-	1.41 - I still need to make it better, but there shouldn't be too
-	many qt releases in a row, would there? ;)
+	* config.sub: Make sure to match an already-canonicalized
+	machine name (eg. mn10300-unknown-elf).
 
-	* ltconfig: libtool update with better BSD/OS support
+2001-03-19  Philip Blundell  <philb@gnu.org>
 
-1998-11-22  Stephan Kulow  <coolo@kde.org>
+	* config.sub: Allow tic80 as machine type.  Allow company name for
+	h8500 and pj targets; add `unknown' component when canonicalising
+	h8500-*, pj-* and pjl-*.
 
-	* ltconfig: cool - libtool uses g++ now to link libraries on Solaris.
-	This means, static objects become usuable on that plattforms (some
-	others as well).
+2001-03-16  Ben Elliston  <bje@redhat.com>
 
-1998-11-20  Stephan Kulow  <coolo@kde.org>
+	* config.guess: Detect Linux on SPARC64.
 
-	* ltmain.sh: updated libtool from their CVS - fixes bugs we haven't
-	found and adds some more features, that we do not need ;-)
+2001-03-14  Ben Elliston  <bje@redhat.com>
 
-1998-11-19  David Faure  <faure@kde.org>
+	* config.guess: Detect ELF-based m68k Linux systems. Reported by
+	Michael Fedrowitz <michael.fedrowitz@informatik.uni-ulm.de>.
 
-	* acinclude.m4.in: added AC_CHECK_UTMP_FILE, taken from kdebase
+2001-03-09  H.J. Lu  <hjl@gnu.org> 
 
-1998-11-16  Harri Porten  <porten@kde.org>
+	* config.sub: Recognize s390/s390x as valid $basic_machine.
 
-	* automoc: take care of "ar" object files, too.
+2001-03-05  Pavel Roskin  <proski@gnu.org>
 
-1998-11-16  Stephan Kulow  <coolo@kde.org>
+	* config.guess: Never use `rm' without `-f' since it may be
+	interactive.
 
-	* libtool.m4.in: revised my --silent patch. The solution
-	Alexandre suggested is much better.
+2001-02-24  Ben Elliston  <bje@redhat.com>
 
-1998-11-15  Stephan Kulow  <coolo@kde.org>
+	* config.guess: Match Linux x86 systems explicitly.  Allow unknown
+	architectures to fall through to the default case.
 
-	* ltconfig.in: done some tweakings to support -export-dynamic
-	with egcs
+2001-02-23  Ben Elliston  <bje@redhat.com>
 
-	* config.sub: wow - BeOS support :)
+	* config.guess: More Linux cleanup. Match more in the top-level
+	case statement and less by groking the output of ld.
 
-1998-11-14  Stephan Kulow  <coolo@kde.org>
+2001-02-16  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: don't use rpath for test program, if rpath is
-	disabled for applications
+	* config.sub: Recognise [cjt]90-*. From Kevin Ryde.
 
-	* ltconfig: patched libtool to make it silent without making
-	ltconfig silent
+2001-02-13  David Edelsohn  <edelsohn@gnu.org>
 
-	* acinclude.m4.in: make libtool silent again
+	* config.guess (ia64:AIX): New case.
+	(*:AIX): Expand AIX V4 case to include V5.  Remove unnecessary `H'
+	option from lsattr.  Check for string "POWER" with prepended space
+	to distinguish from PowerPC_POWER3.  Use ${UNAME_VERSION} instead
+	of assuming "4" to match the expanded case.
 
-	* libtool.m4.in: update to libtool-981114 (untested stuff, but
-	we have to test it to make it tested - sounds that logical? :-)
+2001-02-13  Kevin Ryde  <user42@zip.com.au>
 
-	* libtool.m4.in: moved the self stricked libtool tests to "our"
-	file.
+	* config.sub: Recognise t90, c90, j90 without -cray. Preserve t90
+	and j90--don't transform to c90.
 
-	* acinclude.m4.in: moved ChangeLog of kdebase which I used to
-	maintain acinclude.m4.in logs to kde-common/admin. Hopefully I
-	will maintain it more often from now on :)
+2001-02-13  Ben Elliston  <bje@redhat.com>
 
-1998-07-27  Stephan Kulow  <coolo@kde.org>
+	* config.guess: More Linux cleanup.
 
-	* acinclude.m4.in: fixed some things in the MOC test
+2001-02-13  Martin Schwidefsky  <schwidefsky@de.ibm.com> 
 
-	* acinclude.m4.in: fixed this damn msgfmt test
+	* config.guess: Add Linux target for S/390x.
+	* config.sub: Likewise.
 
-1998-06-02  Stephan Kulow  <coolo@kde.org>
+2001-02-13  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: ignore msgfmt, if not GNU gettext
+	* config.guess: Rework detection of many Linux platforms, where
+	detection is straightforward.
 
-1998-05-28  Stephan Kulow  <coolo@kde.org>
+2001-01-31  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: fixed KDE_CHECK_STL. Checks for HP and SGI type
+	* config.guess: Handle hppa64-linux systems. From Alan Modra
+	<alan@linuxcare.com.au>.
 
-	* acinclude.m4.in: embraced every variable with "" to make
-	it consistent
+2001-01-29  Michael Sokolov  <msokolov@ivan.Harhan.ORG>
 
-	* acinclude.m4.in: various fixes for the koffice checks
-	(mico, ministl and python)
+	* config.guess: Specifically identify 4.3BSD and 4.3BSD-Reno in
+	the original VAX UNIX detection logic based on the BSD define in
+	<sys/param.h>.
 
-1998-05-16  Stephan Kulow  <coolo@kde.org>
+2001-01-17  Pavel Roskin  <proski@gnu.org>
 
-	* acinclude.m4.in: don't use KDE_CHECK_QT_DIRECT, when
-	--with-qt-libs are given
+	* config.sub: Removed cases that cannot match. Vendor changed
+	from "unknown" to "pc" for "mingw", "msdos" and "go32".
 
-1998-04-21  Stephan Kulow  <coolo@kde.org>
+2001-01-17  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: cool, I found the trick to suppress the ls
-	errors
+	* config.guess: Detect HI-UX on Hitachi SR8000 machines. It has
+	been difficult to discover what type of CPU is in this machine,
+	so we'll punt on hppa1.1 for now.
 
-1998-04-20  Stephan Kulow  <coolo@kde.org>
+2001-01-14  Pavel Roskin  <proski@gnu.org>
 
-	* acinclude.m4.in: rewrote the qt checking test, since it
-	didn't work under FreeBSD, since it relied on the .so link.
-	The new version is a little bit buggy, but I need some testing
-	to make it perfect
+	* config.guess: Don't use $version in the error message. Use
+	$timestamp instead. Minor changes in the error text.
 
-	* acinclude.m4.in: fixed the side effects of the PAM test
+2001-01-12  Ben Elliston  <bje@redhat.com>
 
-1998-04-18  Stephan Kulow  <coolo@kde.org>
+	* config.guess: Delete $dummy.rel after compiling test programs on
+	PDP-10 systems whose compilers produce this output file. From Lars
+	Brinkhoff <lars@nocrew.org>.
 
-	* acinclude.m4.in: hopefully fixed the PAM test (I rewrote it)
+	* config.sub: Handle EMX on OS/2. From Pavel Roskin.
 
-1998-04-16  Stephan Kulow  <coolo@kde.org>
+2001-01-12  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: extended the getsockname test inspired
-	by a patch by Martin Baulig
+	* config.guess: Detect common kernels running on various PDP-10
+	architectures. Contributed by Lars Brinkhoff <lars@nocrew.org>.
+	* config.sub: Handle PDP-10.
 
-	* configure.in: added test for utmp file
+2001-01-10  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: made --without-pam default
-	
+	* config.guess: Detect LynxOS 3.x on PowerPC architectures.
 
-1998-04-06  Stephan Kulow  <coolo@kde.org>
+2001-01-07  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: don't test compiling, linking, running in
-	one step. This proved to be too dangerous for my mail box.
-	
-1998-03-21  Stephan Kulow  <coolo@kde.org>
+	* config.sub: Recognise openrisc-*-*.
 
-	* libtool.m4.in: created some new macros to work around this
-	ugly (because long) help of configure --enable-shared/static
+2000-12-21  Ben Elliston  <bje@redhat.com>
 
-1998-03-05  Stephan Kulow  <coolo@kde.org>
+	* config.guess: Detect HP-UX on IA-64 hosts.  From Jonathan
+	Thackray <jon@thackray.org>.
 
-	* acinclude.m4.in: set language to C++ before trying the ksize_t
-	test
+2000-12-20  Pavel Roskin  <proski@gnu.org>
 
-	* configure.in: sorted the Makefile entries alphabeticly (and all
-	together: we love xemacs! we love xemacs! ;)
-	
-	* configure.in: added sk
+	* config.sub: Handle mint with version number as recognized OS.
+	Contributed by Tomas Berndtsson <tomas@nocrew.org>.
 
-	* acinclude.m4.in: substitute x_libraries to fix the empty -rpath
-	
-1998-03-03  Stephan Kulow  <coolo@kde.org>
+2000-12-20  Pavel Roskin  <proski@gnu.org>
 
-	* acinclude.m4.in: add a rpath for every shared library, that is
-	linked too (especially X11 libraries)
-	
-Tue Feb 24 22:04:59 1998  Stephan Kulow  <coolo@kde.org>
+	* config.guess: Detect Fujitsu f700 machines.
+	* config.sub: Handle f700 and f700-fujitsu.
 
-	* acinclude.m4.in: added kde_sounddir and set kde_minidir to
-	kde_icondir/mini to break not too much
+2000-12-15  Ben Elliston  <bje@redhat.com>
 
-Sun Feb 15 18:25:50 1998  Stephan Kulow  <coolo@kde.org>
+	* config.guess: Detect AIX version 5. Contributed by
+	Dan McNichol <mcnichol@austin.ibm.com>.
 
-	* configure.in: added bugfix by Bob Miller <kbob@engr.sgi.com>
-	(correct reset of IFS)
-	
-Wed Feb 11 00:53:11 1998  Stephan Kulow  <coolo@kde.org>
+	* config.sub: Accept f301 for Fujitsu machines.
+	Reported by Pavel Roskin <proski@gnu.org>.
 
-	* configure.in: made shadow under Linux default, since the
-	binaries will work also under non-shadow systems. The only problem
-	left is PAM, so I disabled shadow in case, PAM is present
+2000-12-07  Ben Elliston  <bje@redhat.com>
 
-Tue Feb 10 16:46:32 1998  Stephan Kulow  <coolo@kde.org>
+	* config.sub: Add more detail to version information.
+	* config.guess: Likewise.
 
-	* configure.in: added test for nice to find out, if the option
-	-nice works for the screensavers
+2000-12-06  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: port to LynxOS. For this I moved all library
-	search routines in KDE_MISC_TESTS, so I don't need to write this
-	in every package
+	* config.sub: Add --version option.
+	* config.guess: Likewise.
 
-	* README: some grammar fixes
+2000-12-02  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: search for the libs in the exec_prefix, when
-	it's present
-	
-Sun Feb  8 14:07:23 1998  Stephan Kulow  <coolo@kde.org>
+	* config.guess: Only append "elf" to "netbsd" for platforms that
+	have switched to the ELF object file format in recent history.
+	From Matthew Green <mrg@eterna.com.au>.
 
-	* acinclude.m4.in: updated all packages
+2000-11-24  Nick Clifton  <nickc@redhat.com>
 
-	* libtool.m4.in: applied patch for libtool.m4.in to show the
-	correct default for shared and static
-	
+	* config.sub: Add xscale as a recognised CPU name.
 
-Sat Feb  7 10:56:00 1998  Stephan Kulow  <coolo@kde.org>
+2000-11-23  Ben Elliston  <bje@redhat.com>
 
-	* configure.in: good news - KDE is relocatable again.
+	Patches from Akim Demaille <akim@epita.fr>.
+	* config.sub (version): Rename from this ..
+	(timestamp): .. to this.
+	(usage): Replace --version with --time-stamp. Add additional help
+	and copyleft notice.
+	(time-stamp-start): Replace with "timestamp=".
+	* config.guess (version): Rename from this ..
+	(timestamp): .. to this.
+	(usage): Replace --version with --time-stamp. Add additional help
+	and copyleft notice.
+	(CC_FOR_BUILD): Rework this logic.
+	(time-stamp-start): Replace with "timestamp=".
 
-	* libtool.m4.in: updated to latest libtool 1.0i
+2000-11-21  Ben Elliston  <bje@redhat.com>
 
-Fri Feb  6 21:26:51 1998  Stephan Kulow  <coolo@kde.org>
+	* config.guess: Detect EMX on OS/2. Reported by Ilya Zakharevich
+	<ilya@math.ohio-state.edu>.
 
-	* acinclude.m4.in: added a AC_PROVIDE for AC_PROG_CC and
-	AC_PROG_CPP to KDE_CHECK_COMPILERS
+2000-11-16  Ben Elliston  <bje@redhat.com>
 
-Thu Feb  5 16:27:47 1998  Stephan Kulow  <coolo@kde.org>
+	* config.guess: Use getconf(1) on HP-UX 11.x systems (when
+	available) to eliminate the need for compiling a small test
+	program. From Neil Schellenberger <nschelle@crosskeys.com>.
 
-	* acinclude.m4.in: put $QTDIR/bin before /usr/bin in the path to
-	look for moc. I don't know why, but I got a report, that configure
-	found /usr/bin/moc under Solaris
+2000-11-15  Ben Elliston  <bje@redhat.com>
 
-Fri Jan 30 15:47:50 1998  Stephan Kulow  <coolo@kde.org>
+	* config.sub: Expand `power' to `power-ibm-aix' for consistency.
+	From Kevin Ryde.
 
-	* acinclude.m4.in: export LIBRARY_PATH after reset to the saved
-	value
-	
-	* acinclude.m4.in: unset the LIBRARY_PATH to get a relieable
-	result when trying to find, if Qt compiles without -L
+	* config.guess: Differentiate Cray T3D and T3E. From Kevin Ryde
+	<user42@zip.com.au>.
 
-Sat Jan 24 00:45:52 1998  Stephan Kulow  <coolo@kde.org>
+2000-11-10  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: fixed another bug in AC_PATH_KDE
+	* config.sub: Map pentiumpro and pentiumii aliases onto i686-pc.
+	From Kevin Ryde <user42@zip.com.au>.
 
-Thu Jan 22 14:46:15 1998  Stephan Kulow  <coolo@kde.org>
+	* config.guess: Search for a working C compiler if CC_FOR_BUILD is
+	not specified. From Kevin Ryde.
 
-	* configure.in: fixed an ugly bug in AC_BASE_PATH_KDE
+	* config.guess: Set CPU architecture to "hppa" by default, in case
+	tests fail to produce a result. From Kevin Ryde.
 
-	* kappfinder/kappfinder.in: let kappfinder create by configure to
-	allow the use of the kde_ paths
+2000-11-08  Ben Elliston  <bje@redhat.com>
 
-Wed Jan 21 22:19:35 1998  Stephan Kulow  <coolo@kde.org>
+	* config.guess: Detect sparc-unknown-linux-gnu. Reported by Peter
+	Storkey <pstorkey@primex.com>.
 
-	* acinclude.m4.in: - added a install_root prefix to all paths, if
-	set, to enable package managers to move the whole installation at once
-	- added --with-install-root to set the install_root prefix
+2000-11-02  Per Lundberg  <plundis@chaosdev.org>
 
-Tue Jan 20 22:41:04 1998  Stephan Kulow  <coolo@kde.org>
+	* config.sub: Add support for the *-storm-chaos OS.
 
-	* configure.in: added NOOPT_CXXFLAGS to allow kioslave to be
-	compiled without -O2
+2000-10-25  Ed Satterthwaite  <ehs@sibyte.com>
 
-Mon Jan 19 21:55:21 1998  Stephan Kulow  <coolo@kde.org>
+	* config.sub: NexGen, not nexen, is the x86 CPU clone
+	manufacturer.
 
-	* configure.in: some little fixes for the Makefiles
+2000-10-23  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in: --prefix will no longer override the search for
-	libraries. If they are present somewhere, they are used (through
-	the methodes in KApplication)
+	* config.guess: Detect NonStop-UX on Compaq MIPS machines.
+	* config.sub: Handle aliases for mips-compaq-nonstopux.
+	From Tom Bates <tom.bates@compaq.com>.
 
-Mon Jan 12 00:30:36 1998  Stephan Kulow  <coolo@kde.org>
+2000-10-12  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in fixed an ugly bug, that accoured, when
-	qt_libraries is not set (empty/equals X11/not necessary)
-	
-	* acinclude.m4.in moved the remove of the files after the error
-	detection
-	
+	* config.guess: Detect GNU/Linux on HP PA-RISC systems.
+	From David Huggins-Daines <dhd@linuxcare.com>.
 
-Sun Jan 11 17:27:53 1998  Stephan Kulow  <coolo@kde.org>
+2000-10-09  Ben Elliston  <bje@redhat.com>
 
-	* acinclude.m4.in added a new macro KDE_CHECK_QT_DIRECT to unset
-	the Qt library path, if a Qt program compiles without them
-		
-	* acinclude.m4.in added a return value in the CREATE_KFSSTND
-	macro. Perhaps this has caused the problems
+	* config.sub: Typo fix for sh{3,4} case.
 
-Sat Jan 10 17:40:44 1998  Stephan Kulow  <coolo@kde.org>
+2000-10-08  Ben Elliston  <bje@redhat.com>
 
-	* ChangeLog started to maintain a ChangeLog file again
-	* acinclude.m4.in the AC_CREATE_KFSSTND to get better debug output
-	to find the problem
-	
+	* config.guess: Handle 8-way NCR 4300s -- uname(1) returns 3446A.
+	From Ken Cormack <kcormack@acs.roadway.com>.
 
-Old logs, Stephan Kulow made:
-	
-0.1 : first steps with libkde
-0.2 : first release with libkde, khtmlw, kdehelp, acli, kwm, kpanel
-0.3 : added kfm and bugfixes
-0.4 : updated khtmlw, kdehelp, kwm, changed install in all subdirs
-0.5 : support libtool (chooseable shared libs)
-0.6 : split libkde in kdecore and kdeui
-0.6.1 : Bugfixes
-0.7 : added code from Janos Farkas (configure)
-    : added @{kde,qt}_{includes,libraries}@
-0.7.1: Bugfixes
-0.7.2: Bugfixes
-0.7.3: added @all_includes@ and @all_libraries@
-       replaced all incompatible flags like $(CC) and -DHAVE_UNISTD_H
-0.7.4: changed support for libkde (back in it's own)
-       added kpat
-       updated kpanel, kwm, kghostview
-0.8: removed a bug in kghostview
-	lifted installation process of several apps
-	splitt kdebase into kdelibs and kdeapps	
-	updated khtmlw, kfm and kdehelp
-	added kcalc and kpaint
-	updated kdisplay
-	added kscreensaver
-	added --enable-kscreensaver
-	added --enable-debug (and @CXXFLAGS@ to all Makefile.ins)
-	updated kwm to 0.4.7
-	added make uninstall to every app
-	added kvt
-	added khexdit
-	added .kdelnk for kmines, kedit, ktetris
-	put kwm, kfind's .kdelnk in the right directories
-	replaced --enable-kscreensaver by --disable-kscreensaver
-	updated kpanel to 0.15
-	some bugfixes (thanks Marco)
-	some bugfixes (thanks Martin)
-	changed acinclude.m4, because aclocal won't
-	updated kwm to 0.4.8 (patched it again for Qt-1.2)
-	updated kvt to 0.13 (patch from Matthias)
-	patched kvt and kwm
-	updated kwm to 0.5.0
-	updated kvt for 0.14 (again and again :-)
-	updated kview to 0.10
-	updated kfm to 0.6.3
- 	patched kscreensaver for FreeBSD (thanks Marc)
-0.9: updated kdisplay to 0.5.3
-	added klogout
-	patches from Matthias
-	updated kfm to 0.6.4
-	updated kghostview to 0.4
-	added QTINC and QTLIB
-	updated kdehelp to 0.4.11
-	patched kfm to support ktoolbar
-	updated kedit to kedit+
-	added kfontmanager 0.2.1
-0.9.1: changed kpaint's make style
-	bugfixing
-	updated kmines to 0.6.5
-	updated ktetris to 0.2.4
-	changed to Makefiles to depend on Makefile.in
-	changed the Makefiles to let install depend on all
-	added kjots-0.2.2
-	updated kjots-0.2.3
-	updated kfm to 0.6.6
-	updated kjots-0.2.4
-	updated kpaint-0.2
-	updated kedit to 0.5
-	updated kfontmanager to 0.2.2
-	updated kfm to 0.6.7
-	updated ktetris to 0.2.5
-	updated kjots to 0.2.5
-0.10: added HAVE_SQRTL
-	added HAVE_CRYPT_H
-	updated kfind
-	updated kfm to kfm-0.8.1
-	re-introduced automake to kdebase
-	bugfixes for the configure.in
-	added XPM, GL and PAM tests to configure
-	added morph3d to kscreensavers
-	updated kfind to 0.3.2
-	added some patches for SGI
-... lost the time to maintain a Changelog ;)
+2000-10-03  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Do not hold ld's output in a shell variable; feed
+	the output directly into the command pipline to avoid a limitation
+	in variable lengths in ash(1). From Pavel Roskin <proski@gnu.org>.
+
+2000-09-11  Ben Elliston  <bje@redhat.com>
+
+	* config.sub: Handle nsk*.
+
+2000-09-11  Philip Blundell  <philb@gnu.org>
+
+	* config.sub: Fix mistake in change of 2000-08-06.
+
+2000-09-05  Andreas Jaeger  <aj@suse.de>
+
+	* config.sub (maybe_os): Recognise AMD x86-64 as x86_64.
+	* config.guess: Detect x86_64-unknown-linux-gnu.
+
+2000-09-05  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Handle Tandem NSR-K machines.
+	Reported by Andres Junge <ajunge@adexus.cl>.
+
+2000-09-05  Paul Sokolovsky  <Paul.Sokolovsky@technologist.com>
+
+	* config.guess: Detect the PW32 POSIX-on-Win32 environment.
+	* config.sub: Handle pw32 aliases.
+
+2000-08-31  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Correctly detect Sony NEWS-OS 6.x.
+	From Kimio Ishii <ishii@sm.sony.co.jp>.
+
+2000-08-06  Philip Blundell  <philb@gnu.org>
+
+	* config.sub: Accept `-conix*' as a valid OS.  Accept `armv*' as a
+	valid CPU without a company name.
+
+2000-07-31  Mark Kettenis  <kettenis@gnu.org>
+
+	* config.guess: Restore detection of libc version for x86
+	Linux/GNU ELF systems, but fall back on tentative name based on ld
+	emulation.  Use i?86-pc-linux-gnu as tentative name since that's
+	the canonical name.
+
+2000-07-27  Ben Elliston  <bje@redhat.com>
+
+	* config.sub: Use "unknown" for the manufacturer field of Amiga
+	systems, not "cbm". Contributed by Ruediger Kuhlmann
+	<ruediger.kuhlmann@stud.uni-karlsruhe.de>.
+	* config.sub: Likewise.
+
+2000-07-24  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Detect Plan 9.
+
+2000-07-06  Andrew Cagney  <cagney@b1.cygnus.com>
+
+	* config.sub: Recognise d30v as a valid basic_machine.
+
+2000-06-28  Ben Elliston  <bje@redhat.com>
+
+	* config.sub: Recognise Motorola 68HC11/12 targets. From Stephane
+	Carrez <Stephane.Carrez@worldnet.fr>.
+
+2000-06-20  Ben Elliston  <bje@redhat.com>
+
+	* config.sub: Recognise tic54x (Texas Instruments TMS320C54x) and
+	c54x (IBM C54XDSP). From Tim Wall <twall@cygnus.com>.
+
+2000-06-13  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Detect Minix on x86 machines.
+	* config.sub: Recognise i286. From <michael@moria.de>.
+
+	* config.sub: Recognise sh3 and sh4 aliases. From Kazumoto Kojima
+	<kkojima@rr.iij4u.or.jp>.
+
+	* config.sub: Per Bothner is not the author.
+
+2000-06-10  Hans-Peter Nilsson  <hp@axis.com>
+
+	* config.sub (os): Recognize axis as manufacturer.
+	(basic_machine): Recognize cris and etrax* as cris-axis.
+
+2000-05-31  Ben Elliston  <bje@redhat.com>
+
+	* config.sub: Accept athlon as an i686 variant. From Philipp
+	Thomas <pthomas@suse.de>.
+
+2000-05-30  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Re-word some output.
+	* config.sub: Fix a syntax error introduced by yesterday's
+	changes. Correct a spelling mistake. From Steven G. Johnson
+	<stevenj@alum.mit.edu>.
+
+2000-05-02  Akim Demaille  <akim@epita.fr>
+
+	* config.guess: Add --help and --version options. Add Emacs hooks.
+	* config.sub: Likewise.
+
+2000-05-27  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Handle GNU/Linux on Hitachi SuperH. From Niibe
+	Yutaka <gniibe@chroot.org>.
+
+2000-05-19  Ben Elliston  <bje@redhat.com>
+
+	* config.sub: Recognise hppa64 as a valid cpu type. From Jeff Law.
+
+2000-05-10  Ben Elliston  <bje@redhat.com>
+
+	* config.sub: Recognise bs2000-siemens as a basic_machine type.
+	From Jean-Frederic Clere <jfrederic.clere@fujitsu.siemens.se>.
+
+2000-05-07  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Mac OS X will never return "Mac OS" as a uname
+	value, so remove these cases and punt to the "Darwin" case.
+	From Wilfredo Sanchez <wsanchez@apple.com>.
+
+2000-04-30  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Handle Fujitsu UXP/DS. From Fu-Chuan Tsai
+	<fchtsai@ms23.hinet.net>.
+
+2000-04-26  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Handle an ld emulation of elf_i?86. From Bruce
+	Korb <bkorb@sco.com>.
+
+2000-04-22  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Do not differentiate FreeBSD systems that use the
+	ELF object file format. From David O'Brien <obrien@freebsd.org>.
+
+2000-04-22  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Detect Siemens BS2000 machines. From Jean-Frederic
+	Clere <jfrederic.clere@fujitsu.siemens.se>.
+
+2000-04-22  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Fix a syntax error in the DG/UX test.
+
+2000-04-06  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Define _HPUX_SOURCE for the HP-UX test program.
+	From Bruno Haible <haible@ilog.fr>.
+
+2000-04-06  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Detect Apple's Darwin operating system.
+	* config.sub: Handle an appropriate alias. From Assar Westerlund.
+
+2000-03-27  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Detect Ascend Embedded/OS, which is really BSDI.
+	From Assar Westerlund <assar@sics.se>.
+
+2000-03-20  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Detect the NonStop Kernel on Tandem
+	machines. Suggested by Kelly F. Hickel <kfh@mqsoftware.com>.
+	* config.sub: Handle nsr-tandem and -nsk aliases.
+
+2000-02-29  Peter van der Veen  <peterv@qnx.com>
+
+	* config.guess: Add support for QNX Neutrino.
+	* config.sub: Improve support for QNX Neutrino.
+
+2000-02-29  Ossama Othman  <ossama@ece.uci.edu>
+
+	* config.sub: Add support for QNX Neutrino.
+
+2000-02-24  Nick Clifton  <nickc@cygnus.com>
+
+	* config.sub: Support an OS of "wince".
+
+2000-02-15  Andrew Cagney  <cagney@cygnus.com>
+
+	* config.guess: Rewrite NetBSD code.  Return *-*-netbsdelf* for
+	ELF systems and *-*-netbsd* for all others.  Provide a guideline
+	for how to match a NetBSD tuple.
+
+2000-02-15  Richard Henderson  <rth@cygnus.com>
+
+	* config.guess (alpha-osf, alpha-linux): Detect ev67.
+	* config.sub: Accept alphaev6[78], alphaev8.
+
+2000-02-15  Philip Blundell  <philb@gnu.org>
+
+	* config.guess: Distinguish arm-*-linux-gnuoldld from
+	arm*-linux-gnu.
+
+2000-02-15  Ben Elliston  <bje@redhat.com>
+
+	* config.sub: Handle avr. From Denis Chertykov <denisc@overta.ru>.
+
+	* config.guess: Detect GNU/Linux on IBM S/390 machines.
+	* config.sub: Handle s390-*. From Adam J. Thornton
+	<adam@phoenix.princeton.edu>.
+
+	* config.guess: Detect MacOS X on PowerPC and other machines.
+	From Stephen G. Johnson <stephenj@gil-galad.mit.edu>.
+
+2000-02-08  John W. Eaton  <jwe@bevo.che.wisc.edu>
+
+	* config.sub: Recognize sv1-cray as a basic_machine type.
+
+2000-02-07  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Replace sub-minor system version number with an
+	`X' on certain Cray platforms. From Keith Thompson <kst@sdsc.edu>.
+
+	* config.sub: Add support for mmix and mmixware. From Hans-Peter
+	Nilsson <hp@bitrange.com>.
+
+2000-02-06  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Include <stdio.h> when compiling test programs
+	with a C++ compiler.  Function prototypes are mandatory in C++.
+	From Ossama Othman <othman@cs.wustl.edu>.
+
+	* config.guess: Fix a regression in PowerPC Linux detection.
+	From Franz Sirl.
+
+2000-02-03  Ben Elliston  <bje@redhat.com>
+
+	* config.guess: Handle versions of DJGPP's uname(1) command which
+	return the exact machine type and not just `pc'. From Laurynas
+	Biveinis <lauras@softhome.net>.
+
+	* config.guess: Import from autoconf source tree.
+	* config.sub: Likewise.

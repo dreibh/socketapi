@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.18 2003/07/11 09:45:02 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.19 2003/07/14 12:41:11 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -646,7 +646,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
                                 unsigned int&          protoID,
                                 uint16_t&              ssn,
                                 uint32_t&              tsn,
-                                SCTPNotification&      notification,
+                                SocketAddress**        address,
                                 const unsigned int     notificationFlags)
 {
    // ====== Check parameters ===============================================
@@ -660,10 +660,11 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
 
    // ====== Get next data or notification from queue =====================
 #ifdef PRINT_RECVWAIT
-   cout << "Waiting... ";
+   cout << "Waiting...";
    cout.flush();
 #endif
    SCTPSocketMaster::MasterInstance.lock();
+   SCTPNotification notification;
    bool received = queue.getNotification(notification);
    while(received == false) {
       int errorCode = getErrorCode(assocID);
@@ -710,12 +711,23 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
             flags |= MSG_UNORDERED;
          }
          size_t receivedBytes = min((size_t) sda->sda_bytes_arrived, (size_t) bufferSize);
+#if (SCTPLIB_VERSION != SCTPLIB_1_0_0_PRE19)
+         unsigned int pathIndex;
+         const int ok = sctp_receivefrom(assocID, streamID,
+                                         (unsigned char*)buffer,
+                                         (unsigned int*)&receivedBytes,
+                                         &ssn,
+                                         &tsn,
+                                         &pathIndex,
+                                         (flags & MSG_PEEK) ? SCTP_MSG_PEEK : SCTP_MSG_DEFAULT);
+#else
          const int ok = sctp_receive(assocID, streamID,
                                      (unsigned char*)buffer,
                                      (unsigned int*)&receivedBytes,
                                      &ssn,
                                      &tsn,
                                      (flags & MSG_PEEK) ? SCTP_MSG_PEEK : SCTP_MSG_DEFAULT);
+#endif
          if(ok == 0) {
             bufferSize = receivedBytes;
 
@@ -729,6 +741,27 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
             cout << endl;
 #endif
             result = (int)bufferSize;
+
+#if (SCTPLIB_VERSION != SCTPLIB_1_0_0_PRE19)
+            SCTP_PathStatus pathStatus;
+            if(address) {
+               if(sctp_getPathStatus(assocID, pathIndex, &pathStatus) != 0) {
+                  cerr << "INTERNAL ERROR: SCTPSocket::internalReceiver() - sctp_getPathStatus() failed!" << endl;
+               }
+               else {
+                  *address = SocketAddress::createSocketAddress(
+                                0, (char*)&pathStatus.destinationAddress, LocalPort);
+                  if(*address == NULL) {
+                     cerr << "INTERNAL ERROR: SCTPSocket::internalReceiver() - Unable to create destination address object!" << endl;
+                  }
+#ifdef PRINT_DATA
+                  else {
+                     cout << "Received via address " << *(*address) << " (path index " << pathIndex << ")." << endl;
+                  }
+#endif
+               }
+            }
+#endif
 
             // ====== Peek mode: Restore chunk arrival information ===================
             if(flags & MSG_PEEK) {
@@ -976,12 +1009,11 @@ int SCTPSocket::receive(char*           buffer,
                         uint16_t&       ssn,
                         uint32_t&       tsn)
 {
-   SCTPNotification notification;
    return(receiveFrom(buffer,bufferSize,
                       flags,
                       assocID, streamID, protoID,
                       ssn, tsn,
-                      NULL,notification));
+                      NULL));
 }
 
 
@@ -1000,16 +1032,15 @@ bool SCTPSocket::hasData()
 
 
 // ###### Receive ###########################################################
-int SCTPSocket::receiveFrom(char*              buffer,
-                            size_t&            bufferSize,
-                            int&               flags,
-                            unsigned int&      assocID,
-                            unsigned short&    streamID,
-                            unsigned int&      protoID,
-                            uint16_t&          ssn,
-                            uint32_t&          tsn,
-                            SocketAddress***   addressArray,
-                            SCTPNotification&  notification)
+int SCTPSocket::receiveFrom(char*           buffer,
+                            size_t&         bufferSize,
+                            int&            flags,
+                            unsigned int&   assocID,
+                            unsigned short& streamID,
+                            unsigned int&   protoID,
+                            uint16_t&       ssn,
+                            uint32_t&       tsn,
+                            SocketAddress** address)
 {
    // ====== Receive ========================================================
    if(!(Flags & SSF_GlobalQueue)) {
@@ -1025,28 +1056,8 @@ int SCTPSocket::receiveFrom(char*              buffer,
                          flags,
                          assocID, streamID, protoID,
                          ssn, tsn,
-                         notification,
+                         address,
                          NotificationFlags);
-
-   // ====== Extract sender's addresses =====================================
-   if((result >= 0) && (addressArray != NULL)) {
-      unsigned int i;
-      *addressArray = SocketAddress::newAddressList(notification.RemoteAddresses);
-      if(*addressArray != NULL) {
-         for(i = 0;i < notification.RemoteAddresses;i++) {
-            (*addressArray)[i] = SocketAddress::createSocketAddress(
-                                    0,
-                                    (char*)&notification.RemoteAddress[i],
-                                    notification.RemotePort);
-            if((*addressArray)[i] == NULL) {
-#ifndef DISABLE_WARNINGS
-               cerr << "WARNING: SCTPSocket::receiveFrom() - Bad address \""
-                    << (char*)&notification.RemoteAddress[i] << "\"!" << endl;
-#endif
-            }
-         }
-      }
-   }
 
    // ====== Check, if association has to be closed =========================
    checkAutoConnect();
