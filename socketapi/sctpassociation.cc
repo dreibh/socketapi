@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.cc,v 1.2 2003/06/01 17:40:54 dreibh Exp $
+ *  $Id: sctpassociation.cc,v 1.3 2003/06/03 22:01:40 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -38,7 +38,7 @@
 
 
 
-#define PRINT_SHUTDOWN
+// #define PRINT_SHUTDOWN
 // #define PRINT_RTOMAX
 
 
@@ -356,7 +356,6 @@ void SCTPAssociation::abort()
 bool SCTPAssociation::getAssocStatus(
                          SCTP_Association_Status& assocStatus)
 {
-printf("G*** Assoc=%d\n",AssociationID);
    const bool result = Socket->getAssocStatus(AssociationID,assocStatus);
    if(result) {
       if(RTOMaxIsInitTimeout) {
@@ -376,7 +375,6 @@ printf("G*** Assoc=%d\n",AssociationID);
 bool SCTPAssociation::setAssocStatus(
                          const SCTP_Association_Status& assocStatus)
 {
-printf("S*** Assoc=%d\n",AssociationID);
    SCTP_Association_Status newStatus = assocStatus;
    if(RTOMaxIsInitTimeout) {
 #ifdef PRINT_RTOMAX

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.2 2003/06/01 17:40:54 dreibh Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.3 2003/06/03 22:01:40 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -41,8 +41,8 @@
 
 
 
-#define PRINT_NOTIFICATIONS
-#define PRINT_ARRIVENOTIFICATION
+// #define PRINT_NOTIFICATIONS
+// #define PRINT_ARRIVENOTIFICATION
 
 // #define PRINT_PIPE
 // #define PRINT_GC

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.4 2003/06/02 17:29:42 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.5 2003/06/03 22:01:40 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -38,7 +38,7 @@
 #include "sctpsocketmaster.h"
 
 
-
+/*
 #define PRINT_BIND
 #define PRINT_UNBIND
 #define PRINT_ADDIP
@@ -50,7 +50,7 @@
 #define PRINT_DATA
 #define PRINT_RECVSTATUS
 #define PRINT_SETPRIMARY
-
+*/
 
 // #define PRINT_AUTOCLOSE_TIMEOUT
 // #define PRINT_AUTOCLOSE_CHECK
@@ -489,7 +489,6 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
    unsigned char addressArray[destinationAddresses][SCTP_MAX_IP_LEN];
    if(destinationAddresses > 0) {
       for(unsigned int i = 0;i < destinationAddresses;i++) {
-cout << "Addr" << i << "=" << *(destinationAddressList[i]) << endl;
          snprintf((char*)&addressArray[i], SCTP_MAX_IP_LEN, "%s",
                   destinationAddressList[i]->getAddressString(SocketAddress::PF_HidePort|SocketAddress::PF_Address|SocketAddress::PF_Legacy).getData());
       }
@@ -800,7 +799,8 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
       }
       else {
 #ifndef DISABLE_WARNINGS
-            cout << "WARNING: Skipping " << header->sn_length << " bytes notification data from association " << assocID << ", stream " << streamID << ":" << endl;
+            cout << "WARNING: Skipping " << header->sn_length << " bytes notification data (type "
+                 << header->sn_type << ") from association " << assocID << ", stream " << streamID << ":" << endl;
 #endif
 #ifdef PRINT_DATA
             for(size_t i = 0;i < header->sn_length;i++) {
@@ -1410,7 +1410,6 @@ bool SCTPSocket::getPathParameters(const unsigned int          assocID,
    SCTPSocketMaster::MasterInstance.lock();
    const int pathIndex = getPathIndexForAddress(assocID,address,pathParameters);
    if(pathIndex >= 0) {
-      pathParameters.heartbeatIntervall = 12345678;  // ?????
       sctp_getPathStatus(assocID,pathIndex,&pathParameters);
    }
    SCTPSocketMaster::MasterInstance.unlock();

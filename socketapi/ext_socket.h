@@ -1,5 +1,5 @@
 /*
- *  $Id: ext_socket.h,v 1.4 2003/06/01 22:45:45 dreibh Exp $
+ *  $Id: ext_socket.h,v 1.5 2003/06/03 22:01:40 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -58,7 +58,7 @@
 
 
 #if defined(__APPLE__)
- typedef int socklen_t;
+typedef int socklen_t;
 #endif
 
 
@@ -567,9 +567,8 @@ int sctp_enableCRC32(const unsigned int enable);
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/uio.h>
 #include <netinet/sctp.h>
-#include <netinet/sctp_uio.h>
-#include <netinet/sctp_constants.h>
 
 #endif
 
