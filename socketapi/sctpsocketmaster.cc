@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.8 2003/06/30 13:59:28 dreibh Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.9 2003/07/07 16:12:44 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -798,6 +798,7 @@ void SCTPSocketMaster::communicationLostNotif(unsigned int assocID,
          association->ReadyForTransmit.broadcast();
       }
    }
+   socket->checkAutoClose();
 }
 
 
@@ -948,6 +949,7 @@ void SCTPSocketMaster::shutdownCompleteNotif(unsigned int assocID, void* ulpData
          addNotification(socket,assocID,notification);
       }
    }
+   socket->checkAutoClose();
 }
 
 

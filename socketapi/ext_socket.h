@@ -1,5 +1,5 @@
 /*
- *  $Id: ext_socket.h,v 1.8 2003/06/18 15:21:25 dreibh Exp $
+ *  $Id: ext_socket.h,v 1.9 2003/07/07 16:12:44 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -139,7 +139,7 @@ struct sctp_paddr_change
 #define SCTP_ADDR_REMOVED     23
 #define SCTP_ADDR_ADDED       24
 #define SCTP_ADDR_MADE_PRIM   25
-
+#define SCTP_ADDR_CONFIRMED   26
 
 #define SCTP_REMOTE_ERROR 3
 struct sctp_remote_error
@@ -183,7 +183,7 @@ struct sctp_adaption_event
    uint16_t     sai_type;
    uint16_t     sai_flags;
    uint32_t     sai_length;
-   uint32_t     sai_adaption_bits;
+   uint32_t     sai_adaption_ind;
    sctp_assoc_t sai_assoc_id;
 };
 

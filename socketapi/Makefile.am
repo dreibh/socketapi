@@ -18,14 +18,14 @@ libsctpsocket_la_LDFLAGS = \
 INCLUDES =
 
 
-noinst_PROGRAMS = t1
+noinst_PROGRAMS = t1 t2
 #t1 t2 t3
 
 t1_SOURCES = t1.c
 t1_LDADD = libsctpsocket.la -lsctp -lstdc++ @glib_LIBS@ @thread_LIBS@
 
-#t2_SOURCES = t2.c
-#t2_LDADD = libsctpsocket.la -lsctp -lstdc++ @glib_LIBS@ @thread_LIBS@
+t2_SOURCES = t2.c
+t2_LDADD = libsctpsocket.la -lsctp -lstdc++ @glib_LIBS@ @thread_LIBS@
 
 #t3_SOURCES = t3.c
 #t3_LDADD = libsctpsocket.la -lsctp -lstdc++ @glib_LIBS@ @thread_LIBS@

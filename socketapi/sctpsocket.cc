@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.15 2003/07/01 14:40:21 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.16 2003/07/07 16:12:44 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -53,16 +53,17 @@
 #define PRINT_SETPRIMARY
 */
 
-// #define PRINT_AUTOCLOSE_TIMEOUT
-// #define PRINT_AUTOCLOSE_CHECK
+/*
+#define PRINT_AUTOCLOSE_TIMEOUT
+#define PRINT_AUTOCLOSE_CHECK
 
-// #define PRINT_RECVWAIT
-// #define PRINT_ISSHUTDOWN
-// #define PRINT_PATHFORINDEX
-// #define PRINT_ASSOCSEARCH
-// #define PRINT_ASSOC_USECOUNT
-// #define PRINT_RTO
-
+#define PRINT_RECVWAIT
+#define PRINT_ISSHUTDOWN
+#define PRINT_PATHFORINDEX
+#define PRINT_ASSOCSEARCH
+#define PRINT_ASSOC_USECOUNT
+#define PRINT_RTO
+*/
 
 
 // ###### Constructor #######################################################
@@ -1396,11 +1397,11 @@ int SCTPSocket::getPathIndexForAddress(const unsigned int          assocID,
          break;
       }
 #ifdef PRINT_PATHFORINDEX
-      cout << "pathForIndex: " << pathIndex << ": " << addressString << " == " << pathParameters.destinationAddress << "?" << endl;
+      cout << "pathForIndex: " << index << ": " << addressString << " == " << pathParameters.destinationAddress << "?" << endl;
 #endif
       if(addressString == String((char*)&pathParameters.destinationAddress)) {
 #ifdef PRINT_PATHFORINDEX
-         cout << "   => " << pathIndex << endl;
+         cout << "   => " << index << endl;
 #endif
          return(index);
       }
@@ -1741,17 +1742,21 @@ void SCTPSocket::checkAutoClose()
            << "   AutoCloseTimeout = " << AutoCloseTimeout << endl;
 #endif
       if((association->UseCount == 0) &&
-        (((AutoCloseTimeout > 0) &&
-          (now - association->LastUsage > AutoCloseTimeout)) ||
-         (association->ShutdownCompleteNotification)         ||
-         (association->CommunicationLostNotification))) {
+         (AutoCloseTimeout > 0) &&
+         (now - association->LastUsage > AutoCloseTimeout)) {
 #ifdef PRINT_AUTOCLOSE_TIMEOUT
          const unsigned int assocID = association->getID();
-         cout << "AutoConnect: AutoClose of association #" << assocID << " due to ";
-         if(association->LastUsage + AutoCloseTimeout < now) {
-            cout << "timeout";
-         }
-         else if(association->ShutdownCompleteNotification) {
+         cout << "AutoConnect: Doing shutdown of association #" << assocID << " due to timeout" << endl;
+#endif
+         association->shutdown();
+         iterator++;
+      }
+      else if((association->ShutdownCompleteNotification)         ||
+              (association->CommunicationLostNotification)) {
+#ifdef PRINT_AUTOCLOSE_TIMEOUT
+         const unsigned int assocID = association->getID();
+         cout << "AutoConnect: Removing association #" << assocID << ": ";
+         if(association->ShutdownCompleteNotification) {
             cout << "shutdown complete";
          }
          else if(association->CommunicationLostNotification) {
