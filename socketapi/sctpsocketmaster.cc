@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.15 2004/07/28 12:55:16 dreibh Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.16 2004/07/29 15:11:03 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -470,8 +470,8 @@ void SCTPSocketMaster::dataArriveNotif(unsigned int   assocID,
 #ifdef PRINT_ARRIVENOTIFICATION
    char str[256];
    snprintf((char*)&str,sizeof(str),
-               "A%04d S%02d: Data Arrive Notification, Length = %d",
-               assocID,streamID,length);
+               "A%04d S%02d: Data Arrive Notification - length=%d, PPID=%u",
+               assocID, streamID, length, protoID);
    cerr << str << endl;
 #endif
 

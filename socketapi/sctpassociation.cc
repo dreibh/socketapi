@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.cc,v 1.9 2004/07/28 12:55:16 dreibh Exp $
+ *  $Id: sctpassociation.cc,v 1.10 2004/07/29 15:11:03 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -163,6 +163,7 @@ SCTPAssociation::~SCTPAssociation()
    while(packet != NULL) {
       PreEstablishmentPacket* nextPacket = packet->Next;
       delete packet->Data;
+      packet->Data = NULL;
       delete packet;
       packet = nextPacket;
    }
@@ -329,7 +330,9 @@ int SCTPAssociation::sendTo(const char*          buffer,
                FirstPreEstablishmentPacket = packet;
                LastPreEstablishmentPacket  = packet;
             }
-            LastPreEstablishmentPacket->Next = packet;
+            else {
+               LastPreEstablishmentPacket->Next = packet;
+            }
             LastPreEstablishmentPacket       = packet;
          }
          else {
@@ -394,7 +397,7 @@ bool SCTPAssociation::sendPreEstablishmentPackets()
                       packet->StreamID,
                       packet->ProtoID,
                       packet->TimeToLive,
-                      true,
+                      false,
                       NULL);
       if(result == (ssize_t)packet->Length) {
 #ifdef PRINT_PREESTABLISHMENT_SEND
@@ -405,6 +408,7 @@ bool SCTPAssociation::sendPreEstablishmentPackets()
             LastPreEstablishmentPacket = NULL;
          }
          delete packet->Data;
+         packet->Data = NULL;
          delete packet;
       }
       else {

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.25 2004/07/28 12:55:16 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.26 2004/07/29 15:11:03 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -2296,7 +2296,7 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                            if(destinationAddressList[i] == NULL) {
                               errno_return(-EINVAL);
                            }
-                           cout << "#" << i << ": " << *(destinationAddressList[i]) << endl;
+                           // cout << "#" << i << ": " << *(destinationAddressList[i]) << endl;
                            switch(sa->sa_family) {
                               case AF_INET:
                                  sa = (sockaddr*)((long)sa + sizeof(sockaddr_in));
@@ -3196,16 +3196,16 @@ int sctp_opt_info(int sd, sctp_assoc_t assocID,
 
 
 // ###### sctp_sendmsg() implementation #####################################
-ssize_t sctp_sendmsg(int              s,
-                     void*            data,
-                     size_t           len,
-                     struct sockaddr* to,
-                     socklen_t        tolen,
-                     uint32_t         ppid,
-                     uint32_t         flags,
-                     uint16_t         stream_no,
-                     uint32_t         timetolive,
-                     uint32_t         context)
+ssize_t sctp_sendmsg(int                    s,
+                     const void*            data,
+                     size_t                 len,
+                     const struct sockaddr* to,
+                     socklen_t              tolen,
+                     uint32_t               ppid,
+                     uint32_t               flags,
+                     uint16_t               stream_no,
+                     uint32_t               timetolive,
+                     uint32_t               context)
 {
    sctp_sndrcvinfo* sri;
    struct iovec     iov = { (char*)data, len };
@@ -3216,7 +3216,7 @@ ssize_t sctp_sendmsg(int              s,
 #ifdef __APPLE__
       (char*)to,
 #else
-      to,
+      (struct sockaddr*)to,
 #endif
       tolen,
       &iov, 1,
@@ -3244,17 +3244,48 @@ ssize_t sctp_sendmsg(int              s,
 }
 
 
+// ###### sctp_send() implementation ########################################
+ssize_t sctp_sendfkt(int                           s,
+                     const void*                   data,
+                     size_t                        len,
+                     const struct sctp_sndrcvinfo* sinfo,
+                     int                           flags)
+{
+   sctp_sndrcvinfo* sri;
+   struct iovec     iov = { (char*)data, len };
+   struct cmsghdr*  cmsg;
+   size_t           cmsglen = CSpace(sizeof(struct sctp_sndrcvinfo));
+   char             cbuf[CSpace(sizeof(struct sctp_sndrcvinfo))];
+   struct msghdr msg = {
+      NULL, 0,
+      &iov, 1,
+      cbuf, cmsglen,
+      flags
+   };
+
+   cmsg = (struct cmsghdr*)CFirst(&msg);
+   cmsg->cmsg_len   = CLength(sizeof(struct sctp_sndrcvinfo));
+   cmsg->cmsg_level = IPPROTO_SCTP;
+   cmsg->cmsg_type  = SCTP_SNDRCV;
+
+   sri = (struct sctp_sndrcvinfo*)CData(cmsg);
+   memcpy(sri, sinfo, sizeof(struct sctp_sndrcvinfo));
+
+   return(ext_sendmsg(s, &msg, 0));
+}
+
+
 // ###### sctp_sendmsg() implementation #####################################
-ssize_t sctp_sendmsgx(int              s,
-                      void*            data,
-                      size_t           len,
-                      struct sockaddr* toaddrs,
-                      int              toaddrcnt,
-                      uint32_t         ppid,
-                      uint32_t         flags,
-                      uint16_t         stream_no,
-                      uint32_t         timetolive,
-                      uint32_t         context)
+ssize_t sctp_sendmsgx(int                    s,
+                      const void*            data,
+                      size_t                 len,
+                      const struct sockaddr* toaddrs,
+                      size_t                 toaddrcnt,
+                      uint32_t               ppid,
+                      uint32_t               flags,
+                      uint16_t               stream_no,
+                      uint32_t               timetolive,
+                      uint32_t               context)
 {
    sctp_sndrcvinfo* sri;
    struct iovec     iov = { (char*)data, len };
@@ -3265,7 +3296,7 @@ ssize_t sctp_sendmsgx(int              s,
 #ifdef __APPLE__
       (char*)toaddrs,
 #else
-      toaddrs,
+      (struct sockaddr*)toaddrs,
 #endif
       toaddrcnt,
       &iov, 1,

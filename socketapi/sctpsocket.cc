@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.23 2004/07/28 12:55:16 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.24 2004/07/29 15:11:03 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -953,7 +953,9 @@ int SCTPSocket::internalSend(const char*          buffer,
       }
 
 #ifdef PRINT_DATA
-      cout << "Sending data to association " << assocID << ", stream " << streamID << ", path index " << pathIndex << ":" << endl;
+      cout << "Sending " << length << " bytes of data to association "
+           << assocID << ", stream " << streamID << ", PPID "
+           << protoID << ", path index " << pathIndex << ":" << endl;
       for(size_t i = 0;i < length;i++) {
          char str[32];
          snprintf((char*)&str,sizeof(str),"%02x ",((unsigned char*)buffer)[i]);
@@ -1465,14 +1467,12 @@ int SCTPSocket::getPathIndexForAddress(const unsigned int          assocID,
                                        const struct SocketAddress* address,
                                        SCTP_PathStatus&            pathParameters)
 {
-puts("x-1");
    if(address == NULL) {
 #ifdef PRINT_PATHFORINDEX
       cout << "pathForIndex - primary" << endl;
 #endif
       return(sctp_getPrimary(assocID));
    }
-puts("x0");
 
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
    SCTP_Association_Status status;
@@ -1495,9 +1495,7 @@ puts("x0");
 #error Wrong sctplib version!
 #endif
 
-puts("x1");
       const int ok = sctp_getPathStatus(assocID, index, &pathParameters);
-puts("x2");
       if(ok != 0) {
          break;
       }
