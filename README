@@ -3,6 +3,9 @@
 This source code repository contains an implementation of the
 socket API for the sctplib SCTP userland implementation.
 
+See http://www.ietf.org/internet-drafts/draft-ietf-tsvwg-sctpsocket-07.txt
+for a description of the API.
+
 ---------------------------------------------------------------------------------
 
 Installation instructions:
