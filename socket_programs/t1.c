@@ -18,11 +18,12 @@ int main()
    if ((fd = ext_socket(AF_INET, SOCK_SEQPACKET, IPPROTO_SCTP)) < 0)
       perror("socket");
 
+      /*
    memset((void *) &local_addr, 0, sizeof(remote_addr));
    local_addr.sin_family = AF_INET;
    if(ext_bind(fd, (struct sockaddr*)&local_addr, sizeof(local_addr) < 0))
       perror("bind");
-
+*/
    printf("Using fd = %u.\n", fd);
 
    FD_ZERO(&rset);

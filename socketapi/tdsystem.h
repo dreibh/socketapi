@@ -1,5 +1,5 @@
 /*
- *  $Id: tdsystem.h,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: tdsystem.h,v 1.2 2003/06/26 10:10:10 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -139,12 +139,6 @@ using namespace std;
  #include <machine/endian.h>
  #include <stdint.h>
  #define CPU_BYTEORDER BYTE_ORDER
-#endif
-
-#if (defined __i386__) || (defined __i486__) || (defined __pentium__) || (defined __pentiumpro__)|| (defined __ppc__)
- #define CPU_BITS 32
-#else
- #error "CPU_BITS is not set correctly! Check tdsystem.h!"
 #endif
 
 #if ((CPU_BYTEORDER != BIG_ENDIAN) && (CPU_BYTEORDER != LITTLE_ENDIAN))

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.11 2003/06/18 15:21:25 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.12 2003/06/26 10:10:10 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -2371,7 +2371,7 @@ static int collectSCTP_FDs(SelectData&                 selectData,
       selectData.ConditionArray[selectData.Conditions] =
          tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->getUpdateCondition(type);
       if((type == UCT_Write) &&
-         (tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr == NULL)) {
+         (tdSocket->Socket.SCTPSocketDesc.ConnectionOriented == false)) {
          selectData.ConditionArray[selectData.Conditions]->signal();
 #ifdef PRINT_SELECT
          cout << "collectSCTP_FDs: UDP-like sockets are always writable" << endl;
@@ -2474,6 +2474,7 @@ static int select_wrapper(int             n,
                           fd_set*         exceptfds,
                           struct timeval* timeout)
 {
+   bool   fakeUDPWrite = false;
    fd_set r;
    fd_set w;
    fd_set e;
@@ -2485,28 +2486,37 @@ static int select_wrapper(int             n,
    for(unsigned int i = 0;i < min((const unsigned int)n,(const unsigned int)FD_SETSIZE);i++) {
       if(SAFE_FD_ISSET(i,readfds) || SAFE_FD_ISSET(i,writefds) || SAFE_FD_ISSET(i,exceptfds)) {
          ExtSocketDescriptor* socket = ExtSocketDescriptorMaster::getSocket(i);
-         if((socket != NULL) && (socket->Type == ExtSocketDescriptor::ESDT_System)) {
-            const int fd = socket->Socket.SystemSocketID;
-            maxFD = max(maxFD,fd);
+         if(socket != NULL) {
+            if(socket->Type == ExtSocketDescriptor::ESDT_System) {
+               const int fd = socket->Socket.SystemSocketID;
+               maxFD = max(maxFD,fd);
 
-            if(SAFE_FD_ISSET(i,readfds)) {
-               FD_SET(fd,&r);
-            }
-            if(SAFE_FD_ISSET(i,writefds)) {
-               FD_SET(fd,&w);
-            }
-            if(SAFE_FD_ISSET(i,exceptfds)) {
-               FD_SET(fd,&e);
-            }
+               if(SAFE_FD_ISSET(i,readfds)) {
+                  FD_SET(fd,&r);
+               }
+               if(SAFE_FD_ISSET(i,writefds)) {
+                  FD_SET(fd,&w);
+               }
+               if(SAFE_FD_ISSET(i,exceptfds)) {
+                  FD_SET(fd,&e);
+               }
 #ifdef PRINT_SELECT
-            cout << "select(" << getpid() << "): added FD " << fd << " (" << i << ")" << endl;
+               cout << "select(" << getpid() << "): added FD " << fd << " (" << i << ")" << endl;
 #endif
-            reverseMapping[fd] = i;
-         }
-         else {
+               reverseMapping[fd] = i;
+            }
+            else if((socket->Type == ExtSocketDescriptor::ESDT_SCTP) &&
+                    (socket->Socket.SCTPSocketDesc.ConnectionOriented == false)) {
+#ifdef PRINT_SELECT
+               cout << "select(" << getpid() << "): added FD " << i << " - Unbound UDP-like SCTP socket" << endl;
+#endif
+               fakeUDPWrite = true;
+            }
+            else {
 #ifndef DISABLE_WARNINGS
-            cerr << "ERROR: select_wrapper() - Bad file descriptor " << i << "!" << endl;
+               cerr << "WARNING: select_wrapper() - Bad FD " << i << "!" << endl;
 #endif
+            }
          }
       }
    }
@@ -2514,15 +2524,46 @@ static int select_wrapper(int             n,
 #ifdef PRINT_SELECT
    cout << "select..." << endl;
 #endif
-   const int result = select(maxFD + 1,&r,&w,&e,timeout);
+   int result;
+   if(!fakeUDPWrite) {
+      result = select(maxFD + 1,&r,&w,&e,timeout);
+   }
+   else {
+      struct timeval mytimeout;
+      mytimeout.tv_sec  = 0;
+      mytimeout.tv_usec = 0;
+      result = select(maxFD + 1,&r,&w,&e,&mytimeout);
+   }
 #ifdef PRINT_SELECT
    cout << "select result " << result << endl;
 #endif
 
    if(result >= 0) {
       SAFE_FD_ZERO(readfds);
-      SAFE_FD_ZERO(writefds);
       SAFE_FD_ZERO(exceptfds);
+      if(!fakeUDPWrite) {
+         SAFE_FD_ZERO(writefds);
+      }
+      else {
+         for(unsigned int i = 0;i < FD_SETSIZE;i++) {
+            if(SAFE_FD_ISSET(i,writefds)) {
+               ExtSocketDescriptor* socket = ExtSocketDescriptorMaster::getSocket(i);
+               if((socket != NULL) &&
+                  (socket->Type == ExtSocketDescriptor::ESDT_SCTP) &&
+                  (socket->Socket.SCTPSocketDesc.ConnectionOriented == false)) {
+#ifdef PRINT_SELECT
+                  cout << "select(" << getpid() << "): write for FD " << i
+                       << " (Unbound UDP-like SCTP socket)" << endl;
+#endif
+                  FD_SET(i,writefds);
+                  result++;
+               }
+               else {
+                  FD_CLR(i,writefds);
+               }
+            }
+         }
+      }
       for(int i = 0;i <= maxFD;i++) {
          if(SAFE_FD_ISSET(i,&r)) {
 #ifdef PRINT_SELECT
@@ -3072,6 +3113,9 @@ int sctp_recvmsg(int                     s,
                  struct sctp_sndrcvinfo* sinfo,
                  int*                    msg_flags)
 {
+   if(len == NULL) {
+      errno_return(-EINVAL);
+   }
    struct iovec    iov = { (char*)data, *len };
    struct cmsghdr* cmsg;
    size_t          cmsglen = CMSG_SPACE(sizeof(struct sctp_sndrcvinfo));
@@ -3094,7 +3138,8 @@ int sctp_recvmsg(int                     s,
    *len = iov.iov_len;
    if((cc > 0) && (msg.msg_control != NULL) && (msg.msg_controllen > 0)) {
       cmsg = (struct cmsghdr*)CMSG_FIRSTHDR(&msg);
-      if((cmsg != NULL) &&
+      if((sinfo != NULL) &&
+         (cmsg != NULL)  &&
          (cmsg->cmsg_len   == CMSG_LEN(sizeof(struct sctp_sndrcvinfo))) &&
          (cmsg->cmsg_level == IPPROTO_SCTP)                             &&
          (cmsg->cmsg_type  == SCTP_SNDRCV)) {
@@ -3107,6 +3152,7 @@ int sctp_recvmsg(int                     s,
    if(fromlen != NULL) {
       *fromlen = msg.msg_namelen;
    }
+   *len = cc;
    return(cc);
 }
 
