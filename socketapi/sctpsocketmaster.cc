@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.18 2004/11/23 10:13:45 dreibh Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.19 2005/03/11 09:51:20 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -853,8 +853,8 @@ void SCTPSocketMaster::communicationLostNotif(unsigned int assocID,
          association->EstablishCondition.broadcast();
          association->ReadyForTransmit.broadcast();
       }
+      socket->checkAutoClose();
    }
-   socket->checkAutoClose();
 }
 
 
