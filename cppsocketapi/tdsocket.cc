@@ -1,5 +1,5 @@
 /*
- *  $Id: tdsocket.cc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: tdsocket.cc,v 1.2 2003/05/15 12:05:09 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -38,7 +38,7 @@
 #include "tdmessage.h"
 
 
-#include "tdin6.h"
+//#include "tdin6.h"
 
 
 #include <netdb.h>
