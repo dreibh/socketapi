@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.16 2003/07/07 16:12:44 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.17 2003/07/09 17:23:38 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -50,10 +50,11 @@
 #define PRINT_NOTIFICATION_SKIP
 #define PRINT_DATA
 #define PRINT_RECVSTATUS
+#define PRINT_SENDSTATUS
 #define PRINT_SETPRIMARY
-*/
 
-/*
+
+
 #define PRINT_AUTOCLOSE_TIMEOUT
 #define PRINT_AUTOCLOSE_CHECK
 
@@ -917,7 +918,7 @@ int SCTPSocket::internalSend(const char*            buffer,
 #elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
       result = sctp_send(
                   assocID, streamID,
-                  (unsigned char*)buffer, length,
+   
                   protoID,
                   SCTP_USE_PRIMARY,
                   timeToLive,
@@ -946,7 +947,16 @@ int SCTPSocket::internalSend(const char*            buffer,
       WriteReady = true;
    }
 
-   return((result == 0) ? (int)length : -EIO);
+#ifdef PRINT_RECVSTATUS
+   cout << "Association " << assocID << ": WriteReady=" << WriteReady << " sctp_send()=" << result << endl;
+#endif
+   if(result == 0) {
+      return((int)length);
+   }
+   if(result == SCTP_PARAMETER_PROBLEM) {
+      return(-EINVAL);
+   }
+   return(EIO);
 }
 
 
@@ -1064,18 +1074,49 @@ int SCTPSocket::sendTo(const char*          buffer,
          while(iterator != ConnectionlessAssociationList.end()) {
             SCTP_Association_Status status;
             if(sctp_getAssocStatus(iterator->second->AssociationID,&status) == 0) {
-#ifdef PRINT_ASSOCSEARCH
-               cout << "CL "
-                    << destinationAddress->getAddressString(InternetAddress::PF_HidePort|InternetAddress::PF_Address|InternetAddress::PF_Legacy)
-                    << " == "
-                    << String((const char*)&status.primaryDestinationAddress)
-                    << "?" << endl;
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
+               const unsigned int addresses = status.numberOfAddresses;
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+               const unsigned int addresses = status.numberOfDestinationPaths;
+#else
+#error Wrong sctplib version!
 #endif
-               if( (!iterator->second->IsShuttingDown)               &&
-                   (destinationAddress->getPort() == status.destPort) &&
-                   (destinationAddress->getAddressString(InternetAddress::PF_HidePort|InternetAddress::PF_Address|InternetAddress::PF_Legacy) == String((const char*)&status.primaryDestinationAddress)) ) {
-                  association = iterator->second;
-                  break;
+               for(unsigned int i = 0;i < addresses;i++) {
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
+                  const int index = i;
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+                  const int index = status.destinationPathIDs[i];
+#else
+#error Wrong sctplib version!
+#endif
+
+                  SCTP_Path_Status pathStatus;
+                  if(sctp_getPathStatus(iterator->second->AssociationID,index,&pathStatus) != 0) {
+#ifndef DISABLE_WARNINGS
+                     cerr << "INTERNAL ERROR: SCTPSocket::sendTo() - sctp_getPathStatus() failure!"
+                          << endl;
+                     ::exit(1);
+#endif
+                  }
+                  else {
+                     SCTP_Association_Status status;
+                     if(sctp_getAssocStatus(iterator->second->AssociationID,&status) == 0) {
+#ifdef PRINT_ASSOCSEARCH
+                        cout << "CL "
+                             << destinationAddress->getAddressString(InternetAddress::PF_HidePort|InternetAddress::PF_Address|InternetAddress::PF_Legacy)
+                             << " == "
+                             << String((const char*)&pathStatus.destinationAddress)
+                             << "?   AssocID=" << iterator->second->AssociationID << " index=" << index << endl;
+#endif
+                        if( (!iterator->second->IsShuttingDown)               &&
+                            (destinationAddress->getPort() == status.destPort) &&
+                            (destinationAddress->getAddressString(InternetAddress::PF_HidePort|InternetAddress::PF_Address|InternetAddress::PF_Legacy) ==
+                               String((const char*)&pathStatus.destinationAddress)) ) {
+                           association = iterator->second;
+                           break;
+                        }
+                     }
+                  }
                }
             }
             iterator++;
