@@ -198,7 +198,7 @@ int main()
   }
 
   /* Allow new associations to be accepted */
-  if (ext_listen(fd, 0) < 0) {
+  if (ext_listen(fd, 1) < 0) {
     perror("listen");
     exit(1);
   }
