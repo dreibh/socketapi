@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.2 2003/05/23 15:42:58 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -987,7 +987,7 @@ static int getAssocMaxRxt(ExtSocketDescriptor* tdSocket,
    int result = getAssocParams(tdSocket,assocID,parameters);
    if(result == 0) {
       assocparams->sasoc_assoc_id                 = assocID;
-      assocparams->sasoc_assocmaxrxt              = parameters.assocMaxRetransmits;
+      assocparams->sasoc_asocmaxrxt               = parameters.assocMaxRetransmits;
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
       assocparams->sasoc_number_peer_destinations = parameters.numberOfAddresses;
 #elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
@@ -1425,7 +1425,7 @@ static int setAssocMaxRxt(ExtSocketDescriptor* tdSocket,
    SCTPSocketMaster::MasterInstance.lock();
    int result = getAssocParams(tdSocket,assocID,parameters);
    if(result == 0) {
-      parameters.assocMaxRetransmits = assocparams->sasoc_assocmaxrxt;
+      parameters.assocMaxRetransmits = assocparams->sasoc_asocmaxrxt;
       result = setAssocParams(tdSocket,assocID,parameters);
    }
    SCTPSocketMaster::MasterInstance.unlock();
@@ -2960,7 +2960,8 @@ int sctp_opt_info(int sd, sctp_assoc_t assocID,
    if((opt == SCTP_RTOINFO)               ||
       (opt == SCTP_ASSOCINFO)             ||
       (opt == SCTP_STATUS)                ||
-      (opt == SCTP_GET_PEER_ADDR_INFO)) {
+      (opt == SCTP_GET_PEER_ADDR_INFO)    ||
+      (opt == SCTP_GET_PEER_ADDR_PARAMS)) {
          *(sctp_assoc_t *)arg = assocID;
          return(ext_getsockopt(sd,IPPROTO_SCTP,opt,arg,size));
     }

@@ -1,5 +1,5 @@
 /*
- *  $Id: ext_socket.h,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: ext_socket.h,v 1.2 2003/05/23 15:42:58 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -263,7 +263,7 @@ struct sctp_rtoinfo
 struct sctp_assocparams
 {
    sctp_assoc_t sasoc_assoc_id;
-   uint16_t     sasoc_assocmaxrxt;
+   uint16_t     sasoc_asocmaxrxt;
    uint16_t     sasoc_number_peer_destinations;
    uint32_t     sasoc_peer_rwnd;
    int32_t      sasoc_local_rwnd;
