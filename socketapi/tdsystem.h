@@ -1,5 +1,5 @@
 /*
- *  $Id: tdsystem.h,v 1.3 2003/07/14 12:41:11 dreibh Exp $
+ *  $Id: tdsystem.h,v 1.4 2003/07/16 14:20:08 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -107,6 +107,7 @@ using namespace std;
 #define OS_Linux   1
 #define OS_FreeBSD 2
 #define OS_Darwin  3
+#define OS_SOLARIS 4
 
 #ifdef LINUX
  #define SYSTEM OS_Linux
@@ -118,6 +119,10 @@ using namespace std;
  #define SYSTEM OS_Darwin
  #define MAXDNAME 256
 #endif
+#ifdef SOLARIS
+ #define SYSTEM OS_SOLARIS
+#endif
+
 #ifndef SYSTEM
  #warning Variable SYSTEM with operating system name not defined! Use e.g. -DOS_Linux compiler option.
  #warning Trying Linux...
@@ -136,6 +141,9 @@ using namespace std;
 #elif (SYSTEM == OS_Darwin)
  #include <machine/endian.h>
  #include <stdint.h>
+#elif (SYSTEM == OS_SOLARIS)
+ #include <inttypes.h>
+ #include <arpa/nameser_compat.h>
 #endif
 
 
