@@ -10,7 +10,7 @@ AC_CONFIG_AUX_DIR(admin)
 AC_CANONICAL_SYSTEM
 AC_ARG_PROGRAM
 
-AM_INIT_AUTOMAKE(socketapi,1.3.0c)
+AM_INIT_AUTOMAKE(socketapi,1.3.1)
 
 AC_PREFIX_DEFAULT(/usr/local)
 if test "x$prefix" = "xNONE"; then
