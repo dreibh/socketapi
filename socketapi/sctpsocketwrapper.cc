@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.18 2003/08/11 18:09:49 tuexen Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.19 2003/08/12 09:15:24 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -102,7 +102,7 @@ inline static void SAFE_FD_ZERO(fd_set* fdset)
 
 
 // ###### Unpack sockaddr blocks to sockaddr_storage array ##################
-void unpack_sockaddr(sockaddr* addrArray, const size_t addrs, sockaddr_storage* newArray)
+static void unpack_sockaddr(sockaddr* addrArray, const size_t addrs, sockaddr_storage* newArray)
 {
    for(size_t i = 0;i < addrs;i++) {
       switch(addrArray->sa_family) {
@@ -126,7 +126,7 @@ void unpack_sockaddr(sockaddr* addrArray, const size_t addrs, sockaddr_storage* 
 
 
 // ###### Pack sockaddr_storage array to sockaddr blocks ####################
-sockaddr* pack_sockaddr_storage(const sockaddr_storage* addrArray, const size_t addrs)
+static sockaddr* pack_sockaddr_storage(const sockaddr_storage* addrArray, const size_t addrs)
 {
    size_t required = 0;
    for(size_t i = 0;i < addrs;i++) {
@@ -149,6 +149,9 @@ sockaddr* pack_sockaddr_storage(const sockaddr_storage* addrArray, const size_t 
    sockaddr* newArray = NULL;
    if(required > 0) {
       newArray = (sockaddr*)new char[required];
+      if(newArray == NULL) {
+         return(NULL);
+      }
       sockaddr* a = newArray;
       for(size_t i = 0;i < addrs;i++) {
          switch(((sockaddr*)&addrArray[i])->sa_family) {
