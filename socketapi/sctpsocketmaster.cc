@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.4 2003/06/04 17:21:00 dreibh Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.5 2003/06/05 23:00:26 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -621,7 +621,7 @@ void* SCTPSocketMaster::communicationUpNotif(unsigned int   assocID,
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
                                              int            adaptationLayerIndicationLen,
                                              void*          adaptationLayerIndication,
-#endif                                             
+#endif
                                              void*          dummy)
 {
 #ifdef PRINT_NOTIFICATIONS

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpterminal.cc,v 1.4 2003/06/04 17:21:00 dreibh Exp $
+ *  $Id: sctpterminal.cc,v 1.5 2003/06/05 23:00:26 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -271,13 +271,15 @@ void CopyThread::run()
          sctp_sndrcvinfo* info = (sctp_sndrcvinfo*)message.addHeader(sizeof(sctp_sndrcvinfo),IPPROTO_SCTP,SCTP_SNDRCV);
          info->sinfo_assoc_id = 0;
          info->sinfo_stream   = (unsigned short)stream;
-         info->sinfo_flags    = 0;
+         info->sinfo_flags    = MSG_PR_SCTP_TTL;
          info->sinfo_ppid     = ppid;
          if((Unreliable > 0) && (info->sinfo_stream <= Unreliable - 1)) {
+            info->sinfo_flags      = MSG_PR_SCTP_TTL;
             info->sinfo_timetolive = 0;
          }
          else {
-            info->sinfo_timetolive = (unsigned int)-1;
+            info->sinfo_flags      = MSG_PR_SCTP_TTL;
+            info->sinfo_timetolive = 0;
          }
          const ssize_t result = CopySocket->sendMsg(&message.Header,0);
          if(result < 0) {
@@ -299,8 +301,8 @@ void CopyThread::run()
 int main(int argc, char** argv)
 {
    bool            optForceIPv4       = false;
-   cardinal        instreams          = 1;
-   cardinal        outstreams         = 1;
+   cardinal        instreams          = 128;
+   cardinal        outstreams         = 128;
    cardinal        localAddresses     = 0;
    cardinal        remoteAddresses    = 0;
    cardinal        unreliable         = 0;
@@ -458,15 +460,16 @@ int main(int argc, char** argv)
    cout << "SCTP Terminal - Copyright (C) 2001-2003 Thomas Dreibholz" << endl;
    cout << "--------------------------------------------------------" << endl;
    cout << "Version:               " << __DATE__ << ", " << __TIME__ << endl;
-   localAddressArray[0]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_HidePort);
+   localAddressArray[0]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_Legacy|SocketAddress::PF_HidePort);
    cout << "Local Addresses:       " << *(localAddressArray[0]) << endl;
    for(cardinal i = 1;i < localAddresses;i++) {
-      localAddressArray[i]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_HidePort);
+      localAddressArray[i]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_Legacy|SocketAddress::PF_HidePort);
       cout << "                       " << *(localAddressArray[i]) << endl;
    }
    cout << "Remote Addresses:      " << *(remoteAddressArray[0]) << endl;
+   remoteAddressArray[0]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_Legacy|SocketAddress::PF_HidePort);
    for(cardinal i = 1;i < remoteAddresses;i++) {
-      remoteAddressArray[i]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_HidePort);
+      remoteAddressArray[i]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_Legacy|SocketAddress::PF_HidePort);
       cout << "                       " << *(remoteAddressArray[i]) << endl;
    }
    cout << "Outgoing Streams:      " << outstreams     << endl;
