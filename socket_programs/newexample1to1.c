@@ -91,7 +91,7 @@ static void echo(int fd, int socketModeUDP)
    /* Wait for something to echo */
    buflen = sizeof(buf);
    flags  = 0;
-   received = sctp_recvmsg(fd, buf, &buflen, NULL, 0, &sri, &flags);
+   received = sctp_recvmsg(fd, buf, buflen, NULL, 0, &sri, &flags);
    while(received > 0) {
       /* Intercept notifications here */
       if(flags & MSG_NOTIFICATION) {
@@ -119,7 +119,7 @@ static void echo(int fd, int socketModeUDP)
 
       buflen = sizeof(buf);
       flags  = 0;
-      received = sctp_recvmsg(fd, buf, &buflen, NULL, 0, &sri, &flags);
+      received = sctp_recvmsg(fd, buf, buflen, NULL, 0, &sri, &flags);
    }
 
    if(received < 0) {
