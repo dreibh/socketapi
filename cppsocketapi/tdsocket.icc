@@ -1,0 +1,283 @@
+/*
+ *  $Id: tdsocket.icc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *
+ * SCTP implementation according to RFC 2960.
+ * Copyright (C) 1999-2001 by Thomas Dreibholz
+ *
+ * Realized in co-operation between Siemens AG
+ * and University of Essen, Institute of Computer Networking Technology.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * There are two mailinglists available at www.sctp.de which should be used for
+ * any discussion related to this implementation.
+ *
+ * Contact: discussion@sctp.de
+ *          dreibh@exp-math.uni-essen.de
+ *
+ * Purpose: Socket Implementation
+ *
+ */
+
+
+#ifndef TDSOCKET_ICC
+#define TDSOCKET_ICC
+
+
+#include "tdsocket.h"
+#include "ext_socket.h"
+
+
+#include "tdin6.h"
+
+
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+
+
+
+// ###### Get socket type ###################################################
+inline integer Socket::getType() const
+{
+   return(Type);
+}
+
+
+// ###### Get socket communication domain ###################################
+inline integer Socket::getCommunicationDomain() const
+{
+   return(CommunicationDomain);
+}
+
+
+// ###### Get socket protocol ###############################################
+inline integer Socket::getProtocol() const
+{
+   return(Protocol);
+}
+
+
+// ###### Check, if socket is ready #########################################
+inline bool Socket::ready() const
+{
+   return(SocketDescriptor >= 0);
+}
+
+
+// ###### Get flow info #####################################################
+inline card32 Socket::getSendFlowLabel() const
+{
+   return(SendFlow & IPV6_FLOWINFO_FLOWLABEL);
+}
+
+
+// ###### Get traffic class #################################################
+inline card8 Socket::getSendTrafficClass() const
+{
+   return((SendFlow & IPV6_FLOWINFO_PRIORITY) >> 20);
+}
+
+
+// ###### Get flow info #####################################################
+inline card32 Socket::getReceivedFlowLabel() const
+{
+   return(ReceivedFlow & IPV6_FLOWINFO_FLOWLABEL);
+}
+
+
+// ###### Get traffic class #################################################
+inline card8 Socket::getReceivedTrafficClass() const
+{
+   return((ReceivedFlow & IPV6_FLOWINFO_PRIORITY) >> 20);
+}
+
+
+// ###### Get bytes sent ####################################################
+inline card64 Socket::getBytesSent() const
+{
+   return(BytesSent);
+}
+
+
+// ###### Get bytes received ################################################
+inline card64 Socket::getBytesReceived() const
+{
+   return(BytesReceived);
+}
+
+
+// ###### Reset bytes sent ##################################################
+inline void Socket::resetBytesSent()
+{
+   BytesSent = 0;
+}
+
+
+// ###### Reset bytes received ##############################################
+inline void Socket::resetBytesReceived()
+{
+   BytesReceived = 0;
+}
+
+
+// ###### Socket control ####################################################
+inline integer Socket::fcntl(const integer cmd, long arg)
+{
+   const integer result = ext_fcntl(SocketDescriptor,cmd,arg);
+   if(result != 0) {
+      LastError = errno;
+   }
+   return(result);
+}
+
+
+// ###### Socket control ####################################################
+inline integer Socket::fcntl(const integer cmd,
+                             long          arg,
+                             struct flock* lock)
+{
+   const integer result = ext_fcntl(SocketDescriptor,cmd,arg,lock);
+   if(result != 0) {
+      LastError = errno;
+   }
+   return(result);
+}
+
+
+// ###### Socket control ####################################################
+inline integer Socket::ioctl(const integer request, const void* argp)
+{
+   const integer result = ext_ioctl(SocketDescriptor,request,argp);
+   if(result != 0) {
+      LastError = errno;
+   }
+   return(result);
+}
+
+
+// ###### Wrapper for getsockopt() ##########################################
+inline integer Socket::getSocketOption(const cardinal level,
+                                       const cardinal optionNumber,
+                                       void*          optionValue,
+                                       socklen_t*     optionLength)
+{
+   const integer result = ext_getsockopt(SocketDescriptor,
+                                        level,optionNumber,optionValue,optionLength);
+   if(result != 0) {
+      LastError = errno;
+   }
+   return(result);
+}
+
+
+// ###### Wrapper for setsockopt() ##########################################
+inline integer Socket::setSocketOption(const cardinal  level,
+                                       const cardinal  optionNumber,
+                                       const void*     optionValue,
+                                       const socklen_t optionLength)
+{
+   const integer result = ext_setsockopt(SocketDescriptor,
+                                        level,optionNumber,optionValue,optionLength);
+   if(result != 0) {
+      LastError = errno;
+   }
+   return(result);
+}
+
+
+// ###### Get system's socket descriptor ####################################
+inline int Socket::getSystemSocketDescriptor() const
+{
+   return(SocketDescriptor);
+}
+
+
+// ###### Get last error ####################################################
+inline integer Socket::getLastError()
+{
+   const integer error = LastError;
+   LastError = 0;
+   return(error);
+}
+
+
+// ###### Receive data ######################################################
+inline ssize_t Socket::receive(void*          buffer,
+                               const size_t   length,
+                               const cardinal flags)
+{
+   char      socketAddressBuffer[SocketAddress::MaxSockLen];
+   socklen_t socketAddressLength = SocketAddress::MaxSockLen;
+
+   ssize_t result = recvFrom(SocketDescriptor, buffer,
+                             length, flags,
+                             (sockaddr*)&socketAddressBuffer,
+                             &socketAddressLength);
+   if(result > 0) {
+      BytesReceived += (card64)result;
+   }
+   return(result);
+}
+
+
+// ###### Read data #########################################################
+inline ssize_t Socket::read(void* buffer, const size_t length)
+{
+   ssize_t result = ext_read(SocketDescriptor,buffer,length);
+   if(result >= 0) {
+      BytesReceived += (card64)result;
+   }
+   else {
+      LastError = errno;
+      result    = -LastError;
+   }
+   return(result);
+}
+
+
+// ###### Write data ########################################################
+inline ssize_t Socket::write(const void*  buffer,
+                             const size_t length)
+{
+   ssize_t result = ext_write(SocketDescriptor,buffer,length);
+   if(result >= 0) {
+      BytesSent += (card64)result;
+   }
+   else {
+      LastError = errno;
+      result    = -LastError;
+   }
+   return(result);
+}
+
+
+// ###### Add multicast membership ##########################################
+bool Socket::addMulticastMembership(const SocketAddress& address,
+                                    const char*          interface)
+{
+   return(multicastMembership(address,interface,true) == 0);
+}
+
+
+// ###### Drop multicast membership #########################################
+bool Socket::dropMulticastMembership(const SocketAddress& address,
+                                     const char*          interface)
+{
+   return(multicastMembership(address,interface,false) == 0);
+}
+
+
+#endif

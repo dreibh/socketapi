@@ -1,0 +1,260 @@
+/*
+ *  $Id: tools.icc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *
+ * SCTP implementation according to RFC 2960.
+ * Copyright (C) 1999-2002 by Thomas Dreibholz
+ *
+ * Realized in co-operation between Siemens AG
+ * and University of Essen, Institute of Computer Networking Technology.
+ *
+ * Acknowledgement
+ * This work was partially funded by the Bundesministerium für Bildung und
+ * Forschung (BMBF) of the Federal Republic of Germany (Förderkennzeichen 01AK045).
+ * The authors alone are responsible for the contents.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * There are two mailinglists available at http://www.sctp.de which should be
+ * used for any discussion related to this implementation.
+ *
+ * Contact: discussion@sctp.de
+ *          dreibh@exp-math.uni-essen.de
+ *
+ * Purpose: Tools Implementation
+ *
+ */
+
+#ifndef TOOLS_ICC
+#define TOOLS_ICC
+
+
+#include "tools.h"
+
+#include <sys/time.h>
+#include <errno.h>
+
+
+// Use system's byteswap functions
+#if (SYSTEM == OS_Linux)
+#define USE_BYTESWAP
+#endif
+
+
+
+// ###### Calculate the current time in milliseconds from 01-Jan-1970 #######
+inline card64 getMicroTime()
+{
+  struct timeval tv;
+  gettimeofday(&tv,NULL);
+  return(((card64)tv.tv_sec * (card64)1000000) + (card64)tv.tv_usec);
+}
+
+
+// ###### Debug output ######################################################
+inline void debug(const char* string)
+{
+   cerr << string << endl;
+   cerr.flush();
+}
+
+
+// ##########################################################################
+// #### Byte Order Translations                                          ####
+// ##########################################################################
+
+
+#if CPU_BYTEORDER == BIG_ENDIAN
+
+
+// No byteorder translation for big endian necessary!
+inline card16 translate16(const card16 x) { return(x); }
+inline card32 translate32(const card32 x) { return(x); }
+inline card64 translate64(const card64 x) { return(x); }
+
+
+#elif CPU_BYTEORDER == LITTLE_ENDIAN
+
+
+#ifdef USE_BYTESWAP
+#include <byteswap.h>
+#endif
+
+
+// ###### 16-bit byteorder translation ######################################
+inline card16 translate16(const card16 x)
+{
+#ifdef USE_BYTESWAP
+   return(bswap_16(x));
+#else
+   return( (x << 8) | (x >> 8) );
+#endif
+}
+
+
+// ###### 32-bit byteorder translation ######################################
+inline card32 translate32(const card32 x)
+{
+#ifdef USE_BYTESWAP
+   return(bswap_32(x));
+#else
+   return( (x << 24)               |
+           ((x & 0x0000ff00) << 8) |
+           ((x & 0x00ff0000) >> 8) |
+           (x >> 24) );
+#endif
+}
+
+
+// ###### 64-bit byteorder translation ######################################
+inline card64 translate64(const card64 x)
+{
+#ifdef USE_BYTESWAP
+   return(bswap_64(x));
+#else
+   const card32 a = (card32)(x >> 32);
+   const card32 b = (card32)(x & 0xffffffff);
+   return( (card64)((a << 24) | ((a & 0x0000ff00) << 8) |
+                    ((a & 0x00ff0000) >> 8) | (a >> 24))
+        |  ((card64)((b << 24) | ((b & 0x0000ff00) << 8) |
+                    ((b & 0x00ff0000) >> 8) | (b >> 24)) << 32) );
+#endif
+}
+
+
+#else
+#error "Unknown CPU_BYTEORDER setting!"
+#endif
+
+
+// ###### Translate double to 64-bit binary value (32/32 bit separation) ####
+inline card64 translateToBinary(const double x)
+{
+   const double shift = (double)((card64)1 << 32);
+   return((card64)((int64)(x * shift)));
+}
+
+
+// ###### Translate 64-bit binary value (32/32 bit separation) to double ####
+inline double translateToDouble(const card64 x)
+{
+   const double shift = (double)((card64)1 << 32);
+   return(((double)((int64)x)) / shift);
+}
+
+
+// ###### QuickSort algorithm ###############################################
+template<class T> void quickSort(T*            array,
+                                 const integer start,
+                                 const integer end)
+{
+   const T v = array[(start + end) / 2];
+   integer i = start;
+   integer j = end;
+
+   do {
+      while(array[i] < v) i++;
+      while(array[j] > v) j--;
+      if(i <= j) {
+         const T temp = array[i];
+         array[i] = array[j];
+         array[j] = temp;
+         i++;
+         j--;
+      }
+   } while(j >= i);
+
+   if(start < j) {
+      quickSort(array,start,j);
+   }
+   if(i < end) {
+      quickSort(array,i,end);
+   }
+}
+
+
+// ###### QuickSort algorithm ###############################################
+template<class T> void quickSortPtr(T*            array,
+                                    const integer start,
+                                    const integer end,
+                                    bool (*lt)(T,T),
+                                    bool (*gt)(T,T))
+{
+   const T v = array[(start + end) / 2];
+   integer i = start;
+   integer j = end;
+
+   do {
+      while(lt(array[i],v)) i++;
+      while(gt(array[j],v)) j--;
+      if(i <= j) {
+         const T temp = array[i];
+         array[i] = array[j];
+         array[j] = temp;
+         i++;
+         j--;
+      }
+   } while(j >= i);
+
+   if(start < j) {
+      quickSortPtr(array,start,j,lt,gt);
+   }
+   if(i < end) {
+      quickSortPtr(array,i,end,lt,gt);
+   }
+}
+
+
+// ###### QuickSort algorithm for groups ####################################
+template<class T> void quickSortGroupPtr(T*            array,
+                                         const integer start,
+                                         const integer end,
+                                         bool (*lt)(T,T),
+                                         bool (*gt)(T,T),
+                                         bool (*geq)(T,T))
+{
+   if((end - start) > 1) {
+      integer s = start;
+      integer i;
+      for(i = start + 1;i <= end;i++) {
+         if(!geq(array[s],array[i])) {
+            quickSortPtr(array,s,i - 1,lt,gt);
+            s = i;
+         }
+      }
+      if(!geq(array[s],array[i])) {
+         quickSortPtr(array,s,i - 1,lt,gt);
+      }
+   }
+}
+
+
+// ###### Remove duplicates #################################################
+template<class T> cardinal removeDuplicates(T*             array,
+                                            const cardinal length)
+{
+   cardinal counter;
+   if(length <= 1) {
+      counter = length;
+   }
+   else {
+      counter = 0;
+      for(cardinal i = 1;i < length;i++) {
+         if(array[counter] != array[i]) {
+            counter++;
+            array[counter] = array[i];
+         }
+      }
+      counter++;
+   }
+   return(counter);
+}
+
+
+#endif

@@ -1,0 +1,105 @@
+/*
+ *  $Id: timedthread.icc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *
+ * SCTP implementation according to RFC 2960.
+ * Copyright (C) 1999-2001 by Thomas Dreibholz
+ *
+ * Realized in co-operation between Siemens AG
+ * and University of Essen, Institute of Computer Networking Technology.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * There are two mailinglists available at www.sctp.de which should be used for
+ * any discussion related to this implementation.
+ *
+ * Contact: discussion@sctp.de
+ *          dreibh@exp-math.uni-essen.de
+ *
+ * Purpose: Timed Thread Inlines
+ *
+ */
+
+
+#ifndef TIMEDTHREAD_ICC
+#define TIMEDTHREAD_ICC
+
+
+
+// ###### Get interval ######################################################
+inline card64 TimedThread::getInterval() const
+{
+   return(SingleTimerThread::getInterval(0));
+}
+
+
+// ###### Set new interval ##################################################
+inline void TimedThread::setInterval(const card64 usec)
+{
+   SingleTimerThread::setInterval(0,usec);
+}
+
+
+// ###### Get timer correction mode #########################################
+inline cardinal TimedThread::getTimerCorrection() const
+{
+   return(SingleTimerThread::getTimerCorrection(0));
+}
+
+
+// ###### Set timer correction mode #########################################
+inline void TimedThread::setTimerCorrection(const cardinal maxCorrection)
+{
+   SingleTimerThread::setTimerCorrection(0,maxCorrection);
+}
+
+
+// ###### Leave correction loop #############################################
+inline void TimedThread::leaveCorrectionLoop()
+{
+   SingleTimerThread::leaveCorrectionLoop(0);
+}
+
+
+// ###### Get fast start mode ###############################################
+inline bool TimedThread::getFastStart() const
+{
+   return(SingleTimerThread::getFastStart(0));
+}
+
+
+// ###### Set fast start mode ###############################################
+inline void TimedThread::setFastStart(const bool on)
+{
+   SingleTimerThread::setFastStart(0,on);
+}
+
+
+// ###### Set time to next invokation #######################################
+inline void TimedThread::setNextAction(const card64 usec,
+                                       const card64 callLimit)
+{
+   SingleTimerThread::setNextAction(0,usec,callLimit);
+}
+
+
+// ###### Set time to next invokation #######################################
+inline void TimedThread::setNextActionAbs(const card64 usec,
+                                          const card64 timeStamp)
+{
+   SingleTimerThread::setNextActionAbs(0,usec,timeStamp);
+}
+
+
+#endif

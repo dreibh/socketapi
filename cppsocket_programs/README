@@ -1,0 +1,194 @@
+Socket API Program Usage
+========================
+
+
+
+1. SCTP Terminal
+
+A simple SCTP terminal program.
+
+Arguments for sctpterminal:
+- [Remote address]
+   Address of remote host, including SCTP port number.
+   The address and port may be given in text form, which will
+   be resolved automatically.
+   Examples: 1.2.3.4:7
+             1.2.3.4:echo
+             host.mydomain.xy:7
+             host.mydomain.xy:echo
+             [3ffe:400:9600::1:2:3]:7        (RFC 2732 compliant IPv6 format)
+             [3ffe:400:9600::1:2:3]:echo     (RFC 2732 compliant IPv6 format)
+
+- {-in=incoming}
+   Set maximum number of incoming streams. Default: 1.
+
+- {-out=outgoing}
+   Set number of outgoing streams. Default: 1.
+
+- {-force-ipv4|-use-ipv6}
+   Enables or disables usage of IPv6.
+
+- {-local=address1} ... {-local=addressN}
+   Set local address(es). The address may be given in text form,
+   which will be resolved automatically.
+   Examples: 127.0.0.1
+             [::1]
+             localhost
+             ipv6-localhost
+   If no local address is given, the address of the interface which
+   is used for routing to the given destination is used.
+
+- {-notif|-nonotif}
+   Enable or disable printing of SCTP notitications.
+
+- {-control|-nocontrol}
+   Enable or disable printing of SCTP control data.
+
+- {-color|-nocolor}
+   Enable or disable usage of ANSI color codes to display different
+   streams, notifications and control data colored for better
+   readability.
+
+
+
+2. SCTP MultiServer
+
+A multi-threaded SCTP server including echo, discard, daytime,
+connect test, TFTP and character generator services.
+
+Arguments for sctpmultiserver:
+- {-force-ipv4|-use-ipv6}
+   Enables or disables usage of IPv6.
+
+- {-in=incoming}
+   Set maximum number of incoming streams. Default: 16.
+
+- {-out=outgoing}
+   Set maximum number of outgoing streams. Default: 16.
+
+- {-local=address1} ... {-local=addressn}
+   Set local address(es). The address may be given in text form,
+   which will be resolved automatically.
+   Examples: 127.0.0.1
+             [::1]
+             localhost
+             ipv6-localhost
+   If no local address is given, the local addresses are obtained
+   automatically from the list of running interfaces (Ethernet, PPP,
+   tunnels, ...). The loopback address, multicast addresses,
+   IPv6 link local addreses and IPv6 anycast addresses will be
+   skipped.
+
+- {-notif|-nonotif}
+   Enable or disable printing of SCTP notitications.
+
+- {-control|-nocontrol}
+   Enable or disable printing of SCTP control data.
+
+- {-color|-nocolor}
+   Enable or disable usage of ANSI color codes to display different
+   streams, notifications and control data colored for better
+   readability.
+
+
+
+3. SCTP TFTP
+
+A TFTP (Trivial File Transfer Protocol) client.
+
+
+Arguments for sctptftp:
+- [Remote address]
+   Address of remote host, including SCTP port number.
+   The address and port may be given in text form, which will
+   be resolved automatically.
+   Examples: 1.2.3.4:69
+             1.2.3.4:tftp
+             host.mydomain.xy:69
+             host.mydomain.xy:tftp
+             [3ffe:400:9600::1:2:3]:69      (RFC 2732 compliant IPv6 format)
+             [3ffe:400:9600::1:2:3]:tftp    (RFC 2732 compliant IPv6 format)
+
+- [get|put]
+   Do download (get) or upload (put).
+
+- [Filename]
+   Filename for upload or download.
+
+- {-force-ipv4|-use-ipv6}
+   Enables or disables usage of IPv6.
+
+- {-local=address1} ... {-local=addressn}
+   Set local address(es). The address may be given in text form,
+   which will be resolved automatically.
+   Examples: 127.0.0.1
+             [::1]
+             localhost
+             ipv6-localhost
+   If no local address is given, the local addresses are obtained
+   automatically from the list of running interfaces (Ethernet, PPP,
+   tunnels, ...). The loopback address, multicast addresses,
+   IPv6 link local addreses and IPv6 anycast addresses will be
+   skipped.
+
+
+
+4. SCTP Test
+
+A simple test program demonstrating the usage of the C++ SCTP Socket
+classes for connection-oriented (TCP-like) and connection-less (UDP-like)
+SCTP usage.
+NOTE: The class Socket is a wrapper for the SCTP Socket classes AND
+      system socket functionality (socket(), bind(), ...). Therefore,
+      it can also be used for TCP, UDP, Unix sockets, ... .
+      The usage of this class is demonstrated in the SCTP Socket Test
+      program (sctpsockettest, see section 4).
+
+
+Arguments for sctptest:
+- [-force-ipv4|-use-ipv6]
+   Enables or disables usage of IPv6.
+   NOTE: The current default behavior is disabling IPv6!
+
+- [-server|-client]
+   Start in server or client mode.
+
+-[-connectionless|-cl | -connectionoriented|-co]
+   Use connection-less (UDP-like) or connection-oriented (TCP-like) mode.
+
+- [-local=address1] ... [-local=addressN]
+   Set local address(es). The address may be given in text form,
+   which will be resolved automatically.
+   Examples: 127.0.0.1
+             [::1]
+             localhost
+             ipv6-localhost
+
+- [-remote=address1] ... [-remote=addressN]
+   Set remote address(es). The address may be given in text form,
+   which will be resolved automatically.
+   Examples: 127.0.0.1
+             [::1]
+             remotehost
+             ipv6-remotehost
+
+Connection-less Example:
+Server: ./sctptest -server -cl -local=132.252.150.160
+Client: ./sctptest -client -cl -local=132.252.150.151 -remote=132.252.150.160
+
+Connection-oriented Example:
+Server: ./sctptest -server -co -local=132.252.150.160
+Client: ./sctptest -client -co -local=132.252.150.151 -remote=132.252.150.160
+
+
+
+5. SCTP Socket Test
+
+A simple test program demonstrating the usage of the C++ Socket
+classes for connection-oriented (TCP-like) and connection-less (UDP-like)
+SCTP usage. The arguments are the same as for SCTP Test. The Socket class
+also supports other protocols like TCP, UDP and Unix sockets.
+
+
+
+Thomas Dreibholz, dreibh@exp-math.uni-essen.de

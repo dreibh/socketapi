@@ -1,0 +1,80 @@
+/*
+ *  $Id: internetflow.icc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *
+ * SCTP implementation according to RFC 2960.
+ * Copyright (C) 1999-2002 by Thomas Dreibholz
+ *
+ * Realized in co-operation between Siemens AG
+ * and University of Essen, Institute of Computer Networking Technology.
+ *
+ * Acknowledgement
+ * This work was partially funded by the Bundesministerium für Bildung und
+ * Forschung (BMBF) of the Federal Republic of Germany (Förderkennzeichen 01AK045).
+ * The authors alone are responsible for the contents.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * There are two mailinglists available at http://www.sctp.de which should be
+ * used for any discussion related to this implementation.
+ *
+ * Contact: discussion@sctp.de
+ *          dreibh@exp-math.uni-essen.de
+ *
+ * Purpose: Internet Flow Implementation
+ *
+ */
+
+#ifndef INTERNETFLOW_ICC
+#define INTERNETFLOW_ICC
+
+
+#include "internetflow.h"
+
+
+#include "tdin6.h"
+
+
+
+// ###### Get flow info #####################################################
+inline card32 InternetFlow::getFlowInfo() const
+{
+   return(ntohl(FlowInfo));
+}
+
+
+// ###### Get flow label ####################################################
+inline card32 InternetFlow::getFlowLabel() const
+{
+   return(ntohl(FlowInfo) & IPV6_FLOWINFO_FLOWLABEL);
+}
+
+
+// ###### Get traffic class #################################################
+inline card8 InternetFlow::getTrafficClass() const
+{
+   return((ntohl(FlowInfo) & IPV6_FLOWINFO_PRIORITY) >> 20);
+}
+
+
+// ###### Set traffic class #################################################
+inline void InternetFlow::setTrafficClass(const card8 trafficClass)
+{
+   FlowInfo = htonl((ntohl(FlowInfo) & IPV6_FLOWINFO_FLOWLABEL) | ((card32)trafficClass << 20));
+}
+
+
+// ###### Set flow label ####################################################
+inline void InternetFlow::setFlowLabel(const card32 flowLabel)
+{
+   FlowInfo = htonl((ntohl(FlowInfo) & IPV6_FLOWINFO_PRIORITY) | flowLabel);
+}
+
+
+#endif

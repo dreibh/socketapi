@@ -1,0 +1,54 @@
+---------------------------------------------------------------------------------
+
+This source code repository contains an implementation of the
+socket API for the sctplib SCTP userland implementation.
+
+---------------------------------------------------------------------------------
+
+Installation instructions:
+1. - Get a compatible version of the sctplib from http://www.sctp.de/sctp.html
+   - Install it:
+     prompt> tar xzvf sctplib-XXXX.tar.gz
+     prompt> cd sctplib-XXXX
+     prompt> aclocal
+     prompt> autoconf
+     prompt> autoheader
+     prompt> automake
+     prompt> ./configure
+     prompt> make
+     prompt> make install   (as root!)
+     Now, the sctplib should be installed under /usr/local.
+2. - Go to the socketapi directory
+     prompt> aclocal
+     prompt> autoconf
+     prompt> autoheader
+     prompt> automake
+     prompt> ./configure
+     If configure fails due to incompatible version of the sctplib, go to step 1
+     and install a compatible version first. Then, try again.
+     prompt> make
+     prompt> make install   (as root!)
+
+
+It contains a number of files that are shortly described hereafter:
+AUTHORS   :   People who have produced this code.
+COPYING   :   The license to be applied for using/compiling/distributing
+              this code.
+INSTALL   :   Basic installation notes.
+NEWS      :   Changes from release to release.
+README    :   This file
+TODO      :   A more or less complete list of missing features/known
+              problems, etc.
+socketapi          :   This directory contains the socketapi sources.
+socket_programs    :   Example programs written in C.
+cppsocketapi       :   Some C++ wrapper classes for easier socket access.
+cppsocket_programs :   Example programs written in C++ using the C++ classes.
+
+
+Homepage and Mailing Lists:
+http://www.sctp.de/sctp.html
+Here, you will find a mailing list to which you can write bug reports.
+
+
+
+Thomas Dreibholz, dreibh@exp-math.uni-essen.de

@@ -1,0 +1,27 @@
+   SCTP_Instance_Parameters parameters;
+   bool                     result = false;
+
+   // ====== Get local addresses ============================================
+   SCTPSocketMaster::MasterInstance.lock();
+   if(getInstanceParameters(parameters)) {
+      const unsigned int localAddresses = parameters.noOfLocalAddresses;
+      addressArray = SocketAddress::newAddressList(localAddresses);
+      if(addressArray != NULL) {
+         for(unsigned int i = 0;i < localAddresses;i++) {
+            addressArray[i] = SocketAddress::createSocketAddress(0,(char*)&parameters.localAddressList[i],LocalPort);
+            if(addressArray[i] == NULL) {
+#ifndef DISABLE_WARNINGS
+               cerr << "WARNING: SCTPSocket::getLocalAddresses() - Bad address "
+                    << parameters.localAddressList[i] << ", port " << LocalPort << "!" << endl;
+#endif
+               SocketAddress::deleteAddressList(addressArray);
+               addressArray = NULL;
+               result       = false;
+               break;
+            }
+         }
+      }
+   }
+   SCTPSocketMaster::MasterInstance.unlock();
+
+   return(result);

@@ -1,0 +1,260 @@
+/*
+ *  $Id: tools.h,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *
+ * SCTP implementation according to RFC 2960.
+ * Copyright (C) 1999-2002 by Thomas Dreibholz
+ *
+ * Realized in co-operation between Siemens AG
+ * and University of Essen, Institute of Computer Networking Technology.
+ *
+ * Acknowledgement
+ * This work was partially funded by the Bundesministerium für Bildung und
+ * Forschung (BMBF) of the Federal Republic of Germany (Förderkennzeichen 01AK045).
+ * The authors alone are responsible for the contents.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * There are two mailinglists available at http://www.sctp.de which should be
+ * used for any discussion related to this implementation.
+ *
+ * Contact: discussion@sctp.de
+ *          dreibh@exp-math.uni-essen.de
+ *
+ * Purpose: Tools Implementation
+ *
+ */
+
+
+#ifndef TOOLS_H
+#define TOOLS_H
+
+
+#include "tdsystem.h"
+#include "tdstrings.h"
+
+#ifdef   HAVE_SYS_TIME_H
+#include <sys/time.h>
+#ifdef  TIME_WITH_SYS_TIME
+#include <time.h>
+#endif
+#endif
+
+
+
+/**
+  * Debug output.
+  *
+  * @param string Debug string to be written to cerr.
+  */
+inline void debug(const char* string);
+
+
+/**
+  * Get microseconds since January 01, 1970.
+  *
+  * @return Microseconds since January 01, 1970.
+  */
+inline card64 getMicroTime();
+
+
+/**
+  * Translate 16-bit value to network byte order.
+  *
+  * @param x Value to be translated.
+  * @return Translated value.
+  */
+inline card16 translate16(const card16 x);
+
+/**
+  * Translate 32-bit value to network byte order.
+  *
+  * @param x Value to be translated.
+  * @return Translated value.
+  */
+inline card32 translate32(const card32 x);
+
+/**
+  * Translate 64-bit value to network byte order.
+  *
+  * @param x Value to be translated.
+  * @return Translated value.
+  */
+inline card64 translate64(const card64 x);
+
+/**
+  * Translate double to 64-bit binary.
+  *
+  * @param x Value to be translated.
+  * @return Translated value.
+  */
+inline card64 translateToBinary(const double x);
+
+/**
+  * Translate 64-bit binary to double.
+  *
+  * @param x Value to be translated.
+  * @return Translated value.
+  */
+inline double translateToDouble(const card64 x);
+
+
+/**
+  * Calculate packets per second.
+  *
+  * Asumption: Every frame has it's own packets.
+  *
+  * @param payloadBytesPerSecond Byte rate of payload data.
+  * @param framesPerSecond Frame rate.
+  * @param maxPacketSize Maximum size of a packet.
+  * @param headerLength Length of header for each frame.
+  * @return Total bytes per second.
+  */
+cardinal calculatePacketsPerSecond(const cardinal payloadBytesPerSecond,
+                                   const cardinal framesPerSecond,
+                                   const cardinal maxPacketSize,
+                                   const cardinal headerLength);
+
+/**
+  * Calculate frames per second.
+  *
+  * Asumption: Every frame has it's own packets.
+  *
+  * @param payloadBytesPerSecond Byte rate of payload data.
+  * @param framesPerSecond Frame rate.
+  * @param maxPacketSize Maximum size of a packet.
+  * @param headerLength Length of header for each frame.
+  * @return Total frames per second.
+  */
+cardinal calculateBytesPerSecond(const cardinal payloadBytesPerSecond,
+                                 const cardinal framesPerSecond,
+                                 const cardinal maxPacketSize,
+                                 const cardinal headerLength);
+
+/**
+  * Scan protocol, host and path from an URL string. The protocol my be
+  * missing, if the String "protocol" is initialized with a default.
+  *
+  * @param location String with URL.
+  * @param protocol Place to store the protocol name.
+  * @param host Place to store the host name.
+  * @param path Place to store the path.
+  * @return true on success; false otherwise.
+  */
+bool scanURL(const String& location,
+             String&       protocol,
+             String&       host,
+             String&       path);
+
+/**
+  * Get user name for given user ID.
+  *
+  * @param str Buffer to store name to.
+  * @param size Size of buffer.
+  * @param realName true to get real name (e.g. John Miller); false to get user name (e.g. jmiller).
+  * @param uid User ID.
+  * @return true for success; false otherwise.
+  */
+bool getUserName(char*        str,
+                 const size_t size,
+                 const bool   realName  = false,
+                 const        uid_t uid = getuid());
+
+/**
+  * Sort array using QuickSort algorithm.
+  *
+  * @param array Array to be sorted.
+  * @param start Start offset in array.
+  * @param end End offset in array.
+  */
+template<class T> void quickSort(T*            array,
+                                 const integer start,
+                                 const integer end);
+
+/**
+  * Sort pointer array using QuickSort algorithm.
+  *
+  * @param array Array to be sorted.
+  * @param start Start offset in array.
+  * @param end End offset in array.
+  * @param lt Less than comparision routine.
+  * @param gt Greater than comparision routine.
+  */
+template<class T> void quickSortPtr(T*            array,
+                                    const integer start,
+                                    const integer end,
+                                    bool (*lt)(T,T),
+                                    bool (*gt)(T,T));
+
+
+/**
+  * Sort pointer array using QuickSort algorithm.
+  *
+  * @param array Array to be sorted.
+  * @param start Start offset in array.
+  * @param end End offset in array.
+  * @param lt Less than comparision routine for sorting.
+  * @param gt Greater than comparision routine for sorting.
+  * @param geq Equal routine for separation of groups.
+  */
+template<class T> void quickSortGroupPtr(T*            array,
+                                         const integer start,
+                                         const integer end,
+                                         bool (*lt)(T,T),
+                                         bool (*gt)(T,T),
+                                         bool (*geq)(T,T));
+
+
+/**
+  * Remove duplicates from *sorted* array.
+  *
+  * @param array Array to be sorted.
+  * @param length Length of array.
+  */
+template<class T> cardinal removeDuplicates(T*             array,
+                                            const cardinal length);
+
+
+/**
+  * Print time stamp (date and time) to given output stream.
+  *
+  * @param os Output stream.
+  */
+void printTimeStamp(ostream& os = cout);
+
+
+#ifdef USE_EFENCE
+
+
+#include "synchronizable.h"
+
+
+extern Synchronizable MemoryManagementLock;
+
+
+/**
+  * operator new() replacement for usage with libefence.
+  */ 
+void* operator new(size_t size) throw (std::bad_alloc);
+
+
+/**
+  * operator delete() replacement for usage with libefence.
+  */ 
+void operator delete(void* ptr) throw ();
+
+
+#endif
+
+
+#include "tools.icc"
+
+
+#endif
+

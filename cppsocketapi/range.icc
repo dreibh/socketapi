@@ -1,0 +1,105 @@
+/*
+ *  $Id: range.icc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *
+ * SCTP implementation according to RFC 2960.
+ * Copyright (C) 1999-2001 by Thomas Dreibholz
+ *
+ * Realized in co-operation between Siemens AG
+ * and University of Essen, Institute of Computer Networking Technology.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * There are two mailinglists available at www.sctp.de which should be used for
+ * any discussion related to this implementation.
+ *
+ * Contact: discussion@sctp.de
+ *          dreibh@exp-math.uni-essen.de
+ *
+ * Purpose: Range Template
+ *
+ */
+
+
+#ifndef RANGE_ICC
+#define RANGE_ICC
+
+
+#include "range.h"
+
+
+// ###### Set limits ########################################################
+template<class T> inline void Range<T>::setLimits(const T min, const T max)
+{
+   init(min,max,getValue());
+}
+
+
+// ###### Set value #########################################################
+template<class T> inline void Range<T>::setValue(const T value)
+{
+   Value = value;
+   if(Value != 0) {
+      if(Value < Min) Value = Min;
+      if(Value > Max) Value = Max;
+   }
+}
+
+
+// ###### "="-operator ######################################################
+template<class T> Range<T>& Range<T>::operator=(const Range<T>& range)
+{
+   Min   = range.Min;
+   Max   = range.Max;
+   Value = range.Value;
+   return(*this);
+}
+
+
+// ###### "=="-operator #####################################################
+template<class T> int Range<T>::operator==(const Range<T>& range) const
+{
+   return((Min == range.Min) && (Max == range.Max) && (Value == range.Value));
+}
+
+
+// ###### "!="-operator #####################################################
+template<class T> int Range<T>::operator!=(const Range<T>& range) const
+{
+   return((Min != range.Min) || (Max != range.Max) || (Value != range.Value));
+}
+
+
+// ###### Get minimum #######################################################
+template<class T> inline T Range<T>::getMin() const
+{
+   return(Min);
+}
+
+
+// ###### Get maximum #######################################################
+template<class T> inline T Range<T>::getMax() const
+{
+   return(Max);
+}
+
+
+// ###### Get value #########################################################
+template<class T> inline T Range<T>::getValue() const
+{
+   return(Value);
+}
+
+
+#endif

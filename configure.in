@@ -1,0 +1,378 @@
+dnl without this order in this file, autoconf will not work!
+dnl the argument is a source file out of your sources. But
+dnl acinclude.m4 makes the job for all programs ;-)
+AC_INIT(acinclude.m4)
+
+dnl enable the following if you want to use autoconf/automake
+dnl framework from a certain directory (like kde-common)
+AC_CONFIG_AUX_DIR(admin)
+
+AC_CANONICAL_SYSTEM
+AC_ARG_PROGRAM
+
+AM_INIT_AUTOMAKE(socketapi,1.2.1)
+
+AC_PREFIX_DEFAULT(/usr/local)
+if test "x$prefix" = "xNONE"; then
+  prefix=$ac_default_prefix
+  ac_configure_args="$ac_configure_args --prefix $prefix"
+fi
+AC_SUBST(prefix)
+
+dnl without this order in this file, automake will be confused!
+dnl 
+AM_CONFIG_HEADER(config.h)
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_RANLIB
+
+dnl create only shared libtool-libraries (add --enable-shared)
+AC_ENABLE_SHARED(no)
+dnl AM_DISABLE_SHARED
+
+dnl set the following to yes, if you want to create static
+dnl libtool-libraries, else no
+AC_ENABLE_STATIC(yes)
+
+dnl create a working libtool-script
+if test -z "$LIBTOOL"; then
+  AC_LANG_SAVE
+  AC_LANG_C
+  AC_LIBTOOL_DLOPEN
+  AM_PROG_LIBTOOL
+  dnl LIBTOOL="$LIBTOOL --silent"
+  dnl AC_SUBST(LIBTOOL)
+  AC_LANG_RESTORE
+  LIBTOOL_SHELL='/bin/sh ./libtool'
+else
+  LIBTOOL_SHELL=$LIBTOOL
+fi
+
+
+dnl add --with-extra-includes and --with-extra-libs switch to ./configure
+dnl
+all_libraries="$all_libraries $USER_LDFLAGS /usr/local/lib"
+all_includes="$all_includes $USER_INCLUDES /usr/local/include"
+AC_SUBST(all_includes)
+AC_SUBST(all_libraries)
+
+AC_SUBST(AUTODIRS)
+
+
+CFLAGS="$CFLAGS -D_REENTRANT -D_THREAD_SAFE"
+CXXFLAGS="$CXXFLAGS -D_REENTRANT -D_THREAD_SAFE"
+
+case $host_os in
+bsdi*)
+    CFLAGS="$CFLAGS -DBSDI"
+    thread_LIBS="-lpthread"
+    CFLAGS="$CFLAGS `glib-config --cflags`"
+    LDFLAGS="$LDFLAGS `glib-config --libs`"
+    ;;
+freebsd*)
+    CFLAGS="$CFLAGS -DFreeBSD -Wall -D_PTHREADS -pthread -I/usr/local/include"
+    CXXFLAGS="$CXXFLAGS -DFreeBSD -Wall -D_PTHREADS -pthread -I/usr/local/include"
+    thread_LIBS=""
+    # CFLAGS="$CFLAGS `glib12-config --cflags`"
+    # LDFLAGS="$LDFLAGS `glib12-config --libs`"
+    ;;
+hpux*)
+    CFLAGS="$CFLAGS -DSNAKE"
+    test -z "$GCC" && TRY_CFLAGS="$TRY_CFLAGS -Wp,-H600000"
+    thread_LIBS="-lpthread"
+    # CFLAGS="$CFLAGS `glib-config --cflags`"
+    # LDFLAGS="$LDFLAGS `glib-config --libs`"
+	;;
+linux*)
+    #CC="/opt/gcc3.1/bin/gcc"
+    #CPP="/opt/gcc3.1/bin/gcc -E"
+    #CXX="/opt/gcc3.1/bin/g++"
+    #CFLAGS="$CFLAGS -O0 -g -Wall -DLINUX"
+    #CXXFLAGS="$CXXFLAGS -Wall -O0 -g -DLINUX"
+    CFLAGS="$CFLAGS -O0 -g -Wall -DLINUX"
+    CXXFLAGS="$CXXFLAGS -O0 -g -Wall -DLINUX"
+    thread_LIBS="-lpthread"
+    LDFLAGS="$LDFLAGS"
+    # CFLAGS="$CFLAGS `glib-config --cflags`"
+    # LDFLAGS="`glib-config --libs` $LDFLAGS"
+    ;;
+openbsd*)
+    LIBS="$LIBS -lcompat"
+    thread_LIBS="-lpthread"
+    # CFLAGS="$CFLAGS `glib-config --cflags`"
+    # LDFLAGS="$LDFLAGS `glib-config --libs`"
+    ;;
+solaris*)
+    CFLAGS="$CFLAGS -Wall -DSOLARIS -D__sun -DSUN -DSUNOS_5"
+    CXXFLAGS="$CXXFLAGS -Wall -DSOLARIS -D__sun -DSUN -DSUNOS_5"
+    thread_LIBS="-lpthread"
+    LDFLAGS="$LDFLAGS -lsocket -lnsl -lrt -lresolv"
+    # CFLAGS="$CFLAGS `glib-config --cflags`"
+    # LDFLAGS="$LDFLAGS `glib-config --libs`"
+    ;;
+sunos4*)
+    CFLAGS="$CFLAGS -DSUN -DSUN4"
+    thread_LIBS="-lpthread"
+    # CFLAGS="$CFLAGS `glib-config --cflags`"
+    # LDFLAGS="$LDFLAGS `glib-config --libs`"
+    ;;
+darwin*)
+    CFLAGS="$CFLAGS -DDARWIN"
+    CXXFLAGS="$CXXFLAGS -DDARWIN"
+    thread_LIBS="-lpthread"
+    # CFLAGS="$CFLAGS `glib-config --cflags`"
+    # LDFLAGS="$LDFLAGS `glib-config --libs`"
+    ;;
+esac
+AC_SUBST(thread_LIBS)
+
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_SIZE_T
+AC_STRUCT_TM
+AC_CHECK_SIZEOF(char, 1)
+AC_CHECK_SIZEOF(short, 2)
+AC_CHECK_SIZEOF(int, 4)
+AC_CHECK_SIZEOF(long, 4)
+AC_CHECK_SIZEOF(long long, 8)
+
+AC_MSG_CHECKING(for type socklen_t)
+AC_TRY_COMPILE([#include <sys/types.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <netinet/in.h>],
+[socklen_t x; x = 0;],
+[AC_DEFINE(HAVE_SOCKLEN_T)
+ AC_MSG_RESULT(yes)],
+[AC_MSG_RESULT(no)])
+
+dnl this does not work, as socklen_t is not defined in <sys/types.h>
+dnl AC_CHECK_TYPE(socklen_t, int)
+
+
+
+if test x$with_glib = xyes ; then
+  AC_MSG_ERROR([
+*** Directory must be specified for --with-glib])
+fi
+
+if test x$with_glib = x ; then
+  # Look for separately installed glib
+
+  AM_PATH_GLIB(1.2.8,,
+    AC_MSG_ERROR([
+*** GLIB 1.2.8 or better is required. The latest version of GLIB
+*** is always available from ftp://ftp.gtk.org/.]),
+    gmodule gthread)
+
+  # we do not want to make all gtk progs to link to thread libraries.
+  glib_cflags=`$GLIB_CONFIG glib gmodule --cflags`
+  glib_thread_cflags="$GLIB_CFLAGS"
+  glib_libs=`$GLIB_CONFIG glib gmodule --libs`
+  glib_thread_libs="$GLIB_LIBS"
+  glib_LIBS="$glib_libs"
+  GLIB_LIBS="$glib_libs"
+  GLIB_DEPLIBS="$glib_libs"
+else
+  # Use uninstalled glib (assume they got the version right)
+
+  GLIB_CONFIG=$with_glib/glib-config
+  if test -x $GLIB_CONFIG ; then
+    :
+  else
+    AC_MSG_ERROR([GLIB directory ($with_glib) not present or not configured])
+  fi
+
+  # For use in gtk-config
+  glib_cflags=`$GLIB_CONFIG --cflags gmodule`
+  glib_thread_cflags=`$GLIB_CONFIG --cflags gmodule gthread`
+  glib_libs=`$GLIB_CONFIG --libs gmodule`
+  glib_thread_libs=`$GLIB_CONFIG --libs gmodule gthread`
+
+  glib_release=`$GLIB_CONFIG --version | sed 's%\\.[[0-9]]*$%%'`
+
+  # canonicalize relative paths
+  case $with_glib in
+    /*)
+      glib_dir=$with_glib
+      ;;
+    *)
+      glib_dir="\$(top_builddir)/$with_glib"
+      ;;
+  esac
+
+  glib_LIBS="$glib_libs"
+  GLIB_CFLAGS="-I$glib_dir -I$glib_dir/gmodule"
+  GLIB_LIBS="$glib_dir/libglib.la $glib_dir/gmodule/libgmodule.la"
+  GLIB_DEPLIBS=
+
+  AC_SUBST(GLIB_CFLAGS)
+  AC_SUBST(GLIB_LIBS)
+fi
+
+AC_SUBST(glib_cflags)
+AC_SUBST(glib_libs)
+AC_SUBST(glib_thread_cflags)
+AC_SUBST(glib_thread_libs)
+AC_SUBST(GLIB_DEPLIBS)
+AC_SUBST(glib_LIBS)
+
+
+
+ac_sctplib_includes=NO ac_sctplib_libraries=NO ac_sctplib_bindir=NO
+sctplib_libraries=""
+sctplib_includes=""
+AC_ARG_WITH(sctplib,
+   [  --with-sctplib=DIR       where the root of sctplib is installed ],
+   [  ac_sctplib_includes="$withval"/include
+      ac_sctplib_libraries="$withval"/lib
+      ac_sctplib_bindir="$withval"/bin
+   ])
+
+if test "$ac_sctplib_libraries" = "NO"; then
+   ac_sctplib_defaultdir="/usr/local"
+   ac_sctplib_includes="$ac_sctplib_defaultdir"/include
+   ac_sctplib_libraries="$ac_sctplib_defaultdir"/lib
+   ac_sctplib_bindir="$ac_sctplib_defaultdir"/bin
+fi
+
+if test ! -e "$ac_sctplib_includes/sctp.h" ; then
+   AC_MSG_ERROR([No sctplib installation found ($ac_sctplib_includes/sctp.h)!])
+fi
+if test ! -e $ac_sctplib_libraries/libsctp.a ; then
+   AC_MSG_ERROR([No sctplib installation found ($ac_sctplib_libraries/libsctp.a)!])
+fi
+
+
+sctplib_LIBS="$ac_sctplib_libraries/libsctp.a"
+AC_SUBST(sctplib_LIBS)
+
+
+#AC_MSG_CHECKING(checking whether you can compile and run a standard C++ program)
+#AC_LANG_CPLUSPLUS
+#AC_TRY_RUN(dnl
+#[
+##include <iostream>
+##include <fstream>
+##include <set>
+##include <map>
+#
+#using namespace std;
+#
+#class Test
+#{
+#   public:
+#   Test();
+#   ~Test();
+#
+#   void run();
+#
+#   private:
+#   set<double> testSet;
+#};
+#
+#Test::Test()
+#{
+#   testSet.insert(19.1);
+#   testSet.insert(3.15169);
+#   testSet.insert(-29.091976);
+#   cerr << "Constructor!" << endl;
+#}
+#
+#Test::~Test()
+#{
+#   cerr << "Destructor!" << endl;
+#}
+#
+#void Test::run()
+#{
+#   cout << "Run!" << endl;
+#   set<double>::iterator iterator = testSet.begin();
+#   while(iterator != testSet.end()) {
+#      cerr << ">> " << *iterator << endl;
+#      iterator++;
+#   }
+#}
+#
+#int main()
+#{
+#   Test* test = new Test;
+#   if(test) {
+#      cerr << "This is a test! -> C++ works!" << endl;
+#      test->run();
+#   }
+#   delete test;
+#   return 0;
+#}
+#],
+#AC_MSG_RESULT(compatible),
+#AC_MSG_ERROR([Bad1]),
+#AC_MSG_ERROR([Bad2]))
+#AC_LANG_C
+
+
+AC_MSG_CHECKING(checking whether sctplib/socketapi version are compatible)
+AC_TRY_RUN(dnl
+[
+#include <sctp.h>
+#include <stdio.h>
+#include "socketapi/ext_socket.h"
+
+int main()
+{
+   int result = 0;
+
+   puts("\n********** sctplib/socketapi version checker **********");
+   printf("Current sctplib version: %d.%d\n",SCTP_MAJOR_VERSION,SCTP_MINOR_VERSION);
+   if((SCTP_MAJOR_VERSION == 0) && (SCTP_MINOR_VERSION == 19)) {
+      puts("Using sctplib-1.0.0pre19!");
+   }
+   else if((SCTP_MAJOR_VERSION == 1) && (SCTP_MINOR_VERSION == 0)) {
+      puts("Using sctplib-1.0.0!");
+   }
+   else if((SCTP_MAJOR_VERSION == 0) && (SCTP_MINOR_VERSION == 20)) {
+      puts("Using sctplib-1.0.0pre20!");
+   }
+   else {
+      puts("++++ This version is incompatible! ++++");
+      result = -1;
+   }
+   puts("*******************************************************");
+
+   return(result);
+}
+],
+AC_MSG_RESULT(compatible),
+AC_MSG_ERROR([Incompatible versions]),
+AC_MSG_ERROR([Incompatible versions]))
+
+
+
+socketapi_LIBS="../socketapi/libsctpsocket.la"
+AC_SUBST(socketapi_LIBS)
+
+cppsocketapi_LIBS="../cppsocketapi/libcppsctpsocket.la"
+AC_SUBST(cppsocketapi_LIBS)
+
+
+SOCKETAPI_CURRENT=1
+SOCKETAPI_REVISION=1
+SOCKETAPI_AGE=0
+SOCKETAPI_RELEASE=110
+
+AC_SUBST(SOCKETAPI_CURRENT)
+AC_SUBST(SOCKETAPI_REVISION)
+AC_SUBST(SOCKETAPI_AGE)
+AC_SUBST(SOCKETAPI_RELEASE)
+
+
+dnl perform program name transformation
+AC_ARG_PROGRAM
+
+dnl add here all your Makefiles. These will be created by configure
+AC_OUTPUT(Makefile socketapi/Makefile cppsocketapi/Makefile socket_programs/Makefile cppsocket_programs/Makefile )

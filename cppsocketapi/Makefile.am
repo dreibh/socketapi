@@ -1,0 +1,35 @@
+lib_LTLIBRARIES = libcppsctpsocket.la
+
+libcppsctpsocketincludedir      = $(prefix)/include/cppsctpsocket
+libcppsctpsocketinclude_HEADERS = breakdetector.h multitimerthread.h packetaddress.h range.h ringbuffer.h streamsrcdest.h tdin6.h tdsocket.h timedthread.h trafficclassvalues.h condition.h internetaddress.h internetflow.h portableaddress.h randomizer.h socketaddress.h synchronizable.h tdin6.h tdmessage.h tdstrings.h tdsystem.h thread.h tools.h unixaddress.h condition.icc internetaddress.icc internetflow.icc multitimerthread.icc packetaddress.icc portableaddress.icc randomizer.icc range.icc ringbuffer.icc socketaddress.icc synchronizable.icc tdmessage.icc tdsocket.icc tdstrings.icc thread.icc timedthread.icc tools.icc trafficclassvalues.icc unixaddress.icc multitimerthread.cc
+
+libcppsctpsocket_la_SOURCES = packetaddress.cc tdsocket.cc \
+                              breakdetector.cc \
+                              timedthread.cc trafficclassvalues.cc \
+                              streamsrcdest.cc multitimerthread.cc ringbuffer.cc
+
+libcppsctpsocket_la_LDFLAGS = \
+   -version-info $(SOCKETAPI_CURRENT):$(SOCKETAPI_REVISION):$(SOCKETAPI_AGE) \
+   -release $(SOCKETAPI_RELEASE)
+
+
+INCLUDES = -I../sctp -I../socketapi
+
+
+noinst_PROGRAMS =
+#t1
+
+#t1_SOURCES =  t1.cc
+#t1_LDADD = libcppsctpsocket.a @socketapi_LIBS@ ../sctp/libsctp.la @glib_LIBS@ @thread_LIBS@
+
+#t2_SOURCES =  t2.cc
+#t2_LDADD = libcppsctpsocket.a @socketapi_LIBS@ ../sctp/libsctp.la @glib_LIBS@ @thread_LIBS@
+
+#t3_SOURCES =  t3.cc
+#t3_LDADD = libcppsctpsocket.a @socketapi_LIBS@ ../sctp/libsctp.la @glib_LIBS@ @thread_LIBS@
+
+#t4_SOURCES =  t4.cc
+#t4_LDADD = libcppsctpsocket.a @socketapi_LIBS@ ../sctp/libsctp.la @glib_LIBS@ @thread_LIBS@
+
+#t5_SOURCES =  t5.cc
+#t5_LDADD = libcppsctpsocket.a @socketapi_LIBS@ ../sctp/libsctp.la @glib_LIBS@ @thread_LIBS@

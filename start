@@ -1,0 +1,2 @@
+#!/bin/sh
+autoconf && autoheader && automake && ./configure && gmake

@@ -1,0 +1,30 @@
+Changes of July 11, 2002:
+- Many ext_select() fixes
+- Introduced "Break Pipe":
+  Sending 1 Byte to break pipe registered for read events using sctplib
+  callback breaks sctplib's poll loop and allows adding/removing of
+  FDs for poll() call.
+
+Changes of June 07, 2002:
+- sctp_notification updated
+- added spc_assoc_id in sctp_paddr_change
+- sctp_remote_error updated
+- added sctp_adaption_event  (currently unsupported!)
+- added sctp_rcv_pdapi_event  (currently unsupported!)
+- updated sctp_assocparams
+   To be checked:
+      assocparams->sasoc_assocmaxrxt              = parameters.assocMaxRetransmits;
+      assocparams->sasoc_number_peer_destinations = parameters.numberOfAddresses;
+      assocparams->sasoc_peer_rwnd                = 0;
+      assocparams->sasoc_local_rwnd               = parameters.currentReceiverWindow;
+      assocparams->sasoc_cookie_life              = parameters.validCookieLife;
+- added sctp_setstrm_timeout  (currently unsupported!)
+- updated sctp_status
+   To be checked:
+      status->sstat_fragmentation_point = 0;
+- updated sctp_paddrinfo
+- added SCTP_DISABLE_FRAGMENTS  (currently unsupported!)
+- added SCTP_SET_DEFAULT_SEND_PARAM  (currently unsupported!)
+- added sctp_event_subscribe + SCTP_SET_EVENTS
+  The deprecated event setting mechanism is still available!
+- sctp_opt_info updated

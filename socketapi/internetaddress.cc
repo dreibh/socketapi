@@ -1,0 +1,761 @@
+/*
+ *  $Id: internetaddress.cc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *
+  * SCTP implementation according to RFC 2960.
+ * Copyright (C) 1999-2002 by Thomas Dreibholz
+ *
+ * Realized in co-operation between Siemens AG
+ * and University of Essen, Institute of Computer Networking Technology.
+ *
+ * Acknowledgement
+ * This work was partially funded by the Bundesministerium für Bildung und
+ * Forschung (BMBF) of the Federal Republic of Germany (Förderkennzeichen 01AK045).
+ * The authors alone are responsible for the contents.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * There are two mailinglists available at http://www.sctp.de which should be
+ * used for any discussion related to this implementation.
+ *
+ * Contact: discussion@sctp.de
+ *          dreibh@exp-math.uni-essen.de
+ *
+ * Purpose: Internet Address Implementation
+ *
+ */
+
+
+#include "tdsystem.h"
+#include "internetaddress.h"
+#include "ext_socket.h"
+
+
+#include <netdb.h>
+#include <netinet/in.h>
+#include <sys/utsname.h>
+#include <arpa/nameser.h>
+#include <ctype.h>
+
+
+
+// Print note, if IPv6 is not available.
+// #ifdef PRINT_NOIPV6_NOTE
+
+
+
+// ###### Internet address constructor ######################################
+InternetAddress::InternetAddress()
+{
+   reset();
+   Valid = false;
+}
+
+
+// ###### Internet address constructor ######################################
+// ## address: <Name>:port
+// ##          <Address>:port
+// ##          <Name>            => implies port = 0
+// ##          <Address>         => implies port = 0
+InternetAddress::InternetAddress(const String& address)
+{
+   if(address.isNull()) {
+      reset();
+   }
+   else {
+      // ====== Handle addresses with additional hostname:port ==============
+      // Skip hostname:port, only use (address:port) within brackets
+      String host = address;
+      String port = "0";
+      integer p1 = host.index('(');
+      if(p1 > 0) {
+         host = host.mid(p1 + 1);
+         host = host.left(host.length());
+      }
+
+      // ====== Handle RFC 2732 compliant address ===========================
+      if(host[0] == '[') {
+         p1 = host.index(']');
+         if(p1 > 0) {
+            if((host[p1 + 1] == ':') || (host[p1 + 1] == '!')) {
+               port = host.mid(p1 + 2);
+            }
+            host = host.mid(1,p1 - 1);
+            host = host.left(host.length());
+         }
+         else {
+            Valid = false;
+            return;
+         }
+      }
+
+      // ====== Handle standard address:port ================================
+      else {
+         p1 = address.rindex(':');
+         if(p1 < 0) p1 = address.rindex('!');
+         if(p1 > 0) {
+            host = address.left(p1);
+            port = address.mid(p1 + 1);
+         }
+      }
+
+      // ====== Initialize address ==========================================
+      int portNumber;
+      if((sscanf(port.getData(),"%d",&portNumber) == 1) &&
+         (portNumber >= 0) &&
+         (portNumber <= 65535)) {
+         init(host.getData(),portNumber);
+      }
+      else {
+         portNumber = getServiceByName(port.getData());
+         if(portNumber != 0) {
+            init(host.getData(),portNumber);
+         }
+         else {
+            Valid = false;
+         }
+      }
+   }
+}
+
+
+// ###### Internet address constructor ######################################
+InternetAddress::InternetAddress(const InternetAddress& address)
+{
+   init(address);
+}
+
+
+// ###### Internet address constructor ######################################
+InternetAddress::InternetAddress(const String& hostName,
+                                 const card16  port)
+{
+   if(hostName.isNull()) {
+      init(port);
+   }
+   else {
+      init(hostName,port);
+   }
+}
+
+
+// ###### Internet address constructor ######################################
+InternetAddress::InternetAddress(const PortableAddress& address)
+{
+   for(cardinal i = 0;i < 8;i++) {
+      Host[i] = address.Host[i];
+   }
+   Port  = address.Port;
+   Valid = true;
+   setPrintFormat(PF_Default);
+}
+
+
+// ###### Internet address constructor ######################################
+InternetAddress::~InternetAddress()
+{
+   Valid = false;
+}
+
+
+// ###### Internet address constructor ######################################
+InternetAddress::InternetAddress(const card16 port)
+{
+   init(port);
+}
+
+
+// ###### Internet address constructor ######################################
+InternetAddress::InternetAddress(sockaddr* address, const socklen_t length)
+{
+   init(address,length);
+}
+
+
+// ###### Get port ##########################################################
+card16 InternetAddress::getPort() const
+{
+   return(ntohs(Port));
+}
+
+
+// ###### Set port ##########################################################
+void InternetAddress::setPort(const card16 port)
+{
+   Port = htons(port);
+}
+
+
+// ###### Reset #############################################################
+void InternetAddress::reset()
+{
+   for(cardinal i = 0;i < 8;i++) {
+      Host[i] = 0x0000;
+   }
+   Valid = true;
+   setPort(0);
+   setPrintFormat(PF_Default);
+}
+
+
+// ###### Create duplicate ##################################################
+SocketAddress* InternetAddress::duplicate() const
+{
+   return(new InternetAddress(*this));
+}
+
+
+// ###### Check, if address is valid ########################################
+bool InternetAddress::isValid() const
+{
+   return(Valid);
+}
+
+
+// ###### Get address family ################################################
+integer InternetAddress::getFamily() const
+{
+   if(isIPv6()) {
+      return(AF_INET6);
+   }
+   return((UseIPv6 == true) ? AF_INET6 : AF_INET);
+}
+
+
+// ###### Internet address constructor ######################################
+void InternetAddress::init(const InternetAddress& address)
+{
+   Port = address.Port;
+   for(cardinal i = 0;i < 8;i++) {
+      Host[i] = address.Host[i];
+   }
+   Valid = address.Valid;
+   setPrintFormat(address.getPrintFormat());
+}
+
+
+// ###### Internet address initializer ######################################
+void InternetAddress::init(const card16 port)
+{
+   for(cardinal i = 0;i < 8;i++) {
+      Host[i] = 0x0000;
+   }
+   Valid = true;
+   setPort(port);
+   setPrintFormat(PF_Default);
+}
+
+
+// ###### Initialize internet address with hostname and port ################
+void InternetAddress::init(const String& hostName, const card16 port)
+{
+   card16   address[8];
+   cardinal length = getHostByName(hostName.getData(),(card16*)&address);
+
+   Valid = true;
+   setPort(port);
+   setPrintFormat(PF_Default);
+   switch(length) {
+      case 4:
+          for(cardinal i = 0;i < 5;i++) {
+             Host[i] = 0x0000;
+          }
+          Host[5] = 0xffff;
+          memcpy((char*)&Host[6],&address,4);
+        break;
+      case 16:
+         memcpy((char*)&Host,&address,16);
+       break;
+      default:
+        reset();
+        Valid = false;
+       break;
+   }
+}
+
+
+// ###### Internet address initializer ######################################
+void InternetAddress::init(const PortableAddress& address)
+{
+   for(cardinal i = 0;i < 8;i++) {
+      Host[i] = address.Host[i];
+   }
+   Port  = address.Port;
+   Valid = true;
+   setPrintFormat(PF_Default);
+}
+
+
+// ###### Initialize internet address from system's sockaddr structure ######
+void InternetAddress::init(sockaddr* address, const socklen_t length)
+{
+   setSystemAddress(address,length);
+   setPrintFormat(PF_Default);
+}
+
+
+// ###### Get local address #################################################
+InternetAddress InternetAddress::getLocalAddress(const InternetAddress& peer)
+{
+   InternetAddress address;
+
+   int sd = ext_socket((UseIPv6 == true) ? AF_INET6 : AF_INET,SOCK_DGRAM,IPPROTO_UDP);
+   if(socket >= 0) {
+      sockaddr_storage socketAddress;
+      socklen_t        socketAddressLength =
+                          peer.getSystemAddress((sockaddr*)&socketAddress,SocketAddress::MaxSockLen,
+                                                (UseIPv6 == true) ? AF_INET6 : AF_INET);
+      if(socketAddressLength > 0) {
+         if(ext_connect(sd,(sockaddr*)&socketAddress,socketAddressLength) == 0) {
+            if(ext_getsockname(sd,(sockaddr*)&socketAddress,&socketAddressLength) == 0) {
+               address.setSystemAddress((sockaddr*)&socketAddress,socketAddressLength);
+               address.setPort(0);
+            }
+         }
+      }
+      ext_close(sd);
+   }
+
+   return(address);
+}
+
+
+// ###### Get address string ################################################
+String InternetAddress::getAddressString(const cardinal format) const
+{
+   // ====== Check for invalid address ======================================
+   if(!Valid) {
+      return(String("(invalid)"));
+   }
+
+   // ====== Initialize =====================================================
+   char hostString[NI_MAXHOST + NI_MAXSERV + 16];
+   char addressString[256];
+   hostString[0]    = 0x00;
+   addressString[0] = 0x00;
+   if(!((format & PF_Hostname) || (format & PF_Address))) {
+#ifndef DISABLE_WARNINGS
+      cerr << "WARNING: InternetAddress::getAddressString() - "
+              "Set PF_Hostname or PF_Address before printing!" << endl;
+#endif
+      return(String("(check print format)"));
+   }
+
+   // ====== Generate hostname string =======================================
+   if(format & PF_Hostname) {
+#if (SYSTEM != OS_Darwin)
+      char             cname[NI_MAXHOST];
+      char             sname[NI_MAXSERV];
+      sockaddr_storage socketAddress;
+      const cardinal len = getSystemAddress((sockaddr*)&socketAddress,
+                                               sizeof(sockaddr_in6),
+                                               AF_UNSPEC);
+      const int error = getnameinfo((sockaddr*)&socketAddress,len,
+                                       (char*)&cname,MAXDNAME,
+                                       (char*)&sname,sizeof(sname),
+                                       NI_NAMEREQD);
+      if(error == 0) {
+         if(!(format & PF_HidePort)) {
+            snprintf((char*)&hostString,sizeof(hostString),"%s:%s",cname,sname);
+         }
+         else {
+            snprintf((char*)&hostString,sizeof(hostString),"%s",cname);
+         }
+      }
+#else
+#warning DNS reverse lookup unter Darwin ist noch nicht implementiert!
+#endif
+   }
+
+   // ====== Generate address string ========================================
+   if((format & PF_Address) || ((format & PF_Hostname) && (hostString[0] == 0x00))) {
+      if((UseIPv6 && !(format & PF_Legacy)) || (!isIPv4())) {
+         char str[32];
+         bool compressed = false;
+
+         // ====== If IPv6 address has an embedded IPv4 address
+         // print ::ffff:a.b.c.d format =====================================
+         integer length = isIPv6() ? 8 : 6;
+
+         // ====== Use RFC 2732 compilant notation ==========================
+         if(!(format & PF_HidePort)) {
+            strcat((char*)&addressString,"[");
+         }
+
+         // ====== Print IPv6 hex notation ==================================
+         const cardinal l0 = strlen(addressString);
+         for(cardinal i = 0;i < (cardinal)length;i++) {
+            card16 value = ntohs(Host[i]);
+            if((value != 0) || (compressed == true) || (i == 7)) {
+               snprintf((char*)&str,sizeof(str),"%x",value);
+            }
+            else {
+               cardinal j;
+               for(j = i + 1;j < 8;j++) {
+                  if(Host[j] != 0) {
+                     break;
+                  }
+               }
+               if(j == i + 1) {
+                  snprintf((char*)&str,sizeof(str),"%x",value);
+               }
+               else {
+                  if((i == 0) || (j == 8)) {
+                     strcpy((char*)&str,":");
+                  }
+                  else {
+                     strcpy((char*)&str,"");
+                  }
+                  compressed = true;
+                  i = j - 1;
+               }                        
+            }
+            strcat((char*)&addressString,(char*)&str);
+            if(i < 7) {
+               strcat((char*)&addressString,":");
+            }
+         }
+         if(addressString[l0 + 1] == 0x00) { // Any-Adress "::"
+            strcat((char*)&addressString,":");
+         }
+               
+         // ====== Print embedded IPv4 address in IPv4 notation =============
+         if(length == 6) {
+            card32 a = ntohl(*((card32*)&Host[6]));
+            snprintf((char*)&str,sizeof(str),
+                     "%d.%d.%d.%d",(a & 0xff000000) >> 24,
+                                   (a & 0x00ff0000) >> 16,
+                                   (a & 0x0000ff00) >> 8,
+                                   (a & 0x000000ff));
+            strcat((char*)&addressString,(char*)&str);
+         }
+               
+         // ====== Add port number ==========================================
+         if(!(format & PF_HidePort)) {
+            snprintf((char*)&str,sizeof(str),"]:%d",ntohs(Port));
+            strcat((char*)&addressString,(char*)&str);
+         }
+      }
+      else {
+         card32 a = ntohl(*((card32*)&Host[6]));
+         if(!(format & PF_HidePort)) {
+            snprintf((char*)&addressString,sizeof(addressString),
+                     "%d.%d.%d.%d:%d",(a & 0xff000000) >> 24,
+                                      (a & 0x00ff0000) >> 16,
+                                      (a & 0x0000ff00) >> 8,
+                                      (a & 0x000000ff),
+                                      ntohs(Port));
+         }
+         else {
+            snprintf((char*)&addressString,sizeof(addressString),
+                     "%d.%d.%d.%d",(a & 0xff000000) >> 24,
+                                   (a & 0x00ff0000) >> 16,
+                                   (a & 0x0000ff00) >> 8,
+                                   (a & 0x000000ff));
+         }
+      }
+   }
+
+   if((hostString[0] != 0x00) && (addressString[0] != 0x00))
+      return(String(hostString) + " (" + String(addressString) + ")");
+
+   return(String(hostString) + String(addressString));
+}
+
+
+// ###### Get sockaddr structure from internet address ######################
+cardinal InternetAddress::getSystemAddress(sockaddr*       buffer,
+                                           const socklen_t length,
+                                           const cardinal  type) const
+{
+   cardinal newType = type;
+   if(newType == AF_UNSPEC) {
+      newType = (UseIPv6 == true) ? AF_INET6 : AF_INET;
+   }
+   switch(newType) {
+      case AF_INET6: {
+         sockaddr_in6* address = (sockaddr_in6*)buffer;
+         if(sizeof(sockaddr_in6) <= length) {
+            address->sin6_family   = AF_INET6;
+            address->sin6_flowinfo = 0;
+            address->sin6_port     = Port;
+#if (SYSTEM == OS_Linux)
+            memcpy((char*)&address->sin6_addr.s6_addr16[0],(char*)&Host,16);
+#else
+            memcpy((char*)&address->sin6_addr.__u6_addr.__u6_addr16[0],(char*)&Host,16);
+#endif
+            return(sizeof(sockaddr_in6));
+         }
+         else {
+#ifndef DISABLE_WARNINGS
+            cerr << "WARNING: InternetAddress::getSystemInternetAddress() - "
+                    "Buffer size too low for AF_INET6!" << endl;
+#endif
+         }
+        }
+       break;
+      case AF_INET: {
+         sockaddr_in* address = (sockaddr_in*)buffer;
+         if(sizeof(sockaddr_in) <= length) {
+            address->sin_family = AF_INET;
+            if(isIPv4()) {
+               address->sin_port = Port;
+               memcpy((char*)&address->sin_addr.s_addr,(char*)&Host[6],4);
+               return(sizeof(sockaddr_in));
+            }
+            else {
+#ifndef DISABLE_WARNINGS
+               cerr << "WARNING: InternetAddress::getSystemInternetAddress() - "
+                       "Requested AF_INET for IPv6 address?!" << endl;
+#endif
+            }
+         }
+         else {
+#ifndef DISABLE_WARNINGS
+            cerr << "WARNING: InternetAddress::getSystemInternetAddress() - "
+                    "Buffer size too low for AF_INET!" << endl;
+#endif
+         }
+        }
+       break;
+      default:
+#ifndef DISABLE_WARNINGS
+         cerr << "WARNING: InternetAddress::getSystemInternetAddress() - Unknown type "
+              << newType << "!" << endl;
+#endif
+       break;
+   }
+   return(0);
+}
+
+
+// ###### Initialize internet address from sockaddr structure ###############
+bool InternetAddress::setSystemAddress(sockaddr* address, const socklen_t length)
+{
+   sockaddr_in* address4 = (sockaddr_in*)address;
+   Port = address4->sin_port;
+
+   switch(address4->sin_family) {
+      case AF_INET:
+         for(cardinal i = 0;i < 5;i++) {
+            Host[i] = 0x0000;
+         }
+         Host[5] = 0xffff;
+         memcpy((char*)&Host[6],(char*)&address4->sin_addr.s_addr,4);
+         Valid = true;
+         return(true);
+       break;
+      case AF_INET6: {
+         sockaddr_in6* address6 = (sockaddr_in6*)address;
+#if (SYSTEM == OS_Linux)
+         memcpy((char*)&Host,(char*)&address6->sin6_addr.s6_addr16[0],16);
+#else
+         memcpy((char*)&Host,(char*)&address6->sin6_addr.__u6_addr.__u6_addr8[0],16);
+#endif
+         Valid = true;
+         return(true);
+        }
+       break;
+      default:
+         reset();
+         Valid = true;
+        break;
+   }
+   return(false);
+}
+
+
+// ###### Check, if IPv6 is available #######################################
+bool InternetAddress::checkIPv6()
+{
+   int result = socket(AF_INET6,SOCK_DGRAM,0);
+   if(result != -1) {
+      close(result);
+#if (SYSTEM != OS_Darwin)
+      _res.options |= RES_USE_INET6;
+#endif
+      return(true);
+   }
+   else {
+#ifdef PRINT_NOIPV6_NOTE
+      cerr << "IPv6 is unsupported on this host!" << endl;
+#endif
+      return(false);
+   }
+}
+
+
+// ###### Get host address by name ##########################################
+cardinal InternetAddress::getHostByName(const String& hostName, card16* myadr)
+{
+   // ====== Check for null address =========================================
+   if(hostName.isNull()) {
+      for(cardinal i = 0;i < 8;i++) myadr[i] = 0;
+      if(UseIPv6) {
+         return(16);
+      }
+      else {
+         return(4);
+      }
+   }
+
+   // ====== Get information for host =======================================
+   addrinfo  hints;
+   addrinfo* res = NULL;
+   memset((char*)&hints,0,sizeof(hints));
+   hints.ai_socktype = SOCK_DGRAM;
+   hints.ai_family   = (UseIPv6 == true) ? AF_UNSPEC : AF_INET;
+   const char* name = hostName.getData();
+
+   // Avoid DNS lookups for IP addresses
+   bool isNumeric = true;
+   bool isIPv6    = false;
+   const cardinal nameLength = strlen(name);
+   for(cardinal i = 0;i < nameLength;i++) {
+      if(name[i] == ':') {
+         isIPv6 = true;
+         break;
+      }
+   }
+   if(!isIPv6) {
+      for(cardinal i = 0;i < nameLength;i++) {
+         if(!(isdigit(name[i]) || (name[i] == '.'))) {
+            isNumeric = false;
+            break;
+         }
+       }
+   }
+   if(isNumeric) {
+      hints.ai_flags = AI_NUMERICHOST;
+   }
+
+   if(getaddrinfo(name,NULL,&hints,&res) != 0) {
+      return(0);
+   }
+
+   // ====== Copy address ===================================================
+   cardinal result;
+   switch(res->ai_addr->sa_family) {
+      case AF_INET: {
+             const sockaddr_in* adr = (const sockaddr_in*)res->ai_addr;
+             memcpy((char*)myadr,(const char*)&adr->sin_addr,4);
+             result = 4;
+          }
+       break;
+      case AF_INET6: {
+             const sockaddr_in6* adr = (const sockaddr_in6*)res->ai_addr;
+             memcpy((char*)myadr,(const char*)&adr->sin6_addr,16);
+             result = 16;
+          }
+       break;
+      default:
+         result = 0;
+       break;
+   }
+
+   // ====== Free host information structure ================================
+   freeaddrinfo(res);
+
+   return(result);
+}
+
+
+// ###### Get service by name ###############################################
+card16 InternetAddress::getServiceByName(const char* name)
+{
+   addrinfo  hints;
+   addrinfo* res;
+   memset((char*)&hints,0,sizeof(hints));
+   hints.ai_family = AF_INET;
+   int error = getaddrinfo(NULL,name,&hints,&res);
+   if(error == 0) {
+      sockaddr_in* adr = (sockaddr_in*)res->ai_addr;
+      const card16 port = ntohs(adr->sin_port);
+      freeaddrinfo(res);
+      return(port);
+   }
+   return(0);
+}
+
+
+// ###### Get full hostname #################################################
+bool InternetAddress::getFullHostName(char* str, const size_t size)
+{
+   utsname uts;
+   if(uname(&uts) == 0) {
+      const InternetAddress address(uts.nodename);
+      snprintf(str,size,"%s",address.getAddressString(SocketAddress::PF_Hostname|SocketAddress::PF_HidePort).getData());
+      return(true);
+   }
+   str[0] = 0x00;
+   return(false);
+}
+
+
+// ###### Set in_addr structure from InternetAddress ########################
+bool InternetAddress::setIPv4Address(const InternetAddress& address,
+                                     in_addr*               ipv4Address)
+{
+   sockaddr_in sa;
+   if(address.getSystemAddress((sockaddr*)&sa,sizeof(sa),AF_INET) > 0) {
+      memcpy((char*)ipv4Address,(char*)&sa.sin_addr,sizeof(in_addr));
+      return(true);
+   }
+   return(false);
+}
+
+
+// ###### Get InternetAddress from in_addr structure ########################
+InternetAddress InternetAddress::getIPv4Address(const in_addr& ipv4Address)
+{
+   sockaddr_in sa;
+   sa.sin_family = AF_INET;
+   sa.sin_port   = 0;
+   memcpy((char*)&sa.sin_addr,(char*)&ipv4Address,sizeof(in_addr));
+
+   InternetAddress address((sockaddr*)&sa,sizeof(sa));
+   return(address);
+}
+
+
+// ###### Internet checksum calculation #####################################
+card32 InternetAddress::calculateChecksum(card8*         buf,
+                                          const cardinal nbytes,
+                                          card32         sum)
+{
+   // Checksum all the pairs of bytes first...
+   cardinal i;
+   for(i = 0; i < (nbytes & ~1U);i += 2) {
+      sum += (card16)ntohs(*((card16*)(buf + i)));
+      // Add carry
+      if(sum > 0xffff) {
+         sum -= 0xffff;
+      }
+   }
+
+   // If there's a single byte left over, checksum it, too.
+   if (i < nbytes) {
+      // sum += buf[i] << 8;
+      sum += htons((card16)buf[i]);
+      // Add carry
+      if(sum > 0xffff) {
+         sum -= 0xffff;
+      }
+   }
+
+   return(sum);
+}
+
+
+// ###### Internet checksum calculation #####################################
+card32 InternetAddress::wrapChecksum(card32 sum)
+{
+   sum = ~sum & 0xFFFF;
+   return(htons(sum));
+}

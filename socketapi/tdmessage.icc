@@ -1,0 +1,191 @@
+/*
+ *  $Id: tdmessage.icc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *
+ * SCTP implementation according to RFC 2960.
+ * Copyright (C) 1999-2002 by Thomas Dreibholz
+ *
+ * Realized in co-operation between Siemens AG
+ * and University of Essen, Institute of Computer Networking Technology.
+ *
+ * Acknowledgement
+ * This work was partially funded by the Bundesministerium für Bildung und
+ * Forschung (BMBF) of the Federal Republic of Germany (Förderkennzeichen 01AK045).
+ * The authors alone are responsible for the contents.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * There are two mailinglists available at http://www.sctp.de which should be
+ * used for any discussion related to this implementation.
+ *
+ * Contact: discussion@sctp.de
+ *          dreibh@exp-math.uni-essen.de
+ *
+ * Purpose: Message Inlines
+ *
+ */
+
+
+#ifndef TDMESSAGE_ICC
+#define TDMESSAGE_ICC
+
+
+#include "tdsystem.h"
+#include "tdmessage.h"
+
+#if (SYSTEM == OS_FreeBSD)
+#include <machine/param.h>
+#endif
+
+
+
+// ###### Constructor #######################################################
+template<const size_t size> inline SocketMessage<size>::SocketMessage()
+{
+   clear();
+}
+
+
+// ###### Destructor ########################################################
+template<const size_t size> inline void SocketMessage<size>::clear()
+{
+   Header.msg_name       = NULL;
+   Header.msg_namelen    = NULL;
+   Header.msg_iov        = NULL;
+   Header.msg_iovlen     = 0;
+   Header.msg_control    = (char*)&Control;
+   Header.msg_controllen = size;
+   Header.msg_flags      = 0;
+   NextMsg               = NULL;
+   if(size >= sizeof(cmsghdr)) {
+      cmsghdr* cmsg = (cmsghdr*)&Control;
+      cmsg->cmsg_len   = 0;
+      cmsg->cmsg_level = 0;
+      cmsg->cmsg_type  = 0;
+   }
+}
+
+
+// ###### Get address #######################################################
+template<const size_t size> inline SocketAddress* SocketMessage<size>::getAddress() const
+{
+   return(SocketAddress::createSocketAddress(
+             (sockaddr*)&Address,sizeof(Address)));
+}
+
+
+// ###### Set address #######################################################
+template<const size_t size> inline void SocketMessage<size>::setAddress(const SocketAddress& address)
+{
+   Header.msg_namelen = address.getSystemAddress((sockaddr*)&Address,sizeof(Address));
+   Header.msg_name    = (char*)&Address;
+}
+
+
+// ###### Set buffer ########################################################
+template<const size_t size> inline void SocketMessage<size>::setBuffer(char* buffer, const size_t buffersize)
+{
+   Header.msg_iov    = &IOVector;
+   Header.msg_iovlen = 1;
+   IOVector.iov_base = buffer;
+   IOVector.iov_len  = buffersize;
+}
+
+
+// ###### Set control size ##################################################
+template<const size_t size> inline void SocketMessage<size>::setControl(const size_t controlsize)
+{
+   Header.msg_control = (char*)&Control;
+   if(controlsize > size) {
+      cerr << "WARNING: SocketMessage<" << size << ">:setControl() - Size too large!" << endl;
+      Header.msg_controllen = size;
+      return;
+   }
+   Header.msg_controllen = controlsize;
+}
+
+
+// ###### Add cmsg header ###################################################
+template<const size_t size> inline char* SocketMessage<size>::addHeader(
+                                            const cardinal payload,
+                                            const int      level,
+                                            const int      type)
+{
+   if(NextMsg == NULL) {
+      NextMsg = (cmsghdr*)&Control;
+      Header.msg_control    = (char*)&Control;
+      Header.msg_controllen = 0;
+   }
+   const cardinal length = payload + sizeof(cmsghdr);
+
+   if(Header.msg_controllen + length > size) {
+      cerr << "WARNING: SocketMessage<" << size << ">:addHeader() - Too much control data!" << endl;
+      return(NULL);
+   }
+
+   cmsghdr* cmsg = NextMsg;
+   cmsg->cmsg_len   = length;
+   cmsg->cmsg_level = level;
+   cmsg->cmsg_type  = type;
+
+   Header.msg_controllen += cmsg->cmsg_len;
+   NextMsg = (cmsghdr*)((long)cmsg + (long)length);
+   return((char*)((long)cmsg + (long)sizeof(cmsghdr)));
+}
+
+
+// ###### Get first cmsg header #############################################
+template<const size_t size> inline cmsghdr* SocketMessage<size>::getFirstHeader() const
+{
+   if(Header.msg_controllen > 0) {
+      return(CFirst(&Header));
+   }
+   return(NULL);
+}
+
+
+// ###### Get next cmsg header ##############################################
+template<const size_t size> inline cmsghdr* SocketMessage<size>::getNextHeader(const cmsghdr* prev) const
+{
+   return(CNext(&Header,prev));
+}
+
+
+// ###### Wrapper for CMSG_DATA #############################################
+inline static char* CData(const cmsghdr* cmsg)
+{
+   return((char*)CMSG_DATA(cmsg));
+}
+
+
+// ###### Wrapper for CMSG_LEN ##############################################
+inline static const cardinal CLength(const cmsghdr* cmsg)
+{
+   return((cardinal)CMSG_LEN(cmsg));
+}
+
+
+// ###### Wrapper for CMSG_FIRSTHDR #########################################
+inline static cmsghdr* CFirst(const msghdr* header)
+{
+   if(header->msg_controllen > 0) {
+      return(CMSG_FIRSTHDR((msghdr*)header));
+   }
+   return(NULL);   
+}
+
+
+// ###### Wrapper for CMSG_NXTHDR ###########################################
+inline static cmsghdr* CNext(const msghdr* header, const cmsghdr* cmsg)
+{
+   return(CMSG_NXTHDR((msghdr*)header,(cmsghdr*)cmsg));
+}
+
+
+#endif
