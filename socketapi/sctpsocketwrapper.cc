@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.9 2003/06/06 16:52:13 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.10 2003/06/08 15:15:12 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -3052,7 +3052,7 @@ int sctp_sendmsg(int              s,
    sri->sinfo_cumtsn     = 0;
    sri->sinfo_timetolive = timetolive;
 
-   return(ext_sendmsg(s, &msg, flags));
+   return(ext_sendmsg(s, &msg, 0));
 }
 
 
@@ -3082,10 +3082,9 @@ int sctp_recvmsg(int                     s,
    };
    int cc;
 
-   cc = ext_recvmsg(s, &msg, msg.msg_flags);
+   cc = ext_recvmsg(s, &msg, 0);
 
    *len = iov.iov_len;
-printf("cc=%d len=%d\n",cc,*len);   
    if((cc > 0) && (msg.msg_control != NULL) && (msg.msg_controllen > 0)) {
       cmsg = (struct cmsghdr*)CMSG_FIRSTHDR(&msg);
       if((cmsg != NULL) &&

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.8 2003/06/06 23:30:28 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.9 2003/06/08 15:15:12 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -47,6 +47,7 @@
 #define PRINT_NEW_ASSOCIATIONS
 #define PRINT_SHUTDOWNS
 #define PRINT_PRSCTP
+#define PRINT_NOTIFICATION_SKIP
 #define PRINT_DATA
 #define PRINT_RECVSTATUS
 #define PRINT_SETPRIMARY
@@ -805,7 +806,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
          result = (int)bufferSize;
       }
       else {
-#ifndef DISABLE_WARNINGS
+#ifdef PRINT_NOTIFICATION_SKIP
             cout << "WARNING: Skipping " << notification.Content.sn_header.sn_length << " bytes notification data (type "
                  << notification.Content.sn_header.sn_type << ") from association " << assocID << ", stream " << streamID << ":" << endl;
 #endif
