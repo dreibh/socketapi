@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.17 2003/08/04 11:04:54 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.18 2003/08/11 18:09:49 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -1014,7 +1014,7 @@ static int getAssocStatus(ExtSocketDescriptor* tdSocket,
 static int getRTOInfo(ExtSocketDescriptor* tdSocket,
                       void* optval, socklen_t* optlen)
 {
-   if((optval == NULL) || (*optlen < sizeof(sctp_rtoinfo))) {
+   if((optval == NULL) || ((size_t)*optlen < sizeof(sctp_rtoinfo))) {
       errno_return(-EINVAL);
    }
    sctp_rtoinfo*           rtoinfo = (sctp_rtoinfo*)optval;
@@ -1037,7 +1037,7 @@ static int getRTOInfo(ExtSocketDescriptor* tdSocket,
 static int getAssocInfo(ExtSocketDescriptor* tdSocket,
                           void* optval, socklen_t* optlen)
 {
-   if((optval == NULL) || (*optlen < sizeof(sctp_assocparams))) {
+   if((optval == NULL) || ((size_t)*optlen < sizeof(sctp_assocparams))) {
       errno_return(-EINVAL);
    }
    sctp_assocparams*       assocparams = (sctp_assocparams*)optval;
@@ -1068,7 +1068,7 @@ static int getAssocInfo(ExtSocketDescriptor* tdSocket,
 static int getPeerAddressInfo(ExtSocketDescriptor* tdSocket,
                               void* optval, socklen_t* optlen)
 {
-   if((optval == NULL) || (*optlen < sizeof(sctp_paddrinfo))) {
+   if((optval == NULL) || ((size_t)*optlen < sizeof(sctp_paddrinfo))) {
       errno_return(-EINVAL);
    }
    int              result;
@@ -1104,7 +1104,7 @@ static int getPeerAddressInfo(ExtSocketDescriptor* tdSocket,
 static int getPeerAddressParams(ExtSocketDescriptor* tdSocket,
                                 void* optval, socklen_t* optlen)
 {
-   if((optval == NULL) || (*optlen < sizeof(sctp_paddrparams))) {
+   if((optval == NULL) || ((size_t)*optlen < sizeof(sctp_paddrparams))) {
       errno_return(-EINVAL);
    }
    int               result;
@@ -1178,7 +1178,7 @@ int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* 
                             return(getAssocStatus(tdSocket,optval,optlen));
                           break;
                          case SCTP_INITMSG: {
-                               if((optval == NULL) || (*optlen < sizeof(sctp_initmsg))) {
+                               if((optval == NULL) || ((size_t)*optlen < sizeof(sctp_initmsg))) {
                                   errno_return(-EINVAL);
                                }
                                sctp_initmsg* initmsg = (sctp_initmsg*)optval;
@@ -1223,7 +1223,7 @@ int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* 
                           /* ---- End of deprecated block ------------------------------ */
 
                          case SCTP_AUTOCLOSE:
-                            if((optval == NULL) || (*optlen < sizeof(unsigned int))) {
+                            if((optval == NULL) || ((size_t)*optlen < sizeof(unsigned int))) {
                                errno_return(-EINVAL);
                             }
                             if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
@@ -1242,7 +1242,7 @@ int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* 
                   case SOL_SOCKET:
                       switch(optname) {
                          case SO_SNDBUF:
-                            if((optval == NULL) || (*optlen < sizeof(unsigned int))) {
+                            if((optval == NULL) || ((size_t)*optlen < sizeof(unsigned int))) {
                                errno_return(-EINVAL);
                             }
                             if(tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr != NULL) {
@@ -1253,7 +1253,7 @@ int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* 
                             errno_return(-EBADF);
                           break;
                          case SO_RCVBUF:
-                            if((optval == NULL) || (*optlen < sizeof(unsigned int))) {
+                            if((optval == NULL) || ((size_t)*optlen < sizeof(unsigned int))) {
                                errno_return(-EINVAL);
                             }
                             if(tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr != NULL) {
@@ -1264,7 +1264,7 @@ int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* 
                             errno_return(-EBADF);
                           break;
                          case SO_LINGER:
-                            if((optval == NULL) || (*optlen < sizeof(linger))) {
+                            if((optval == NULL) || ((size_t)*optlen < sizeof(linger))) {
                                errno_return(-EINVAL);
                             }
                             *((linger*)optval) = tdSocket->Socket.SCTPSocketDesc.Linger;
@@ -1295,7 +1295,7 @@ int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* 
 static int setFlag(ExtSocketDescriptor* tdSocket,
                    const void* optval, const socklen_t optlen, const int flag)
 {
-   if((optlen != sizeof(int)) || (optval == NULL)) {
+   if(((size_t)optlen != sizeof(int)) || (optval == NULL)) {
       errno_return(-EINVAL);
    }
    const bool on = (*((int*)optval) != 0);
@@ -1445,7 +1445,7 @@ static int setEvents(ExtSocketDescriptor* tdSocket,
 static int setRTOInfo(ExtSocketDescriptor* tdSocket,
                       const void* optval, const socklen_t optlen)
 {
-   if((optval == NULL) || (optlen < sizeof(sctp_rtoinfo))) {
+   if((optval == NULL) || ((size_t)optlen < sizeof(sctp_rtoinfo))) {
       errno_return(-EINVAL);
    }
    sctp_rtoinfo*           rtoinfo = (sctp_rtoinfo*)optval;
@@ -1477,7 +1477,7 @@ static int setAssocInfo(ExtSocketDescriptor* tdSocket,
                         const void*          optval,
                         const socklen_t      optlen)
 {
-   if((optval == NULL) || (optlen < sizeof(sctp_assocparams))) {
+   if((optval == NULL) || ((size_t)optlen < sizeof(sctp_assocparams))) {
       errno_return(-EINVAL);
    }
    sctp_assocparams*       assocparams = (sctp_assocparams*)optval;
@@ -1499,7 +1499,7 @@ static int setAssocInfo(ExtSocketDescriptor* tdSocket,
 static int setPrimaryAddr(ExtSocketDescriptor* tdSocket,
                           const void* optval, const socklen_t optlen)
 {
-   if((optval == NULL) || (optlen < sizeof(sctp_setprim))) {
+   if((optval == NULL) || ((size_t)optlen < sizeof(sctp_setprim))) {
       errno_return(-EINVAL);
    }
    sctp_setprim* setprim = (sctp_setprim*)optval;
@@ -1529,7 +1529,7 @@ static int setPrimaryAddr(ExtSocketDescriptor* tdSocket,
 static int setPeerPrimaryAddr(ExtSocketDescriptor* tdSocket,
                               const void* optval, const socklen_t optlen)
 {
-   if((optval == NULL) || (optlen < sizeof(sctp_setpeerprim))) {
+   if((optval == NULL) || ((size_t)optlen < sizeof(sctp_setpeerprim))) {
       errno_return(-EINVAL);
    }
    sctp_setpeerprim* setpeerprim = (sctp_setpeerprim*)optval;
@@ -1559,7 +1559,7 @@ static int setPeerPrimaryAddr(ExtSocketDescriptor* tdSocket,
 static int setPeerAddressParams(ExtSocketDescriptor* tdSocket,
                                 const void* optval, const socklen_t optlen)
 {
-   if((optval == NULL) || (optlen < sizeof(sctp_paddrparams))) {
+   if((optval == NULL) || ((size_t)optlen < sizeof(sctp_paddrparams))) {
       errno_return(-EINVAL);
    }
    int               result      = -EBADF;
@@ -1657,7 +1657,7 @@ int ext_setsockopt(int sockfd, int level, int optname, const void* optval, sockl
                   case IPPROTO_SCTP:
                       switch(optname) {
                          case SCTP_INITMSG: {
-                               if((optval == NULL) || (optlen < sizeof(sctp_initmsg))) {
+                               if((optval == NULL) || ((size_t)optlen < sizeof(sctp_initmsg))) {
                                   errno_return(-EINVAL);
                                }
                                sctp_initmsg* initmsg = (sctp_initmsg*)optval;
@@ -1716,7 +1716,7 @@ int ext_setsockopt(int sockfd, int level, int optname, const void* optval, sockl
                          /* ---- Start of deprecated block ------------------------------ */
 
                          case SCTP_AUTOCLOSE:
-                            if((optval == NULL) || (optlen < sizeof(unsigned int))) {
+                            if((optval == NULL) || ((size_t)optlen < sizeof(unsigned int))) {
                                errno_return(-EINVAL);
                             }
                             if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr == NULL) {
@@ -1733,7 +1733,7 @@ int ext_setsockopt(int sockfd, int level, int optname, const void* optval, sockl
                   case SOL_SOCKET:
                       switch(optname) {
                          case SO_SNDBUF:
-                            if((optval == NULL) || (optlen < sizeof(unsigned int))) {
+                            if((optval == NULL) || ((size_t)optlen < sizeof(unsigned int))) {
                                errno_return(-EINVAL);
                             }
                             if((tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr != NULL) && (tdSocket->Socket.SCTPSocketDesc.ConnectionOriented)) {
@@ -1745,7 +1745,7 @@ int ext_setsockopt(int sockfd, int level, int optname, const void* optval, sockl
                             errno_return(-EBADF);
                           break;
                          case SO_RCVBUF:
-                            if((optval == NULL) || (optlen < sizeof(unsigned int))) {
+                            if((optval == NULL) || ((size_t)optlen < sizeof(unsigned int))) {
                                errno_return(-EINVAL);
                             }
                             if((tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr != NULL) && (tdSocket->Socket.SCTPSocketDesc.ConnectionOriented)) {
@@ -1757,7 +1757,7 @@ int ext_setsockopt(int sockfd, int level, int optname, const void* optval, sockl
                             errno_return(-EBADF);
                           break;
                          case SO_LINGER:
-                            if((optval == NULL) || (optlen < sizeof(linger))) {
+                            if((optval == NULL) || ((size_t)optlen < sizeof(linger))) {
                                errno_return(-EINVAL);
                             }
                             if( (((linger*)optval)->l_linger < 0) ||
@@ -1818,7 +1818,7 @@ int ext_connect(int sockfd, const struct sockaddr* serv_addr, socklen_t addrlen)
    if(tdSocket != NULL) {
       if(tdSocket->Type == ExtSocketDescriptor::ESDT_SCTP) {
          struct sockaddr_storage addressArray[1];
-         memcpy((char*)&addressArray[0], serv_addr, min(sizeof(sockaddr_storage), addrlen));
+         memcpy((char*)&addressArray[0], serv_addr, min(sizeof(sockaddr_storage), (size_t)addrlen));
          return(ext_connectx(sockfd, (sockaddr*)&addressArray, 1));
       }
       else {
@@ -1902,7 +1902,7 @@ int ext_connectx(int              sockfd,
 
 
 // ###### recv() wrapper ####################################################
-int ext_recv(int sockfd, void* buf, size_t len, int flags)
+ssize_t ext_recv(int sockfd, void* buf, size_t len, int flags)
 {
    ExtSocketDescriptor* tdSocket = ExtSocketDescriptorMaster::getSocket(sockfd);
    if(tdSocket != NULL) {
@@ -1924,7 +1924,7 @@ int ext_recv(int sockfd, void* buf, size_t len, int flags)
 
 
 // ###### recvfrom() wrapper ################################################
-int ext_recvfrom(int sockfd, void* buf, size_t len, int flags,
+ssize_t ext_recvfrom(int sockfd, void* buf, size_t len, int flags,
                 struct sockaddr* from, socklen_t* fromlen)
 {
    ExtSocketDescriptor* tdSocket = ExtSocketDescriptorMaster::getSocket(sockfd);
@@ -2127,14 +2127,14 @@ int ext_recvmsg2(int sockfd, struct msghdr* msg, int flags,
 
 
 // ###### recvmsg() wrapper #################################################
-int ext_recvmsg(int sockfd, struct msghdr* msg, int flags)
+ssize_t ext_recvmsg(int sockfd, struct msghdr* msg, int flags)
 {
    return(ext_recvmsg2(sockfd,msg,flags,1));
 }
 
 
 // ###### send() wrapper ####################################################
-int ext_send(int sockfd, const void* msg, size_t len, int flags)
+ssize_t ext_send(int sockfd, const void* msg, size_t len, int flags)
 {
    ExtSocketDescriptor* tdSocket = ExtSocketDescriptorMaster::getSocket(sockfd);
    if(tdSocket != NULL) {
@@ -2153,7 +2153,7 @@ int ext_send(int sockfd, const void* msg, size_t len, int flags)
 
 
 // ###### sendto() wrapper ####################################################
-int ext_sendto(int sockfd, const void* buf, size_t len, int flags,
+ssize_t ext_sendto(int sockfd, const void* buf, size_t len, int flags,
                const struct sockaddr* to, socklen_t tolen)
 {
    ExtSocketDescriptor* tdSocket = ExtSocketDescriptorMaster::getSocket(sockfd);
@@ -2254,10 +2254,8 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                   flags |= MSG_DONTWAIT;
                }
                if(msg->msg_name != NULL) {
-puts("DEST0");
                   SocketAddress* destination = SocketAddress::createSocketAddress(
                                                   0, (sockaddr*)msg->msg_name,msg->msg_namelen);
-puts("DEST1");
                   if(destination == NULL) {
                      errno_return(-EADDRNOTAVAIL);
                   }
@@ -2322,7 +2320,7 @@ puts("DEST1");
 
 
 // ###### sendmsg() wrapper #################################################
-int ext_sendmsg(int sockfd, const struct msghdr* msg, int flags)
+ssize_t ext_sendmsg(int sockfd, const struct msghdr* msg, int flags)
 {
    struct iovec* iov    = msg->msg_iov;
    const size_t  count  = msg->msg_iovlen;
@@ -2990,7 +2988,7 @@ int sctp_getlpaddrs(int               sockfd,
                     struct sockaddr** packedAddrs,
                     const bool        peerAddresses)
 {
-   sockaddr_storage* addrs;
+   sockaddr_storage* addrs = NULL;
 
    *packedAddrs = NULL;
    ExtSocketDescriptor* tdSocket = ExtSocketDescriptorMaster::getSocket(sockfd);

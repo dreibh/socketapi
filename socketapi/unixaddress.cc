@@ -1,5 +1,5 @@
 /*
- *  $Id: unixaddress.cc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: unixaddress.cc,v 1.2 2003/08/11 18:09:49 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -160,7 +160,7 @@ cardinal UnixAddress::getSystemAddress(sockaddr*       buffer,
       case AF_UNSPEC:
       case AF_UNIX: {
          sockaddr_un* address = (sockaddr_un*)buffer;
-         if(sizeof(sockaddr_un) <= length) {
+         if(sizeof(sockaddr_un) <= (size_t)length) {
             address->sun_family = AF_UNIX;
             strncpy((char*)&address->sun_path,(char*)&Name,MaxNameLength);
             return(sizeof(sockaddr_un));

@@ -1,5 +1,5 @@
 /*
- *  $Id: internetaddress.cc,v 1.3 2003/07/31 09:24:02 tuexen Exp $
+ *  $Id: internetaddress.cc,v 1.4 2003/08/11 18:09:49 tuexen Exp $
  *
   * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -481,7 +481,7 @@ cardinal InternetAddress::getSystemAddress(sockaddr*       buffer,
    switch(newType) {
       case AF_INET6: {
          sockaddr_in6* address = (sockaddr_in6*)buffer;
-         if(sizeof(sockaddr_in6) <= length) {
+         if(sizeof(sockaddr_in6) <= (size_t)length) {
             address->sin6_family   = AF_INET6;
             address->sin6_flowinfo = 0;
             address->sin6_port     = Port;
@@ -504,7 +504,7 @@ cardinal InternetAddress::getSystemAddress(sockaddr*       buffer,
        break;
       case AF_INET: {
          sockaddr_in* address = (sockaddr_in*)buffer;
-         if(sizeof(sockaddr_in) <= length) {
+         if(sizeof(sockaddr_in) <= (size_t)length) {
             address->sin_family = AF_INET;
             if(isIPv4()) {
                address->sin_port = Port;

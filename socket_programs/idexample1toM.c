@@ -89,7 +89,7 @@ my_recvmsg(int fd, struct msghdr *msg, void *buf, size_t *buflen, ssize_t *nrp, 
     }
 
     /* Realloc the buffer? */
-    if (*buflen == nr) {
+    if (*buflen == (size_t)nr) {
       buf = realloc(buf, *buflen * 2);
       if (buf == 0) {
         fprintf(stderr, "out of memory\n");
