@@ -1,5 +1,5 @@
 /*
- *  $Id: ext_socket.h,v 1.9 2003/07/07 16:12:44 dreibh Exp $
+ *  $Id: ext_socket.h,v 1.10 2003/07/09 15:49:47 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -74,6 +74,7 @@ typedef int socklen_t;
 #endif
 #define MSG_SHUTDOWN     MSG_EOF
 #define MSG_PR_SCTP_TTL  (1 << 26)
+#define MSG_ADDR_OVER    (1 << 25)
 
 
 typedef unsigned int   sctp_assoc_t;
