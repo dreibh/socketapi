@@ -2,11 +2,25 @@
 set -x
 mv -f admin/config.guess admin/config.guess.save
 mv -f admin/config.sub  admin/config.sub.save
-glibtoolize --force 
+if [ -e /usr/bin/glibtoolize ] ; then
+   glibtoolize --force
+elif [ -e /usr/bin/libtoolize ] ; then
+   libtoolize --force
+else
+   echo "ERROR: I cannot find libtoolize or glibtoolize!"
+   exit 1
+fi
 rm -f admin/config.guess admin/config.sub
 mv -f admin/config.guess.save admin/config.guess
 mv -f admin/config.sub.save admin/config.sub
-aclocal -I /usr/local/share/aclocal
+if [ -e /usr/share/aclocal ] ; then
+   aclocal -I /usr/share/aclocal
+elif [ -e /usr/local/share/aclocal ] ; then
+   aclocal -I /usr/local/share/aclocal
+else
+   echo "ERROR: I cannot find the aclocal directory!"
+   exit 1
+fi
 autoheader 
 automake --gnu --add-missing --copy
 autoconf
