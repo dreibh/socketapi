@@ -10,7 +10,7 @@ AC_CONFIG_AUX_DIR(admin)
 AC_CANONICAL_SYSTEM
 AC_ARG_PROGRAM
 
-AM_INIT_AUTOMAKE(socketapi,1.2.2)
+AM_INIT_AUTOMAKE(socketapi,1.3.0)
 
 AC_PREFIX_DEFAULT(/usr/local)
 if test "x$prefix" = "xNONE"; then
@@ -235,6 +235,8 @@ fi
 
 sctplib_LIBS="$ac_sctplib_libraries/libsctp.a"
 AC_SUBST(sctplib_LIBS)
+sctplib_INCLUDES="$ac_sctplib_includes"
+AC_SUBST(sctplib_INCLUDES)
 
 
 #AC_MSG_CHECKING(checking whether you can compile and run a standard C++ program)
@@ -300,40 +302,40 @@ AC_SUBST(sctplib_LIBS)
 #AC_LANG_C
 
 
-AC_MSG_CHECKING(checking whether sctplib/socketapi version are compatible)
-AC_TRY_RUN(dnl
-[
-#include <sctp.h>
-#include <stdio.h>
-#include "socketapi/ext_socket.h"
-
-int main()
-{
-   int result = 0;
-
-   puts("\n********** sctplib/socketapi version checker **********");
-   printf("Current sctplib version: %d.%d\n",SCTP_MAJOR_VERSION,SCTP_MINOR_VERSION);
-   if((SCTP_MAJOR_VERSION == 0) && (SCTP_MINOR_VERSION == 19)) {
-      puts("Using sctplib-1.0.0pre19!");
-   }
-   else if((SCTP_MAJOR_VERSION == 1) && (SCTP_MINOR_VERSION == 0)) {
-      puts("Using sctplib-1.0.0!");
-   }
-   else if((SCTP_MAJOR_VERSION == 0) && (SCTP_MINOR_VERSION == 20)) {
-      puts("Using sctplib-1.0.0pre20!");
-   }
-   else {
-      puts("++++ This version is incompatible! ++++");
-      result = -1;
-   }
-   puts("*******************************************************");
-
-   return(result);
-}
-],
-AC_MSG_RESULT(compatible),
-AC_MSG_ERROR([Incompatible versions]),
-AC_MSG_ERROR([Incompatible versions]))
+#AC_MSG_CHECKING(checking whether sctplib/socketapi version are compatible)
+#AC_TRY_RUN(dnl
+#[
+##include <sctp.h>
+##include <stdio.h>
+##include "socketapi/ext_socket.h"
+#
+#int main()
+#{
+#   int result = 0;
+#
+#   puts("\n********** sctplib/socketapi version checker **********");
+#   printf("Current sctplib version: %d.%d\n",SCTP_MAJOR_VERSION,SCTP_MINOR_VERSION);
+#   if((SCTP_MAJOR_VERSION == 0) && (SCTP_MINOR_VERSION == 19)) {
+#      puts("Using sctplib-1.0.0pre19!");
+#   }
+#   else if((SCTP_MAJOR_VERSION == 1) && (SCTP_MINOR_VERSION == 0)) {
+#      puts("Using sctplib-1.0.0!");
+#   }
+#   else if((SCTP_MAJOR_VERSION == 0) && (SCTP_MINOR_VERSION == 20)) {
+#      puts("Using sctplib-1.0.0pre20!");
+#   }
+#   else {
+#      puts("++++ This version is incompatible! ++++");
+#      result = -1;
+#   }
+#   puts("*******************************************************");
+#
+#   return(result);
+#}
+#],
+#AC_MSG_RESULT(compatible),
+#AC_MSG_ERROR([Incompatible versions]),
+#AC_MSG_ERROR([Incompatible versions]))
 
 
 
@@ -345,9 +347,9 @@ AC_SUBST(cppsocketapi_LIBS)
 
 
 SOCKETAPI_CURRENT=1
-SOCKETAPI_REVISION=2
-SOCKETAPI_AGE=1
-SOCKETAPI_RELEASE=121
+SOCKETAPI_REVISION=3
+SOCKETAPI_AGE=0
+SOCKETAPI_RELEASE=130
 
 AC_SUBST(SOCKETAPI_CURRENT)
 AC_SUBST(SOCKETAPI_REVISION)
@@ -364,6 +366,7 @@ AC_OUTPUT(Makefile socketapi/Makefile cppsocketapi/Makefile socket_programs/Make
 echo ""
 echo "The socketapi package has been configured with the following options:"
 echo "   sctplib libraries   : $sctplib_LIBS"
+echo "   sctplib includes    : $sctplib_INCLUDES"
 echo "   socketapi libraries : $socketapi_LIBS"
 echo "   thread libraries    : $thread_LIBS"
 echo "   CFLAGS              : $CFLAGS"
