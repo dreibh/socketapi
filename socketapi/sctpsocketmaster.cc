@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.11 2003/07/31 09:25:21 tuexen Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.12 2003/08/18 11:48:52 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -589,7 +589,7 @@ void SCTPSocketMaster::networkStatusChangeNotif(unsigned int assocID,
       spc->spc_assoc_id = assocID;
       switch(newState) {
          case SCTP_PATH_OK:
-            spc->spc_state = SCTP_ADDR_AVAILABLE;
+            spc->spc_state = SCTP_ADDR_REACHABLE;
           break;
          case SCTP_PATH_UNREACHABLE:
             spc->spc_state = SCTP_ADDR_UNREACHABLE;
