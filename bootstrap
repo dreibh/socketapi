@@ -1,7 +1,7 @@
 #! /bin/sh
 set -x
 glibtoolize --force 
-aclocal
+aclocal -I /usr/local/share/aclocal
 autoheader 
 automake --gnu --add-missing --copy
 autoconf
