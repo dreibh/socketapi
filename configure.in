@@ -20,7 +20,7 @@ fi
 AC_SUBST(prefix)
 
 dnl without this order in this file, automake will be confused!
-dnl 
+dnl
 AM_CONFIG_HEADER(config.h)
 
 dnl Checks for programs.
@@ -361,9 +361,9 @@ AC_SUBST(cppsocketapi_LIBS)
 
 
 SOCKETAPI_CURRENT=1
-SOCKETAPI_REVISION=1
-SOCKETAPI_AGE=0
-SOCKETAPI_RELEASE=110
+SOCKETAPI_REVISION=2
+SOCKETAPI_AGE=1
+SOCKETAPI_RELEASE=121
 
 AC_SUBST(SOCKETAPI_CURRENT)
 AC_SUBST(SOCKETAPI_REVISION)
@@ -375,7 +375,7 @@ dnl perform program name transformation
 AC_ARG_PROGRAM
 
 dnl add here all your Makefiles. These will be created by configure
-AC_OUTPUT(Makefile socketapi/Makefile cppsocketapi/Makefile socket_programs/Makefile cppsocket_programs/Makefile )
+AC_OUTPUT(Makefile socketapi/Makefile cppsocketapi/Makefile socket_programs/Makefile cppsocket_programs/Makefile scripts/Makefile )
 
 
 echo ""

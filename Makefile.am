@@ -1,1 +1,1 @@
-SUBDIRS = socketapi cppsocketapi socket_programs cppsocket_programs
+SUBDIRS = socketapi cppsocketapi socket_programs cppsocket_programs scripts
