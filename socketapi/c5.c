@@ -143,8 +143,8 @@ process_notification(int fd, char *notify_buf)
 	case SCTP_PEER_ADDR_CHANGE:
 		spc = &snp->sn_paddr_change;
 		switch(spc->spc_state) {
-		case SCTP_ADDR_AVAILABLE:
-			str = "ADDRESS AVAILABLE";
+		case SCTP_ADDR_REACHABLE:
+			str = "ADDRESS REACHABLE";
 			break;
 		case SCTP_ADDR_UNREACHABLE:
 			str = "ADDRESS UNAVAILABLE";

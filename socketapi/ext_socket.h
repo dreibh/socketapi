@@ -1,5 +1,5 @@
 /*
- *  $Id: ext_socket.h,v 1.14 2003/08/15 15:14:18 tuexen Exp $
+ *  $Id: ext_socket.h,v 1.15 2003/08/18 11:50:15 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -135,7 +135,7 @@ struct sctp_paddr_change
     int                     spc_error;
     sctp_assoc_t            spc_assoc_id;
 };
-#define SCTP_ADDR_AVAILABLE   21
+#define SCTP_ADDR_REACHABLE   21
 #define SCTP_ADDR_UNREACHABLE 22
 #define SCTP_ADDR_REMOVED     23
 #define SCTP_ADDR_ADDED       24
