@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.30 2004/11/23 10:13:45 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.31 2005/03/08 12:50:30 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -331,12 +331,12 @@ static int setAssocParams(ExtSocketDescriptor*           tdSocket,
 }
 
 
-// ###### Get association parameters ########################################
-static int getAddressParams(ExtSocketDescriptor* tdSocket,
-                            unsigned int&        assocID,
-                            sockaddr*            sockadr,
-                            const socklen_t      socklen,
-                            SCTP_PathStatus&     parameters)
+// ###### Get path status ###################################################
+static int getPathStatus(ExtSocketDescriptor* tdSocket,
+                         unsigned int&        assocID,
+                         sockaddr*            sockadr,
+                         const socklen_t      socklen,
+                         SCTP_PathStatus&     parameters)
 {
    SocketAddress* address = SocketAddress::createSocketAddress(0,sockadr,socklen);
    if(address == NULL) {
@@ -357,12 +357,12 @@ static int getAddressParams(ExtSocketDescriptor* tdSocket,
 }
 
 
-// ###### Set association parameters ########################################
-static int setAddressParams(ExtSocketDescriptor*    tdSocket,
-                            unsigned int            assocID,
-                            sockaddr*               sockadr,
-                            const socklen_t         socklen,
-                            const SCTP_PathStatus&  newParameters)
+// ###### Set path status ###################################################
+static int setPathStatus(ExtSocketDescriptor*    tdSocket,
+                         unsigned int            assocID,
+                         sockaddr*               sockadr,
+                         const socklen_t         socklen,
+                         const SCTP_PathStatus&  newParameters)
 {
    SocketAddress* address = SocketAddress::createSocketAddress(0,sockadr,socklen);
    if(address == NULL) {
@@ -970,26 +970,6 @@ int ext_ioctl(int sockfd, int request, const void* argp)
 }
 
 
-// ###### Get option ########################################################
-static int getFlag(ExtSocketDescriptor* tdSocket,
-                   void* optval, socklen_t* optlen, const int flag)
-{
-   if((*optlen < (int)sizeof(int)) || (optval == NULL)) {
-      errno_return(-EINVAL);
-   }
-   *optlen = sizeof(int);
-   if(tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr != NULL) {
-      *((int*)optval) = (tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->getNotificationFlags() & flag);
-      errno_return(0);
-   }
-   else if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
-      *((int*)optval) = (tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->getNotificationFlags() & flag);
-      errno_return(0);
-   }
-   errno_return(-EBADF);
-}
-
-
 // ###### Get association status ############################################
 static int getAssocStatus(ExtSocketDescriptor* tdSocket,
                           void* optval, socklen_t* optlen)
@@ -1086,10 +1066,10 @@ static int getPeerAddressInfo(ExtSocketDescriptor* tdSocket,
    unsigned int     assocID   = paddrinfo->spinfo_assoc_id;
    SCTP_PathStatus  parameters;
 
-   result = getAddressParams(tdSocket,assocID,
-                             (sockaddr*)&paddrinfo->spinfo_address,
-                             sizeof(paddrinfo->spinfo_address),
-                             parameters);
+   result = getPathStatus(tdSocket,assocID,
+                          (sockaddr*)&paddrinfo->spinfo_address,
+                          sizeof(paddrinfo->spinfo_address),
+                          parameters);
    if(result == 0) {
       switch(parameters.state) {
          case 1:
@@ -1110,29 +1090,43 @@ static int getPeerAddressInfo(ExtSocketDescriptor* tdSocket,
 }
 
 
-// ###### Get address parameters ############################################
-static int getPeerAddressParams(ExtSocketDescriptor* tdSocket,
-                                void* optval, socklen_t* optlen)
+// ###### Configure address parameters ######################################
+static int configurePeerAddressParams(ExtSocketDescriptor* tdSocket,
+                                      void*                optval,
+                                      socklen_t*           optlen)
 {
    if((optval == NULL) || ((size_t)*optlen < sizeof(sctp_paddrparams))) {
       errno_return(-EINVAL);
    }
    int               result;
-   sctp_paddrparams* paddrparams = (sctp_paddrparams*)optval;
-   unsigned int      assocID     = paddrparams->spp_assoc_id;
+   sctp_paddrparams* newParams = (sctp_paddrparams*)optval;
+   unsigned int      assocID   = newParams->spp_assoc_id;
    SCTP_PathStatus   parameters;
 
-   result = getAddressParams(tdSocket,
-                             assocID,
-                             (sockaddr*)&paddrparams->spp_address,
-                             sizeof(paddrparams->spp_address),
-                             parameters);
+   SCTPSocketMaster::MasterInstance.lock();
+   result = getPathStatus(tdSocket,
+                          assocID,
+                          (sockaddr*)&newParams->spp_address,
+                          sizeof(newParams->spp_address),
+                          parameters);
    if(result == 0) {
-      paddrparams->spp_hbinterval = parameters.heartbeatIntervall;
-      paddrparams->spp_pathmaxrxt = 0;
-      paddrparams->spp_assoc_id = assocID;
+      if(newParams->spp_hbinterval == 0) {
+         newParams->spp_hbinterval = parameters.heartbeatIntervall;
+      }
+      newParams->spp_pathmaxrxt = 0;
+      newParams->spp_pathmtu    = parameters.mtu;
+      newParams->spp_sackdelay  = 0;
+      newParams->spp_flags      = (newParams->spp_hbinterval > 0) ? SPP_HB_ENABLED : SPP_HB_DISABLED;
       *optlen = sizeof(sctp_paddrparams);
+
+      parameters.heartbeatIntervall = newParams->spp_hbinterval;
+      result = setPathStatus(tdSocket,assocID,
+                             (sockaddr*)&newParams->spp_address,
+                             sizeof(newParams->spp_address),
+                             parameters);
    }
+   SCTPSocketMaster::MasterInstance.unlock();
+
    errno_return(result);
 }
 
@@ -1184,6 +1178,9 @@ int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* 
                   // ====== SCTP ============================================
                   case IPPROTO_SCTP:
                       switch(optname) {
+                         case SCTP_PEER_ADDR_PARAMS:
+                            return(configurePeerAddressParams(tdSocket,optval,optlen));
+                          break;
                          case SCTP_STATUS:
                             return(getAssocStatus(tdSocket,optval,optlen));
                           break;
@@ -1200,9 +1197,6 @@ int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* 
                          case SCTP_GET_PEER_ADDR_INFO:
                              return(getPeerAddressInfo(tdSocket,optval,optlen));
                           break;
-                         case SCTP_GET_PEER_ADDR_PARAMS:
-                             return(getPeerAddressParams(tdSocket,optval,optlen));
-                          break;
                          case SCTP_RTOINFO: {
                                return(getRTOInfo(tdSocket,optval,optlen));
                             }
@@ -1210,28 +1204,6 @@ int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* 
                          case SCTP_ASSOCINFO:
                             return(getAssocInfo(tdSocket,optval,optlen));
                           break;
-
-                         /* ---- Start of deprecated block ------------------------------ */
-                         case SCTP_RECVDATAIOEVNT:
-                            return(getFlag(tdSocket,optval,optlen,SCTP_RECVDATAIOEVNT));
-                          break;
-                         case SCTP_RECVASSOCEVNT:
-                            return(getFlag(tdSocket,optval,optlen,SCTP_RECVASSOCEVNT));
-                          break;
-                         case SCTP_RECVPADDREVNT:
-                            return(getFlag(tdSocket,optval,optlen,SCTP_RECVPADDREVNT));
-                          break;
-                         case SCTP_RECVSENDFAILEVNT:
-                            return(getFlag(tdSocket,optval,optlen,SCTP_RECVSENDFAILEVNT));
-                          break;
-                         case SCTP_RECVPEERERR:
-                            return(getFlag(tdSocket,optval,optlen,SCTP_RECVPEERERR));
-                          break;
-                         case SCTP_RECVSHUTDOWNEVNT:
-                            return(getFlag(tdSocket,optval,optlen,SCTP_RECVSHUTDOWNEVNT));
-                          break;
-                          /* ---- End of deprecated block ------------------------------ */
-
                          case SCTP_AUTOCLOSE:
                             if((optval == NULL) || ((size_t)*optlen < sizeof(unsigned int))) {
                                errno_return(-EINVAL);
@@ -1296,46 +1268,6 @@ int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* 
           break;
       }
       errno_return(-ENXIO);
-   }
-   errno_return(-EBADF);
-}
-
-
-// ###### Set option ########################################################
-static int setFlag(ExtSocketDescriptor* tdSocket,
-                   const void* optval, const socklen_t optlen, const int flag)
-{
-   if(((size_t)optlen != sizeof(int)) || (optval == NULL)) {
-      errno_return(-EINVAL);
-   }
-   const bool on = (*((int*)optval) != 0);
-   if(on) {
-      if((tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr != NULL) && (tdSocket->Socket.SCTPSocketDesc.ConnectionOriented)) {
-         tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->setNotificationFlags(
-            tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->getNotificationFlags() |
-            flag);
-         errno_return(0);
-      }
-      else if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
-         tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->setNotificationFlags(
-            tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->getNotificationFlags() |
-            flag);
-         errno_return(0);
-      }
-   }
-   else {
-      if((tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr != NULL) && (tdSocket->Socket.SCTPSocketDesc.ConnectionOriented)) {
-         tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->setNotificationFlags(
-            tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->getNotificationFlags() &
-            ~flag);
-         errno_return(0);
-      }
-      else if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
-         tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->setNotificationFlags(
-            tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->getNotificationFlags() &
-            ~flag);
-         errno_return(0);
-      }
    }
    errno_return(-EBADF);
 }
@@ -1566,36 +1498,6 @@ static int setPeerPrimaryAddr(ExtSocketDescriptor* tdSocket,
 
 
 // ###### Get address parameters ############################################
-static int setPeerAddressParams(ExtSocketDescriptor* tdSocket,
-                                const void* optval, const socklen_t optlen)
-{
-   if((optval == NULL) || ((size_t)optlen < sizeof(sctp_paddrparams))) {
-      errno_return(-EINVAL);
-   }
-   int               result      = -EBADF;
-   sctp_paddrparams* paddrparams = (sctp_paddrparams*)optval;
-   unsigned int      assocID     = paddrparams->spp_assoc_id;
-   SCTP_PathStatus   parameters;
-
-   SCTPSocketMaster::MasterInstance.lock();
-   result = getAddressParams(tdSocket,assocID,
-                             (sockaddr*)&paddrparams->spp_address,
-                             sizeof(paddrparams->spp_address),
-                             parameters);
-   if(result == 0) {
-      parameters.heartbeatIntervall = paddrparams->spp_hbinterval;
-      result = setAddressParams(tdSocket,assocID,
-                                (sockaddr*)&paddrparams->spp_address,
-                                sizeof(paddrparams->spp_address),
-                                parameters);
-   }
-   SCTPSocketMaster::MasterInstance.unlock();
-
-   errno_return(result);
-}
-
-
-// ###### Get address parameters ############################################
 static void setInitMsg(SCTPSocket* sctpSocket, struct sctp_initmsg* initmsg)
 {
    SCTP_Instance_Parameters parameters;
@@ -1685,9 +1587,6 @@ int ext_setsockopt(int sockfd, int level, int optname, const void* optval, sockl
                          case SCTP_SET_PEER_PRIMARY_ADDR:
                             return(setPeerPrimaryAddr(tdSocket,optval,optlen));
                           break;
-                         case SCTP_PEER_ADDR_PARAMS:
-                             return(setPeerAddressParams(tdSocket,optval,optlen));
-                          break;
                          case SCTP_RTOINFO:
                             return(setRTOInfo(tdSocket,optval,optlen));
                           break;
@@ -1703,28 +1602,6 @@ int ext_setsockopt(int sockfd, int level, int optname, const void* optval, sockl
                          case SCTP_SET_STREAM_TIMEOUTS:
                             return(setDefaultStreamTimeouts(tdSocket,optval,optlen));
                           break;
-
-                         /* ---- Start of deprecated block ------------------------------ */
-                         case SCTP_RECVDATAIOEVNT:
-                            return(setFlag(tdSocket,optval,optlen,SCTP_RECVDATAIOEVNT));
-                          break;
-                         case SCTP_RECVASSOCEVNT:
-                            return(setFlag(tdSocket,optval,optlen,SCTP_RECVASSOCEVNT));
-                          break;
-                         case SCTP_RECVPADDREVNT:
-                            return(setFlag(tdSocket,optval,optlen,SCTP_RECVPADDREVNT));
-                          break;
-                         case SCTP_RECVSENDFAILEVNT:
-                            return(setFlag(tdSocket,optval,optlen,SCTP_RECVSENDFAILEVNT));
-                          break;
-                         case SCTP_RECVPEERERR:
-                            return(setFlag(tdSocket,optval,optlen,SCTP_RECVPEERERR));
-                          break;
-                         case SCTP_RECVSHUTDOWNEVNT:
-                            return(setFlag(tdSocket,optval,optlen,SCTP_RECVSHUTDOWNEVNT));
-                          break;
-                         /* ---- Start of deprecated block ------------------------------ */
-
                          case SCTP_AUTOCLOSE:
                             if((optval == NULL) || ((size_t)optlen < sizeof(unsigned int))) {
                                errno_return(-EINVAL);
@@ -3175,18 +3052,17 @@ void sctp_freeladdrs(struct sockaddr* addrs)
 int sctp_opt_info(int sd, sctp_assoc_t assocID,
                   int opt, void* arg, socklen_t* size)
 {
-   if((opt == SCTP_RTOINFO)               ||
-      (opt == SCTP_ASSOCINFO)             ||
-      (opt == SCTP_STATUS)                ||
-      (opt == SCTP_GET_PEER_ADDR_INFO)    ||
-      (opt == SCTP_GET_PEER_ADDR_PARAMS)) {
+   if((opt == SCTP_RTOINFO)            ||
+      (opt == SCTP_ASSOCINFO)          ||
+      (opt == SCTP_STATUS)             ||
+      (opt == SCTP_GET_PEER_ADDR_INFO) ||
+      (opt == SCTP_PEER_ADDR_PARAMS)) {
          *(sctp_assoc_t *)arg = assocID;
          return(ext_getsockopt(sd,IPPROTO_SCTP,opt,arg,size));
     }
     else if((opt == SCTP_PRIMARY_ADDR)          ||
             (opt == SCTP_SET_PEER_PRIMARY_ADDR) ||
-            (opt == SCTP_SET_STREAM_TIMEOUTS)   ||
-            (opt == SCTP_PEER_ADDR_PARAMS)) {
+            (opt == SCTP_SET_STREAM_TIMEOUTS)) {
        return(ext_setsockopt(sd,IPPROTO_SCTP,opt,arg,*size));
     }
     else {
