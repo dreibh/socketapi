@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.13 2003/06/29 15:41:13 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.14 2003/06/30 13:59:28 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -537,7 +537,8 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
    // ====== Create SCTPAssociation object ==================================
    SCTPAssociation* association = NULL;
    if(assocID != 0) {
-      association = new SCTPAssociation(this,assocID,NotificationFlags);
+      association = new SCTPAssociation(this, assocID, NotificationFlags,
+                                        Flags & SCTPSocket::SSF_GlobalQueue);
       if(association == NULL) {
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
          sctp_abort(assocID, 0, NULL);

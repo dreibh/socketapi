@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.cc,v 1.3 2003/06/03 22:01:40 dreibh Exp $
+ *  $Id: sctpassociation.cc,v 1.4 2003/06/30 13:59:28 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -39,13 +39,15 @@
 
 
 // #define PRINT_SHUTDOWN
+// #define PRINT_SOCKTYPE
 // #define PRINT_RTOMAX
 
 
 // ###### Constructor #######################################################
 SCTPAssociation::SCTPAssociation(SCTPSocket*        socket,
                                  const unsigned int associationID,
-                                 const unsigned int notificationFlags)
+                                 const unsigned int notificationFlags,
+                                 const bool         udpLike)
 {
    Socket                        = socket;
    AssociationID                 = associationID;
@@ -75,9 +77,20 @@ SCTPAssociation::SCTPAssociation(SCTPSocket*        socket,
    ExceptUpdateCondition.setName("SCTPAssociation::ExceptUpdateCondition");
 
    InQueue.getUpdateCondition()->addParent(&ReadUpdateCondition);
-   EstablishCondition.addParent(&WriteUpdateCondition);
-   ShutdownCompleteCondition.addParent(&ExceptUpdateCondition);
-   ReadyForTransmit.addParent(&WriteUpdateCondition);
+
+   if(!udpLike) {
+#ifdef PRINT_SOCKTYPE
+      cout << "SCTPAssociation::SCTPAssociation() - Initializing TCP-like socket" << endl;
+#endif
+      ShutdownCompleteCondition.addParent(&ExceptUpdateCondition);
+      EstablishCondition.addParent(&WriteUpdateCondition);
+      ReadyForTransmit.addParent(&WriteUpdateCondition);
+   }
+#ifdef PRINT_SOCKTYPE
+   else {
+      cout << "SCTPAssociation::SCTPAssociation() - Initializing UDP-like socket" << endl;
+   }
+#endif
 
    SCTPSocketMaster::MasterInstance.lock();
    Socket->AssociationList.insert(pair<unsigned int, SCTPAssociation*>(AssociationID,this));

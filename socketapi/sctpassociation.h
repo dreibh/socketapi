@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.h,v 1.2 2003/06/01 17:40:54 dreibh Exp $
+ *  $Id: sctpassociation.h,v 1.3 2003/06/30 13:59:28 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -406,7 +406,8 @@ class SCTPAssociation
    protected:
    SCTPAssociation(SCTPSocket*        socket,
                    const unsigned int associationID,
-                   const unsigned int notificationFlags);
+                   const unsigned int notificationFlags,
+                   const bool         udpLike);
 
 
    // ====== Private data ===================================================

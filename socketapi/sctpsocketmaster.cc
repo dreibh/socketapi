@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.7 2003/06/13 13:14:34 dreibh Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.8 2003/06/30 13:59:28 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -662,7 +662,8 @@ void* SCTPSocketMaster::communicationUpNotif(unsigned int   assocID,
       }
       // ====== Incoming connection =========================================
       else if(socket->Flags & SCTPSocket::SSF_Listening) {
-         association = new SCTPAssociation(socket,assocID,socket->NotificationFlags);
+         association = new SCTPAssociation(socket, assocID, socket->NotificationFlags,
+                                           socket->Flags & SCTPSocket::SSF_GlobalQueue);
          if(association != NULL) {
             association->CommunicationUpNotification = true;
             SCTPSocket::IncomingConnection* newConnection = new SCTPSocket::IncomingConnection;
@@ -1148,8 +1149,10 @@ void SCTPSocketMaster::addNotification(SCTPSocket*             socket,
 
    // ====== Check, if notification has to be added =========================
    if((notification.Content.sn_header.sn_type == SCTP_DATA_ARRIVE)    ||
+/* ????? Deprecated!
       ((notification.Content.sn_header.sn_type == SCTP_ASSOC_CHANGE) && (notification.Content.sn_assoc_change.sac_state == SCTP_SHUTDOWN_COMP)) ||
       ((notification.Content.sn_header.sn_type == SCTP_ASSOC_CHANGE) && (notification.Content.sn_assoc_change.sac_state == SCTP_COMM_LOST))     ||
+*/
       ((notification.Content.sn_header.sn_type == SCTP_ASSOC_CHANGE)     && (notificationFlags & SCTP_RECVASSOCEVNT))    ||
       ((notification.Content.sn_header.sn_type == SCTP_PEER_ADDR_CHANGE) && (notificationFlags & SCTP_RECVPADDREVNT))    ||
       ((notification.Content.sn_header.sn_type == SCTP_REMOTE_ERROR)     && (notificationFlags & SCTP_RECVPEERERR))      ||
