@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.19 2003/07/14 12:41:11 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.20 2003/08/10 16:33:04 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -677,6 +677,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
 #ifdef PRINT_ISSHUTDOWN
             cout << "Socket has been shut down -> leaving waiting loop!" << endl;
 #endif
+            flags &= ~MSG_NOTIFICATION;
             errorCode = 0;
          }
          return(errorCode);
@@ -727,6 +728,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
                                      &ssn,
                                      &tsn,
                                      (flags & MSG_PEEK) ? SCTP_MSG_PEEK : SCTP_MSG_DEFAULT);
+         const int pathIndex = sctp_getPrimary(assocID);
 #endif
          if(ok == 0) {
             bufferSize = receivedBytes;
@@ -742,26 +744,30 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
 #endif
             result = (int)bufferSize;
 
-#if (SCTPLIB_VERSION != SCTPLIB_1_0_0_PRE19)
             SCTP_PathStatus pathStatus;
+            SCTP_AssociationStatus assocStatus;
             if(address) {
                if(sctp_getPathStatus(assocID, pathIndex, &pathStatus) != 0) {
                   cerr << "INTERNAL ERROR: SCTPSocket::internalReceiver() - sctp_getPathStatus() failed!" << endl;
                }
                else {
-                  *address = SocketAddress::createSocketAddress(
-                                0, (char*)&pathStatus.destinationAddress, LocalPort);
-                  if(*address == NULL) {
-                     cerr << "INTERNAL ERROR: SCTPSocket::internalReceiver() - Unable to create destination address object!" << endl;
+                  if(sctp_getAssocStatus(assocID, &assocStatus) != 0) {
+                     cerr << "INTERNAL ERROR: SCTPSocket::internalReceiver() - sctp_getAssocStatus() failed!" << endl;
                   }
-#ifdef PRINT_DATA
                   else {
-                     cout << "Received via address " << *(*address) << " (path index " << pathIndex << ")." << endl;
-                  }
+                     *address = SocketAddress::createSocketAddress(
+                                   0, (char*)&pathStatus.destinationAddress, assocStatus.destPort);
+                     if(*address == NULL) {
+                        cerr << "INTERNAL ERROR: SCTPSocket::internalReceiver() - Unable to create destination address object!" << endl;
+                     }
+#ifdef PRINT_DATA
+                     else {
+                        cout << "Received via address " << *(*address) << " (path index " << pathIndex << ")." << endl;
+                     }
 #endif
+                  }
                }
             }
-#endif
 
             // ====== Peek mode: Restore chunk arrival information ===================
             if(flags & MSG_PEEK) {
@@ -856,6 +862,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
          result = getErrorCode(assocID);
          if(result == 0) {
             result = -EAGAIN;
+            flags &= ~MSG_NOTIFICATION;
          }
       }
    }
