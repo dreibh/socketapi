@@ -1,6 +1,11 @@
 #! /bin/sh
 set -x
+mv -f admin/config.guess admin/config.guess.save
+mv -f admin/config.sub  admin/config.sub.save
 glibtoolize --force 
+rm -f admin/config.guess admin/config.sub
+mv -f admin/config.guess.save admin/config.guess
+mv -f admin/config.sub.save admin/config.sub
 aclocal -I /usr/local/share/aclocal
 autoheader 
 automake --gnu --add-missing --copy
