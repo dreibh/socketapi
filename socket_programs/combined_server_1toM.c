@@ -7,9 +7,11 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string.h>
-
+#if defined (SOLARIS)
+#include <strings.h>
+#endif
 #if defined (LINUX)
-    #include <time.h>
+#include <time.h>
 #endif
 
 

@@ -11,7 +11,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <pthread.h>
-
+#if defined (SOLARIS)
+#include <strings.h>
+#endif
 
 #define ECHO_PORT    7
 #define DISCARD_PORT 9

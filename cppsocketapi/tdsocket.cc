@@ -1,5 +1,5 @@
 /*
- *  $Id: tdsocket.cc,v 1.4 2003/06/04 17:21:00 dreibh Exp $
+ *  $Id: tdsocket.cc,v 1.5 2003/07/31 09:12:19 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -52,6 +52,9 @@
 
 #if (SYSTEM == OS_Linux)
 #define LINUX_PROC_IPV6_FILE "/proc/net/if_inet6"
+#endif
+#if (SYSTEM == OS_SOLARIS)
+#include <sys/sockio.h>
 #endif
 #if (SYSTEM == OS_FreeBSD) || (SYSTEM == OS_Darwin)
 #define USES_BSD_4_4_SOCKET
@@ -1354,7 +1357,12 @@ bool Socket::getLocalAddressList(SocketAddress**& addressList,
    char          configBuffer[8192];
    config.ifc_buf = configBuffer;
    config.ifc_len = sizeof(configBuffer);
+#if (SYSTEM == OS_SOLARIS)
+   // SOLARIS does not like SIOCGIFFLAGS on AF_INET6
+   int fd = ::socket(AF_INET,SOCK_DGRAM,0);
+#else
    int fd = ::socket((InternetAddress::UseIPv6 == true) ? AF_INET6 : AF_INET,SOCK_DGRAM,0);
+#endif
    if(fd < 0) {
       return(false);
    }
