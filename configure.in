@@ -49,8 +49,8 @@ AC_SUBST(AUTODIRS)
 # Achtung! Wenn LDFLAGS nicht gesetzt wird, verwendet der Linker die
 # Option -s => Alle Debug-Symbole werden entfernt!
 LDFLAGS=""
-CFLAGS="$CFLAGS -D_REENTRANT -D_THREAD_SAFE"
-CXXFLAGS="$CXXFLAGS -D_REENTRANT -D_THREAD_SAFE"
+CFLAGS="$CFLAGS -D_REENTRANT -D_THREAD_SAFE -DSCTP_SOCKET_API"
+CXXFLAGS="$CXXFLAGS -D_REENTRANT -D_THREAD_SAFE -DSCTP_SOCKET_API"
 
 case $host_os in
 bsdi*)

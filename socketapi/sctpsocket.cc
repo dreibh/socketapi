@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.24 2004/07/29 15:11:03 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.25 2004/11/10 19:22:03 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -971,7 +971,7 @@ int SCTPSocket::internalSend(const char*          buffer,
 #endif
 
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
-      result = sctp_send(
+      result = sctp_send_private(
                   assocID, streamID,
                   (unsigned char*)buffer, length,
                   protoID,
@@ -981,7 +981,7 @@ int SCTPSocket::internalSend(const char*          buffer,
                   ((flags & MSG_UNORDERED) ? SCTP_UNORDERED_DELIVERY : SCTP_ORDERED_DELIVERY),
                   ((flags & MSG_UNBUNDLED) ? SCTP_BUNDLING_DISABLED : SCTP_BUNDLING_ENABLED));
 #elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
-      result = sctp_send(
+      result = sctp_send_private(
                   assocID, streamID,
                   (unsigned char*)buffer, length,
                   protoID,

@@ -1,5 +1,5 @@
 /*
- *  $Id: ext_socket.h,v 1.19 2004/07/29 15:11:03 dreibh Exp $
+ *  $Id: ext_socket.h,v 1.20 2004/11/10 19:22:03 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -431,11 +431,18 @@ void sctp_freeladdrs(struct sockaddr* addrs);
 
 int sctp_opt_info(int sd, sctp_assoc_t assocID, int opt, void* arg, socklen_t* size);
 
-ssize_t sctp_sendfkt(int                           s,
-                     const void*                   data,
-                     size_t                        len,
-                     const struct sctp_sndrcvinfo* sinfo,
-                     int                           flags);
+ssize_t sctp_send(int                           s,
+                  const void*                   data,
+                  size_t                        len,
+                  const struct sctp_sndrcvinfo* sinfo,
+                  int                           flags);
+ssize_t sctp_sendx(int                           sd,
+                   const void*                   data,
+                   size_t                        len,
+                   const struct sockaddr*        addrs,
+                   int                           addrcnt,
+                   const struct sctp_sndrcvinfo* sinfo,
+                   int                           flags);
 ssize_t sctp_sendmsg(int                    s,
                      const void*            data,
                      size_t                 len,
@@ -446,16 +453,6 @@ ssize_t sctp_sendmsg(int                    s,
                      uint16_t               stream_no,
                      uint32_t               timetolive,
                      uint32_t               context);
-ssize_t sctp_sendmsgx(int                    s,
-                      const void*            data,
-                      size_t                 len,
-                      const struct sockaddr* toaddrs,
-                      size_t                 toaddrcnt,
-                      uint32_t               ppid,
-                      uint32_t               flags,
-                      uint16_t               stream_no,
-                      uint32_t               timetolive,
-                      uint32_t               context);
 ssize_t sctp_recvmsg(int                     s,
                      void*                   msg,
                      size_t                  len,
