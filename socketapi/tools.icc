@@ -1,5 +1,5 @@
 /*
- *  $Id: tools.icc,v 1.2 2003/07/14 12:41:11 dreibh Exp $
+ *  $Id: tools.icc,v 1.3 2003/07/31 09:34:57 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -64,89 +64,6 @@ inline void debug(const char* string)
    cerr.flush();
 }
 
-
-// ##########################################################################
-// #### Byte Order Translations                                          ####
-// ##########################################################################
-
-
-#if __BYTE_ORDER == BIG_ENDIAN
-
-
-// No byteorder translation for big endian necessary!
-inline card16 translate16(const card16 x) { return(x); }
-inline card32 translate32(const card32 x) { return(x); }
-inline card64 translate64(const card64 x) { return(x); }
-
-
-#elif __BYTE_ORDER == LITTLE_ENDIAN
-
-
-#ifdef USE_BYTESWAP
-#include <byteswap.h>
-#endif
-
-
-// ###### 16-bit byteorder translation ######################################
-inline card16 translate16(const card16 x)
-{
-#ifdef USE_BYTESWAP
-   return(bswap_16(x));
-#else
-   return( (x << 8) | (x >> 8) );
-#endif
-}
-
-
-// ###### 32-bit byteorder translation ######################################
-inline card32 translate32(const card32 x)
-{
-#ifdef USE_BYTESWAP
-   return(bswap_32(x));
-#else
-   return( (x << 24)               |
-           ((x & 0x0000ff00) << 8) |
-           ((x & 0x00ff0000) >> 8) |
-           (x >> 24) );
-#endif
-}
-
-
-// ###### 64-bit byteorder translation ######################################
-inline card64 translate64(const card64 x)
-{
-#ifdef USE_BYTESWAP
-   return(bswap_64(x));
-#else
-   const card32 a = (card32)(x >> 32);
-   const card32 b = (card32)(x & 0xffffffff);
-   return( (card64)((a << 24) | ((a & 0x0000ff00) << 8) |
-                    ((a & 0x00ff0000) >> 8) | (a >> 24))
-        |  ((card64)((b << 24) | ((b & 0x0000ff00) << 8) |
-                    ((b & 0x00ff0000) >> 8) | (b >> 24)) << 32) );
-#endif
-}
-
-
-#else
-#error "Unable to determine byte order!"
-#endif
-
-
-// ###### Translate double to 64-bit binary value (32/32 bit separation) ####
-inline card64 translateToBinary(const double x)
-{
-   const double shift = (double)((card64)1 << 32);
-   return((card64)((int64)(x * shift)));
-}
-
-
-// ###### Translate 64-bit binary value (32/32 bit separation) to double ####
-inline double translateToDouble(const card64 x)
-{
-   const double shift = (double)((card64)1 << 32);
-   return(((double)((int64)x)) / shift);
-}
 
 
 // ###### QuickSort algorithm ###############################################
