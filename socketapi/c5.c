@@ -11,6 +11,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 #include <ext_socket.h>
 
 #define HEARTBEAT_TIMEOUT 1000
@@ -21,7 +22,7 @@ print_addresses(struct sockaddr *addrs, int num)
 {
 	char buf[INET6_ADDRSTRLEN];
     struct sockaddr *sa;
-    int i, fam, incr;
+    int i, fam, incr = 0;
     struct sockaddr_in *lad4;
     struct sockaddr_in6 *lad6;
 
@@ -52,11 +53,8 @@ print_addresses(struct sockaddr *addrs, int num)
 void
 set_path_parameters(int fd, sctp_assoc_t assoc_id, struct sockaddr *addrs, int num, uint32_t hbinterval, uint16_t pathmaxrxt)
 {
-	char buf[INET6_ADDRSTRLEN];
     struct sockaddr *sa;
-    int i, fam, incr;
-    struct sockaddr_in *lad4;
-    struct sockaddr_in6 *lad6;
+    int i, incr = 0;
     struct sctp_paddrparams peer_params;
     size_t size;
     
@@ -75,11 +73,11 @@ set_path_parameters(int fd, sctp_assoc_t assoc_id, struct sockaddr *addrs, int n
                 incr = sizeof(struct sockaddr_in6);
 				break;
 			default:
-				printf("Unknown family %d\n", fam);
+				printf("Unknown family %d\n", sa->sa_family);
 				break;
 		}
         memcpy((void *) &(peer_params.spp_address), (const void *) sa, incr);
-        if (sctp_opt_info(fd, 0, SCTP_PEER_ADDR_PARAMS, (void *)&peer_params, &size) < 0)
+        if (sctp_opt_info(fd, 0, SCTP_PEER_ADDR_PARAMS, (void *)&peer_params, (socklen_t *)&size) < 0)
             perror("sctp_opt_info");
 		sa = (struct sockaddr *)((unsigned int)sa + incr);
 	}
@@ -99,9 +97,8 @@ process_notification(int fd, char *notify_buf)
 	struct sockaddr_in *msin;
 	struct sockaddr_in6 *msin6;
 	const char *str;
-    struct sctp_paddrparams peer_params;
     struct sockaddr *sal, *sar;
-    int num_loc, num_rem, j;
+    int num_loc, num_rem;
 
 	snp = (union sctp_notification *)notify_buf;
 	switch(snp->sn_header.sn_type) {
@@ -212,7 +209,7 @@ process_notification(int fd, char *notify_buf)
 
 int main(int argc, char **argv) 
 {
-	int fd, n, addr_len, len, msg_flags, close_time, i;
+	int fd, n, addr_len, len, msg_flags, i;
 	size_t buffer_size;
 	fd_set rset;
 	char buffer[1000];

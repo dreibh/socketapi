@@ -5,18 +5,19 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 #include <ext_socket.h>
 
-struct sockaddr_storage *sar;
+struct sockaddr *sar;
 int num_rem = 0;
 sctp_assoc_t assoc_id;
 
 void
-print_addresses(struct sockaddr_storage *addrs, int num)
+print_addresses(struct sockaddr *addrs, int num)
 {
    char buf[INET6_ADDRSTRLEN];
     struct sockaddr *sa;
-    int i, fam, incr;
+    int i, fam, incr = 0;
     struct sockaddr_in *lad4;
     struct sockaddr_in6 *lad6;
 
@@ -58,8 +59,8 @@ process_notification(int fd, char *notify_buf)
    struct sockaddr_in *msin;
    struct sockaddr_in6 *msin6;
    const char *str;
-    struct sockaddr_storage *sal;
-    int num_loc;
+   struct sockaddr *sal;
+   int num_loc;
 
    snp = (union sctp_notification *)notify_buf;
    switch(snp->sn_header.sn_type) {
@@ -175,7 +176,6 @@ int main(int argc, char **argv)
    struct sctp_event_subscribe evnts;
    struct sctp_sndrcvinfo sri;
    struct sockaddr_in local_addr, remote_addr;
-    struct sctp_setprim set_prim;
     
    i = 0;
    if (argc < 4) {
@@ -257,7 +257,7 @@ int main(int argc, char **argv)
          printf("Reading from network.\n");
          addr_len = sizeof(struct sockaddr_in);
          buffer_size = sizeof(buffer);
-         if ((len = sctp_recvmsg(fd, (void *) buffer, &buffer_size , (struct sockaddr *)&remote_addr, &addr_len, &sri,&msg_flags)) < 0)
+         if ((len = sctp_recvmsg(fd, (void *) buffer, buffer_size , (struct sockaddr *)&remote_addr, &addr_len, &sri,&msg_flags)) < 0)
             perror("recvfrom");
          else {
             if(msg_flags & MSG_NOTIFICATION) {

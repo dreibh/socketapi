@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 #include <ext_socket.h>
 
 void
@@ -197,7 +198,7 @@ int main(int argc, char **argv)
          printf("Reading from network.\n");
          addr_len = sizeof(struct sockaddr_in);
          buffer_size = sizeof(buffer);
-         if ((len = sctp_recvmsg(fd, (void *) buffer, &buffer_size , (struct sockaddr *)&remote_addr, &addr_len, &sri,&msg_flags)) < 0)
+         if ((len = sctp_recvmsg(fd, (void *) buffer, buffer_size , (struct sockaddr *)&remote_addr, &addr_len, &sri,&msg_flags)) < 0)
             perror("recvfrom");
          else {
             if(msg_flags & MSG_NOTIFICATION) {
