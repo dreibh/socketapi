@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.15 2003/07/14 12:41:11 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.16 2003/07/31 09:29:36 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -62,9 +62,13 @@
 
 #include <sys/time.h>
 #include <sys/uio.h>
+#include <sys/types.h>
 #include <sys/socket.h>
 
-
+#if (SYSTEM == OS_SOLARIS)
+#include <sys/stat.h>
+#include <fcntl.h>
+#endif 
 // Set errno variable and return.
 inline static int getErrnoResult(const int result)
 {
@@ -2866,7 +2870,7 @@ int sctp_peeloff(int              sockfd,
                      if(id != NULL) {
                         association = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->peelOff(*id);
                      }
-                     else if((addr != NULL) && (*addrlen != NULL)) {
+                     else if((addr != NULL) && (addrlen != NULL)) {
                         SocketAddress* address = SocketAddress::createSocketAddress(
                                                     0,
                                                     (sockaddr*)addr,
@@ -3069,8 +3073,8 @@ int sctp_sendmsg(int              s,
    sctp_sndrcvinfo* sri;
    struct iovec     iov = { (char*)data, len };
    struct cmsghdr*  cmsg;
-   size_t           cmsglen = CMSG_SPACE(sizeof(struct sctp_sndrcvinfo));
-   char             cbuf[CMSG_SPACE(sizeof(struct sctp_sndrcvinfo))];
+   size_t           cmsglen = CSpace(sizeof(struct sctp_sndrcvinfo));
+   char             cbuf[CSpace(sizeof(struct sctp_sndrcvinfo))];
    struct msghdr msg = {
 #ifdef __APPLE__
       (char*)to,
@@ -3083,12 +3087,12 @@ int sctp_sendmsg(int              s,
       flags
    };
 
-   cmsg = (struct cmsghdr*)CMSG_FIRSTHDR(&msg);
-   cmsg->cmsg_len   = CMSG_LEN(sizeof(struct sctp_sndrcvinfo));
+   cmsg = (struct cmsghdr*)CFirst(&msg);
+   cmsg->cmsg_len   = CLength(sizeof(struct sctp_sndrcvinfo));
    cmsg->cmsg_level = IPPROTO_SCTP;
    cmsg->cmsg_type  = SCTP_SNDRCV;
 
-   sri = (struct sctp_sndrcvinfo*)CMSG_DATA(cmsg);
+   sri = (struct sctp_sndrcvinfo*)CData(cmsg);
    sri->sinfo_assoc_id   = 0;
    sri->sinfo_stream     = stream_no;
    sri->sinfo_ppid       = ppid;
@@ -3117,8 +3121,8 @@ int sctp_recvmsg(int                     s,
    }
    struct iovec    iov = { (char*)data, *len };
    struct cmsghdr* cmsg;
-   size_t          cmsglen = CMSG_SPACE(sizeof(struct sctp_sndrcvinfo));
-   char            cbuf[CMSG_SPACE(sizeof(struct sctp_sndrcvinfo))];
+   size_t          cmsglen = CSpace(sizeof(struct sctp_sndrcvinfo));
+   char            cbuf[CSpace(sizeof(struct sctp_sndrcvinfo))];
    struct msghdr msg = {
 #ifdef __APPLE__
       (char*)from,
@@ -3136,13 +3140,13 @@ int sctp_recvmsg(int                     s,
 
    *len = iov.iov_len;
    if((cc > 0) && (msg.msg_control != NULL) && (msg.msg_controllen > 0)) {
-      cmsg = (struct cmsghdr*)CMSG_FIRSTHDR(&msg);
+      cmsg = (struct cmsghdr*)CFirst(&msg);
       if((sinfo != NULL) &&
          (cmsg != NULL)  &&
-         (cmsg->cmsg_len   == CMSG_LEN(sizeof(struct sctp_sndrcvinfo))) &&
+         (cmsg->cmsg_len   == CLength(sizeof(struct sctp_sndrcvinfo))) &&
          (cmsg->cmsg_level == IPPROTO_SCTP)                             &&
          (cmsg->cmsg_type  == SCTP_SNDRCV)) {
-         *sinfo = *((struct sctp_sndrcvinfo*)CMSG_DATA(cmsg));
+         *sinfo = *((struct sctp_sndrcvinfo*)CData(cmsg));
       }
    }
    if(msg_flags != NULL) {
