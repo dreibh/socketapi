@@ -1,5 +1,5 @@
 /*
- *  $Id: ext_socket.h,v 1.6 2003/06/04 17:21:00 dreibh Exp $
+ *  $Id: ext_socket.h,v 1.7 2003/06/06 23:30:28 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -134,11 +134,11 @@ struct sctp_paddr_change
     int                     spc_error;
     sctp_assoc_t            spc_assoc_id;
 };
-#define SCTP_ADDR_AVAILABLE  21
-#define SCTP_ADDR_UNREACHABL 22
-#define SCTP_ADDR_REMOVED    23
-#define SCTP_ADDR_ADDED      24
-#define SCTP_ADDR_MADE_PRIM  25
+#define SCTP_ADDR_AVAILABLE   21
+#define SCTP_ADDR_UNREACHABLE 22
+#define SCTP_ADDR_REMOVED     23
+#define SCTP_ADDR_ADDED       24
+#define SCTP_ADDR_MADE_PRIM   25
 
 
 #define SCTP_REMOTE_ERROR 3
@@ -183,14 +183,14 @@ struct sctp_adaption_event
    uint16_t     sai_type;
    uint16_t     sai_flags;
    uint32_t     sai_length;
-   uint32_t     sai_adaptation_bits;
+   uint32_t     sai_adaption_bits;
    sctp_assoc_t sai_assoc_id;
 };
 
 
 #define SCTP_PARTIAL_DELIVERY_EVENT 7
 #define SCTP_PARTIAL_DELIVERY_ABORTED 1
-struct sctp_rcv_pdapi_event
+struct sctp_pdapi_event
 {
    uint16_t     pdapi_type;
    uint16_t     pdapi_flags;
@@ -217,24 +217,21 @@ struct sctp_data_arrive
 };
 
 
-struct sctp_tlv
-{
-   uint16_t sn_type;
-   uint16_t sn_flags;
-   uint32_t sn_length;
-};
-
 union sctp_notification {
-   struct sctp_tlv                 sn_header;
-   struct sctp_assoc_change        sn_assoc_change;
-   struct sctp_paddr_change        sn_paddr_change;
-   struct sctp_remote_error        sn_remote_error;
-   struct sctp_send_failed         sn_send_failed;
-   struct sctp_shutdown_event      sn_shutdown_event;
-   struct sctp_adaption_event      sn_adaption_event;
-   struct sctp_rcv_pdapi_event     sn_rcv_pdapi_event;
+   struct {
+      uint16_t sn_type;
+      uint16_t sn_flags;
+      uint32_t sn_length;
+   }                           sn_header;
+   struct sctp_assoc_change    sn_assoc_change;
+   struct sctp_paddr_change    sn_paddr_change;
+   struct sctp_remote_error    sn_remote_error;
+   struct sctp_send_failed     sn_send_failed;
+   struct sctp_shutdown_event  sn_shutdown_event;
+   struct sctp_adaption_event  sn_adaption_event;
+   struct sctp_pdapi_event     sn_pdapi_event;
 
-   struct sctp_data_arrive         sn_data_arrive;
+   struct sctp_data_arrive     sn_data_arrive;
 };
 
 

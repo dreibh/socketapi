@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.7 2003/06/06 16:52:13 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.8 2003/06/06 23:30:28 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -696,8 +696,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
    const bool receiveNotifications = (flags & MSG_NOTIFICATION);
    bool updatedNotification = false;
    int result               = 0;
-   sctp_tlv* header         = &notification.Content.sn_header;
-   if(header->sn_type == SCTP_DATA_ARRIVE) {
+   if(notification.Content.sn_header.sn_type == SCTP_DATA_ARRIVE) {
       flags &= ~MSG_NOTIFICATION;
       sctp_data_arrive* sda = &notification.Content.sn_data_arrive;
       if(sda->sda_bytes_arrived > 0) {
@@ -758,7 +757,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
 
    // ====== Handle notification ============================================
    else {
-      switch(header->sn_type) {
+      switch(notification.Content.sn_header.sn_type) {
          case SCTP_ASSOC_CHANGE:
             assocID = notification.Content.sn_assoc_change.sac_assoc_id;
           break;
@@ -775,17 +774,17 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
 
       // ====== Copy notification ===========================================
       if((receiveNotifications) &&
-         (((header->sn_type == SCTP_ASSOC_CHANGE)     && (notificationFlags & SCTP_RECVASSOCEVNT)) ||
-          ((header->sn_type == SCTP_PEER_ADDR_CHANGE) && (notificationFlags & SCTP_RECVPADDREVNT)) ||
-          ((header->sn_type == SCTP_REMOTE_ERROR)     && (notificationFlags & SCTP_RECVPEERERR))   ||
-          ((header->sn_type == SCTP_SEND_FAILED)      && (notificationFlags & SCTP_RECVSENDFAILEVNT)) ||
-          ((header->sn_type == SCTP_SHUTDOWN_EVENT)   && (notificationFlags & SCTP_RECVSHUTDOWNEVNT)))) {
-         const cardinal toCopy = min((cardinal)header->sn_length - notification.ContentPosition,(cardinal)bufferSize);
+         (((notification.Content.sn_header.sn_type == SCTP_ASSOC_CHANGE)     && (notificationFlags & SCTP_RECVASSOCEVNT)) ||
+          ((notification.Content.sn_header.sn_type == SCTP_PEER_ADDR_CHANGE) && (notificationFlags & SCTP_RECVPADDREVNT)) ||
+          ((notification.Content.sn_header.sn_type == SCTP_REMOTE_ERROR)     && (notificationFlags & SCTP_RECVPEERERR))   ||
+          ((notification.Content.sn_header.sn_type == SCTP_SEND_FAILED)      && (notificationFlags & SCTP_RECVSENDFAILEVNT)) ||
+          ((notification.Content.sn_header.sn_type == SCTP_SHUTDOWN_EVENT)   && (notificationFlags & SCTP_RECVSHUTDOWNEVNT)))) {
+         const cardinal toCopy = min((cardinal)notification.Content.sn_header.sn_length - notification.ContentPosition,(cardinal)bufferSize);
          const char* from = (char*)&notification.Content;
          memcpy(buffer,&from[notification.ContentPosition],toCopy);
          bufferSize = toCopy;
          notification.ContentPosition += toCopy;
-         if(notification.ContentPosition < header->sn_length) {
+         if(notification.ContentPosition < notification.Content.sn_header.sn_length) {
             queue.updateNotification(notification);
             updatedNotification = true;
             flags |= MSG_NOTIFICATION;
@@ -807,8 +806,8 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
       }
       else {
 #ifndef DISABLE_WARNINGS
-            cout << "WARNING: Skipping " << header->sn_length << " bytes notification data (type "
-                 << header->sn_type << ") from association " << assocID << ", stream " << streamID << ":" << endl;
+            cout << "WARNING: Skipping " << notification.Content.sn_header.sn_length << " bytes notification data (type "
+                 << notification.Content.sn_header.sn_type << ") from association " << assocID << ", stream " << streamID << ":" << endl;
 #endif
 #ifdef PRINT_DATA
             for(size_t i = 0;i < header->sn_length;i++) {

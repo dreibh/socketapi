@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.5 2003/06/05 23:00:26 dreibh Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.6 2003/06/06 23:30:28 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -582,7 +582,7 @@ void SCTPSocketMaster::networkStatusChangeNotif(unsigned int assocID,
             spc->spc_state = SCTP_ADDR_AVAILABLE;
           break;
          case SCTP_PATH_UNREACHABLE:
-            spc->spc_state = SCTP_ADDR_UNREACHABL;
+            spc->spc_state = SCTP_ADDR_UNREACHABLE;
           break;
          case SCTP_PATH_ADDED:
             spc->spc_state = SCTP_ADDR_ADDED;
@@ -1147,15 +1147,14 @@ void SCTPSocketMaster::addNotification(SCTPSocket*             socket,
    const unsigned int notificationFlags = association->NotificationFlags;
 
    // ====== Check, if notification has to be added =========================
-   const sctp_tlv* header = &notification.Content.sn_header;
-   if((header->sn_type == SCTP_DATA_ARRIVE)    ||
-      ((header->sn_type == SCTP_ASSOC_CHANGE) && (notification.Content.sn_assoc_change.sac_state == SCTP_SHUTDOWN_COMP)) ||
-      ((header->sn_type == SCTP_ASSOC_CHANGE) && (notification.Content.sn_assoc_change.sac_state == SCTP_COMM_LOST))     ||
-      ((header->sn_type == SCTP_ASSOC_CHANGE)     && (notificationFlags & SCTP_RECVASSOCEVNT))    ||
-      ((header->sn_type == SCTP_PEER_ADDR_CHANGE) && (notificationFlags & SCTP_RECVPADDREVNT))    ||
-      ((header->sn_type == SCTP_REMOTE_ERROR)     && (notificationFlags & SCTP_RECVPEERERR))      ||
-      ((header->sn_type == SCTP_SEND_FAILED)      && (notificationFlags & SCTP_RECVSENDFAILEVNT)) ||
-      ((header->sn_type == SCTP_SHUTDOWN_EVENT)   && (notificationFlags & SCTP_RECVSHUTDOWNEVNT))) {
+   if((notification.Content.sn_header.sn_type == SCTP_DATA_ARRIVE)    ||
+      ((notification.Content.sn_header.sn_type == SCTP_ASSOC_CHANGE) && (notification.Content.sn_assoc_change.sac_state == SCTP_SHUTDOWN_COMP)) ||
+      ((notification.Content.sn_header.sn_type == SCTP_ASSOC_CHANGE) && (notification.Content.sn_assoc_change.sac_state == SCTP_COMM_LOST))     ||
+      ((notification.Content.sn_header.sn_type == SCTP_ASSOC_CHANGE)     && (notificationFlags & SCTP_RECVASSOCEVNT))    ||
+      ((notification.Content.sn_header.sn_type == SCTP_PEER_ADDR_CHANGE) && (notificationFlags & SCTP_RECVPADDREVNT))    ||
+      ((notification.Content.sn_header.sn_type == SCTP_REMOTE_ERROR)     && (notificationFlags & SCTP_RECVPEERERR))      ||
+      ((notification.Content.sn_header.sn_type == SCTP_SEND_FAILED)      && (notificationFlags & SCTP_RECVSENDFAILEVNT)) ||
+      ((notification.Content.sn_header.sn_type == SCTP_SHUTDOWN_EVENT)   && (notificationFlags & SCTP_RECVSHUTDOWNEVNT))) {
 
       // ====== Add notification to global or association's queue ===========
 #ifdef PRINT_ASSOC_USECOUNT
