@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.21 2003/08/19 19:20:00 tuexen Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.22 2004/07/22 15:13:39 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -71,7 +71,7 @@
 #if (SYSTEM == OS_SOLARIS)
 #include <sys/stat.h>
 #include <fcntl.h>
-#endif 
+#endif
 // Set errno variable and return.
 inline static int getErrnoResult(const int result)
 {
@@ -3076,7 +3076,7 @@ int sctp_getlpaddrs(int               sockfd,
                SocketAddress::deleteAddressList(addressArray);
                if(addrs) {
                   *packedAddrs = pack_sockaddr_storage(addrs, result);
-                  delete addrs;
+                  delete [] addrs;
                }
                errno_return(result);
             }
