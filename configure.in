@@ -342,18 +342,10 @@ AC_SUBST(sctplib_CXXFLAGS)
 #AC_MSG_ERROR([Incompatible versions]))
 
 
-
-#socketapi_LIBS="../socketapi/libsctpsocket.la"
-#AC_SUBST(socketapi_LIBS)
-
-#cppsocketapi_LIBS="../cppsocketapi/libcppsctpsocket.la"
-#AC_SUBST(cppsocketapi_LIBS)
-
-
 SOCKETAPI_CURRENT=1
-SOCKETAPI_REVISION=3
+SOCKETAPI_REVISION=5
 SOCKETAPI_AGE=0
-SOCKETAPI_RELEASE=130
+SOCKETAPI_RELEASE=150
 
 AC_SUBST(SOCKETAPI_CURRENT)
 AC_SUBST(SOCKETAPI_REVISION)
@@ -371,7 +363,6 @@ echo ""
 echo "The socketapi package has been configured with the following options:"
 echo "   sctplib libraries   : $sctplib_LIBS"
 echo "   sctplib flags       : $sctplib_CXXFLAGS"
-#echo "   socketapi libraries : $socketapi_LIBS"
 echo "   thread libraries    : $thread_LIBS"
 echo "   glib libraries      : $glib_LIBS"
 echo "   CFLAGS              : $CFLAGS"

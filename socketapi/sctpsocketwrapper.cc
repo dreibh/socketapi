@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.27 2004/11/10 19:22:03 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.28 2004/11/11 21:35:41 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -602,7 +602,7 @@ int ext_bind(int sockfd, struct sockaddr* my_addr, socklen_t addrlen)
    if(tdSocket != NULL) {
       switch(tdSocket->Type) {
          case ExtSocketDescriptor::ESDT_SCTP:
-             return(ext_bindx(sockfd,my_addr,1,SCTP_BINDX_ADD_ADDR));
+             return(sctp_bindx(sockfd,my_addr,1,SCTP_BINDX_ADD_ADDR));
           break;
          case ExtSocketDescriptor::ESDT_System:
             return(bind(tdSocket->Socket.SystemSocketID,(sockaddr*)my_addr,addrlen));
@@ -616,11 +616,11 @@ int ext_bind(int sockfd, struct sockaddr* my_addr, socklen_t addrlen)
 }
 
 
-// ###### ext_bind() wrapper ################################################
-int ext_bindx(int              sockfd,
-              struct sockaddr* packedAddrs,
-              int              addrcnt,
-              int              flags)
+// ###### sctp_bindx() wrapper ##############################################
+int sctp_bindx(int              sockfd,
+               struct sockaddr* packedAddrs,
+               int              addrcnt,
+               int              flags)
 {
    sockaddr_storage addrs[addrcnt];
    unpack_sockaddr(packedAddrs, addrcnt, (sockaddr_storage*)addrs);

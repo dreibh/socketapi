@@ -1,5 +1,5 @@
 /*
- *  $Id: tdsocket.cc,v 1.8 2003/08/19 19:24:25 tuexen Exp $
+ *  $Id: tdsocket.cc,v 1.9 2004/11/11 21:35:41 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -326,10 +326,10 @@ bool Socket::bindx(const SocketAddress** addressArray,
          }
          sockaddr_storage packedSocketAddressArray[addresses];
          packSocketAddressArray(storage, addresses, (sockaddr*)&packedSocketAddressArray);
-         result = ext_bindx(SocketDescriptor,
-                            (sockaddr*)&packedSocketAddressArray,
-                            addresses,
-                            (int)flags);
+         result = sctp_bindx(SocketDescriptor,
+                             (sockaddr*)&packedSocketAddressArray,
+                             addresses,
+                             (int)flags);
          if(result == 0) {
             break;
          }
@@ -345,10 +345,10 @@ bool Socket::bindx(const SocketAddress** addressArray,
             socketAddress->sin6_port = (card16)htons(i);
             sockaddr_storage packedSocketAddressArray[addresses];
             packSocketAddressArray(storage, addresses, (sockaddr*)&packedSocketAddressArray);
-            result = ext_bindx(SocketDescriptor,
-                               (sockaddr*)&packedSocketAddressArray,
-                               addresses,
-                               (int)flags);
+            result = sctp_bindx(SocketDescriptor,
+                                (sockaddr*)&packedSocketAddressArray,
+                                addresses,
+                                (int)flags);
             for(cardinal n = 1;n < addresses;n++) {
                sockaddr_in6* address2 = (sockaddr_in6*)&storage[n];
                if((address2->sin6_family == AF_INET6) ||
@@ -371,10 +371,10 @@ bool Socket::bindx(const SocketAddress** addressArray,
    else {
       sockaddr_storage packedSocketAddressArray[addresses];
       packSocketAddressArray(storage, addresses, (sockaddr*)&packedSocketAddressArray);
-      result = ext_bindx(SocketDescriptor,
-                         (sockaddr*)&packedSocketAddressArray,
-                         addresses,
-                         (int)flags);
+      result = sctp_bindx(SocketDescriptor,
+                          (sockaddr*)&packedSocketAddressArray,
+                          addresses,
+                          (int)flags);
       if(result < 0) {
          LastError = errno;
       }
@@ -1198,7 +1198,7 @@ bool Socket::multicastMembership(const SocketAddress& address,
       if(address.getSystemAddress((sockaddr*)&addr,sizeof(addr),AF_INET) == 0) {
 #ifndef DISABLE_WARNINGS
          cerr << "ERROR: Socket::multicastMembership() - Bad address type for IPv4 socket!" << endl;
-#endif         
+#endif
       }
       else {
          ip_mreq mreq;
@@ -1209,7 +1209,7 @@ bool Socket::multicastMembership(const SocketAddress& address,
             if(ioctl(SIOCGIFADDR,&ifr) != 0) {
 #ifndef DISABLE_WARNINGS
                cerr << "ERROR: Socket::multicastMembership() - Unable to get interface address!" << endl;
-#endif               
+#endif
                return(false);
             }
             mreq.imr_interface = ((sockaddr_in*)&ifr.ifr_addr)->sin_addr;
@@ -1227,7 +1227,7 @@ bool Socket::multicastMembership(const SocketAddress& address,
       if(address.getSystemAddress((sockaddr*)&addr,sizeof(addr),AF_INET6) == 0) {
 #ifndef DISABLE_WARNINGS
          cerr << "ERROR: Socket::multicastMembership() - Bad address type for IPv6 socket!" << endl;
-#endif         
+#endif
       }
       else {
          ipv6_mreq mreq;
@@ -1272,7 +1272,7 @@ bool Socket::getMulticastLoop()
    else {
 #ifndef DISABLE_WARNINGS
       cerr << "ERROR: Socket::getMulticastLoop() - Multicast is not supported for this socket type!" << endl;
-#endif      
+#endif
    }
    return(false);
 }
@@ -1292,7 +1292,7 @@ bool Socket::setMulticastLoop(const bool on)
    else {
 #ifndef DISABLE_WARNINGS
       cerr << "ERROR: Socket::setMulticastLoop() - Multicast is not supported for this socket type!" << endl;
-#endif      
+#endif
    }
    return(false);
 }
@@ -1318,7 +1318,7 @@ card8 Socket::getMulticastTTL()
    else {
 #ifndef DISABLE_WARNINGS
       cerr << "ERROR: Socket::getMulticastTTL() - Multicast is not supported for this socket type!" << endl;
-#endif      
+#endif
    }
    return(0);
 }
@@ -1337,7 +1337,7 @@ bool Socket::setMulticastTTL(const card8 ttl)
    else {
 #ifndef DISABLE_WARNINGS
       cerr << "ERROR: Socket::setMulticastTTL() - Multicast is not supported for this socket type!" << endl;
-#endif      
+#endif
    }
    return(false);
 }
