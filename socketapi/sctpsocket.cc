@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.25 2004/11/10 19:22:03 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.26 2004/11/13 03:34:51 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -56,8 +56,9 @@
 #define PRINT_RECVSTATUS
 #define PRINT_SENDSTATUS
 #define PRINT_SETPRIMARY
+*/
 
-
+/*
 #define PRINT_AUTOCLOSE_TIMEOUT
 #define PRINT_AUTOCLOSE_CHECK
 
@@ -255,12 +256,12 @@ int SCTPSocket::bind(const unsigned short    localPort,
 #ifdef PRINT_BIND
    cout << "Binding to {";
    for(unsigned int i = 0;i < NoOfLocalAddresses;i++) {
-      cout << " " << localAddressList[i]->getAddressString(SocketAddress::PF_Address|SocketAddress::PF_HidePort|SocketAddress::PF_Legacy) << ":" << localPort << " ";
+      cout << " " << localAddressList[i]->getAddressString(SocketAddress::PF_Address|SocketAddress::PF_HidePort) << ":" << localPort << " ";
    }
    cout << "}." << endl;
 #endif
    for(unsigned int i = 0;i < min(NoOfLocalAddresses,(unsigned int)SCTP_MAX_NUM_ADDRESSES);i++) {
-      snprintf((char*)&LocalAddressList[i],SCTP_MAX_IP_LEN,"%s",localAddressList[i]->getAddressString(SocketAddress::PF_HidePort|SocketAddress::PF_Address|SocketAddress::PF_Legacy).getData());
+      snprintf((char*)&LocalAddressList[i],SCTP_MAX_IP_LEN,"%s",localAddressList[i]->getAddressString(SocketAddress::PF_HidePort|SocketAddress::PF_Address).getData());
    }
    if(NoOfLocalAddresses < 1) {
 #ifndef DISABLE_WARNINGS
