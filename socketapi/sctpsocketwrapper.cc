@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.29 2004/11/20 21:07:21 tuexen Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.30 2004/11/23 10:13:45 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -420,7 +420,7 @@ int ext_socket(int domain, int type, int protocol)
       tdSocket.Socket.SCTPSocketDesc.InitMsg.sinit_max_instreams  = 10;
       tdSocket.Socket.SCTPSocketDesc.InitMsg.sinit_max_attempts   = 8;
       tdSocket.Socket.SCTPSocketDesc.InitMsg.sinit_max_init_timeo = 60000;
-      tdSocket.Socket.SCTPSocketDesc.SCTPSocketPtr = new SCTPSocket(flags);
+      tdSocket.Socket.SCTPSocketDesc.SCTPSocketPtr = new SCTPSocket(domain, flags);
       if(tdSocket.Socket.SCTPSocketDesc.SCTPSocketPtr == NULL) {
          errno_return(-ENOMEM);
       }

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.h,v 1.7 2004/07/27 11:53:44 dreibh Exp $
+ *  $Id: sctpsocket.h,v 1.8 2004/11/23 10:13:45 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -79,9 +79,10 @@ class SCTPSocket
    /**
      * Constructor.
      *
+     * @param family AF_INET or AF_INET6.
      * @param flags SCTP socket flags.
      */
-   SCTPSocket(const cardinal flags = 0);
+   SCTPSocket(const int family, const cardinal flags = 0);
 
    /**
      * Destructor.
@@ -584,6 +585,7 @@ class SCTPSocket
    multimap<unsigned int, SCTPAssociation*> ConnectionlessAssociationList;
    card8                                    DefaultTrafficClass;
 
+   int                                      Family;
    bool                                     WriteReady;
    bool                                     ReadReady;
    bool                                     HasException;

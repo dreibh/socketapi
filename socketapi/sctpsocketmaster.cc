@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.17 2004/11/19 17:12:35 dreibh Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.18 2004/11/23 10:13:45 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -108,6 +108,14 @@ SCTPSocketMaster::SCTPSocketMaster()
 
       if(!versionCheck()) {
          return;
+      }
+
+      int sd;
+      sd = socket(AF_INET, SOCK_SEQPACKET, IPPROTO_SCTP);
+      if(sd >= 0) {
+         close(sd);
+         cerr << "ERROR: Kernel SCTP seems to be available! You cannout use sctplib and kernel SCTP simultaneously!" << endl;
+         ::exit(1);
       }
 
       InitializationResult = sctp_initLibrary();

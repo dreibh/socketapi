@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpterminal.cc,v 1.8 2004/11/10 19:22:03 dreibh Exp $
+ *  $Id: sctpterminal.cc,v 1.9 2004/11/23 10:13:45 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -198,7 +198,7 @@ class CopyThread : public Thread
 CopyThread::CopyThread(Socket*        socket,
                        const cardinal outgoing,
                        const cardinal unreliable)
-   : Thread("CopyThread",Thread::TF_CancelAsynchronous)
+   : Thread("CopyThread", Thread::TF_CancelAsynchronous)
 {
    CopySocket = socket;
    Outgoing   = outgoing;
@@ -222,13 +222,15 @@ void CopyThread::run()
       // ====== Read data from cin ==========================================
       Thread::testCancel();
       char str[8192];
-      cin.getline((char*)&str,sizeof(str) - 1);
-      if(cin.eof()) {
+
+      // For some reason, cin.getline() causes problems with Ctrl-C
+      // handling. Therefore, we use fgets() and feof() instead.
+      fgets((char*)&str, sizeof(str), stdin);
+      if(feof(stdin)) {
          CopySocket->shutdown(2);
          sendBreak(true);
          return;
       }
-      strcat((char*)&str,"\n");
 
       // ====== Check for new stream ID and protocol ID =====================
       unsigned int position = 0;
@@ -536,7 +538,6 @@ int main(int argc, char** argv)
 
 
    // ====== Stop threads ===================================================
-   Thread::delay(500000);
    copy.stop();
    echo.stop();
    SocketAddress::deleteAddressList(localAddressArray);

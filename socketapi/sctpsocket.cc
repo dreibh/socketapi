@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.26 2004/11/13 03:34:51 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.27 2004/11/23 10:13:45 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -72,7 +72,7 @@
 
 
 // ###### Constructor #######################################################
-SCTPSocket::SCTPSocket(const cardinal flags)
+SCTPSocket::SCTPSocket(const int family, const cardinal flags)
 {
    CorrelationID       = 0;
    AutoCloseTimeout    = 30000000;
@@ -84,6 +84,7 @@ SCTPSocket::SCTPSocket(const cardinal flags)
    ReadReady           = false;
    WriteReady          = false;
    HasException        = false;
+   Family              = family;
 
    EstablishCondition.setName("SCTPSocket::EstablishCondition");
    ReadUpdateCondition.setName("SCTPSocket::ReadUpdateCondition");
@@ -253,16 +254,28 @@ int SCTPSocket::bind(const unsigned short    localPort,
 
 
    // ====== Initialize local addresses =====================================
+   for(unsigned int i = 0;i < min(NoOfLocalAddresses,(unsigned int)SCTP_MAX_NUM_ADDRESSES);i++) {
+      const InternetAddress* localAddress = dynamic_cast<const InternetAddress*>(localAddressList[i]);
+      const bool isIPv6 = (localAddress != NULL) ? localAddress->isIPv6() : false;
+      if(isIPv6 && (Family == AF_INET6)) {
+         snprintf((char*)&LocalAddressList[i],SCTP_MAX_IP_LEN, "%s",
+                  localAddressList[i]->getAddressString(
+                     SocketAddress::PF_HidePort|SocketAddress::PF_Address).getData());
+      }
+      else {
+         snprintf((char*)&LocalAddressList[i],SCTP_MAX_IP_LEN, "%s",
+                  localAddressList[i]->getAddressString(
+                     SocketAddress::PF_HidePort|SocketAddress::PF_Address|
+                     SocketAddress::PF_Legacy).getData());
+      }
+   }
 #ifdef PRINT_BIND
    cout << "Binding to {";
    for(unsigned int i = 0;i < NoOfLocalAddresses;i++) {
-      cout << " " << localAddressList[i]->getAddressString(SocketAddress::PF_Address|SocketAddress::PF_HidePort) << ":" << localPort << " ";
+      cout << " " << LocalAddressList[i] << " ";
    }
    cout << "}." << endl;
 #endif
-   for(unsigned int i = 0;i < min(NoOfLocalAddresses,(unsigned int)SCTP_MAX_NUM_ADDRESSES);i++) {
-      snprintf((char*)&LocalAddressList[i],SCTP_MAX_IP_LEN,"%s",localAddressList[i]->getAddressString(SocketAddress::PF_HidePort|SocketAddress::PF_Address).getData());
-   }
    if(NoOfLocalAddresses < 1) {
 #ifndef DISABLE_WARNINGS
       cerr << "ERROR: SCTPSocket::bind() - No local addresses!" << endl;
@@ -496,8 +509,16 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
    unsigned char addressArray[destinationAddresses][SCTP_MAX_IP_LEN];
    if(destinationAddresses > 0) {
       for(unsigned int i = 0;i < destinationAddresses;i++) {
-         snprintf((char*)&addressArray[i], SCTP_MAX_IP_LEN, "%s",
-                  destinationAddressList[i]->getAddressString(SocketAddress::PF_HidePort|SocketAddress::PF_Address|SocketAddress::PF_Legacy).getData());
+         const InternetAddress* destinationAddress = dynamic_cast<const InternetAddress*>(destinationAddressList[i]);
+         const bool isIPv6 = (destinationAddress != NULL) ? destinationAddress->isIPv6() : false;
+         if(isIPv6 && (Family == AF_INET6)) {
+            snprintf((char*)&addressArray[i], SCTP_MAX_IP_LEN, "%s",
+                     destinationAddressList[i]->getAddressString(SocketAddress::PF_HidePort|SocketAddress::PF_Address).getData());
+         }
+         else {
+            snprintf((char*)&addressArray[i], SCTP_MAX_IP_LEN, "%s",
+                     destinationAddressList[i]->getAddressString(SocketAddress::PF_HidePort|SocketAddress::PF_Address|SocketAddress::PF_Legacy).getData());
+         }
       }
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19)
       assocID = sctp_associate(InstanceName,
