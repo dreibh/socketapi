@@ -1,5 +1,5 @@
 /*
- *  $Id: tdsocket.cc,v 1.6 2003/08/04 11:04:54 dreibh Exp $
+ *  $Id: tdsocket.cc,v 1.7 2003/08/18 11:47:41 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -1225,12 +1225,7 @@ bool Socket::multicastMembership(const SocketAddress& address,
          ipv6_mreq mreq;
          memcpy((char*)&mreq.ipv6mr_multiaddr,(char*)&addr.sin6_addr,sizeof(addr.sin6_addr));
          if(interface != NULL) {
-#if defined(__APPLE__)
-#warning Darwin does not support if_nametoindex() => Socket does not support multicast interface selection!
-            mreq.ipv6mr_interface = 0;
-#else
-            mreq.ipv6mr_interface = if_nametoindex(interface);
-#endif
+             mreq.ipv6mr_interface = if_nametoindex(interface);
          }
          else {
             mreq.ipv6mr_interface = 0;
