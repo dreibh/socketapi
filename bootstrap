@@ -7,19 +7,19 @@ if [ -e /usr/bin/glibtoolize ] ; then
 elif [ -e /usr/bin/libtoolize ] ; then
    libtoolize --force
 else
+   mv -f admin/config.guess.save admin/config.guess
+   mv -f admin/config.sub.save  admin/config.sub
    echo "ERROR: I cannot find libtoolize or glibtoolize!"
    exit 1
 fi
 rm -f admin/config.guess admin/config.sub
 mv -f admin/config.guess.save admin/config.guess
 mv -f admin/config.sub.save admin/config.sub
-if [ -e /usr/share/aclocal ] ; then
-   aclocal -I /usr/share/aclocal
-elif [ -e /usr/local/share/aclocal ] ; then
-   aclocal -I /usr/local/share/aclocal
+
+if [ -e /usr/local/share/aclocal ] ; then
+   aclocal -I /usr/local/share/aclocal -I /usr/share/aclocal
 else
-   echo "ERROR: I cannot find the aclocal directory!"
-   exit 1
+   aclocal -I /usr/share/aclocal
 fi
 autoheader 
 automake --gnu --add-missing --copy
