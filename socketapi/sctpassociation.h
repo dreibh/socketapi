@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.h,v 1.6 2003/08/19 19:20:00 tuexen Exp $
+ *  $Id: sctpassociation.h,v 1.7 2004/07/27 11:53:44 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -434,6 +434,8 @@ class SCTPAssociation
 
    // ====== Private data ===================================================
    private:
+   bool sendPreEstablishmentPackets();
+
    SCTPSocket*           Socket;
    SCTPNotificationQueue InQueue;
    Condition             EstablishCondition;
@@ -454,21 +456,34 @@ class SCTPAssociation
       bool         Valid;
       unsigned int Timeout;
    };
-   StreamDefaultTimeout* StreamDefaultTimeoutArray;
-   unsigned int          StreamDefaultTimeoutCount;
+   StreamDefaultTimeout*   StreamDefaultTimeoutArray;
+   unsigned int            StreamDefaultTimeoutCount;
 
-   bool                  CommunicationUpNotification;
-   bool                  CommunicationLostNotification;
-   bool                  ShutdownCompleteNotification;
-   bool                  IsShuttingDown;
+   bool                    CommunicationUpNotification;
+   bool                    CommunicationLostNotification;
+   bool                    ShutdownCompleteNotification;
+   bool                    IsShuttingDown;
 
-   bool                  ReadReady;
-   bool                  WriteReady;
-   bool                  HasException;
+   bool                    ReadReady;
+   bool                    WriteReady;
+   bool                    HasException;
 
-   bool                  RTOMaxIsInitTimeout;
-   unsigned int          InitTimeout;
-   unsigned int          RTOMax;
+   bool                    RTOMaxIsInitTimeout;
+   unsigned int            InitTimeout;
+   unsigned int            RTOMax;
+
+   struct PreEstablishmentPacket {
+      PreEstablishmentPacket* Next;
+      unsigned int            Flags;
+      uint32_t                ProtoID;
+      uint16_t                StreamID;
+      unsigned int            TimeToLive;
+      size_t                  Length;
+      char*                   Data;
+   };
+   PreEstablishmentPacket* FirstPreEstablishmentPacket;
+   PreEstablishmentPacket* LastPreEstablishmentPacket;
+   SocketAddress**         PreEstablishmentAddressList;
 };
 
 

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.cc,v 1.7 2003/08/19 19:20:00 tuexen Exp $
+ *  $Id: sctpassociation.cc,v 1.8 2004/07/27 11:53:44 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -40,7 +40,7 @@
 #include "sctpsocketmaster.h"
 
 
-
+// #define PRINT_PREESTABLISHMENT_SEND
 // #define PRINT_SHUTDOWN
 // #define PRINT_SOCKTYPE
 // #define PRINT_RTOMAX
@@ -70,6 +70,9 @@ SCTPAssociation::SCTPAssociation(SCTPSocket*        socket,
    WriteReady                    = false;
    HasException                  = false;
    RTOMaxIsInitTimeout           = false;
+   FirstPreEstablishmentPacket   = NULL;
+   LastPreEstablishmentPacket    = NULL;
+   PreEstablishmentAddressList   = NULL;
 
    EstablishCondition.setName("SCTPAssociation::EstablishCondition");
    ShutdownCompleteCondition.setName("SCTPAssociation::ShutdownCompleteCondition");
@@ -154,6 +157,20 @@ SCTPAssociation::~SCTPAssociation()
       delete StreamDefaultTimeoutArray;
       StreamDefaultTimeoutArray = NULL;
       StreamDefaultTimeoutCount = 0;
+   }
+
+   PreEstablishmentPacket* packet = FirstPreEstablishmentPacket;
+   while(packet != NULL) {
+      PreEstablishmentPacket* nextPacket = packet->Next;
+      delete packet->Data;
+      delete packet;
+      packet = nextPacket;
+   }
+   FirstPreEstablishmentPacket = NULL;
+   LastPreEstablishmentPacket  = NULL;
+   if(PreEstablishmentAddressList) {
+      SocketAddress::deleteAddressList(PreEstablishmentAddressList);
+      PreEstablishmentAddressList = NULL;
    }
 }
 
@@ -296,33 +313,108 @@ int SCTPAssociation::sendTo(const char*          buffer,
                             const SocketAddress* pathDestinationAddress)
 {
    int result;
-   if(!useDefaults) {
-      result = Socket->internalSend(
-                          buffer, length,
-                          flags,
-                          AssociationID, streamID, protoID,
-                          timeToLive,
-                          &ReadyForTransmit, pathDestinationAddress);
-   }
-   else {
-      if((buffer != NULL) && (length > 0)) {
-         unsigned int timeout;
-         if(!getDefaultStreamTimeout(Defaults.StreamID, timeout)) {
-            timeout = Defaults.TimeToLive;
+   if(!CommunicationUpNotification) {
+      PreEstablishmentPacket* packet = new PreEstablishmentPacket;
+      if(packet) {
+         packet->Data = new char[length];
+         if(packet->Data) {
+            memcpy(packet->Data, buffer, length);
+            packet->Length     = length;
+            packet->Next       = NULL;
+            packet->Flags      = flags;
+            packet->ProtoID    = protoID;
+            packet->StreamID   = streamID;
+            packet->TimeToLive = timeToLive;
+            if(FirstPreEstablishmentPacket == NULL) {
+               FirstPreEstablishmentPacket = packet;
+               LastPreEstablishmentPacket  = packet;
+            }
+            LastPreEstablishmentPacket->Next = packet;
+            LastPreEstablishmentPacket       = packet;
          }
-         result = Socket->internalSend(
-                             buffer, length,
-                             flags,
-                             AssociationID,
-                             Defaults.StreamID, Defaults.ProtoID, Defaults.TimeToLive,
-                             &ReadyForTransmit,
-                             pathDestinationAddress);
+         else {
+            delete packet;
+            result = -ENOMEM;
+         }
       }
       else {
-         result = 0;
+         result = -ENOMEM;
+      }
+      result = length;
+   }
+   else {
+      if(!useDefaults) {
+         result = Socket->internalSend(
+                           buffer, length,
+                           flags,
+                           AssociationID, streamID, protoID,
+                           timeToLive,
+                           &ReadyForTransmit, pathDestinationAddress);
+      }
+      else {
+         if((buffer != NULL) && (length > 0)) {
+            unsigned int timeout;
+            if(!getDefaultStreamTimeout(Defaults.StreamID, timeout)) {
+               timeout = Defaults.TimeToLive;
+            }
+            result = Socket->internalSend(
+                              buffer, length,
+                              flags,
+                              AssociationID,
+                              Defaults.StreamID, Defaults.ProtoID, Defaults.TimeToLive,
+                              &ReadyForTransmit,
+                              pathDestinationAddress);
+         }
+         else {
+            result = 0;
+         }
       }
    }
    return(result);
+}
+
+
+// ###### Send pre-establishment packets ####################################
+bool SCTPAssociation::sendPreEstablishmentPackets()
+{
+   ssize_t result;
+
+   while(FirstPreEstablishmentPacket) {
+      SCTPAssociation::PreEstablishmentPacket* packet = FirstPreEstablishmentPacket;
+#ifdef PRINT_PREESTABLISHMENT_SEND
+      char str[256];
+      snprintf((char*)&str,sizeof(str),
+                  "A%04d: sendPreEstablishmentPackets() - Sending %u bytes, PPID $%08x, stream %u",
+                  AssociationID, packet->Length, packet->ProtoID, packet->StreamID);
+      cerr << str << endl;
+#endif
+      result = sendTo(packet->Data,
+                      packet->Length,
+                      packet->Flags,
+                      packet->StreamID,
+                      packet->ProtoID,
+                      packet->TimeToLive,
+                      true,
+                      NULL);
+      if(result == (ssize_t)packet->Length) {
+#ifdef PRINT_PREESTABLISHMENT_SEND
+         cerr << "Successfully sent packet" << endl;
+#endif
+         FirstPreEstablishmentPacket = packet->Next;
+         if(LastPreEstablishmentPacket == packet) {
+            LastPreEstablishmentPacket = NULL;
+         }
+         delete packet->Data;
+         delete packet;
+      }
+      else {
+#ifdef PRINT_PREESTABLISHMENT_SEND
+         cerr << "Sending failed" << endl;
+#endif
+         return(false);
+      }
+   }
+   return(true);
 }
 
 

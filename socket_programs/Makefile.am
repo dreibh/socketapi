@@ -1,6 +1,6 @@
 EXTRA_DIST = Makefile.am combined_server_1to1.c combined_server_1toM.c idexample1to1.c idexample1toM.c newexample1to1.c
 
-noinst_PROGRAMS = combined_server_1to1 combined_server_1toM idexample1to1 idexample1toM newexample1to1
+noinst_PROGRAMS = combined_server_1to1 combined_server_1toM idexample1to1 idexample1toM newexample1to1 t2
 
 combined_server_1to1_SOURCES =  combined_server_1to1.c
 combined_server_1to1_CFLAGS =  -I../socketapi
@@ -21,3 +21,8 @@ idexample1toM_LDADD = ../socketapi/libsctpsocket.la
 newexample1to1_SOURCES = newexample1to1.c
 newexample1to1_CFLAGS =  -I../socketapi
 newexample1to1_LDADD = ../socketapi/libsctpsocket.la
+
+
+t2_SOURCES = t2.c
+t2_CFLAGS =  -I../socketapi
+t2_LDADD = ../socketapi/libsctpsocket.la

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.23 2004/07/25 16:55:19 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.24 2004/07/27 11:53:44 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -105,7 +105,9 @@ inline static void SAFE_FD_ZERO(fd_set* fdset)
 
 
 // ###### Unpack sockaddr blocks to sockaddr_storage array ##################
-static void unpack_sockaddr(sockaddr* addrArray, const size_t addrs, sockaddr_storage* newArray)
+static void unpack_sockaddr(const sockaddr*   addrArray,
+                            const size_t      addrs,
+                            sockaddr_storage* newArray)
 {
    for(size_t i = 0;i < addrs;i++) {
       switch(addrArray->sa_family) {
@@ -1827,7 +1829,7 @@ int ext_connect(int sockfd, const struct sockaddr* serv_addr, socklen_t addrlen)
       if(tdSocket->Type == ExtSocketDescriptor::ESDT_SCTP) {
          struct sockaddr_storage addressArray[1];
          memcpy((char*)&addressArray[0], serv_addr, min(sizeof(sockaddr_storage), (size_t)addrlen));
-         return(ext_connectx(sockfd, (sockaddr*)&addressArray, 1));
+         return(ext_connectx(sockfd, (const sockaddr*)&addressArray, 1));
       }
       else {
          return(connect(tdSocket->Socket.SystemSocketID, serv_addr, addrlen));
@@ -1838,12 +1840,12 @@ int ext_connect(int sockfd, const struct sockaddr* serv_addr, socklen_t addrlen)
 
 
 // ###### connectx() wrapper ################################################
-int ext_connectx(int              sockfd,
-                 struct sockaddr* packedAddrs,
-                 int              addrcnt)
+int ext_connectx(int                    sockfd,
+                 const struct sockaddr* packedAddrs,
+                 int                    addrcnt)
 {
    sockaddr_storage addrs[addrcnt];
-   unpack_sockaddr(packedAddrs, addrcnt, (sockaddr_storage*)addrs);
+   unpack_sockaddr(packedAddrs, addrcnt, addrs);
 
    ExtSocketDescriptor* tdSocket = ExtSocketDescriptorMaster::getSocket(sockfd);
    if(tdSocket != NULL) {
@@ -1859,9 +1861,6 @@ int ext_connectx(int              sockfd,
                }
 #endif
                bindToAny(tdSocket);
-               if(tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr != NULL) {
-                  errno_return(-EISCONN);
-               }
                if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
                   const SocketAddress* addressArray[addrcnt + 1];
                   for(int i = 0;i < addrcnt;i++) {
@@ -1876,23 +1875,41 @@ int ext_connectx(int              sockfd,
                   }
                   addressArray[addrcnt] = NULL;
 
-                  tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr =
-                     tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->associate(
-                        tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_num_ostreams,
-                        tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_attempts,
-                        tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_init_timeo,
-                        (const SocketAddress**)&addressArray,
-                        !(tdSocket->Socket.SCTPSocketDesc.Flags & O_NONBLOCK));
-
-                  for(int i = 0;i < addrcnt;i++) {
-                     delete addressArray[i];
-                     addressArray[i] = NULL;
+                  if(tdSocket->Socket.SCTPSocketDesc.ConnectionOriented) {
+                     tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr =
+                        tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->associate(
+                           tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_num_ostreams,
+                           tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_attempts,
+                           tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_init_timeo,
+                           (const SocketAddress**)&addressArray,
+                           !(tdSocket->Socket.SCTPSocketDesc.Flags & O_NONBLOCK));
+                     for(int i = 0;i < addrcnt;i++) {
+                        delete addressArray[i];
+                        addressArray[i] = NULL;
+                     }
+                     if(tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr == NULL) {
+                        errno_return(-EIO);
+                     }
+                     else if(tdSocket->Socket.SCTPSocketDesc.Flags & O_NONBLOCK) {
+                        errno_return(-EINPROGRESS);
+                     }
                   }
-                  if(tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr == NULL) {
-                     errno_return(-EIO);
-                  }
-                  else if(tdSocket->Socket.SCTPSocketDesc.Flags & O_NONBLOCK) {
-                     errno_return(-EINPROGRESS);
+                  else {
+                     int result = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->sendTo(
+                                     NULL, 0,
+                                     (tdSocket->Socket.SCTPSocketDesc.Flags & O_NONBLOCK) ? MSG_DONTWAIT : 0,
+                                     0, 0x0000, 0x00000000, SCTP_INFINITE_LIFETIME,
+                                     tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_attempts,
+                                     tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_init_timeo,
+                                     true,
+                                     (const SocketAddress**)&addressArray,
+                                     tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_num_ostreams);
+                     if(result > 0) {
+                        errno_return(result);
+                     }
+                     else if(tdSocket->Socket.SCTPSocketDesc.Flags & O_NONBLOCK) {
+                        errno_return(-EINPROGRESS);
+                     }
                   }
                   errno_return(0);
                }
@@ -2269,6 +2286,9 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                   }
                   int result = -EBADF;
                   if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
+                     const SocketAddress* destinationAddressList[2];
+                     destinationAddressList[0] = destination;
+                     destinationAddressList[1] = NULL;
                      result = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->sendTo(
                                  (char*)msg->msg_iov->iov_base,
                                  msg->msg_iov->iov_len,
@@ -2280,7 +2300,7 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                                  tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_attempts,
                                  tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_init_timeo,
                                  useDefaults,
-                                 destination,
+                                 (const SocketAddress**)&destinationAddressList,
                                  tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_num_ostreams);
                   }
                   delete destination;

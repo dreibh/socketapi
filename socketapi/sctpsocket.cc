@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.21 2003/08/19 19:20:00 tuexen Exp $
+ *  $Id: sctpsocket.cc,v 1.22 2004/07/27 11:53:44 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -48,6 +48,7 @@
 #define PRINT_ACCEPT
 #define PRINT_ASSOCIATE
 #define PRINT_NEW_ASSOCIATIONS
+#define PRINT_SEND_TO_ALL
 #define PRINT_SHUTDOWNS
 #define PRINT_PRSCTP
 #define PRINT_NOTIFICATION_SKIP
@@ -55,8 +56,8 @@
 #define PRINT_RECVSTATUS
 #define PRINT_SENDSTATUS
 #define PRINT_SETPRIMARY
-*/
-/*
+
+
 #define PRINT_AUTOCLOSE_TIMEOUT
 #define PRINT_AUTOCLOSE_CHECK
 
@@ -568,6 +569,15 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
          association->RTOMaxIsInitTimeout = true;
          association->RTOMax              = oldParameters.rtoMax;
          association->InitTimeout         = maxInitTimeout;
+
+         association->PreEstablishmentAddressList = SocketAddress::newAddressList(destinationAddresses);
+         if(association->PreEstablishmentAddressList != NULL) {
+            for(unsigned int i = 0;i < destinationAddresses;i++) {
+               association->PreEstablishmentAddressList[i] =
+                  destinationAddressList[i]->duplicate();
+            }
+         }
+
 #ifdef PRINT_RTO
          cout << "associate() - InitTimeout=" << association->InitTimeout << " SavedMaxRTO=" << association->RTOMax << endl;
 #endif
@@ -1076,232 +1086,275 @@ int SCTPSocket::receiveFrom(char*           buffer,
 }
 
 
-// ###### Send ##############################################################
-int SCTPSocket::sendTo(const char*          buffer,
-                       const size_t         length,
-                       const int            flags,
-                       const unsigned int   assocID,
-                       const unsigned short streamID,
-                       const unsigned int   protoID,
-                       const unsigned int   timeToLive,
-                       const unsigned short maxAttempts,
-                       const unsigned short maxInitTimeout,
-                       const bool           useDefaults,
-                       const SocketAddress* destinationAddress,
-                       const cardinal       noOfOutgoingStreams)
+// ###### Find association for given destination address ####################
+SCTPAssociation* SCTPSocket::findAssociationForDestinationAddress(
+                    multimap<unsigned int, SCTPAssociation*>& list,
+                    const SocketAddress** destinationAddressList)
 {
-   SCTPSocketMaster::MasterInstance.lock();
-   short pathIndex = SCTP_USE_PRIMARY;
+   SCTP_PathStatus pathStatus;
+   short           pathIndex;
 
-   // ====== Check for already created association ==========================
-   SCTPAssociation* association = NULL;
-   if(destinationAddress != NULL) {
-      SCTP_PathStatus pathStatus;
-
-      if(Flags & SSF_AutoConnect) {
-         multimap<unsigned int, SCTPAssociation*>::iterator iterator =
-            ConnectionlessAssociationList.begin();
-         while(iterator != ConnectionlessAssociationList.end()) {
-            SCTP_Association_Status assocStatus;
-            if(sctp_getAssocStatus(iterator->second->AssociationID,&assocStatus) == 0) {
+   multimap<unsigned int, SCTPAssociation*>::iterator iterator = list.begin();
+   while(iterator != list.end()) {
+      SCTP_Association_Status assocStatus;
+      if(iterator->second->PreEstablishmentAddressList == NULL) {
+         if(sctp_getAssocStatus(iterator->second->AssociationID, &assocStatus) == 0) {
+            size_t i = 0;
+            while(destinationAddressList[i] != NULL) {
 #ifdef PRINT_ASSOCSEARCH
-               cout << "CL "
-                    << destinationAddress->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
-                    << " in AssocID=" << iterator->second->AssociationID << "?" << endl;
+               cout << "Check "
+                  << destinationAddressList[i]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
+                  << " in AssocID=" << iterator->second->AssociationID << "?" << endl;
 #endif
                if( (!iterator->second->IsShuttingDown) &&
-                   (destinationAddress->getPort() == assocStatus.destPort) &&
-                   ((pathIndex = getPathIndexForAddress(iterator->second->AssociationID, destinationAddress, pathStatus)) >= 0) ) {
+                  (destinationAddressList[i]->getPort() == assocStatus.destPort) &&
+                  ((pathIndex = getPathIndexForAddress(iterator->second->AssociationID, destinationAddressList[i], pathStatus)) >= 0) ) {
 #ifdef PRINT_ASSOCSEARCH
                   cout << "Found: index=" << pathIndex << endl;
 #endif
-                  association = iterator->second;
-                  break;
+                  return(iterator->second);
                }
+               i++;
             }
-            iterator++;
          }
       }
-      if(association == NULL) {
-         multimap<unsigned int, SCTPAssociation*>::iterator iterator =
-            AssociationList.begin();
-         while(iterator != AssociationList.end()) {
-            SCTP_Association_Status assocStatus;
-            if(sctp_getAssocStatus(iterator->second->AssociationID,&assocStatus) == 0) {
+      else {
+         size_t i = 0;
+         size_t j = 0;
+         while(destinationAddressList[i] != NULL) {
+            while(iterator->second->PreEstablishmentAddressList[j] != NULL) {
 #ifdef PRINT_ASSOCSEARCH
-               cout << "CO "
-                    << destinationAddress->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
-                    << " in AssocID=" << iterator->second->AssociationID << "?" << endl;
+               cout << "PreEstablishmentAddressList Check "
+                    << destinationAddressList[i]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
+                    << " == "
+                    << iterator->second->PreEstablishmentAddressList[j]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy) << endl;
 #endif
-               if( (!iterator->second->IsShuttingDown) &&
-                   (destinationAddress->getPort() == assocStatus.destPort) &&
-                   ((pathIndex = getPathIndexForAddress(iterator->second->AssociationID, destinationAddress, pathStatus)) >= 0) ) {
+               if(destinationAddressList[i]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy) ==
+                  iterator->second->PreEstablishmentAddressList[j]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)) {
 #ifdef PRINT_ASSOCSEARCH
-                  cout << "Found: index=" << pathIndex << endl;
+                  cout << "Found" << endl;
 #endif
-                  association = iterator->second;
-                  break;
+                  return(iterator->second);
                }
+               j++;
             }
-            iterator++;
+            i++;
          }
       }
+      iterator++;
    }
-   else {
+   return(NULL);
+}
+
+
+// ###### Send ##############################################################
+int SCTPSocket::sendTo(const char*           buffer,
+                       const size_t          length,
+                       const int             flags,
+                       const unsigned int    assocID,
+                       const unsigned short  streamID,
+                       const unsigned int    protoID,
+                       const unsigned int    timeToLive,
+                       const unsigned short  maxAttempts,
+                       const unsigned short  maxInitTimeout,
+                       const bool            useDefaults,
+                       const SocketAddress** destinationAddressList,
+                       const cardinal        noOfOutgoingStreams)
+{
+   int result;
+
+   SCTPSocketMaster::MasterInstance.lock();
+
+   // ====== Send to one association ========================================
+   if(!(flags & MSG_SEND_TO_ALL)) {
+      // ====== Check for already created association =======================
+      SCTPAssociation* association = NULL;
+      if(destinationAddressList != NULL) {
+         if(Flags & SSF_AutoConnect) {
 #ifdef PRINT_ASSOCSEARCH
-      cout << "AssocIDLookup " << assocID << "... ";
+            cout << "Assoc lookup in ConnectionlessAssociationList..." << endl;
 #endif
-      multimap<unsigned int, SCTPAssociation*>::iterator iterator =
-         AssociationList.find(assocID);
-      if(iterator != AssociationList.end()) {
+            association = findAssociationForDestinationAddress(ConnectionlessAssociationList,
+                                                               destinationAddressList);
+         }
+         if(association == NULL) {
 #ifdef PRINT_ASSOCSEARCH
-         cout << "ok." << endl;
+            cout << "Assoc lookup in AssociationList..." << endl;
 #endif
-         association = iterator->second;
+            association = findAssociationForDestinationAddress(AssociationList,
+                                                               destinationAddressList);
+         }
       }
       else {
 #ifdef PRINT_ASSOCSEARCH
-         cout << "failed!" << endl;
+         cout << "AssocIDLookup " << assocID << "... ";
 #endif
+         multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+            AssociationList.find(assocID);
+         if(iterator != AssociationList.end()) {
+#ifdef PRINT_ASSOCSEARCH
+            cout << "ok." << endl;
+#endif
+            association = iterator->second;
+         }
+         else {
+#ifdef PRINT_ASSOCSEARCH
+            cout << "failed!" << endl;
+#endif
+         }
       }
-   }
-   if(association != NULL) {
-#ifdef PRINT_ASSOC_USECOUNT
-      cout << "Send: UseCount increment for A" << association->getID() << ": "
-           << association->UseCount << " -> ";
-#endif
-      association->UseCount++;
-#ifdef PRINT_ASSOC_USECOUNT
-      cout << association->UseCount << endl;
-#endif
-   }
-
-   SCTPSocketMaster::MasterInstance.unlock();
-
-
-   // ====== Create new association =========================================
-   if((Flags & SSF_AutoConnect) && (association == NULL) && (destinationAddress != NULL)) {
-#ifdef PRINT_NEW_ASSOCIATIONS
-      cout << "AutoConnect: New outgoing association to "
-           << destinationAddress->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
-           << "..." << endl;
-#endif
-      const SocketAddress* destinationAddressList[2];
-      destinationAddressList[0] = destinationAddress;
-      destinationAddressList[1] = NULL;
-      association = associate(noOfOutgoingStreams,
-                              maxAttempts, maxInitTimeout,
-                              (const SocketAddress**)&destinationAddressList,
-                              (flags & MSG_DONTWAIT) ? false : true);
       if(association != NULL) {
-#ifdef PRINT_NEW_ASSOCIATIONS
-         cout << "AutoConnect: New outgoing association to "
-                 << destinationAddress->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
-                 << ", #" << association->getID() << " established!" << endl;
-#endif
-         SCTPSocketMaster::MasterInstance.lock();
 #ifdef PRINT_ASSOC_USECOUNT
-         cout << "AutoConnect: UseCount increment for A" << association->getID() << ": "
-              << association->UseCount << " -> ";
+         cout << "Send: UseCount increment for A" << association->getID() << ": "
+            << association->UseCount << " -> ";
 #endif
          association->UseCount++;
 #ifdef PRINT_ASSOC_USECOUNT
          cout << association->UseCount << endl;
 #endif
-         ConnectionlessAssociationList.insert(pair<unsigned int, SCTPAssociation*>(association->getID(),association));
-         SCTPSocketMaster::MasterInstance.unlock();
       }
+
+      SCTPSocketMaster::MasterInstance.unlock();
+
+
+      // ====== Create new association ======================================
+      if((Flags & SSF_AutoConnect) && (association == NULL) && (destinationAddressList != NULL)) {
 #ifdef PRINT_NEW_ASSOCIATIONS
-      else {
          cout << "AutoConnect: New outgoing association to "
-              << destinationAddress->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
-              << " failed!" << endl;
-      }
+            << destinationAddressList[0]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
+            << "..." << endl;
 #endif
-   }
-
-
-   // ====== Send data ======================================================
-   int result;
-   if(association != NULL) {
-      if((buffer != NULL) && (length > 0)) {
-         result = association->sendTo(buffer, length, flags,
-                                      streamID, protoID, timeToLive, useDefaults,
-                                      destinationAddress);
-      }
-      else {
-         result = 0;
-      }
-
-      // ====== Remove association, if SHUTDOWN flag is set =================
-      if((flags & MSG_EOF) || (flags & MSG_ABORT)) {
-         if(flags & MSG_ABORT) {
-            association->abort();
-         }
-         else if(flags & MSG_EOF) {
-            association->shutdown();
-         }
-         if(Flags & SSF_AutoConnect) {
-#ifdef PRINT_SHUTDOWNS
-            cout << "AutoConnect: Shutdown of outgoing association ";
-            if(destinationAddress != NULL) {
-               cout << "to " << *destinationAddress << "..." << endl;
-            }
-            else {
-               cout << "A" << assocID << "..." << endl;
-            }
+         association = associate(noOfOutgoingStreams,
+                                 maxAttempts, maxInitTimeout,
+                                 destinationAddressList,
+                                 (flags & MSG_DONTWAIT) ? false : true);
+         if(association != NULL) {
+#ifdef PRINT_NEW_ASSOCIATIONS
+            cout << "AutoConnect: New outgoing association to "
+                  << destinationAddressList[0]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
+                  << ", #" << association->getID() << " established!" << endl;
 #endif
             SCTPSocketMaster::MasterInstance.lock();
-            multimap<unsigned int, SCTPAssociation*>::iterator iterator =
-               ConnectionlessAssociationList.find(association->getID());
-            if(iterator != ConnectionlessAssociationList.end()) {
-               ConnectionlessAssociationList.erase(iterator);
-            }
+#ifdef PRINT_ASSOC_USECOUNT
+            cout << "AutoConnect: UseCount increment for A" << association->getID() << ": "
+               << association->UseCount << " -> ";
+#endif
+            association->UseCount++;
+#ifdef PRINT_ASSOC_USECOUNT
+            cout << association->UseCount << endl;
+#endif
+            ConnectionlessAssociationList.insert(pair<unsigned int, SCTPAssociation*>(association->getID(),association));
             SCTPSocketMaster::MasterInstance.unlock();
-            delete association;
-            association = NULL;
+         }
+#ifdef PRINT_NEW_ASSOCIATIONS
+         else {
+            cout << "AutoConnect: New outgoing association to "
+               << destinationAddressList[0]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
+               << " failed!" << endl;
+         }
+#endif
+      }
+
+
+      // ====== Send data ===================================================
+      if(association != NULL) {
+         if((buffer != NULL) && (length > 0)) {
+            result = association->sendTo(buffer, length, flags,
+                                         streamID, protoID, timeToLive, useDefaults,
+                                         destinationAddressList ? destinationAddressList[0] : NULL);
+         }
+         else {
+            result = 0;
+         }
+
+         // ====== Remove association, if SHUTDOWN flag is set ==============
+         if((flags & MSG_EOF) || (flags & MSG_ABORT)) {
+            if(flags & MSG_ABORT) {
+               association->abort();
+            }
+            else if(flags & MSG_EOF) {
+               association->shutdown();
+            }
+            if(Flags & SSF_AutoConnect) {
 #ifdef PRINT_SHUTDOWNS
-            cout << "AutoConnect: Shutdown of outgoing association ";
-            if(destinationAddress != NULL) {
-               cout << "to " << *destinationAddress << endl;
+               cout << "AutoConnect: Shutdown of outgoing association ";
+               if(destinationAddressList != NULL) {
+                  cout << "to " << *(destinationAddressList[0]) << "..." << endl;
+               }
+               else {
+                  cout << "A" << assocID << "..." << endl;
+               }
+#endif
+               SCTPSocketMaster::MasterInstance.lock();
+               multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+                  ConnectionlessAssociationList.find(association->getID());
+               if(iterator != ConnectionlessAssociationList.end()) {
+                  ConnectionlessAssociationList.erase(iterator);
+               }
+               SCTPSocketMaster::MasterInstance.unlock();
+               delete association;
+               association = NULL;
+#ifdef PRINT_SHUTDOWNS
+               cout << "AutoConnect: Shutdown of outgoing association ";
+               if(destinationAddressList != NULL) {
+                  cout << "to " << *(destinationAddressList[0]) << endl;
+               }
+               else {
+                  cout << "A" << assocID << endl;
+               }
+               cout << " completed!" << endl;
+#endif
             }
-            else {
-               cout << "A" << assocID << endl;
-            }
-            cout << " completed!" << endl;
+            checkAutoConnect();
+         }
+      }
+      else {
+         result = -EIO;
+      }
+
+
+      SCTPSocketMaster::MasterInstance.lock();
+      if(association != NULL) {
+         association->LastUsage = getMicroTime();
+         if(association->UseCount > 0) {
+#ifdef PRINT_ASSOC_USECOUNT
+            cout << "Send: UseCount decrement for A" << association->getID() << ": "
+                 << association->UseCount << " -> ";
+#endif
+            association->UseCount--;
+#ifdef PRINT_ASSOC_USECOUNT
+            cout << association->UseCount << endl;
 #endif
          }
-         checkAutoConnect();
-      }
-   }
-   else {
-      result = -EIO;
-   }
-
-
-   SCTPSocketMaster::MasterInstance.lock();
-   if(association != NULL) {
-      association->LastUsage = getMicroTime();
-      if(association->UseCount > 0) {
-#ifdef PRINT_ASSOC_USECOUNT
-      cout << "Send: UseCount decrement for A" << association->getID() << ": "
-           << association->UseCount << " -> ";
-#endif
-         association->UseCount--;
-#ifdef PRINT_ASSOC_USECOUNT
-      cout << association->UseCount << endl;
-#endif
-      }
 #ifndef DISABLE_WARNINGS
-      else {
-         cerr << "INTERNAL ERROR: SCTPSocket::sendTo() - Too many association usecount decrements!" << endl;
-         exit(1);
-      }
+         else {
+            cerr << "INTERNAL ERROR: SCTPSocket::sendTo() - Too many association usecount decrements!" << endl;
+            exit(1);
+         }
 #endif
+      }
+      SCTPSocketMaster::MasterInstance.unlock();
+
+
+      return(result);
    }
+
+   // ====== Send to all ====================================================
+   else {
+      multimap<unsigned int, SCTPAssociation*>::iterator iterator = ConnectionlessAssociationList.begin();
+      while(iterator != ConnectionlessAssociationList.end()) {
+#ifdef PRINT_SEND_TO_ALL
+         cout << "SendToAll: AssocID=" << iterator->second->AssociationID << endl;
+#endif
+         result = iterator->second->sendTo(buffer, length, flags,
+                                           streamID, protoID, timeToLive, useDefaults,
+                                           NULL);
+         iterator++;
+      }
+      result = length;
+   }
+
    SCTPSocketMaster::MasterInstance.unlock();
-
-
    return(result);
 }
 
@@ -1408,12 +1461,14 @@ int SCTPSocket::getPathIndexForAddress(const unsigned int          assocID,
                                        const struct SocketAddress* address,
                                        SCTP_PathStatus&            pathParameters)
 {
+puts("x-1");
    if(address == NULL) {
 #ifdef PRINT_PATHFORINDEX
       cout << "pathForIndex - primary" << endl;
 #endif
       return(sctp_getPrimary(assocID));
    }
+puts("x0");
 
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
    SCTP_Association_Status status;
@@ -1436,7 +1491,9 @@ int SCTPSocket::getPathIndexForAddress(const unsigned int          assocID,
 #error Wrong sctplib version!
 #endif
 
+puts("x1");
       const int ok = sctp_getPathStatus(assocID, index, &pathParameters);
+puts("x2");
       if(ok != 0) {
          break;
       }

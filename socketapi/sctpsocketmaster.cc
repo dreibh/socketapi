@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.13 2003/08/19 19:20:00 tuexen Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.14 2004/07/27 11:53:44 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -686,6 +686,12 @@ void* SCTPSocketMaster::communicationUpNotif(unsigned int   assocID,
          association->EstablishCondition.broadcast();
          association->WriteReady   = true;
          association->HasException = false;
+
+         if(association->PreEstablishmentAddressList) {
+            SocketAddress::deleteAddressList(association->PreEstablishmentAddressList);
+            association->PreEstablishmentAddressList = NULL;
+         }
+         association->sendPreEstablishmentPackets();
       }
       // ====== Incoming connection =========================================
       else if(socket->Flags & SCTPSocket::SSF_Listening) {
@@ -1001,6 +1007,7 @@ void SCTPSocketMaster::queueStatusChangeNotif(unsigned int assocID,
       if(association != NULL) {
          association->ReadyForTransmit.broadcast();
          association->WriteReady = true;
+         association->sendPreEstablishmentPackets();
       }
    }
 }

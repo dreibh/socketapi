@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.h,v 1.6 2003/08/19 19:20:00 tuexen Exp $
+ *  $Id: sctpsocket.h,v 1.7 2004/07/27 11:53:44 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -155,7 +155,7 @@ class SCTPSocket
                            const bool       blocking     = true);
 
 
-   // ====== Association peel-off ===========================================                           
+   // ====== Association peel-off ===========================================
    /**
      * Peel automatically established association in UDP-like mode off.
      *
@@ -259,22 +259,22 @@ class SCTPSocket
      * @param maxAttempts Maximum number of INIT attempts.
      * @param maxInitTimeout Maximum init timeout.
      * @param useDefaults true to use defaults for Stream ID, Protocol ID and TTL; false to use given values.
-     * @param destinationAddress Destination address.
+     * @param destinationAddressList List of destination addresses.
      * @param noOfOutgoingStreams For AutoConnect mode: Number of outgoing streams for newly created connections.
      * @return error code (0 for success).
      */
-   int sendTo(const char*          buffer,
-              const size_t         length,
-              const int            flags,
-              const unsigned int   assocID,
-              const unsigned short streamID,
-              const unsigned int   protoID,
-              const unsigned int   timeToLive,
-              const unsigned short maxAttempts,
-              const unsigned short maxInitTimeout,
-              const bool           useDefaults,
-              const SocketAddress* destinationAddress,
-              const cardinal       noOfOutgoingStreams = 1);
+   int sendTo(const char*           buffer,
+              const size_t          length,
+              const int             flags,
+              const unsigned int    assocID,
+              const unsigned short  streamID,
+              const unsigned int    protoID,
+              const unsigned int    timeToLive,
+              const unsigned short  maxAttempts,
+              const unsigned short  maxInitTimeout,
+              const bool            useDefaults,
+              const SocketAddress** destinationAddressList,
+              const cardinal        noOfOutgoingStreams = 1);
 
 
    // ====== Check, if there is new data to read ============================
@@ -576,6 +576,9 @@ class SCTPSocket
    private:
    void checkAutoConnect();
    void checkAutoClose();
+   SCTPAssociation* SCTPSocket::findAssociationForDestinationAddress(
+                       multimap<unsigned int, SCTPAssociation*>& list,
+                       const SocketAddress** destinationAddressList);
 
 
    multimap<unsigned int, SCTPAssociation*> ConnectionlessAssociationList;
