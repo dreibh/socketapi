@@ -1,5 +1,5 @@
 /*
- *  $Id: streamsrcdest.cc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: streamsrcdest.cc,v 1.2 2003/07/31 09:10:52 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -60,7 +60,7 @@ void StreamSrcDest::reset()
 // ###### Translate byte order ##############################################
 void StreamSrcDest::translate()
 {
-   FlowLabel = translate32(FlowLabel);
+   FlowLabel = htonl(FlowLabel);
 }
 
 
