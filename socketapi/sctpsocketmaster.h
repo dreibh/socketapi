@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.h,v 1.5 2004/07/28 12:55:16 dreibh Exp $
+ *  $Id: sctpsocketmaster.h,v 1.6 2004/11/19 17:12:35 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -210,7 +210,7 @@ class SCTPSocketMaster : public Thread
                                const SCTPNotification& notification);
 
    static void dataArriveNotif(unsigned int   assocID,
-                               unsigned int   streamID,
+                               unsigned short streamID,
                                unsigned int   len,
                                unsigned short ssn,
                                unsigned int   tsn,

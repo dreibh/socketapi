@@ -235,9 +235,9 @@ if test ! -f $ac_sctplib_libraries/libsctp.a ; then
 fi
 
 # This works under Linux and MacOS X, but not under Solaris
-sctplib_LIBS="-L$ac_sctplib_libraries -lsctp"
+sctplib_LIBS="-L$ac_sctplib_libraries -lsctplib"
 # This works on all three
-#sctplib_LIBS="$ac_sctplib_libraries/libsctp.la"
+#sctplib_LIBS="$ac_sctplib_libraries/libsctplib.la"
 AC_SUBST(sctplib_LIBS)
 sctplib_CXXFLAGS="-I$ac_sctplib_includes"
 AC_SUBST(sctplib_CXXFLAGS)

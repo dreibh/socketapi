@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.16 2004/07/29 15:11:03 dreibh Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.17 2004/11/19 17:12:35 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -459,7 +459,7 @@ bool SCTPSocketMaster::associationGarbageCollection(const unsigned int assocID,
 
 // ###### SCTP data arrive notification callback ############################
 void SCTPSocketMaster::dataArriveNotif(unsigned int   assocID,
-                                       unsigned int   streamID,
+                                       unsigned short streamID,
                                        unsigned int   length,
                                        unsigned short ssn,
                                        unsigned int   tsn,
