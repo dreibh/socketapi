@@ -1,5 +1,5 @@
 /*
- *  $Id: internetaddress.cc,v 1.2 2003/06/03 14:16:48 dreibh Exp $
+ *  $Id: internetaddress.cc,v 1.3 2003/07/31 09:24:02 tuexen Exp $
  *
   * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -487,6 +487,8 @@ cardinal InternetAddress::getSystemAddress(sockaddr*       buffer,
             address->sin6_port     = Port;
 #if (SYSTEM == OS_Linux)
             memcpy((char*)&address->sin6_addr.s6_addr16[0],(char*)&Host,16);
+#elif (SYSTEM == OS_SOLARIS)
+            memcpy((char*)&address->sin6_addr._S6_un._S6_u8[0],(char*)&Host,16);
 #else
             memcpy((char*)&address->sin6_addr.__u6_addr.__u6_addr16[0],(char*)&Host,16);
 #endif
@@ -549,6 +551,8 @@ bool InternetAddress::setSystemAddress(sockaddr* address, const socklen_t length
          sockaddr_in6* address6 = (sockaddr_in6*)address;
 #if (SYSTEM == OS_Linux)
          memcpy((char*)&Host,(char*)&address6->sin6_addr.s6_addr16[0],16);
+#elif (SYSTEM == OS_SOLARIS)
+         memcpy((char*)&Host,(char*)&address6->sin6_addr._S6_un._S6_u8[0],16);
 #else
          memcpy((char*)&Host,(char*)&address6->sin6_addr.__u6_addr.__u6_addr8[0],16);
 #endif
@@ -681,7 +685,7 @@ card16 InternetAddress::getServiceByName(const char* name)
 // ###### Get full hostname #################################################
 bool InternetAddress::getFullHostName(char* str, const size_t size)
 {
-   utsname uts;
+   struct utsname uts;
    if(uname(&uts) == 0) {
       const InternetAddress address(uts.nodename);
       snprintf(str,size,"%s",address.getAddressString(SocketAddress::PF_Hostname|SocketAddress::PF_HidePort).getData());

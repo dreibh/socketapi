@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.10 2003/07/11 09:45:02 dreibh Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.11 2003/07/31 09:25:21 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -38,6 +38,11 @@
 
 
 #include <signal.h>
+#if (SYSTEM == OS_SOLARIS)
+#include <sys/types.h>
+#include <unistd.h>
+#include <fcntl.h>
+#endif
 
 
 
