@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.13 2003/07/11 09:45:02 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.14 2003/07/11 15:25:50 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -335,8 +335,8 @@ int ext_socket(int domain, int type, int protocol)
       tdSocket.Socket.SCTPSocketDesc.Linger.l_onoff     = 1;
       tdSocket.Socket.SCTPSocketDesc.Linger.l_linger    = 10;
       tdSocket.Socket.SCTPSocketDesc.SCTPAssociationPtr = NULL;
-      tdSocket.Socket.SCTPSocketDesc.InitMsg.sinit_num_ostreams   = 1;
-      tdSocket.Socket.SCTPSocketDesc.InitMsg.sinit_max_instreams  = 1;
+      tdSocket.Socket.SCTPSocketDesc.InitMsg.sinit_num_ostreams   = 10;
+      tdSocket.Socket.SCTPSocketDesc.InitMsg.sinit_max_instreams  = 10;
       tdSocket.Socket.SCTPSocketDesc.InitMsg.sinit_max_attempts   = 8;
       tdSocket.Socket.SCTPSocketDesc.InitMsg.sinit_max_init_timeo = 60000;
       tdSocket.Socket.SCTPSocketDesc.SCTPSocketPtr = new SCTPSocket(flags);
