@@ -41,7 +41,7 @@ int main (int argc, const char * argv[]) {
 
   /* bind the sockets to INADDRANY */
   bzero(&local_addr, sizeof(local_addr));
-#if !defined (LINUX)
+#if !defined (LINUX) && !defined (SOLARIS)
   local_addr.sin_len    = sizeof(local_addr);
 #endif
   local_addr.sin_family = AF_INET;

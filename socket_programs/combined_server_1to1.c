@@ -60,7 +60,7 @@ void getArgs(int argc, char **argv)
         case 's':
             if (noOfLocalAddresses < MAXIMUM_NUMBER_OF_LOCAL_ADDRESSES) {
                     bzero(&local_addr[noOfLocalAddresses], sizeof(local_addr[0]));
-#if !defined (LINUX)
+#if !defined (LINUX) && !defined (SOLARIS)
                     local_addr[noOfLocalAddresses].sin_len    = sizeof(local_addr[0]);
 #endif
                     local_addr[noOfLocalAddresses].sin_family = AF_INET;
@@ -95,7 +95,7 @@ void checkArgs(void)
     
     if (noOfLocalAddresses == 0) {
       bzero(&local_addr[noOfLocalAddresses], sizeof(local_addr[0]));    
-#if !defined (LINUX)
+#if !defined (LINUX) && !defined (SOLARIS)
       local_addr[noOfLocalAddresses].sin_len    = sizeof(local_addr[0]);
 #endif
       local_addr[noOfLocalAddresses].sin_family = AF_INET;
