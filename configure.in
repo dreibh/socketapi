@@ -10,7 +10,7 @@ AC_CONFIG_AUX_DIR(admin)
 AC_CANONICAL_SYSTEM
 AC_ARG_PROGRAM
 
-AM_INIT_AUTOMAKE(socketapi,1.3.0)
+AM_INIT_AUTOMAKE(socketapi,1.3.0c)
 
 AC_PREFIX_DEFAULT(/usr/local)
 if test "x$prefix" = "xNONE"; then
@@ -105,8 +105,8 @@ sunos4*)
     # LDFLAGS="$LDFLAGS `glib-config --libs`"
     ;;
 darwin*)
-    CFLAGS="$CFLAGS -DDARWIN"
-    CXXFLAGS="$CXXFLAGS -DDARWIN"
+    CFLAGS="$CFLAGS -Wall -ansi -DDARWIN"
+    CXXFLAGS="$CXXFLAGS -Wall -ansi -DDARWIN"
     thread_LIBS="-lpthread"
     # CFLAGS="$CFLAGS `glib-config --cflags`"
     # LDFLAGS="$LDFLAGS `glib-config --libs`"
@@ -232,11 +232,13 @@ if test ! -f $ac_sctplib_libraries/libsctp.a ; then
    AC_MSG_ERROR([No sctplib installation found ($ac_sctplib_libraries/libsctp.a)!])
 fi
 
-
-sctplib_LIBS="$ac_sctplib_libraries"
+# This works under Linux and MacOS X, but not under Solaris
+sctplib_LIBS="-L$ac_sctplib_libraries -lsctp"
+# This works on all three
+#sctplib_LIBS="$ac_sctplib_libraries/libsctp.la"
 AC_SUBST(sctplib_LIBS)
-sctplib_INCLUDES="$ac_sctplib_includes"
-AC_SUBST(sctplib_INCLUDES)
+sctplib_CXXFLAGS="-I$ac_sctplib_includes"
+AC_SUBST(sctplib_CXXFLAGS)
 
 
 #AC_MSG_CHECKING(checking whether you can compile and run a standard C++ program)
@@ -366,9 +368,10 @@ AC_OUTPUT(Makefile socketapi/Makefile cppsocketapi/Makefile socket_programs/Make
 echo ""
 echo "The socketapi package has been configured with the following options:"
 echo "   sctplib libraries   : $sctplib_LIBS"
-echo "   sctplib includes    : $sctplib_INCLUDES"
-echo "   socketapi libraries : $socketapi_LIBS"
+echo "   sctplib flags       : $sctplib_CXXFLAGS"
+#echo "   socketapi libraries : $socketapi_LIBS"
 echo "   thread libraries    : $thread_LIBS"
+echo "   glib libraries      : $glib_LIBS"
 echo "   CFLAGS              : $CFLAGS"
 echo "   CXXFLAGS            : $CXXFLAGS"
 echo "   LDFLAGS             : $LDFLAGS"

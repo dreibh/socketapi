@@ -2,7 +2,7 @@ lib_LTLIBRARIES = libsctpsocket.la
 
 libsctpsocketincludedir      = $(prefix)/include
 libsctpsocketinclude_HEADERS = ext_socket.h
-libsctpsocket_la_CXXFLAGS = -I@sctplib_INCLUDES@
+libsctpsocket_la_CXXFLAGS = @sctplib_CXXFLAGS@
 libsctpsocket_la_SOURCES = thread.cc tdstrings.cc synchronizable.cc \
                            sctpsocketwrapper.cc sctpsocketmaster.cc sctpsocket.cc \
                            sctpnotificationqueue.cc sctpassociation.cc randomizer.cc \
@@ -19,27 +19,27 @@ libsctpsocket_la_SOURCES = thread.cc tdstrings.cc synchronizable.cc \
                            internetflow.icc sctpnotificationqueue.icc synchronizable.icc tools.icc \
                            portableaddress.icc sctpsocket.icc tdmessage.icc unixaddress.icc
 
-
+libsctpsocket_la_LIBADD = @sctplib_LIBS@ @glib_LIBS@ @thread_LIBS@ -lstdc++
 libsctpsocket_la_LDFLAGS = \
    -version-info $(SOCKETAPI_CURRENT):$(SOCKETAPI_REVISION):$(SOCKETAPI_AGE) \
    -release $(SOCKETAPI_RELEASE)
 
-noinst_PROGRAMS = t1 t2 c1 c2 c3 c4
+#noinst_PROGRAMS = t1 t2 c1 c2 c3 c4
 
-t1_SOURCES = t1.c
-t1_LDADD = libsctpsocket.la -lsctp -lstdc++ @glib_LIBS@ @thread_LIBS@
+#t1_SOURCES = t1.c
+#t1_LDADD = libsctpsocket.la 
 
-t2_SOURCES = t2.c
-t2_LDADD = libsctpsocket.la -lsctp -lstdc++ @glib_LIBS@ @thread_LIBS@
+#t2_SOURCES = t2.c
+#t2_LDADD = libsctpsocket.la
 
-c1_SOURCES = c1.c
-c1_LDADD = libsctpsocket.la -lsctp -lstdc++ @glib_LIBS@ @thread_LIBS@
+#c1_SOURCES = c1.c
+#c1_LDADD = libsctpsocket.la
 
-c2_SOURCES = c2.c
-c2_LDADD = libsctpsocket.la -lsctp -lstdc++ @glib_LIBS@ @thread_LIBS@
+#c2_SOURCES = c2.c
+#c2_LDADD = libsctpsocket.la 
 
-c3_SOURCES = c3.c
-c3_LDADD = libsctpsocket.la -lsctp -lstdc++ @glib_LIBS@ @thread_LIBS@
+#c3_SOURCES = c3.c
+#c3_LDADD = libsctpsocket.la
 
-c4_SOURCES = c4.c
-c4_LDADD = libsctpsocket.la -lsctp -lstdc++ @glib_LIBS@ @thread_LIBS@
+#c4_SOURCES = c4.c
+#c4_LDADD = libsctpsocket.la
