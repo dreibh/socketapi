@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 #include <ext_socket.h>
 
 int main(int argc, char **argv) 
@@ -75,8 +76,9 @@ int main(int argc, char **argv)
          addr_len = sizeof(struct sockaddr_in);
          if ((len = ext_recvfrom(fd, (void *) buffer, sizeof(buffer),0,(struct sockaddr *) &remote_addr, &addr_len)) < 0)
             {perror("recvfrom");
-//            puts("STOP!------------------");
-            //exit(1);
+/*           puts("STOP!------------------");
+             exit(1);
+*/
             }
          else
             printf("Message of length %d received from %s:%u: %.*s", len, inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port), len, buffer);
