@@ -1,5 +1,5 @@
 /*
- *  $Id: tools.h,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: tools.h,v 1.2 2003/07/31 09:33:49 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -62,47 +62,6 @@ inline void debug(const char* string);
   * @return Microseconds since January 01, 1970.
   */
 inline card64 getMicroTime();
-
-
-/**
-  * Translate 16-bit value to network byte order.
-  *
-  * @param x Value to be translated.
-  * @return Translated value.
-  */
-inline card16 translate16(const card16 x);
-
-/**
-  * Translate 32-bit value to network byte order.
-  *
-  * @param x Value to be translated.
-  * @return Translated value.
-  */
-inline card32 translate32(const card32 x);
-
-/**
-  * Translate 64-bit value to network byte order.
-  *
-  * @param x Value to be translated.
-  * @return Translated value.
-  */
-inline card64 translate64(const card64 x);
-
-/**
-  * Translate double to 64-bit binary.
-  *
-  * @param x Value to be translated.
-  * @return Translated value.
-  */
-inline card64 translateToBinary(const double x);
-
-/**
-  * Translate 64-bit binary to double.
-  *
-  * @param x Value to be translated.
-  * @return Translated value.
-  */
-inline double translateToDouble(const card64 x);
 
 
 /**
