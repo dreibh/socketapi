@@ -1,7 +1,7 @@
 dnl without this order in this file, autoconf will not work!
 dnl the argument is a source file out of your sources. But
 dnl acinclude.m4 makes the job for all programs ;-)
-AC_INIT(acinclude.m4)
+AC_INIT(socketapi/ext_socket.h)
 
 dnl enable the following if you want to use autoconf/automake
 dnl framework from a certain directory (like kde-common)
@@ -10,7 +10,7 @@ AC_CONFIG_AUX_DIR(admin)
 AC_CANONICAL_SYSTEM
 AC_ARG_PROGRAM
 
-AM_INIT_AUTOMAKE(socketapi,1.2.1)
+AM_INIT_AUTOMAKE(socketapi,1.2.2)
 
 AC_PREFIX_DEFAULT(/usr/local)
 if test "x$prefix" = "xNONE"; then
@@ -28,8 +28,7 @@ AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_LN_S
-AC_PROG_RANLIB
-
+AC_PROG_LIBTOOL
 dnl create only shared libtool-libraries (add --enable-shared)
 AC_ENABLE_SHARED(no)
 dnl AM_DISABLE_SHARED
@@ -37,21 +36,6 @@ dnl AM_DISABLE_SHARED
 dnl set the following to yes, if you want to create static
 dnl libtool-libraries, else no
 AC_ENABLE_STATIC(yes)
-
-dnl create a working libtool-script
-if test -z "$LIBTOOL"; then
-  AC_LANG_SAVE
-  AC_LANG_C
-  AC_LIBTOOL_DLOPEN
-  AM_PROG_LIBTOOL
-  dnl LIBTOOL="$LIBTOOL --silent"
-  dnl AC_SUBST(LIBTOOL)
-  AC_LANG_RESTORE
-  LIBTOOL_SHELL='/bin/sh ./libtool'
-else
-  LIBTOOL_SHELL=$LIBTOOL
-fi
-
 
 dnl add --with-extra-includes and --with-extra-libs switch to ./configure
 dnl
@@ -107,7 +91,7 @@ openbsd*)
     # LDFLAGS="$LDFLAGS `glib-config --libs`"
     ;;
 solaris*)
-    CFLAGS="$CFLAGS -Wall -DSOLARIS -D__sun -DSUN -DSUNOS_5"
+    CFLAGS="$CFLAGS -Wall -DSOLARIS -D__sun -DSUN -DSUNOS_5 -D_XPG4_2 -D__EXTENSIONS__"
     CXXFLAGS="$CXXFLAGS -Wall -DSOLARIS -D__sun -DSUN -DSUNOS_5"
     thread_LIBS="-lpthread"
     LDFLAGS="$LDFLAGS -lsocket -lnsl -lrt -lresolv"
@@ -241,10 +225,10 @@ if test "$ac_sctplib_libraries" = "NO"; then
    ac_sctplib_bindir="$ac_sctplib_defaultdir"/bin
 fi
 
-if test ! -e "$ac_sctplib_includes/sctp.h" ; then
+if test ! -f "$ac_sctplib_includes/sctp.h" ; then
    AC_MSG_ERROR([No sctplib installation found ($ac_sctplib_includes/sctp.h)!])
 fi
-if test ! -e $ac_sctplib_libraries/libsctp.a ; then
+if test ! -f $ac_sctplib_libraries/libsctp.a ; then
    AC_MSG_ERROR([No sctplib installation found ($ac_sctplib_libraries/libsctp.a)!])
 fi
 
@@ -372,7 +356,6 @@ AC_SUBST(SOCKETAPI_RELEASE)
 
 
 dnl perform program name transformation
-AC_ARG_PROGRAM
 
 dnl add here all your Makefiles. These will be created by configure
 AC_OUTPUT(Makefile socketapi/Makefile cppsocketapi/Makefile socket_programs/Makefile cppsocket_programs/Makefile scripts/Makefile )
