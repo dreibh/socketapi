@@ -1,5 +1,5 @@
 /*
- *  $Id: ext_socket.h,v 1.12 2003/08/04 11:04:54 dreibh Exp $
+ *  $Id: ext_socket.h,v 1.13 2003/08/11 18:12:41 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -357,8 +357,7 @@ int ext_socket(int domain, int type, int protocol);
 int ext_open(const char* pathname, int flags, mode_t mode);
 int ext_creat(const char* pathname, mode_t mode);
 int ext_bind(int sockfd, struct sockaddr* my_addr, socklen_t addrlen);
-int ext_connect(int sockfd, const struct sockaddr* serv_addr,
-               socklen_t addrlen);
+int ext_connect(int sockfd, const struct sockaddr* serv_addr, socklen_t addrlen);
 int ext_listen(int s, int backlog);
 int ext_accept(int s,  struct  sockaddr * addr,  socklen_t* addrlen);
 int ext_shutdown(int s, int how);
@@ -369,21 +368,15 @@ int ext_fcntl(int fd, int cmd, ...);
 int ext_ioctl(int d, int request, const void* argp);
 int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* optlen);
 int ext_setsockopt(int sockfd, int level, int optname, const void* optval, socklen_t optlen);
-int ext_recv(int s, void* buf, size_t len, int flags);
-int ext_recvfrom(int  s,  void * buf,  size_t len, int flags,
-                struct sockaddr* from, socklen_t* fromlen);
-int ext_recvmsg(int s, struct msghdr* msg, int flags);
-int ext_send(int s, const void* msg, size_t len, int flags);
-int ext_sendto(int s, const void* msg, size_t len, int flags,
-              const struct sockaddr* to, socklen_t tolen);
-int ext_sendmsg(int s, const struct msghdr* msg, int flags);
+ssize_t ext_recv(int s, void* buf, size_t len, int flags);
+ssize_t ext_recvfrom(int  s,  void * buf,  size_t len, int flags, struct sockaddr* from, socklen_t* fromlen);
+ssize_t ext_recvmsg(int s, struct msghdr* msg, int flags);
+ssize_t ext_send(int s, const void* msg, size_t len, int flags);
+ssize_t ext_sendto(int s, const void* msg, size_t len, int flags, const struct sockaddr* to, socklen_t tolen);
+ssize_t ext_sendmsg(int s, const struct msghdr* msg, int flags);
 ssize_t ext_read(int fd, void* buf, size_t count);
 ssize_t ext_write(int fd, const void* buf, size_t count);
-int ext_select(int             n,
-               fd_set*         readfds,
-               fd_set*         writefds,
-               fd_set*         exceptfds,
-               struct timeval* timeout);
+int ext_select(int n, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, struct timeval* timeout);
 
 #if defined(__APPLE__)
 #define POLLIN  0x001
