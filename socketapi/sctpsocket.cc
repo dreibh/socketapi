@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.14 2003/06/30 13:59:28 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.15 2003/07/01 14:40:21 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -1636,7 +1636,11 @@ bool SCTPSocket::setPeerPrimary(const unsigned int   assocID,
    unsigned char address[SCTP_MAX_IP_LEN];
    snprintf((char*)&address,sizeof(address),"%s",
             primary.getAddressString().getData());
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
    const int result = sctp_setRemotePrimary(assocID,address);
+#else
+   const int result = -1;
+#endif
    SCTPSocketMaster::MasterInstance.unlock();
    return(result == 0);
 }
@@ -1666,7 +1670,7 @@ bool SCTPSocket::addAddress(const unsigned int   assocID,
    unsigned char address[SCTP_MAX_IP_LEN];
    snprintf((char*)&address,sizeof(address),"%s",
             addAddress.getAddressString().getData());
-#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
    cerr << "NOT IMPLEMENTED: sctp_addIPAddress()" << endl;
    const int result = -1;
 #else
@@ -1705,8 +1709,8 @@ bool SCTPSocket::deleteAddress(const unsigned int   assocID,
    unsigned char address[SCTP_MAX_IP_LEN];
    snprintf((char*)&address,sizeof(address),"%s",
             delAddress.getAddressString().getData());
-#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
-   cerr << "NOT IMPLEMENTED: sctp_addIPAddress()" << endl;
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
+   cerr << "NOT IMPLEMENTED: sctp_deleteIPAddress()" << endl;
    const int result = -1;
 #else
    const int result = sctp_deleteIPAddress(assocID,address,&CorrelationID);
