@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.h,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: sctpsocketmaster.h,v 1.2 2003/07/11 09:45:02 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -272,11 +272,13 @@ class SCTPSocketMaster : public Thread
                                       int          queueIdentifier,
                                       int          queueLength,
                                       void*        ulpData);
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
    static void asconfStatusNotif(unsigned int assocID,
                                  unsigned int correlationID,
                                  int          result,
                                  void*        request,
                                  void*        ulpData);
+#endif                                 
    static void userCallback(int        fileDescriptor,
                             short int  eventMask,
                             short int* registeredEvents,

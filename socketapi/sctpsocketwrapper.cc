@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.12 2003/06/26 10:10:10 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.13 2003/07/11 09:45:02 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -2179,7 +2179,7 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                }
                if(msg->msg_name != NULL) {
                   SocketAddress* destination = SocketAddress::createSocketAddress(
-                                                  0,(sockaddr*)msg->msg_name,msg->msg_namelen);
+                                                  0, (sockaddr*)msg->msg_name,msg->msg_namelen);
                   if(destination == NULL) {
                      errno_return(-EADDRNOTAVAIL);
                   }
@@ -2189,9 +2189,9 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                                  (char*)msg->msg_iov->iov_base,
                                  msg->msg_iov->iov_len,
                                  flags,
-                                 (info != NULL) ? info->sinfo_assoc_id   : 0,
-                                 (info != NULL) ? info->sinfo_stream     : 0x0000,
-                                 (info != NULL) ? info->sinfo_ppid       : 0x00000000,
+                                 (info != NULL) ? info->sinfo_assoc_id : 0,
+                                 (info != NULL) ? info->sinfo_stream   : 0x0000,
+                                 (info != NULL) ? info->sinfo_ppid     : 0x00000000,
                                  ((info != NULL) && (info->sinfo_flags & MSG_PR_SCTP_TTL)) ? info->sinfo_timetolive : SCTP_INFINITE_LIFETIME,
                                  tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_attempts,
                                  tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_init_timeo,
@@ -2208,8 +2208,8 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                                   (char*)msg->msg_iov->iov_base,
                                   msg->msg_iov->iov_len,
                                   flags,
-                                  (info != NULL) ? info->sinfo_stream     : 0x0000,
-                                  (info != NULL) ? info->sinfo_ppid       : 0x0000000,
+                                  (info != NULL) ? info->sinfo_stream : 0x0000,
+                                  (info != NULL) ? info->sinfo_ppid   : 0x0000000,
                                   ((info != NULL) && (info->sinfo_flags & MSG_PR_SCTP_TTL)) ? info->sinfo_timetolive : SCTP_INFINITE_LIFETIME,
                                   useDefaults));
                   }

@@ -35,6 +35,7 @@ print_addresses(struct sockaddr_storage *addrs, int num)
             inet_ntop(fam, &lad6->sin6_addr, buf, sizeof(buf));
             incr = sizeof(struct sockaddr_in6);
             printf("IPv6 Address: %s:%d\n", buf, ntohs(lad6->sin6_port));
+            break;
          default:
             printf("Unknown family %d\n", fam);
             break;

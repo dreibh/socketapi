@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.h,v 1.3 2003/06/30 13:59:28 dreibh Exp $
+ *  $Id: sctpassociation.h,v 1.4 2003/07/11 09:45:02 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -189,14 +189,35 @@ class SCTPAssociation
      * @param useDefaults true to use defaults for Stream ID, Protocol ID and TTL; false to use given values.
      * @return error code (0 for success).
      */
-   int send(const char*          buffer,
-            const size_t         length,
-            const int            flags,
-            const unsigned short streamID,
-            const unsigned int   protoID,
-            const unsigned int   timeToLive,
-            const bool           useDefaults);
+   inline int send(const char*          buffer,
+                   const size_t         length,
+                   const int            flags,
+                   const unsigned short streamID,
+                   const unsigned int   protoID,
+                   const unsigned int   timeToLive,
+                   const bool           useDefaults);
 
+   /**
+     * Send data via path given by address.
+     *
+     * @param buffer Data to be sent.
+     * @param length Length of data to be sent.
+     * @param flags Flags.
+     * @param streamID Stream ID.
+     * @param protoID Protocol ID.
+     * @param timeToLive Time to live in milliseconds.
+     * @param useDefaults true to use defaults for Stream ID, Protocol ID and TTL; false to use given values.
+     * @param pathDestinationAddress Destination address of path to send data via.
+     * @return error code (0 for success).
+     */
+   int sendTo(const char*          buffer,
+              const size_t         length,
+              const int            flags,
+              const unsigned short streamID,
+              const unsigned int   protoID,
+              const unsigned int   timeToLive,
+              const bool           useDefaults,
+              const SocketAddress* pathDestinationAddress);
 
    /**
      * Shutdown.

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.17 2003/07/09 17:23:38 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.18 2003/07/11 09:45:02 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -52,9 +52,8 @@
 #define PRINT_RECVSTATUS
 #define PRINT_SENDSTATUS
 #define PRINT_SETPRIMARY
-
-
-
+*/
+/*
 #define PRINT_AUTOCLOSE_TIMEOUT
 #define PRINT_AUTOCLOSE_CHECK
 
@@ -869,14 +868,15 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
 
 
 // ###### Internal send implementation ######################################
-int SCTPSocket::internalSend(const char*            buffer,
-                             const size_t           length,
-                             const int              flags,
-                             const unsigned int     assocID,
-                             const unsigned short   streamID,
-                             const unsigned int     protoID,
-                             const unsigned int     timeToLive,
-                             Condition*             waitCondition)
+int SCTPSocket::internalSend(const char*          buffer,
+                             const size_t         length,
+                             const int            flags,
+                             const unsigned int   assocID,
+                             const unsigned short streamID,
+                             const unsigned int   protoID,
+                             const unsigned int   timeToLive,
+                             Condition*           waitCondition,
+                             const SocketAddress* pathDestinationAddress)
 {
    // ====== Check error code ===============================================
    const int errorCode = getErrorCode(assocID);
@@ -889,8 +889,14 @@ int SCTPSocket::internalSend(const char*            buffer,
    do {
       SCTPSocketMaster::MasterInstance.lock();
 
+      int pathIndex = sctp_getPrimary(assocID);
+      if((pathDestinationAddress) && (flags & MSG_ADDR_OVER)) {
+         SCTP_PathStatus pathStatus;
+         pathIndex = getPathIndexForAddress(assocID, pathDestinationAddress, pathStatus);
+      }
+
 #ifdef PRINT_DATA
-      cout << "Sending data to association " << assocID << ", stream " << streamID << ":" << endl;
+      cout << "Sending data to association " << assocID << ", stream " << streamID << ", path index " << pathIndex << ":" << endl;
       for(size_t i = 0;i < length;i++) {
          char str[32];
          snprintf((char*)&str,sizeof(str),"%02x ",((unsigned char*)buffer)[i]);
@@ -910,7 +916,7 @@ int SCTPSocket::internalSend(const char*            buffer,
                   assocID, streamID,
                   (unsigned char*)buffer, length,
                   protoID,
-                  SCTP_USE_PRIMARY,
+                  pathIndex,
                   SCTP_NO_CONTEXT,
                   timeToLive,
                   ((flags & MSG_UNORDERED) ? SCTP_UNORDERED_DELIVERY : SCTP_ORDERED_DELIVERY),
@@ -918,9 +924,9 @@ int SCTPSocket::internalSend(const char*            buffer,
 #elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
       result = sctp_send(
                   assocID, streamID,
-   
+                  (unsigned char*)buffer, length,
                   protoID,
-                  SCTP_USE_PRIMARY,
+                  pathIndex,
                   timeToLive,
                   SCTP_NO_CONTEXT,
                   ((flags & MSG_UNORDERED) ? SCTP_UNORDERED_DELIVERY : SCTP_ORDERED_DELIVERY),
@@ -1064,59 +1070,32 @@ int SCTPSocket::sendTo(const char*          buffer,
                        const cardinal       noOfOutgoingStreams)
 {
    SCTPSocketMaster::MasterInstance.lock();
+   short pathIndex = SCTP_USE_PRIMARY;
 
    // ====== Check for already created association ==========================
    SCTPAssociation* association = NULL;
    if(destinationAddress != NULL) {
+      SCTP_PathStatus pathStatus;
+
       if(Flags & SSF_AutoConnect) {
          multimap<unsigned int, SCTPAssociation*>::iterator iterator =
             ConnectionlessAssociationList.begin();
          while(iterator != ConnectionlessAssociationList.end()) {
-            SCTP_Association_Status status;
-            if(sctp_getAssocStatus(iterator->second->AssociationID,&status) == 0) {
-#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
-               const unsigned int addresses = status.numberOfAddresses;
-#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
-               const unsigned int addresses = status.numberOfDestinationPaths;
-#else
-#error Wrong sctplib version!
-#endif
-               for(unsigned int i = 0;i < addresses;i++) {
-#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
-                  const int index = i;
-#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
-                  const int index = status.destinationPathIDs[i];
-#else
-#error Wrong sctplib version!
-#endif
-
-                  SCTP_Path_Status pathStatus;
-                  if(sctp_getPathStatus(iterator->second->AssociationID,index,&pathStatus) != 0) {
-#ifndef DISABLE_WARNINGS
-                     cerr << "INTERNAL ERROR: SCTPSocket::sendTo() - sctp_getPathStatus() failure!"
-                          << endl;
-                     ::exit(1);
-#endif
-                  }
-                  else {
-                     SCTP_Association_Status status;
-                     if(sctp_getAssocStatus(iterator->second->AssociationID,&status) == 0) {
+            SCTP_Association_Status assocStatus;
+            if(sctp_getAssocStatus(iterator->second->AssociationID,&assocStatus) == 0) {
 #ifdef PRINT_ASSOCSEARCH
-                        cout << "CL "
-                             << destinationAddress->getAddressString(InternetAddress::PF_HidePort|InternetAddress::PF_Address|InternetAddress::PF_Legacy)
-                             << " == "
-                             << String((const char*)&pathStatus.destinationAddress)
-                             << "?   AssocID=" << iterator->second->AssociationID << " index=" << index << endl;
+               cout << "CL "
+                    << destinationAddress->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
+                    << " in AssocID=" << iterator->second->AssociationID << "?" << endl;
 #endif
-                        if( (!iterator->second->IsShuttingDown)               &&
-                            (destinationAddress->getPort() == status.destPort) &&
-                            (destinationAddress->getAddressString(InternetAddress::PF_HidePort|InternetAddress::PF_Address|InternetAddress::PF_Legacy) ==
-                               String((const char*)&pathStatus.destinationAddress)) ) {
-                           association = iterator->second;
-                           break;
-                        }
-                     }
-                  }
+               if( (!iterator->second->IsShuttingDown) &&
+                   (destinationAddress->getPort() == assocStatus.destPort) &&
+                   ((pathIndex = getPathIndexForAddress(iterator->second->AssociationID, destinationAddress, pathStatus)) >= 0) ) {
+#ifdef PRINT_ASSOCSEARCH
+                  cout << "Found: index=" << pathIndex << endl;
+#endif
+                  association = iterator->second;
+                  break;
                }
             }
             iterator++;
@@ -1126,18 +1105,19 @@ int SCTPSocket::sendTo(const char*          buffer,
          multimap<unsigned int, SCTPAssociation*>::iterator iterator =
             AssociationList.begin();
          while(iterator != AssociationList.end()) {
-            SCTP_Association_Status status;
-            if(sctp_getAssocStatus(iterator->second->AssociationID,&status) == 0) {
+            SCTP_Association_Status assocStatus;
+            if(sctp_getAssocStatus(iterator->second->AssociationID,&assocStatus) == 0) {
 #ifdef PRINT_ASSOCSEARCH
                cout << "CO "
-                    << destinationAddress->getAddressString(InternetAddress::PF_HidePort|InternetAddress::PF_Address|InternetAddress::PF_Legacy)
-                    << " == "
-                    << String((const char*)&status.primaryDestinationAddress)
-                    << "?" << endl;
+                    << destinationAddress->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
+                    << " in AssocID=" << iterator->second->AssociationID << "?" << endl;
 #endif
-               if( (!iterator->second->IsShuttingDown)               &&
-                   (destinationAddress->getPort() == status.destPort) &&
-                   (destinationAddress->getAddressString(InternetAddress::PF_HidePort|InternetAddress::PF_Address|InternetAddress::PF_Legacy) == String((const char*)&status.primaryDestinationAddress)) ) {
+               if( (!iterator->second->IsShuttingDown) &&
+                   (destinationAddress->getPort() == assocStatus.destPort) &&
+                   ((pathIndex = getPathIndexForAddress(iterator->second->AssociationID, destinationAddress, pathStatus)) >= 0) ) {
+#ifdef PRINT_ASSOCSEARCH
+                  cout << "Found: index=" << pathIndex << endl;
+#endif
                   association = iterator->second;
                   break;
                }
@@ -1224,7 +1204,9 @@ int SCTPSocket::sendTo(const char*          buffer,
    int result;
    if(association != NULL) {
       if((buffer != NULL) && (length > 0)) {
-         result = association->send(buffer,length,flags,streamID,protoID,timeToLive,useDefaults);
+         result = association->sendTo(buffer, length, flags,
+                                      streamID, protoID, timeToLive, useDefaults,
+                                      destinationAddress);
       }
       else {
          result = 0;
@@ -1428,7 +1410,7 @@ int SCTPSocket::getPathIndexForAddress(const unsigned int          assocID,
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
       const int index = i;
 #elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
-       const int index = status.destinationPathIDs[i];
+      const int index = status.destinationPathIDs[i];
 #else
 #error Wrong sctplib version!
 #endif

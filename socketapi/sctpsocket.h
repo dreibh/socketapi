@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.h,v 1.3 2003/06/04 17:21:00 dreibh Exp $
+ *  $Id: sctpsocket.h,v 1.4 2003/07/11 09:45:02 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -529,14 +529,15 @@ class SCTPSocket
                        uint32_t&              tsn,
                        SCTPNotification&      notification,
                        const unsigned int     notificationFlags);
-   int internalSend(const char*            buffer,
-                    const size_t           length,
-                    const int              flags,
-                    const unsigned int     assocID,
-                    const unsigned short   streamID,
-                    const unsigned int     protoID,
-                    const unsigned int     timeToLive,
-                    Condition*             waitCondition);
+   int internalSend(const char*          buffer,
+                    const size_t         length,
+                    const int            flags,
+                    const unsigned int   assocID,
+                    const unsigned short streamID,
+                    const unsigned int   protoID,
+                    const unsigned int   timeToLive,
+                    Condition*           waitCondition,
+                    const SocketAddress* pathDestinationAddress);
    static int getPathIndexForAddress(const unsigned int          assocID,
                                      const struct SocketAddress* address,
                                      SCTP_PathStatus&            pathParameters);

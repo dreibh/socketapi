@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.cc,v 1.4 2003/06/30 13:59:28 dreibh Exp $
+ *  $Id: sctpassociation.cc,v 1.5 2003/07/11 09:45:02 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -300,14 +300,15 @@ int SCTPAssociation::receiveFrom(char*             buffer,
 }
 
 
-// ###### Send ##############################################################
-int SCTPAssociation::send(const char*          buffer,
-                          const size_t         length,
-                          const int            flags,
-                          const unsigned short streamID,
-                          const unsigned int   protoID,
-                          const unsigned int   timeToLive,
-                          const bool           useDefaults)
+// ###### Send via specified path ############################################
+int SCTPAssociation::sendTo(const char*          buffer,
+                            const size_t         length,
+                            const int            flags,
+                            const unsigned short streamID,
+                            const unsigned int   protoID,
+                            const unsigned int   timeToLive,
+                            const bool           useDefaults,
+                            const SocketAddress* pathDestinationAddress)
 {
    int result;
    if(!useDefaults) {
@@ -316,12 +317,12 @@ int SCTPAssociation::send(const char*          buffer,
                           flags,
                           AssociationID, streamID, protoID,
                           timeToLive,
-                          &ReadyForTransmit);
+                          &ReadyForTransmit, pathDestinationAddress);
    }
    else {
       if((buffer != NULL) && (length > 0)) {
          unsigned int timeout;
-         if(!getDefaultStreamTimeout(Defaults.StreamID,timeout)) {
+         if(!getDefaultStreamTimeout(Defaults.StreamID, timeout)) {
             timeout = Defaults.TimeToLive;
          }
          result = Socket->internalSend(
@@ -329,7 +330,8 @@ int SCTPAssociation::send(const char*          buffer,
                              flags,
                              AssociationID,
                              Defaults.StreamID, Defaults.ProtoID, Defaults.TimeToLive,
-                             &ReadyForTransmit);
+                             &ReadyForTransmit,
+                             pathDestinationAddress);
       }
       else {
          result = 0;

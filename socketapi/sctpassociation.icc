@@ -1,5 +1,5 @@
 /*
- * $Id: sctpassociation.icc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ * $Id: sctpassociation.icc,v 1.2 2003/07/11 09:45:02 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -95,6 +95,20 @@ inline Condition* SCTPAssociation::getUpdateCondition(const UpdateConditionType 
        break;
    }
    return(NULL);
+}
+
+
+// ###### Send ##############################################################
+inline int SCTPAssociation::send(const char*          buffer,
+                                 const size_t         length,
+                                 const int            flags,
+                                 const unsigned short streamID,
+                                 const unsigned int   protoID,
+                                 const unsigned int   timeToLive,
+                                 const bool           useDefaults)
+{
+   return(sendTo(buffer, length, flags, streamID, protoID, timeToLive,
+                 useDefaults, NULL));
 }
 
 

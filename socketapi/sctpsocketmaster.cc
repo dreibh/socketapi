@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.9 2003/07/07 16:12:44 dreibh Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.10 2003/07/11 09:45:02 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -94,7 +94,9 @@ SCTPSocketMaster::SCTPSocketMaster()
       Callbacks.shutdownCompleteNotif     = &shutdownCompleteNotif;
       Callbacks.peerShutdownReceivedNotif = &shutdownReceivedNotif;
       Callbacks.queueStatusChangeNotif    = &queueStatusChangeNotif;
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
       Callbacks.asconfStatusNotif         = &asconfStatusNotif;
+#endif
 
       if(!versionCheck()) {
          return;
@@ -549,21 +551,24 @@ void SCTPSocketMaster::networkStatusChangeNotif(unsigned int assocID,
    // ====== Select new primary path, if it has become inactive ============
    SCTP_PathStatus pathStatus;
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
-   sctp_getPathStatus(assocID,destAddrIndex,&pathStatus);
+   const int ok = sctp_getPathStatus(assocID,destAddrIndex,&pathStatus);
 #elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
-   sctp_getPathStatus(assocID,affectedPathID,&pathStatus);
+   const int ok = sctp_getPathStatus(assocID,affectedPathID,&pathStatus);
 #endif
 
 
    // ====== Get new destination address ====================================
-   SocketAddress* destination = SocketAddress::createSocketAddress(
+   SocketAddress* destination = NULL;
+   if(ok == 0) {
+      destination = SocketAddress::createSocketAddress(
                                       SocketAddress::PF_HidePort,
                                       (char*)&pathStatus.destinationAddress);
-   if(destination == NULL) {
+      if(destination == NULL) {
 #ifndef DISABLE_WARNINGS
-      cerr << "INTERNAL ERROR: SCTPSocketMaster::networkStatusChangeNotif() - Bad destination address!" << endl;
+         cerr << "INTERNAL ERROR: SCTPSocketMaster::networkStatusChangeNotif() - Bad destination address!" << endl;
 #endif
-      return;
+         return;
+      }
    }
 
    // ====== Generate "Network Status Change" notification ==================
@@ -590,19 +595,33 @@ void SCTPSocketMaster::networkStatusChangeNotif(unsigned int assocID,
          case SCTP_PATH_REMOVED:
             spc->spc_state = SCTP_ADDR_REMOVED;
           break;
+#if (SCTPLIB_VERSION != SCTPLIB_1_0_0_PRE19) && (SCTPLIB_VERSION != SCTPLIB_1_0_0)
+         case SCTP_ASCONF_CONFIRMED:
+            spc->spc_state = SCTP_ADDR_CONFIRMED;
+          break;
+         case SCTP_ASCONF_FAILED:
+            spc->spc_state = SCTP_ADDR_CONFIRMED;
+            spc->spc_error = 1;
+          break;
+#endif
          default:
             spc->spc_state = 0;
           break;
       }
       cardinal addrlen = 0;
-      if(destination->getFamily() == AF_INET6) {
-         addrlen = destination->getSystemAddress((sockaddr*)&spc->spc_aaddr,
-                                                 sizeof(sockaddr_storage),
-                                                 AF_INET);
+      if(destination) {
+         if(destination->getFamily() == AF_INET6) {
+            addrlen = destination->getSystemAddress((sockaddr*)&spc->spc_aaddr,
+                                                    sizeof(sockaddr_storage),
+                                                    AF_INET);
+         }
+         if(addrlen == 0) {
+            addrlen = destination->getSystemAddress((sockaddr*)&spc->spc_aaddr,
+                                                    sizeof(sockaddr_storage));
+         }
       }
-      if(addrlen == 0) {
-         addrlen = destination->getSystemAddress((sockaddr*)&spc->spc_aaddr,
-                                                 sizeof(sockaddr_storage));
+      else {
+         memset((char*)&spc->spc_aaddr, 0, sizeof(spc->spc_aaddr));
       }
       addNotification(socket,assocID,notification);
    }
@@ -979,6 +998,7 @@ void SCTPSocketMaster::queueStatusChangeNotif(unsigned int assocID,
 }
 
 
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
 // ###### SCTP asconf status change notification callback #####################
 void SCTPSocketMaster::asconfStatusNotif(unsigned int assocID,
                                          unsigned int correlationID,
@@ -994,6 +1014,7 @@ void SCTPSocketMaster::asconfStatusNotif(unsigned int assocID,
    cerr << str << endl;
 #endif
 }
+#endif
 
 
 // ###### User callback #####################################################
