@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.12 2003/06/26 10:10:10 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.13 2003/06/29 15:41:13 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -854,12 +854,10 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
                                 << " ErrorCode=" << getErrorCode(association->AssociationID) << endl;
 #endif
       }
-      else {
-         ReadReady = hasData() || (ConnectionRequests != NULL);
+      ReadReady = hasData() || (ConnectionRequests != NULL);
 #ifdef PRINT_RECVSTATUS
-         cout << "Instance " << InstanceName << ": ReadReady=" << ReadReady << endl;
+      cout << "Instance " << InstanceName << ": ReadReady=" << ReadReady << endl;
 #endif
-      }
    }
 
    SCTPSocketMaster::MasterInstance.unlock();
