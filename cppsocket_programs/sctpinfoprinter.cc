@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpinfoprinter.cc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: sctpinfoprinter.cc,v 1.2 2003/06/04 17:21:00 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -55,7 +55,7 @@ void printNotification(const sctp_notification* notification)
       cout << "\x1b[" << getANSIColor(NOTIFICATION_COLOR)
            << "mNotification:" << endl;
    }
-   switch(notification->sn_notification_header.sn_type) {
+   switch(notification->sn_header.sn_type) {
       case SCTP_ASSOC_CHANGE: {
            const sctp_assoc_change* sac = &notification->sn_assoc_change;
            char str[16];
@@ -83,9 +83,9 @@ void printNotification(const sctp_notification* notification)
       default:
           char str[16];
           snprintf((char*)&str,sizeof(str),"$%04x",
-                   notification->sn_notification_header.sn_flags);
-          cout << "   Type   = " << notification->sn_notification_header.sn_type   << endl
-               << "   Length = " << notification->sn_notification_header.sn_length << endl
+                   notification->sn_header.sn_flags);
+          cout << "   Type   = " << notification->sn_header.sn_type   << endl
+               << "   Length = " << notification->sn_header.sn_length << endl
                << "   Flags  = " << str                                             << endl;
        break;
    }

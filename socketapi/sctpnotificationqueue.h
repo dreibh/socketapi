@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpnotificationqueue.h,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: sctpnotificationqueue.h,v 1.2 2003/06/04 17:21:00 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -40,6 +40,17 @@
 #include "condition.h"
 #include "ext_socket.h"
 #include "sctp.h"
+
+
+
+#define SCTP_RECVDATAIOEVNT        (1 << 0)
+#define SCTP_RECVASSOCEVNT         (1 << 1)
+#define SCTP_RECVPADDREVNT         (1 << 2)
+#define SCTP_RECVPEERERR           (1 << 3)
+#define SCTP_RECVSENDFAILEVNT      (1 << 4)
+#define SCTP_RECVSHUTDOWNEVNT      (1 << 5)
+#define SCTP_RECVADAPIONINDICATION (1 << 6)
+#define SCTP_RECVPDEVNT            (1 << 7)
 
 
 

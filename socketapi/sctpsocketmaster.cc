@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.3 2003/06/03 22:01:40 dreibh Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.4 2003/06/04 17:21:00 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -1072,7 +1072,7 @@ SCTPSocket* SCTPSocketMaster::getSocketForAssociationID(const unsigned int assoc
 // ###### Clear SCTPNotification structure ##################################
 void SCTPSocketMaster::initNotification(SCTPNotification& notification)
 {
-   notification.Content.sn_notification_header.sn_type = SCTP_UNDEFINED;
+   notification.Content.sn_header.sn_type = SCTP_UNDEFINED;
    notification.ContentPosition = 0;
    notification.RemotePort      = 0;
    notification.RemoteAddresses = 0;
@@ -1087,7 +1087,7 @@ bool SCTPSocketMaster::initNotification(SCTPNotification& notification,
                                         unsigned int      assocID,
                                         unsigned short    streamID)
 {
-   notification.Content.sn_notification_header.sn_type = SCTP_UNDEFINED;
+   notification.Content.sn_header.sn_type = SCTP_UNDEFINED;
    notification.ContentPosition = 0;
    SCTP_Association_Status status;
    if(sctp_getAssocStatus(assocID,&status) == 0) {
@@ -1147,7 +1147,7 @@ void SCTPSocketMaster::addNotification(SCTPSocket*             socket,
    const unsigned int notificationFlags = association->NotificationFlags;
 
    // ====== Check, if notification has to be added =========================
-   const sctp_notification_header* header = &notification.Content.sn_notification_header;
+   const sctp_tlv* header = &notification.Content.sn_header;
    if((header->sn_type == SCTP_DATA_ARRIVE)    ||
       ((header->sn_type == SCTP_ASSOC_CHANGE) && (notification.Content.sn_assoc_change.sac_state == SCTP_SHUTDOWN_COMP)) ||
       ((header->sn_type == SCTP_ASSOC_CHANGE) && (notification.Content.sn_assoc_change.sac_state == SCTP_COMM_LOST))     ||

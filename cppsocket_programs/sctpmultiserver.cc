@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpmultiserver.cc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: sctpmultiserver.cc,v 1.2 2003/06/04 17:21:00 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -286,12 +286,12 @@ void EchoServer::run()
       else {
          const sctp_notification* notification = (sctp_notification*)&dataBuffer;
          printNotification(notification);
-         if(notification->h.sn_type == SCTP_ASSOC_CHANGE) {
+         if(notification->sn_header.sn_type == SCTP_ASSOC_CHANGE) {
             const sctp_assoc_change* sac = &notification->sn_assoc_change;
             inStreams  = sac->sac_inbound_streams;
             outStreams = sac->sac_outbound_streams;
          }
-         else if(notification->h.sn_type == SCTP_SHUTDOWN_EVENT) {
+         else if(notification->sn_header.sn_type == SCTP_SHUTDOWN_EVENT) {
             shutdown = true;
          }
       }
@@ -677,8 +677,8 @@ bool MultiServer::init(SocketAddress** addressArray,
 
    sctp_event_subscribe events;
    memset((char*)&events,1,sizeof(events));
-   if(ServerSocket->setSocketOption(IPPROTO_SCTP,SCTP_SET_EVENTS,&events,sizeof(events)) < 0) {
-      cerr << "ERROR: MultiServer::init() - SCTP_SET_EVENTS failed!" << endl;
+   if(ServerSocket->setSocketOption(IPPROTO_SCTP,SCTP_EVENTS,&events,sizeof(events)) < 0) {
+      cerr << "ERROR: MultiServer::init() - SCTP_EVENTS failed!" << endl;
       delete ServerSocket;
       return(false);
    }
@@ -700,8 +700,8 @@ void MultiServer::run()
          if(newSocket != NULL) {
             sctp_event_subscribe events;
             memset((char*)&events,1,sizeof(events));
-            if(newSocket->setSocketOption(IPPROTO_SCTP,SCTP_SET_EVENTS,&events,sizeof(events)) < 0) {
-               cerr << "WARNING: MultiServer::run() - SCTP_SET_EVENTS failed!" << endl;
+            if(newSocket->setSocketOption(IPPROTO_SCTP,SCTP_EVENTS,&events,sizeof(events)) < 0) {
+               cerr << "WARNING: MultiServer::run() - SCTP_EVENTS failed!" << endl;
             }
 
             printTimeStamp(cout);
@@ -895,7 +895,7 @@ int main(int argc, char** argv)
 
 
    // ====== Print information ==============================================
-   cout << "SCTP Multi Server - Copyright (C) 2001-2002 Thomas Dreibholz" << endl;
+   cout << "SCTP Multi Server - Copyright (C) 2001-2003 Thomas Dreibholz" << endl;
    cout << "------------------------------------------------------------" << endl;
    cout << "Version:           " << __DATE__ << ", " << __TIME__ << endl;
    localAddressArray[0]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_HidePort);

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpportscanner.cc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: sctpportscanner.cc,v 1.2 2003/06/04 17:21:00 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -278,8 +278,8 @@ int main(int argc, char** argv)
 
             sctp_event_subscribe events;
             memset((char*)&events,1,sizeof(events));
-            if(clientSocket[i]->setSocketOption(IPPROTO_SCTP,SCTP_SET_EVENTS,&events,sizeof(events)) < 0) {
-               cerr << "ERROR: SCTP_SET_EVENTS failed!" << endl;
+            if(clientSocket[i]->setSocketOption(IPPROTO_SCTP,SCTP_EVENTS,&events,sizeof(events)) < 0) {
+               cerr << "ERROR: SCTP_EVENTS failed!" << endl;
                exit(1);
             }
 

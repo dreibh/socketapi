@@ -1,5 +1,5 @@
 /*
- *  $Id: tdsocket.h,v 1.2 2003/06/01 22:45:45 dreibh Exp $
+ *  $Id: tdsocket.h,v 1.3 2003/06/04 17:21:00 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -276,7 +276,16 @@ O     * Bind socket to one or more given addresses. If no addresses are given,
      */
    bool connect(const SocketAddress& address, const card8 trafficClass = 0);
 
-   /* ????? */
+
+   /**
+     * Connect socket to destination given by list of addresses. A value for
+     * traffic class is supported if the connection is an IPv6 connection;
+     * otherwise it is ignored.
+     *
+     * @param address Address.
+     * @param trafficClass Traffic class of the connection (IPv6 only!)
+     * @return true on success; false otherwise.
+     */
    bool connectx(const SocketAddress** addressArray,
                  const size_t          addresses);
 

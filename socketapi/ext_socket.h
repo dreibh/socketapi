@@ -1,5 +1,5 @@
 /*
- *  $Id: ext_socket.h,v 1.5 2003/06/03 22:01:40 dreibh Exp $
+ *  $Id: ext_socket.h,v 1.6 2003/06/04 17:21:00 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -65,16 +65,15 @@ typedef int socklen_t;
 
 #define MSG_UNORDERED    (1 << 31)
 #define MSG_UNBUNDLED    (1 << 30)
-#define MSG_ADDR_OVER    (1 << 29)
 #ifndef MSG_NOTIFICATION
-#define MSG_NOTIFICATION (1 << 28)
+#define MSG_NOTIFICATION (1 << 29)
 #endif
-#define MSG_ABORT        (1 << 27)
+#define MSG_ABORT        (1 << 28)
 #ifndef MSG_EOF
-#define MSG_EOF          (1 << 26)
+#define MSG_EOF          (1 << 27)
 #endif
 #define MSG_SHUTDOWN     MSG_EOF
-
+#define MSG_PR_SCTP_TTL  (1 << 26)
 
 
 typedef unsigned int   sctp_assoc_t;
@@ -102,10 +101,9 @@ struct sctp_sndrcvinfo
    uint32_t     sinfo_context;
    uint32_t     sinfo_timetolive;
    uint32_t     sinfo_tsn;
+   uint32_t     sinfo_cumtsn;
    sctp_assoc_t sinfo_assoc_id;
 };
-#define SCTP_INFINITE_TTL (uint32_t)0xffffffff
-
 
 #define SCTP_ASSOC_CHANGE 1
 struct sctp_assoc_change
@@ -219,22 +217,15 @@ struct sctp_data_arrive
 };
 
 
-struct sctp_notification_header { /* ????? */
+struct sctp_tlv
+{
    uint16_t sn_type;
    uint16_t sn_flags;
    uint32_t sn_length;
 };
 
-struct sctp_tlv
-{
-   uint16_t type;
-   uint16_t flags;
-   uint32_t length;
-};
-
 union sctp_notification {
-   struct sctp_notification_header h; /* ????? */
-   struct sctp_tlv                 sn_type;
+   struct sctp_tlv                 sn_header;
    struct sctp_assoc_change        sn_assoc_change;
    struct sctp_paddr_change        sn_paddr_change;
    struct sctp_remote_error        sn_remote_error;
@@ -243,7 +234,6 @@ union sctp_notification {
    struct sctp_adaption_event      sn_adaption_event;
    struct sctp_rcv_pdapi_event     sn_rcv_pdapi_event;
 
-   struct sctp_notification_header sn_notification_header;  /* ????? */
    struct sctp_data_arrive         sn_data_arrive;
 };
 
@@ -342,55 +332,23 @@ struct sctp_event_subscribe
 };
 
 
-/*
-   Already defined in sctp.h.
-#define SCTP_CLOSED                     0
-#define SCTP_COOKIE_WAIT                1
-#define SCTP_COOKIE_ECHOED              2
-#define SCTP_ESTABLISHED                3
-#define SCTP_SHUTDOWN_PENDING           4
-#define SCTP_SHUTDOWN_RECEIVED          5
-#define SCTP_SHUTDOWN_SENT              6
-#define SCTP_SHUTDOWNACK_SENT           7
-*/
-/*
-#define SCTP_SHUTDOWN_ACK_SENT SCTP_SHUTDOWNACK_SENT
-#define SCTP_BOUND             108
-#define SCTP_LISTEN            109
-*/
-
-
-
 #define SCTP_INITMSG                1000
 #define SCTP_AUTOCLOSE              1001
 
 #define SCTP_RTOINFO                1010
 #define SCTP_ASSOCINFO              1011
-#define SCTP_SET_PRIMARY_ADDR       1012
+#define SCTP_PRIMARY_ADDR           1012
 #define SCTP_SET_PEER_PRIMARY_ADDR  1013
 #define SCTP_SET_STREAM_TIMEOUTS    1014
-#define SCTP_SET_PEER_ADDR_PARAMS   1015
+#define SCTP_PEER_ADDR_PARAMS       1015
 #define SCTP_STATUS                 1016
 #define SCTP_GET_PEER_ADDR_INFO     1017
 
-#define SCTP_NODELAY                1030
-#define SCTP_DISABLE_FRAGMENTS      1031
-#define SCTP_SET_DEFAULT_SEND_PARAM 1032
-#define SCTP_SET_EVENTS             1033
+#define SCTP_NODELAY                1018
+#define SCTP_SET_DEFAULT_SEND_PARAM 1019
+#define SCTP_EVENTS                 1020
 
-#define SCTP_GET_PEER_ADDR_PARAMS   1050
-
-
-/* Interal usage only */
-#define SCTP_RECVDATAIOEVNT        (1 << 31)
-#define SCTP_RECVASSOCEVNT         (1 << 30)
-#define SCTP_RECVPADDREVNT         (1 << 29)
-#define SCTP_RECVPEERERR           (1 << 28)
-#define SCTP_RECVSENDFAILEVNT      (1 << 27)
-#define SCTP_RECVSHUTDOWNEVNT      (1 << 26)
-#define SCTP_RECVADAPIONINDICATION (1 << 25)
-#define SCTP_RECVPDEVNT            (1 << 24)
-
+#define SCTP_GET_PEER_ADDR_PARAMS   1021
 
 
 #ifdef __cplusplus
@@ -464,8 +422,7 @@ int ext_bindx(int                     sockfd,
 
 int ext_connectx(int                      sockfd,
                  struct sockaddr_storage* addrs,
-                 int                      addrcnt,
-                 int                      flags);
+                 int                      addrcnt);
 #define sctp_connectx ext_connectx
 
 int sctp_peeloff(int sockfd, sctp_assoc_t* id, struct sockaddr* addr, socklen_t* addrlen);
@@ -477,6 +434,24 @@ int sctp_getladdrs(int sockfd, sctp_assoc_t id, struct sockaddr_storage** addrs)
 void sctp_freeladdrs(struct sockaddr_storage* addrs);
 
 int sctp_opt_info(int sd, sctp_assoc_t assocID, int opt, void* arg, socklen_t* size);
+
+int sctp_sendmsg(int              s,
+                 void*            data,
+                 size_t           len,
+                 struct sockaddr* to,
+                 socklen_t        tolen,
+                 uint32_t         ppid,
+                 uint32_t         flags,
+                 uint16_t         stream_no,
+                 uint32_t         timetolive,
+                 uint32_t         context);
+int sctp_recvmsg(int                     s,
+                 void*                   msg,
+                 size_t*                 len,
+                 struct sockaddr*        from,
+                 socklen_t*              fromlen,
+                 struct sctp_sndrcvinfo* sinfo,
+                 int*                    msg_flags);
 
 
 /**

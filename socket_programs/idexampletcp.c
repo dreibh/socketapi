@@ -29,7 +29,7 @@ handle_event(void *buf)
 
   snp = buf;
 
-  switch (snp->h.sn_type) {
+  switch (snp->sn_header.sn_type) {
     case SCTP_ASSOC_CHANGE:
       sac = &snp->sn_assoc_change;
       printf("^^^ assoc_change: state=%hu, error=%hu, instr=%hu, outstr=%hu\n",
@@ -58,13 +58,13 @@ handle_event(void *buf)
       printf("^^^ shutdown event\n");
       break;
     default:
-      printf("unknown type: %hu\n", snp->h.sn_type);
+      printf("unknown type: %hu\n", snp->sn_header.sn_type);
       break;
   }
 }
 
 static void *
-sctp_recvmsg(int fd, struct msghdr *msg, void *buf, size_t *buflen, ssize_t *nrp, size_t cmsglen)
+my_recvmsg(int fd, struct msghdr *msg, void *buf, size_t *buflen, ssize_t *nrp, size_t cmsglen)
 {
   ssize_t nr = 0;
   struct iovec iov[1];
@@ -136,7 +136,7 @@ echo(int fd, int socketModeUDP)
   sri = (struct sctp_sndrcvinfo *)(cmsg + 1);
 
   /* Wait for something to echo */
-  while ((buf = sctp_recvmsg(fd, msg, buf, &buflen, &nr, cmsglen))) {
+  while ((buf = my_recvmsg(fd, msg, buf, &buflen, &nr, cmsglen))) {
 
     /* Intercept notifications here */
     if (msg->msg_flags & MSG_NOTIFICATION) {
@@ -201,8 +201,8 @@ int main()
 
     /* Enable ancillary data and notifications */
     memset((char*)&events,1,sizeof(events));
-    if (ext_setsockopt(cfd, IPPROTO_SCTP, SCTP_SET_EVENTS, &events, sizeof(events)) < 0) {
-      perror("setsockopt SCTP_SET_EVENTS");
+    if (ext_setsockopt(cfd, IPPROTO_SCTP, SCTP_EVENTS, &events, sizeof(events)) < 0) {
+      perror("setsockopt SCTP_EVENTS");
       exit(1);
     }
 

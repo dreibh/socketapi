@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.h,v 1.2 2003/06/01 17:40:54 dreibh Exp $
+ *  $Id: sctpsocket.h,v 1.3 2003/06/04 17:21:00 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -46,7 +46,6 @@
 
 #include <sctp.h>
 #include <map>
-
 
 
 /**

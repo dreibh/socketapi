@@ -1,5 +1,5 @@
 /*
- *  $Id: sctptftp.cc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: sctptftp.cc,v 1.2 2003/06/04 17:21:00 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -284,8 +284,8 @@ int main(int argc, char** argv)
 
 
    // ====== Print information ==============================================
-   cout << "SCTP TFTP - Copyright (C) 2001 Thomas Dreibholz" << endl;
-   cout << "-----------------------------------------------" << endl;
+   cout << "SCTP TFTP - Copyright (C) 2001-2003 Thomas Dreibholz" << endl;
+   cout << "----------------------------------------------------" << endl;
    cout << "Version:               " << __DATE__ << ", " << __TIME__ << endl;
    cout << "Local Addresses:       " << *(localAddressArray[0]) << endl;
    for(cardinal i = 1;i < localAddresses;i++) {
@@ -315,8 +315,8 @@ int main(int argc, char** argv)
 
    sctp_event_subscribe events;
    memset((char*)&events,0,sizeof(events));
-   if(clientSocket.setSocketOption(IPPROTO_SCTP,SCTP_SET_EVENTS,&events,sizeof(events)) < 0) {
-      cerr << "ERROR: SCTP_SET_EVENTS failed!" << endl;
+   if(clientSocket.setSocketOption(IPPROTO_SCTP,SCTP_EVENTS,&events,sizeof(events)) < 0) {
+      cerr << "ERROR: SCTP_EVENTS failed!" << endl;
       exit(1);
    }
 

@@ -1,5 +1,5 @@
 /*
- *  $Id: tdsocket.cc,v 1.3 2003/06/01 22:45:45 dreibh Exp $
+ *  $Id: tdsocket.cc,v 1.4 2003/06/04 17:21:00 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -621,8 +621,7 @@ bool Socket::connectx(const SocketAddress** addressArray,
    // ====== Connect ========================================================
    int result = ext_connectx(SocketDescriptor,
                              (sockaddr_storage*)&socketAddressArray,
-                             addresses,
-                             0);
+                             addresses);
    if(result != 0) {
       LastError = errno;
       if(LastError != EINPROGRESS) {

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.5 2003/06/03 22:01:40 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.6 2003/06/04 17:21:00 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -688,7 +688,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
    const bool receiveNotifications = (flags & MSG_NOTIFICATION);
    bool updatedNotification = false;
    int result               = 0;
-   sctp_notification_header* header = &notification.Content.sn_notification_header;
+   sctp_tlv* header         = &notification.Content.sn_header;
    if(header->sn_type == SCTP_DATA_ARRIVE) {
       flags &= ~MSG_NOTIFICATION;
       sctp_data_arrive* sda = &notification.Content.sn_data_arrive;

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.6 2003/06/03 22:01:40 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.7 2003/06/04 17:21:00 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -47,10 +47,6 @@
 // #define PRINT_NOSCTP_NOTE
 // #define PRINT_SELECT
 // #define PRINT_RANDOM_PORTSELECTION
-
-// Do not receive notifications with recv() and recvfrom(). Note: The user
-// has to decide whether the data is user data or notification!
-// #define UDP_DEFAULT_NO_ASSOCEVNT
 
 
 
@@ -348,22 +344,11 @@ int ext_socket(int domain, int type, int protocol)
          errno_return(-ENOMEM);
       }
 
-
-      // Set default notifications for UDP-like socket
+      // Set default notifications for UDP-like socket: no notification messages
       if(tdSocket.Socket.SCTPSocketDesc.ConnectionOriented == false) {
-#ifdef UDP_DEFAULT_NO_ASSOCEVNT
-/*
-      Important Note:
-      SCTP_RECVDATAIOEVNT has been turned off since it makes problems using ext_select()!
-*/
          tdSocket.Socket.SCTPSocketDesc.SCTPSocketPtr->setNotificationFlags(
             SCTP_RECVDATAIOEVNT );
-#else
-         tdSocket.Socket.SCTPSocketDesc.SCTPSocketPtr->setNotificationFlags(
-            SCTP_RECVDATAIOEVNT | SCTP_RECVASSOCEVNT);
-#endif
       }
-
 
       int result = ExtSocketDescriptorMaster::setSocket(tdSocket);
       if(result < 0) {
@@ -1610,13 +1595,13 @@ int ext_setsockopt(int sockfd, int level, int optname, const void* optval, sockl
                                errno_return(0);
                             }
                           break;
-                         case SCTP_SET_PRIMARY_ADDR:
+                         case SCTP_PRIMARY_ADDR:
                             return(setPrimaryAddr(tdSocket,optval,optlen));
                           break;
                          case SCTP_SET_PEER_PRIMARY_ADDR:
                             return(setPeerPrimaryAddr(tdSocket,optval,optlen));
                           break;
-                         case SCTP_SET_PEER_ADDR_PARAMS:
+                         case SCTP_PEER_ADDR_PARAMS:
                              return(setPeerAddressParams(tdSocket,optval,optlen));
                           break;
                          case SCTP_RTOINFO:
@@ -1625,7 +1610,7 @@ int ext_setsockopt(int sockfd, int level, int optname, const void* optval, sockl
                          case SCTP_ASSOCINFO:
                             return(setAssocInfo(tdSocket,optval,optlen));
                           break;
-                         case SCTP_SET_EVENTS:
+                         case SCTP_EVENTS:
                             return(setEvents(tdSocket,optval,optlen));
                           break;
                          case SCTP_SET_DEFAULT_SEND_PARAM:
@@ -1760,7 +1745,7 @@ int ext_connect(int sockfd, const struct sockaddr* serv_addr, socklen_t addrlen)
       if(tdSocket->Type == ExtSocketDescriptor::ESDT_SCTP) {
          struct sockaddr_storage addressArray[1];
          memcpy((char*)&addressArray[0], serv_addr, min(sizeof(sockaddr_storage), addrlen));
-         return(ext_connectx(sockfd, (sockaddr_storage*)&addressArray, 1, 0));
+         return(ext_connectx(sockfd, (sockaddr_storage*)&addressArray, 1));
       }
       else {
          return(connect(tdSocket->Socket.SystemSocketID, serv_addr, addrlen));
@@ -1773,8 +1758,7 @@ int ext_connect(int sockfd, const struct sockaddr* serv_addr, socklen_t addrlen)
 // ###### connectx() wrapper ################################################
 int ext_connectx(int                      sockfd,
                  struct sockaddr_storage* addrs,
-                 int                      addrcnt,
-                 int                      flags)
+                 int                      addrcnt)
 {
    ExtSocketDescriptor* tdSocket = ExtSocketDescriptorMaster::getSocket(sockfd);
    if(tdSocket != NULL) {
@@ -2199,7 +2183,7 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                                  (info != NULL) ? info->sinfo_assoc_id   : 0,
                                  (info != NULL) ? info->sinfo_stream     : 0x0000,
                                  (info != NULL) ? info->sinfo_ppid       : 0x00000000,
-                                 (info != NULL) ? info->sinfo_timetolive : SCTP_INFINITE_LIFETIME,
+                                 ((info != NULL) && (info->sinfo_flags & MSG_PR_SCTP_TTL)) ? info->sinfo_timetolive : SCTP_INFINITE_LIFETIME,
                                  tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_attempts,
                                  tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_init_timeo,
                                  useDefaults,
@@ -2217,7 +2201,7 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                                   flags,
                                   (info != NULL) ? info->sinfo_stream     : 0x0000,
                                   (info != NULL) ? info->sinfo_ppid       : 0x0000000,
-                                  (info != NULL) ? info->sinfo_timetolive : SCTP_INFINITE_LIFETIME,
+                                  ((info != NULL) && (info->sinfo_flags & MSG_PR_SCTP_TTL)) ? info->sinfo_timetolive : SCTP_INFINITE_LIFETIME,
                                   useDefaults));
                   }
                   else if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
@@ -2228,7 +2212,7 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                                  (info != NULL) ? info->sinfo_assoc_id   : 0,
                                  (info != NULL) ? info->sinfo_stream     : 0x0000,
                                  (info != NULL) ? info->sinfo_ppid       : 0x00000000,
-                                 (info != NULL) ? info->sinfo_timetolive : SCTP_INFINITE_LIFETIME,
+                                 ((info != NULL) && (info->sinfo_flags & MSG_PR_SCTP_TTL)) ? info->sinfo_timetolive : SCTP_INFINITE_LIFETIME,
                                  tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_attempts,
                                  tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_init_timeo,
                                  useDefaults,
@@ -3002,10 +2986,10 @@ int sctp_opt_info(int sd, sctp_assoc_t assocID,
          *(sctp_assoc_t *)arg = assocID;
          return(ext_getsockopt(sd,IPPROTO_SCTP,opt,arg,size));
     }
-    else if((opt == SCTP_SET_PRIMARY_ADDR)      ||
+    else if((opt == SCTP_PRIMARY_ADDR)          ||
             (opt == SCTP_SET_PEER_PRIMARY_ADDR) ||
             (opt == SCTP_SET_STREAM_TIMEOUTS)   ||
-            (opt == SCTP_SET_PEER_ADDR_PARAMS)) {
+            (opt == SCTP_PEER_ADDR_PARAMS)) {
        return(ext_setsockopt(sd,IPPROTO_SCTP,opt,arg,*size));
     }
     else {

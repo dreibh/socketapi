@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpnotificationqueue.cc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: sctpnotificationqueue.cc,v 1.2 2003/06/04 17:21:00 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -145,7 +145,7 @@ bool SCTPNotificationQueue::hasData(const unsigned int notificationFlags)
 {
    SCTPNotification* notification = First;
    while(notification != NULL) {
-      const sctp_notification_header* header = &notification->Content.sn_notification_header;
+      const sctp_tlv* header = &notification->Content.sn_header;
       if( ((header->sn_type == SCTP_DATA_ARRIVE)                                                      ||
           ((header->sn_type == SCTP_ASSOC_CHANGE)     && (notificationFlags & SCTP_RECVASSOCEVNT))    ||
           ((header->sn_type == SCTP_PEER_ADDR_CHANGE) && (notificationFlags & SCTP_RECVPADDREVNT))    ||
