@@ -1,0 +1,24 @@
+s/ext_socket(/socket(/g
+s/ext_bind(/bind(/g
+s/ext_connect(/connect(/g
+s/ext_listen(/listen(/g
+s/ext_accept(/accept(/g
+s/ext_shutdown(/shutdown(/g
+s/ext_close(/close(/g
+s/ext_getsockname(/getsockname(/g
+s/ext_getpeername(/getpeername(/g
+s/ext_fcntl(/fcntl(/g
+s/ext_ioctl(/ioctl(/g
+s/ext_getsockopt(/getsockopt(/g
+s/ext_setsockopt(/setsockopt(/g
+s/ext_recv(/recv(/g
+s/ext_recvfrom(/recvfrom(/g
+s/ext_recvmsg(/recvmsg(/g
+s/ext_send(/send(/g
+s/ext_sendto(/sendto(/g
+s/ext_sendmsg(/sendmsg(/g
+s/ext_read(/read(/g
+s/ext_write(/write(/g
+s/ext_select(/select(/g
+s/ext_poll(/poll(/g
+s/ext_---** FORK WILL NOT WORK **--- fork(/fork(/g

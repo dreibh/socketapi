@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.8 2003/06/05 23:00:26 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.9 2003/06/06 16:52:13 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -1765,6 +1765,14 @@ int ext_connectx(int                      sockfd,
       switch(tdSocket->Type) {
          case ExtSocketDescriptor::ESDT_SCTP:
             {
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19)
+               if(addrcnt != 1) {
+#ifndef DISABLE_WARNINGS
+                  cerr << "ERROR: connectx() with more than one address requires sctplib 1.0.0 or better!" << endl;
+#endif
+                  errno_return(-EOPNOTSUPP);
+               }
+#endif
                bindToAny(tdSocket);
                if(tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr != NULL) {
                   errno_return(-EISCONN);

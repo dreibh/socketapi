@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.6 2003/06/04 17:21:00 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.7 2003/06/06 16:52:13 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -492,6 +492,13 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
          snprintf((char*)&addressArray[i], SCTP_MAX_IP_LEN, "%s",
                   destinationAddressList[i]->getAddressString(SocketAddress::PF_HidePort|SocketAddress::PF_Address|SocketAddress::PF_Legacy).getData());
       }
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19)
+      assocID = sctp_associate(InstanceName,
+                               (noOfOutStreams < 1) ? 1 : noOfOutStreams,
+                               addressArray[0],
+                               destinationAddressList[0]->getPort(),
+                               NULL);
+#else
       assocID = sctp_associatex(InstanceName,
                                 (noOfOutStreams < 1) ? 1 : noOfOutStreams,
                                 addressArray,
@@ -499,6 +506,7 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
                                 SCTP_MAX_NUM_ADDRESSES,
                                 destinationAddressList[0]->getPort(),
                                 NULL);
+#endif
    }
    else {
 #ifndef DISABLE_WARNINGS
