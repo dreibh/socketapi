@@ -7,9 +7,6 @@
 #include <unistd.h>
 #include <sys/uio.h>
 #include <ext_socket.h>
-#ifdef __APPLE__
-#include "inet_ntop.c"
-#endif
 #include <string.h>
 
 #define BUFLEN        100

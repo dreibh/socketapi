@@ -1,4 +1,4 @@
-EXTRA_DIST = Makefile.am combined_server_1to1.c combined_server_1toM.c idexample1to1.c idexample1toM.c inet_ntop.c newexample1to1.c
+EXTRA_DIST = Makefile.am combined_server_1to1.c combined_server_1toM.c idexample1to1.c idexample1toM.c newexample1to1.c
 
 noinst_PROGRAMS = combined_server_1to1 combined_server_1toM idexample1to1 idexample1toM newexample1to1
 
