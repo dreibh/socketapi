@@ -1,5 +1,5 @@
 /*
- *  $Id: tdmessage.h,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: tdmessage.h,v 1.2 2003/07/31 09:31:43 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -162,17 +162,26 @@ template<const size_t size> class SocketMessage
 /**
   * Wrapper for CMSG_SPACE macro.
   */
+#if (SYSTEM == OS_SOLARIS)
+#define CSpace(payload) (_CMSG_DATA_ALIGN(sizeof(struct cmsghdr)) + _CMSG_DATA_ALIGN(payload))
+#else
 #define CSpace(payload) CMSG_SPACE(payload)
+#endif
+
+/**
+  * Wrapper for CMSG_LEN macro.
+  */
+
+#if (SYSTEM == OS_SOLARIS)
+#define CLength(l) (_CMSG_DATA_ALIGN(sizeof(struct cmsghdr)) + (l))
+#else
+#define CLength(l) CMSG_LEN(l)
+#endif
 
 /**
   * Wrapper for CMSG_DATA macro.
   */
 inline static char* CData(const cmsghdr* cmsg);
-
-/**
-  * Wrapper for CMSG_LEM macro.
-  */
-inline static const cardinal CLength(const cmsghdr* cmsg);
 
 /**
   * Wrapper for CMSG_FIRSTHDR macro.
