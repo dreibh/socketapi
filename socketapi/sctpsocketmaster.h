@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.h,v 1.2 2003/07/11 09:45:02 dreibh Exp $
+ *  $Id: sctpsocketmaster.h,v 1.3 2003/08/02 20:33:03 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -46,6 +46,11 @@
 #include <map>
 #include <set>
 #include <utility>
+
+#define SCTPLIB_VERSION ((SCTP_MAJOR_VERSION << 16) | SCTP_MINOR_VERSION)
+#define SCTPLIB_1_0_0_PRE19 19
+#define SCTPLIB_1_0_0_PRE20 20
+#define SCTPLIB_1_0_0       0x10000
 
 
 
