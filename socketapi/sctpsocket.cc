@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.10 2003/06/13 13:14:34 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.11 2003/06/18 15:21:25 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -455,6 +455,15 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
                                        const SocketAddress** destinationAddressList,
                                        const bool            blocking)
 {
+   if((destinationAddressList != NULL)    &&
+      (destinationAddressList[0] != NULL) &&
+      (destinationAddressList[0]->getPort() == 0)) {
+#ifndef DISABLE_WARNINGS
+      cerr << "WARNING: SCTPSocket::associate() - Invalid destination port 0!" << endl;
+#endif
+      return(NULL);
+   }
+
    // ====== Establish new association ======================================
    SCTPSocketMaster::MasterInstance.lock();
    SCTP_Instance_Parameters oldParameters;

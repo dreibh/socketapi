@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.10 2003/06/08 15:15:12 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.11 2003/06/18 15:21:25 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -2370,6 +2370,13 @@ static int collectSCTP_FDs(SelectData&                 selectData,
    else if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
       selectData.ConditionArray[selectData.Conditions] =
          tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->getUpdateCondition(type);
+      if((type == UCT_Write) &&
+         (tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr == NULL)) {
+         selectData.ConditionArray[selectData.Conditions]->signal();
+#ifdef PRINT_SELECT
+         cout << "collectSCTP_FDs: UDP-like sockets are always writable" << endl;
+#endif
+      }
 
 #ifdef PRINT_SELECT
       if(selectData.ConditionArray[selectData.Conditions]->peekFired()) {

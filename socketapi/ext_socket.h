@@ -1,5 +1,5 @@
 /*
- *  $Id: ext_socket.h,v 1.7 2003/06/06 23:30:28 dreibh Exp $
+ *  $Id: ext_socket.h,v 1.8 2003/06/18 15:21:25 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -481,8 +481,6 @@ int sctp_enableCRC32(const unsigned int enable);
 
 
 #else
-
-// #warning You have kernel SCTP! This file probably has to be updated to use it!
 
 #ifdef __cplusplus
 #define ext_socket(a,b,c) ::socket(a,b,c)
