@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.h,v 1.4 2003/08/19 19:20:00 tuexen Exp $
+ *  $Id: sctpsocketmaster.h,v 1.5 2004/07/28 12:55:16 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -57,6 +57,7 @@
 #define SCTPLIB_1_0_0_PRE19 19
 #define SCTPLIB_1_0_0_PRE20 20
 #define SCTPLIB_1_0_0       0x10000
+#define SCTPLIB_1_3_0       0x10003
 
 
 
@@ -222,7 +223,7 @@ class SCTPSocketMaster : public Thread
                                         short          destAddrIndex,
                                         unsigned short newState,
                                         void*          ulpDataPtr);
-#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
    static void networkStatusChangeNotif(unsigned int   assocID,
                                         unsigned int   affectedPathID,
                                         int            newState,
@@ -237,7 +238,7 @@ class SCTPSocketMaster : public Thread
                                      unsigned short noOfInStreams,
                                      unsigned short noOfOutStreams,
                                      int            supportPRSCTP,
-#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
                                      int            adaptationLayerIndicationLen,
                                      void*          adaptationLayerIndication,
 #endif
@@ -247,7 +248,7 @@ class SCTPSocketMaster : public Thread
    static void communicationLostNotif(unsigned int   assocID,
                                       unsigned short status,
                                       void*          ulpDataPtr);
-#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
    static void communicationLostNotif(unsigned int assocID,
                                       int          status,
                                       void*        ulpDataPtr);
@@ -259,7 +260,7 @@ class SCTPSocketMaster : public Thread
    static void communicationErrorNotif(unsigned int   assocID,
                                        unsigned short status,
                                        void*          dummy);
-#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
    static void communicationErrorNotif(unsigned int assocID,
                                        int          status,
                                        void*        dummy);
@@ -289,7 +290,7 @@ class SCTPSocketMaster : public Thread
                                  int          result,
                                  void*        request,
                                  void*        ulpData);
-#endif                                 
+#endif
    static void userCallback(int        fileDescriptor,
                             short int  eventMask,
                             short int* registeredEvents,

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.24 2004/07/27 11:53:44 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.25 2004/07/28 12:55:16 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -1060,7 +1060,7 @@ static int getAssocInfo(ExtSocketDescriptor* tdSocket,
       assocparams->sasoc_asocmaxrxt               = parameters.assocMaxRetransmits;
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
       assocparams->sasoc_number_peer_destinations = parameters.numberOfAddresses;
-#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
       assocparams->sasoc_number_peer_destinations = parameters.numberOfDestinationPaths;
 #else
 #error Wrong sctplib version!
@@ -2279,16 +2279,38 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                   flags |= MSG_DONTWAIT;
                }
                if(msg->msg_name != NULL) {
-                  SocketAddress* destination = SocketAddress::createSocketAddress(
-                                                  0, (sockaddr*)msg->msg_name,msg->msg_namelen);
-                  if(destination == NULL) {
-                     errno_return(-EADDRNOTAVAIL);
-                  }
                   int result = -EBADF;
+                  const SocketAddress* destinationAddressList[SCTP_MAX_NUM_ADDRESSES + 1];
                   if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
-                     const SocketAddress* destinationAddressList[2];
-                     destinationAddressList[0] = destination;
-                     destinationAddressList[1] = NULL;
+                     if(!(flags & MSG_MULTIADDRS)) {
+                        destinationAddressList[0] = SocketAddress::createSocketAddress(
+                                                       0, (sockaddr*)msg->msg_name, msg->msg_namelen);
+                        destinationAddressList[1] = NULL;
+                     }
+                     else {
+                        sockaddr* sa = (sockaddr*)msg->msg_name;
+                        size_t    i;
+                        for(i = 0;i < msg->msg_namelen;i++) {
+                           destinationAddressList[i] = SocketAddress::createSocketAddress(
+                                                          0, sa, sizeof(sockaddr_storage));
+                           if(destinationAddressList[i] == NULL) {
+                              errno_return(-EINVAL);
+                           }
+                           cout << "#" << i << ": " << *(destinationAddressList[i]) << endl;
+                           switch(sa->sa_family) {
+                              case AF_INET:
+                                 sa = (sockaddr*)((long)sa + sizeof(sockaddr_in));
+                               break;
+                              case AF_INET6:
+                                 sa = (sockaddr*)((long)sa + sizeof(sockaddr_in6));
+                               break;
+                              default:
+                                 errno_return(-EINVAL);
+                               break;
+                           }
+                        }
+                        destinationAddressList[i++] = NULL;
+                     }
                      result = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->sendTo(
                                  (char*)msg->msg_iov->iov_base,
                                  msg->msg_iov->iov_len,
@@ -2302,8 +2324,16 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                                  useDefaults,
                                  (const SocketAddress**)&destinationAddressList,
                                  tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_num_ostreams);
+                     for(size_t i = 0;i  < SCTP_MAX_NUM_ADDRESSES;i++) {
+                        if(destinationAddressList[i] != NULL) {
+                           delete destinationAddressList[i];
+                           destinationAddressList[i] = NULL;
+                        }
+                        else {
+                           break;
+                        }
+                     }
                   }
-                  delete destination;
                   errno_return(result);
                }
                else {
@@ -3204,6 +3234,55 @@ ssize_t sctp_sendmsg(int              s,
    sri->sinfo_stream     = stream_no;
    sri->sinfo_ppid       = ppid;
    sri->sinfo_flags      = flags;
+   sri->sinfo_ssn        = 0;
+   sri->sinfo_tsn        = 0;
+   sri->sinfo_context    = 0;
+   sri->sinfo_cumtsn     = 0;
+   sri->sinfo_timetolive = timetolive;
+
+   return(ext_sendmsg(s, &msg, 0));
+}
+
+
+// ###### sctp_sendmsg() implementation #####################################
+ssize_t sctp_sendmsgx(int              s,
+                      void*            data,
+                      size_t           len,
+                      struct sockaddr* toaddrs,
+                      int              toaddrcnt,
+                      uint32_t         ppid,
+                      uint32_t         flags,
+                      uint16_t         stream_no,
+                      uint32_t         timetolive,
+                      uint32_t         context)
+{
+   sctp_sndrcvinfo* sri;
+   struct iovec     iov = { (char*)data, len };
+   struct cmsghdr*  cmsg;
+   size_t           cmsglen = CSpace(sizeof(struct sctp_sndrcvinfo));
+   char             cbuf[CSpace(sizeof(struct sctp_sndrcvinfo))];
+   struct msghdr msg = {
+#ifdef __APPLE__
+      (char*)toaddrs,
+#else
+      toaddrs,
+#endif
+      toaddrcnt,
+      &iov, 1,
+      cbuf, cmsglen,
+      flags | MSG_MULTIADDRS,
+   };
+
+   cmsg = (struct cmsghdr*)CFirst(&msg);
+   cmsg->cmsg_len   = CLength(sizeof(struct sctp_sndrcvinfo));
+   cmsg->cmsg_level = IPPROTO_SCTP;
+   cmsg->cmsg_type  = SCTP_SNDRCV;
+
+   sri = (struct sctp_sndrcvinfo*)CData(cmsg);
+   sri->sinfo_assoc_id   = 0;
+   sri->sinfo_stream     = stream_no;
+   sri->sinfo_ppid       = ppid;
+   sri->sinfo_flags      = flags | MSG_MULTIADDRS;
    sri->sinfo_ssn        = 0;
    sri->sinfo_tsn        = 0;
    sri->sinfo_context    = 0;

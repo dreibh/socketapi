@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.14 2004/07/27 11:53:44 dreibh Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.15 2004/07/28 12:55:16 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -206,7 +206,7 @@ SCTPSocketMaster::~SCTPSocketMaster()
       // here, since sctp_abort() directly calls communicationLostNotification(),
       // which itself calls associationGarbageCollection(iterator->first,true)
       // again. Therefore, sctp_abort() is used here.
-#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
       sctp_abort(iterator->first, 0, NULL);
 #else
       sctp_abort(iterator->first);
@@ -415,7 +415,7 @@ bool SCTPSocketMaster::associationGarbageCollection(const unsigned int assocID,
 
       // ====== Delete association ==========================================
       if(sendAbort) {
-#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
          sctp_abort(assocID, 0, NULL);
 #else
          sctp_abort(assocID);
@@ -539,7 +539,7 @@ void SCTPSocketMaster::networkStatusChangeNotif(unsigned int   assocID,
                                                 short          destAddrIndex,
                                                 unsigned short newState,
                                                 void*          ulpDataPtr)
-#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
 void SCTPSocketMaster::networkStatusChangeNotif(unsigned int assocID,
                                                 unsigned int affectedPathID,
                                                 int          newState,
@@ -560,8 +560,10 @@ void SCTPSocketMaster::networkStatusChangeNotif(unsigned int assocID,
    SCTP_PathStatus pathStatus;
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
    const int ok = sctp_getPathStatus(assocID,destAddrIndex,&pathStatus);
-#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
    const int ok = sctp_getPathStatus(assocID,affectedPathID,&pathStatus);
+#else
+#error Wrong sctplib version!
 #endif
 
 
@@ -603,7 +605,7 @@ void SCTPSocketMaster::networkStatusChangeNotif(unsigned int assocID,
          case SCTP_PATH_REMOVED:
             spc->spc_state = SCTP_ADDR_REMOVED;
           break;
-#if (SCTPLIB_VERSION != SCTPLIB_1_0_0_PRE19) && (SCTPLIB_VERSION != SCTPLIB_1_0_0)
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
          case SCTP_ASCONF_CONFIRMED:
             spc->spc_state = SCTP_ADDR_CONFIRMED;
           break;
@@ -611,6 +613,17 @@ void SCTPSocketMaster::networkStatusChangeNotif(unsigned int assocID,
             spc->spc_state = SCTP_ADDR_CONFIRMED;
             spc->spc_error = 1;
           break;
+#elif  (SCTPLIB_VERSION == SCTPLIB_1_3_0)
+         case SCTP_ASCONF_SUCCEEDED:
+            spc->spc_state = SCTP_ADDR_CONFIRMED;
+          break;
+         case SCTP_ASCONF_FAILED:
+            spc->spc_state = SCTP_ADDR_CONFIRMED;
+            spc->spc_error = 1;
+          break;
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
+#else
+#error Wrong sctplib version!
 #endif
          default:
             spc->spc_state = 0;
@@ -645,7 +658,7 @@ void* SCTPSocketMaster::communicationUpNotif(unsigned int   assocID,
                                              unsigned short noOfInStreams,
                                              unsigned short noOfOutStreams,
                                              int            supportPRSCTP,
-#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
                                              int            adaptationLayerIndicationLen,
                                              void*          adaptationLayerIndication,
 #endif
@@ -728,10 +741,12 @@ void* SCTPSocketMaster::communicationUpNotif(unsigned int   assocID,
 #ifdef PRINT_NOTIFICATIONS
          cerr << "Rejecting unwanted incoming association" << endl;
 #endif
-#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
          sctp_abort(assocID, 0, NULL);
-#else
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
          sctp_abort(assocID);
+#else
+#error Wrong sctplib version!
 #endif
       }
 
@@ -760,7 +775,7 @@ void* SCTPSocketMaster::communicationUpNotif(unsigned int   assocID,
 void SCTPSocketMaster::communicationLostNotif(unsigned int   assocID,
                                               unsigned short status,
                                               void*          ulpDataPtr)
-#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
 void SCTPSocketMaster::communicationLostNotif(unsigned int assocID,
                                               int          status,
                                               void*        ulpDataPtr)
@@ -840,7 +855,7 @@ void SCTPSocketMaster::communicationLostNotif(unsigned int assocID,
 void SCTPSocketMaster::communicationErrorNotif(unsigned int   assocID,
                                                unsigned short status,
                                                void*          dummy)
-#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
 void SCTPSocketMaster::communicationErrorNotif(unsigned int assocID,
                                                int          status,
                                                void*        dummy)
@@ -1077,7 +1092,7 @@ SCTPSocket* SCTPSocketMaster::getSocketForAssociationID(const unsigned int assoc
 {
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
    unsigned short instanceID = 0;
-#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
    int instanceID = 0;
 #else
 #error Wrong sctplib version!
@@ -1134,7 +1149,7 @@ bool SCTPSocketMaster::initNotification(SCTPNotification& notification,
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
       notification.RemoteAddresses = min((unsigned short)SCTP_MAX_NUM_ADDRESSES,
                                          status.numberOfAddresses);
-#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
       notification.RemoteAddresses = min((unsigned short)SCTP_MAX_NUM_ADDRESSES,
                                          status.numberOfDestinationPaths);
 #else
@@ -1144,7 +1159,7 @@ bool SCTPSocketMaster::initNotification(SCTPNotification& notification,
          SCTP_Path_Status pathStatus;
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
          if(sctp_getPathStatus(assocID,i,&pathStatus) != 0) {
-#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
          if(sctp_getPathStatus(assocID,status.destinationPathIDs[i],&pathStatus) != 0) {
 #else
 #error Wrong sctplib version!

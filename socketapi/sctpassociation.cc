@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.cc,v 1.8 2004/07/27 11:53:44 dreibh Exp $
+ *  $Id: sctpassociation.cc,v 1.9 2004/07/28 12:55:16 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -197,7 +197,7 @@ bool SCTPAssociation::getRemoteAddresses(SocketAddress**& addressArray)
    if(sctp_getAssocStatus(AssociationID,&status) == 0) {
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
       const unsigned int addresses = status.numberOfAddresses;
-#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
       const unsigned int addresses = status.numberOfDestinationPaths;
 #else
 #error Wrong sctplib version!
@@ -210,7 +210,7 @@ bool SCTPAssociation::getRemoteAddresses(SocketAddress**& addressArray)
       for(i = 0;i < addresses;i++) {
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
          const int index = i;
-#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
          const int index = status.destinationPathIDs[i];
 #else
 #error Wrong sctplib version!
@@ -435,10 +435,12 @@ void SCTPAssociation::abort()
 {
    SCTPSocketMaster::MasterInstance.lock();
    IsShuttingDown = true;
-#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
    sctp_abort(AssociationID, 0, NULL);
-#else
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
    sctp_abort(AssociationID);
+#else
+#error Wrong sctplib version!
 #endif
    SCTPSocketMaster::MasterInstance.unlock();
 }

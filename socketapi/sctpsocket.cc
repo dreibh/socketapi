@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.22 2004/07/27 11:53:44 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.23 2004/07/28 12:55:16 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -545,10 +545,12 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
       association = new SCTPAssociation(this, assocID, NotificationFlags,
                                         Flags & SCTPSocket::SSF_GlobalQueue);
       if(association == NULL) {
-#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
          sctp_abort(assocID, 0, NULL);
-#else
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
          sctp_abort(assocID);
+#else
+#error Wrong sctplib version!
 #endif
          sctp_deleteAssociation(assocID);
 #ifndef DISABLE_WARNINGS
@@ -725,7 +727,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
             flags |= MSG_UNORDERED;
          }
          size_t receivedBytes = min((size_t) sda->sda_bytes_arrived, (size_t) bufferSize);
-#if (SCTPLIB_VERSION != SCTPLIB_1_0_0_PRE19)
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0)
          unsigned int pathIndex;
          const int ok = sctp_receivefrom(assocID, streamID,
                                          (unsigned char*)buffer,
@@ -734,7 +736,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
                                          &tsn,
                                          &pathIndex,
                                          (flags & MSG_PEEK) ? SCTP_MSG_PEEK : SCTP_MSG_DEFAULT);
-#else
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
          const int ok = sctp_receive(assocID, streamID,
                                      (unsigned char*)buffer,
                                      (unsigned int*)&receivedBytes,
@@ -742,6 +744,8 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
                                      &tsn,
                                      (flags & MSG_PEEK) ? SCTP_MSG_PEEK : SCTP_MSG_DEFAULT);
          const int pathIndex = sctp_getPrimary(assocID);
+#else
+#error Wrong sctplib version!
 #endif
          if(ok == 0) {
             bufferSize = receivedBytes;
@@ -974,7 +978,7 @@ int SCTPSocket::internalSend(const char*          buffer,
                   timeToLive,
                   ((flags & MSG_UNORDERED) ? SCTP_UNORDERED_DELIVERY : SCTP_ORDERED_DELIVERY),
                   ((flags & MSG_UNBUNDLED) ? SCTP_BUNDLING_DISABLED : SCTP_BUNDLING_ENABLED));
-#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
       result = sctp_send(
                   assocID, streamID,
                   (unsigned char*)buffer, length,
@@ -1470,7 +1474,7 @@ puts("x-1");
    }
 puts("x0");
 
-#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
    SCTP_Association_Status status;
    if(sctp_getAssocStatus(assocID,&status) != 0) {
 #ifndef DISABLE_WARNINGS
@@ -1485,7 +1489,7 @@ puts("x0");
    for(unsigned int i = 0;;i++) {
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
       const int index = i;
-#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
       const int index = status.destinationPathIDs[i];
 #else
 #error Wrong sctplib version!
@@ -1738,7 +1742,7 @@ bool SCTPSocket::setPeerPrimary(const unsigned int   assocID,
    unsigned char address[SCTP_MAX_IP_LEN];
    snprintf((char*)&address,sizeof(address),"%s",
             primary.getAddressString().getData());
-#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20)
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
    const int result = sctp_setRemotePrimary(assocID,address);
 #else
    const int result = -1;
@@ -1772,7 +1776,7 @@ bool SCTPSocket::addAddress(const unsigned int   assocID,
    unsigned char address[SCTP_MAX_IP_LEN];
    snprintf((char*)&address,sizeof(address),"%s",
             addAddress.getAddressString().getData());
-#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_0_0) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
    cerr << "NOT IMPLEMENTED: sctp_addIPAddress()" << endl;
    const int result = -1;
 #else
@@ -1811,7 +1815,7 @@ bool SCTPSocket::deleteAddress(const unsigned int   assocID,
    unsigned char address[SCTP_MAX_IP_LEN];
    snprintf((char*)&address,sizeof(address),"%s",
             delAddress.getAddressString().getData());
-#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
+#if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_0_0) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
    cerr << "NOT IMPLEMENTED: sctp_deleteIPAddress()" << endl;
    const int result = -1;
 #else

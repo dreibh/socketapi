@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpterminal.cc,v 1.6 2003/08/19 19:28:34 tuexen Exp $
+ *  $Id: sctpterminal.cc,v 1.7 2004/07/28 12:55:16 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -289,7 +289,9 @@ void CopyThread::run()
             info->sinfo_flags      = MSG_PR_SCTP_TTL;
             info->sinfo_timetolive = 0;
          }
+puts("s...");
          const ssize_t result = CopySocket->sendMsg(&message.Header,0);
+puts("ok!");
          if(result < 0) {
             if(ColorMode) {
                cerr << "\x1b[" << getANSIColor(ERROR_COLOR) << "m\x07";

@@ -1,5 +1,5 @@
 /*
- *  $Id: ext_socket.h,v 1.17 2004/07/27 11:53:44 dreibh Exp $
+ *  $Id: ext_socket.h,v 1.18 2004/07/28 12:55:16 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -79,6 +79,7 @@ typedef int socklen_t;
 #define MSG_PR_SCTP_TTL  (1 << 26)
 #define MSG_ADDR_OVER    (1 << 25)
 #define MSG_SEND_TO_ALL  (1 << 24)
+#define MSG_MULTIADDRS   (1 << 23)
 
 
 typedef unsigned int   sctp_assoc_t;
@@ -440,6 +441,16 @@ ssize_t sctp_sendmsg(int              s,
                      uint16_t         stream_no,
                      uint32_t         timetolive,
                      uint32_t         context);
+ssize_t sctp_sendmsgx(int              s,
+                      void*            data,
+                      size_t           len,
+                      struct sockaddr* toaddrs,
+                      int              toaddrcnt,
+                      uint32_t         ppid,
+                      uint32_t         flags,
+                      uint16_t         stream_no,
+                      uint32_t         timetolive,
+                      uint32_t         context);
 ssize_t sctp_recvmsg(int                     s,
                      void*                   msg,
                      size_t                  len,
