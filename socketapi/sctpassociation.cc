@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.cc,v 1.10 2004/07/29 15:11:03 dreibh Exp $
+ *  $Id: sctpassociation.cc,v 1.11 2004/07/30 11:03:43 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -407,7 +407,7 @@ bool SCTPAssociation::sendPreEstablishmentPackets()
          if(LastPreEstablishmentPacket == packet) {
             LastPreEstablishmentPacket = NULL;
          }
-         delete packet->Data;
+         delete [] packet->Data;
          packet->Data = NULL;
          delete packet;
       }
