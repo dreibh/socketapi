@@ -20,14 +20,14 @@ libsctpsocket_la_SOURCES = thread.cc tdstrings.cc synchronizable.cc \
                            portableaddress.icc sctpsocket.icc tdmessage.icc unixaddress.icc
 
 
-
+libsctpsocket_la_LIBADD = @sctplib_LIBS@
 
 libsctpsocket_la_LDFLAGS = \
    -version-info $(SOCKETAPI_CURRENT):$(SOCKETAPI_REVISION):$(SOCKETAPI_AGE) \
    -release $(SOCKETAPI_RELEASE)
 
 
-INCLUDES =
+INCLUDES = -I@sctplib_INCLUDES@
 
 
 #noinst_PROGRAMS = t1 t2 c1 c2 c3 c4
