@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.28 2004/11/11 21:35:41 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.29 2004/11/20 21:07:21 tuexen Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -2085,7 +2085,7 @@ static int ext_recvmsg_singlebuffer(int sockfd, struct msghdr* msg, int flags,
          }
          if((notificationFlags & SCTP_RECVDATAIOEVNT) &&
             (msg->msg_control != NULL) &&
-            (msg->msg_controllen >= CSpace(sizeof(sctp_sndrcvinfo)))) {
+            (msg->msg_controllen >= (socklen_t)CSpace(sizeof(sctp_sndrcvinfo)))) {
             cmsghdr* cmsg = (cmsghdr*)msg->msg_control;
             cmsg->cmsg_len   = CSpace(sizeof(sctp_sndrcvinfo));
             cmsg->cmsg_level = IPPROTO_SCTP;
@@ -2230,7 +2230,7 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                   cmsg = CNext(msg,cmsg)) {
                   if(cmsg->cmsg_level == IPPROTO_SCTP) {
                      if(cmsg->cmsg_type == SCTP_SNDRCV) {
-                        if(cmsg->cmsg_len >= sizeof(sctp_sndrcvinfo)) {
+                        if(cmsg->cmsg_len >= (socklen_t)sizeof(sctp_sndrcvinfo)) {
                            info        = (sctp_sndrcvinfo*)CData(cmsg);
                            useDefaults = false;
                         }
@@ -2290,7 +2290,7 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                      else {
                         sockaddr* sa = (sockaddr*)msg->msg_name;
                         size_t    i;
-                        for(i = 0;i < msg->msg_namelen;i++) {
+                        for(i = 0;i < (size_t)msg->msg_namelen;i++) {
                            destinationAddressList[i] = SocketAddress::createSocketAddress(
                                                           0, sa, sizeof(sockaddr_storage));
                            if(destinationAddressList[i] == NULL) {

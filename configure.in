@@ -7,17 +7,17 @@ dnl enable the following if you want to use autoconf/automake
 dnl framework from a certain directory (like kde-common)
 AC_CONFIG_AUX_DIR(admin)
 
-AC_CANONICAL_SYSTEM
-AC_ARG_PROGRAM
+AC_CANONICAL_HOST
+# AC_ARG_PROGRAM
 
-AM_INIT_AUTOMAKE(socketapi,1.3.1)
+AM_INIT_AUTOMAKE(socketapi,1.3.2a)
 
-AC_PREFIX_DEFAULT(/usr/local)
-if test "x$prefix" = "xNONE"; then
-  prefix=$ac_default_prefix
-  ac_configure_args="$ac_configure_args --prefix $prefix"
-fi
-AC_SUBST(prefix)
+#AC_PREFIX_DEFAULT(/usr/local)
+#if test "x$prefix" = "xNONE"; then
+#  prefix=$ac_default_prefix
+#  ac_configure_args="$ac_configure_args --prefix $prefix"
+#fi
+#AC_SUBST(prefix)
 
 dnl without this order in this file, automake will be confused!
 dnl
@@ -30,12 +30,12 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_LIBTOOL
 dnl create only shared libtool-libraries (add --enable-shared)
-AC_ENABLE_SHARED(no)
+dnl AC_ENABLE_SHARED(no)
 dnl AM_DISABLE_SHARED
 
 dnl set the following to yes, if you want to create static
 dnl libtool-libraries, else no
-AC_ENABLE_STATIC(yes)
+dnl AC_ENABLE_STATIC(yes)
 
 dnl add --with-extra-includes and --with-extra-libs switch to ./configure
 dnl
@@ -48,7 +48,7 @@ AC_SUBST(AUTODIRS)
 
 # Achtung! Wenn LDFLAGS nicht gesetzt wird, verwendet der Linker die
 # Option -s => Alle Debug-Symbole werden entfernt!
-LDFLAGS=""
+# LDFLAGS=""
 CFLAGS="$CFLAGS -D_REENTRANT -D_THREAD_SAFE -DSCTP_SOCKET_API"
 CXXFLAGS="$CXXFLAGS -D_REENTRANT -D_THREAD_SAFE -DSCTP_SOCKET_API"
 
@@ -133,7 +133,7 @@ AC_TRY_COMPILE([#include <sys/types.h>
 #include <unistd.h>
 #include <netinet/in.h>],
 [socklen_t x; x = 0;],
-[AC_DEFINE(HAVE_SOCKLEN_T)
+[AC_DEFINE(HAVE_SOCKLEN_T, 1, "[Define it socketlen_t is avaiable.])
  AC_MSG_RESULT(yes)],
 [AC_MSG_RESULT(no)])
 
@@ -230,8 +230,8 @@ fi
 if test ! -f "$ac_sctplib_includes/sctp.h" ; then
    AC_MSG_ERROR([No sctplib installation found ($ac_sctplib_includes/sctp.h)!])
 fi
-if test ! -f $ac_sctplib_libraries/libsctp.a ; then
-   AC_MSG_ERROR([No sctplib installation found ($ac_sctplib_libraries/libsctp.a)!])
+if test ! -f $ac_sctplib_libraries/libsctplib.a ; then
+   AC_MSG_ERROR([No sctplib installation found ($ac_sctplib_libraries/libsctplib.a)!])
 fi
 
 # This works under Linux and MacOS X, but not under Solaris

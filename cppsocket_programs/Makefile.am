@@ -5,22 +5,22 @@ noinst_PROGRAMS = sctpmultiserver sctpterminal sctptftp sctpportscanner
 sctpmultiserver_SOURCES =  sctpmultiserver.cc sctpinfoprinter.cc  sctpinfoprinter.h sctptftp.h ansicolor.h
 sctpmultiserver_CXXFLAGS =  -I../socketapi -I../cppsocketapi
 sctpmultiserver_LDADD = ../cppsocketapi/libcppsctpsocket.la
-sctpmultiserver_LDFLAGS = -static
+#sctpmultiserver_LDFLAGS = -static
 
 sctpterminal_SOURCES =  sctpterminal.cc sctpinfoprinter.cc sctpinfoprinter.h ansicolor.h
 sctpterminal_CXXFLAGS =  -I../socketapi -I../cppsocketapi
 sctpterminal_LDADD = ../cppsocketapi/libcppsctpsocket.la
-sctpterminal_LDFLAGS = -static
+#sctpterminal_LDFLAGS = -static
 
 sctptftp_SOURCES =  sctptftp.cc sctptftp.h
 sctptftp_CXXFLAGS =  -I../socketapi -I../cppsocketapi
 sctptftp_LDADD = ../cppsocketapi/libcppsctpsocket.la
-sctptftp_LDFLAGS = -static
+#sctptftp_LDFLAGS = -static
 
 sctpportscanner_SOURCES =  sctpportscanner.cc ansicolor.h
 sctpportscanner_CXXFLAGS =  -I../socketapi -I../cppsocketapi
 sctpportscanner_LDADD = ../cppsocketapi/libcppsctpsocket.la
-sctpportscanner_LDFLAGS = -static
+#sctpportscanner_LDFLAGS = -static
 
 #t1_SOURCES = t1.cc
 #t1_CXXFLAGS =  -I../socketapi -I../cppsocketapi

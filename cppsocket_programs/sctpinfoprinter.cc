@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpinfoprinter.cc,v 1.3 2003/08/19 19:28:34 tuexen Exp $
+ *  $Id: sctpinfoprinter.cc,v 1.4 2004/11/20 21:06:00 tuexen Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -112,7 +112,7 @@ void printControl(const msghdr* header)
    }
 
    cmsghdr* cmsg = CFirst(header);
-   if((cmsg != NULL) && (header->msg_controllen >= sizeof(cmsghdr))) {
+   if((cmsg != NULL) && (header->msg_controllen >= (socklen_t)sizeof(cmsghdr))) {
       if(ColorMode) {
          cout << "\x1b[" << getANSIColor(CONTROL_COLOR)
               << "mControl Data:" << endl;

@@ -1,20 +1,31 @@
 #! /bin/sh
 set -x
-mv -f admin/config.guess admin/config.guess.save
-mv -f admin/config.sub  admin/config.sub.save
+# if [ ! -d admin ] ; then
+#   mkdir admin
+# fi
+# if [ -e admin/config.guess ] ; then
+#    mv -f admin/config.guess admin/config.guess.save
+# fi
+# if [ -e admin/config.sub ] ; then
+#    mv -f admin/config.sub  admin/config.sub.save
+# fi
 if [ -e /usr/bin/glibtoolize ] ; then
-   glibtoolize --force
+    glibtoolize --force
 elif [ -e /usr/bin/libtoolize ] ; then
-   libtoolize --force
+    libtoolize --force
 else
-   mv -f admin/config.guess.save admin/config.guess
-   mv -f admin/config.sub.save  admin/config.sub
+#    if [ -e admin/config.guess.save ] ; then
+#       mv -f admin/config.guess.save admin/config.guess
+#    fi
+#    if [ -e admin/config.sub.save ] ; then
+#       mv -f admin/config.sub.save  admin/config.sub
+#    fi
    echo "ERROR: I cannot find libtoolize or glibtoolize!"
    exit 1
 fi
-rm -f admin/config.guess admin/config.sub
-mv -f admin/config.guess.save admin/config.guess
-mv -f admin/config.sub.save admin/config.sub
+# rm -f admin/config.guess admin/config.sub
+# mv -f admin/config.guess.save admin/config.guess
+# mv -f admin/config.sub.save admin/config.sub
 
 if [ -e /usr/local/share/aclocal ] ; then
    aclocal -I /usr/local/share/aclocal -I /usr/share/aclocal

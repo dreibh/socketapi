@@ -1,5 +1,5 @@
 /*
- *  $Id: ext_socket.h,v 1.21 2004/11/11 21:35:41 dreibh Exp $
+ *  $Id: ext_socket.h,v 1.22 2004/11/20 21:07:21 tuexen Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -59,10 +59,6 @@
 #define SOCKETAPI_MAJOR_VERSION  1
 #define SOCKETAPI_MINOR_VERSION  3000
 
-
-#if defined(__APPLE__)
-typedef int socklen_t;
-#endif
 
 
 
