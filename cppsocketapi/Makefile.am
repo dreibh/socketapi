@@ -20,16 +20,4 @@ noinst_PROGRAMS =
 #t1
 
 #t1_SOURCES =  t1.cc
-#t1_LDADD = libcppsctpsocket.a @socketapi_LIBS@ ../sctp/libsctp.la @glib_LIBS@ @thread_LIBS@
-
-#t2_SOURCES =  t2.cc
-#t2_LDADD = libcppsctpsocket.a @socketapi_LIBS@ ../sctp/libsctp.la @glib_LIBS@ @thread_LIBS@
-
-#t3_SOURCES =  t3.cc
-#t3_LDADD = libcppsctpsocket.a @socketapi_LIBS@ ../sctp/libsctp.la @glib_LIBS@ @thread_LIBS@
-
-#t4_SOURCES =  t4.cc
-#t4_LDADD = libcppsctpsocket.a @socketapi_LIBS@ ../sctp/libsctp.la @glib_LIBS@ @thread_LIBS@
-
-#t5_SOURCES =  t5.cc
-#t5_LDADD = libcppsctpsocket.a @socketapi_LIBS@ ../sctp/libsctp.la @glib_LIBS@ @thread_LIBS@
+#t1_LDADD = -lcppsctpsocket -lsctpsocket -lsctp @glib_LIBS@ @thread_LIBS@

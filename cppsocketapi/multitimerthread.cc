@@ -1,5 +1,5 @@
 /*
- *  $Id: multitimerthread.cc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: multitimerthread.cc,v 1.2 2003/06/24 08:51:00 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -107,10 +107,10 @@ template<const cardinal Timers> void MultiTimerThread<Timers>::run()
    card64 now           = getMicroTime();
    card64 nextTimeStamp = now;
    while(!Shutdown) {
+      synchronized();
 
       // ====== Check for parameter updates =================================
       if(ParametersUpdated) {
-         synchronized();
          ParametersUpdated = false;
 
          // ====== Update changed parameters ================================
@@ -134,18 +134,18 @@ template<const cardinal Timers> void MultiTimerThread<Timers>::run()
                calls[i] = 0;
             }
          }
-
-         // ====== Calculate next timestamp =================================
-         now  = getMicroTime();
-         nextTimeStamp = now + UpdateResolution;
-         for(cardinal i = 0;i < Timers;i++) {
-            if(parameters[i].Running == true) {
-               nextTimeStamp = min(nextTimeStamp,next[i]);
-            }
-         }
-         unsynchronized();
       }
 
+      // ====== Calculate next timestamp ====================================
+      now  = getMicroTime();
+      nextTimeStamp = now + UpdateResolution;
+      for(cardinal i = 0;i < Timers;i++) {
+         if(parameters[i].Running == true) {
+            nextTimeStamp = min(nextTimeStamp,next[i]);
+         }
+      }
+
+      unsynchronized();
 
       // ====== Delay for calculated time ===================================
       if(nextTimeStamp >= now) {
@@ -162,7 +162,6 @@ template<const cardinal Timers> void MultiTimerThread<Timers>::run()
                parameters[i].Running = false;
             }
             next[i] += parameters[i].Interval;
-
             timerEvent(i);
             calls[i]++;
          }
