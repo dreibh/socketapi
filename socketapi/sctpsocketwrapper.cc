@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.4 2003/06/01 22:45:45 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.5 2003/06/03 14:16:48 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -1743,7 +1743,7 @@ int ext_shutdown(int sockfd, int how)
             errno_return(-EOPNOTSUPP);
           break;
          case ExtSocketDescriptor::ESDT_System:
-            return(shutdown(tdSocket->Socket.SystemSocketID,how));
+            return(shutdown(tdSocket->Socket.SystemSocketID, how));
           break;
       }
       errno_return(-ENXIO);
@@ -1755,9 +1755,18 @@ int ext_shutdown(int sockfd, int how)
 // ###### connect() wrapper #################################################
 int ext_connect(int sockfd, const struct sockaddr* serv_addr, socklen_t addrlen)
 {
-   struct sockaddr_storage addressArray[1];
-   memcpy((char*)&addressArray[0], serv_addr, min(sizeof(sockaddr_storage), addrlen));
-   return(ext_connectx(sockfd, (sockaddr_storage*)&addressArray, 1, 0));
+   ExtSocketDescriptor* tdSocket = ExtSocketDescriptorMaster::getSocket(sockfd);
+   if(tdSocket != NULL) {
+      if(tdSocket->Type == ExtSocketDescriptor::ESDT_SCTP) {
+         struct sockaddr_storage addressArray[1];
+         memcpy((char*)&addressArray[0], serv_addr, min(sizeof(sockaddr_storage), addrlen));
+         return(ext_connectx(sockfd, (sockaddr_storage*)&addressArray, 1, 0));
+      }
+      else {
+         return(connect(tdSocket->Socket.SystemSocketID, serv_addr, addrlen));
+      }
+   }
+   errno_return(-EBADF);
 }
 
 
@@ -1814,7 +1823,7 @@ int ext_connectx(int                      sockfd,
             }
           break;
          case ExtSocketDescriptor::ESDT_System:
-            return(-EOPNOTSUPP);
+            errno_return(-EOPNOTSUPP);
           break;
       }
       errno_return(-ENXIO);

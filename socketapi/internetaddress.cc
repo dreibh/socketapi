@@ -1,5 +1,5 @@
 /*
- *  $Id: internetaddress.cc,v 1.1 2003/05/15 11:35:50 dreibh Exp $
+ *  $Id: internetaddress.cc,v 1.2 2003/06/03 14:16:48 dreibh Exp $
  *
   * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -508,12 +508,6 @@ cardinal InternetAddress::getSystemAddress(sockaddr*       buffer,
                address->sin_port = Port;
                memcpy((char*)&address->sin_addr.s_addr,(char*)&Host[6],4);
                return(sizeof(sockaddr_in));
-            }
-            else {
-#ifndef DISABLE_WARNINGS
-               cerr << "WARNING: InternetAddress::getSystemInternetAddress() - "
-                       "Requested AF_INET for IPv6 address?!" << endl;
-#endif
             }
          }
          else {
