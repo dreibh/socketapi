@@ -1,5 +1,5 @@
 /*
- *  $Id: tdsystem.h,v 1.4 2003/07/16 14:20:08 tuexen Exp $
+ *  $Id: tdsystem.h,v 1.5 2003/08/02 20:31:57 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -148,11 +148,11 @@ using namespace std;
 
 
 // ###### sctplib versions ###################################################
-#include <sctp.h>
-#define SCTPLIB_VERSION ((SCTP_MAJOR_VERSION << 16) | SCTP_MINOR_VERSION)
-#define SCTPLIB_1_0_0_PRE19 19
-#define SCTPLIB_1_0_0_PRE20 20
-#define SCTPLIB_1_0_0       0x10000
+//#include <sctp.h>
+//#define SCTPLIB_VERSION ((SCTP_MAJOR_VERSION << 16) | SCTP_MINOR_VERSION)
+//#define SCTPLIB_1_0_0_PRE19 19
+//#define SCTPLIB_1_0_0_PRE20 20
+//#define SCTPLIB_1_0_0       0x10000
 
 
 // ###### Type definitions ##################################################
