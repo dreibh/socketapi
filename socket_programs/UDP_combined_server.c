@@ -69,7 +69,7 @@ int main (int argc, const char * argv[]) {
     perror("listen call failed");
   if (ext_listen(echo_fd, backlog) < 0)
     perror("listen call failed");
-   
+
   /* disable all event notifications */
   bzero(&evnts, sizeof(evnts));
   evnts.sctp_data_io_event = 1;
@@ -84,7 +84,7 @@ int main (int argc, const char * argv[]) {
 
   if (ext_setsockopt(echo_fd,IPPROTO_SCTP, SCTP_EVENTS, &evnts, sizeof(evnts)) != 0)
     perror("setsockopt");
- 	
+
   /* set autoclose feature: close idle assocs after 5 seconds */
   idle_time = 5;
   if (ext_setsockopt(chargen_fd, IPPROTO_SCTP, SCTP_AUTOCLOSE, &idle_time, sizeof(idle_time)) < 0)
@@ -112,42 +112,48 @@ int main (int argc, const char * argv[]) {
 
     if (FD_ISSET(chargen_fd, &rset)) {
       remote_addr_size = sizeof(remote_addr);
-      bzero(&remote_addr, sizeof(remote_addr));    
+      bzero(&remote_addr, sizeof(remote_addr));
       if ((length =ext_recvfrom(chargen_fd, buffer, sizeof(buffer), 0, (struct sockaddr *) &remote_addr, &remote_addr_size)) < 0)
         perror("recvfrom call failed");
-      length = 1 + (random() % 512);
-      memset(buffer, 'A', length);
-      buffer[length-1] = '\n';
-      if (ext_sendto(chargen_fd, buffer, length, 0, (struct sockaddr *) &remote_addr, remote_addr_size) < 0)
-        perror("sendto call failed.\n");
+      else {
+        length = 1 + (random() % 512);
+        memset(buffer, 'A', length);
+        buffer[length-1] = '\n';
+        if (ext_sendto(chargen_fd, buffer, length, 0, (struct sockaddr *) &remote_addr, remote_addr_size) < 0)
+          perror("sendto call failed.\n");
+      }
     }
-    
+
     if (FD_ISSET(daytime_fd, &rset)) {
       remote_addr_size = sizeof(remote_addr);
-      bzero(&remote_addr, sizeof(remote_addr));    
+      bzero(&remote_addr, sizeof(remote_addr));
       if ((length =ext_recvfrom(daytime_fd, buffer, sizeof(buffer), 0, (struct sockaddr *) &remote_addr, &remote_addr_size)) < 0)
         perror("recvfrom call failed");
-      time(&now);
-      time_as_string = ctime(&now);
-      length = strlen(time_as_string);
-      if (ext_sendto(daytime_fd, time_as_string, length, 0, (struct sockaddr *) &remote_addr, remote_addr_size) < 0)
-        perror("sendto call failed.\n");
+      else {
+        time(&now);
+        time_as_string = ctime(&now);
+        length = strlen(time_as_string);
+        if (ext_sendto(daytime_fd, time_as_string, length, 0, (struct sockaddr *) &remote_addr, remote_addr_size) < 0)
+          perror("sendto call failed.\n");
+      }
     }
-   
+
     if (FD_ISSET(discard_fd, &rset)) {
       remote_addr_size = sizeof(remote_addr);
-      bzero(&remote_addr, sizeof(remote_addr));    
+      bzero(&remote_addr, sizeof(remote_addr));
       if ((length =ext_recvfrom(discard_fd, buffer, sizeof(buffer), 0, (struct sockaddr *) &remote_addr, &remote_addr_size)) < 0)
         perror("recvfrom call failed");
     }
-    
+
     if (FD_ISSET(echo_fd, &rset)) {
       remote_addr_size = sizeof(remote_addr);
-      bzero(&remote_addr, sizeof(remote_addr));    
+      bzero(&remote_addr, sizeof(remote_addr));
       if ((length =ext_recvfrom(echo_fd, buffer, sizeof(buffer), 0, (struct sockaddr *) &remote_addr, &remote_addr_size)) < 0)
         perror("recvfrom call failed");
-      if (ext_sendto(echo_fd, buffer, length, 0, (struct sockaddr *) &remote_addr, remote_addr_size) < 0)
-        perror("sendto call failed.\n");
+      else {
+        if (ext_sendto(echo_fd, buffer, length, 0, (struct sockaddr *) &remote_addr, remote_addr_size) < 0)
+          perror("sendto call failed.\n");
+      }
     }
   }
     

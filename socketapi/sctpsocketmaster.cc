@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.6 2003/06/06 23:30:28 dreibh Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.7 2003/06/13 13:14:34 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -1163,7 +1163,7 @@ void SCTPSocketMaster::addNotification(SCTPSocket*             socket,
 #endif
       association->UseCount++;
 #ifdef PRINT_ASSOC_USECOUNT
-      cout << association->UseCount << ". Notification Type = " << header->sn_type << endl;
+      cout << association->UseCount << ". Notification Type = " << notification.Content.sn_header.sn_type << endl;
 #endif
       if(socket->Flags & SCTPSocket::SSF_GlobalQueue) {
          socket->GlobalQueue.addNotification(notification);

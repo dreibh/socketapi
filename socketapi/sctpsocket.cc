@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.9 2003/06/08 15:15:12 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.10 2003/06/13 13:14:34 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -811,14 +811,17 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
                  << notification.Content.sn_header.sn_type << ") from association " << assocID << ", stream " << streamID << ":" << endl;
 #endif
 #ifdef PRINT_DATA
-            for(size_t i = 0;i < header->sn_length;i++) {
+            for(size_t i = 0;i < notification.Content.sn_header.sn_length;i++) {
                char str[32];
                snprintf((char*)&str,sizeof(str),"%02x ",((unsigned char*)&notification.Content)[i]);
                cout << str;
             }
             cout << endl;
 #endif
-         result = -EAGAIN;
+         result = getErrorCode(assocID);
+         if(result == 0) {
+            result = -EAGAIN;
+         }
       }
    }
 
@@ -1010,7 +1013,7 @@ int SCTPSocket::receiveFrom(char*              buffer,
                          NotificationFlags);
 
    // ====== Extract sender's addresses =====================================
-   if((result == 0) && (addressArray != NULL)) {
+   if((result >= 0) && (addressArray != NULL)) {
       unsigned int i;
       *addressArray = SocketAddress::newAddressList(notification.RemoteAddresses);
       if(*addressArray != NULL) {

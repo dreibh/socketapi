@@ -138,7 +138,7 @@ handle_chargen(void *arg)
             printf("%-6d: sending %u bytes.\n", fd, n);
             fflush(stdout);
         }
-        if (n != ext_write(fd, buffer, n)) {
+        if (n != length) {
             printf("%-6d: Writing %u bytes failed.\n", fd, n);
         }
         length = 1 + (random() % 512);
@@ -315,9 +315,5 @@ int main (int argc, char * argv[])
     pthread_join(daytime_tid, NULL);
     pthread_join(chargen_tid, NULL);
 
-    printf("Give the SCTP thread time to clean up ...");
-    fflush(stdout);
-    sleep(SECONDS_TO_CLEANUP);
-    printf(" the time is over now!\n");
     return 0;
 }

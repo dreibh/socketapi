@@ -79,7 +79,6 @@ static void handle_event(void *buf)
 
 static void echo(int fd, int socketModeUDP)
 {
-   ssize_t                  nr;
    struct  sctp_sndrcvinfo  sri;
    char                     buf[BUFLEN];
    size_t                   buflen;
@@ -123,8 +122,8 @@ static void echo(int fd, int socketModeUDP)
       received = sctp_recvmsg(fd, buf, &buflen, NULL, 0, &sri, &flags);
    }
 
-   if(nr < 0) {
-      perror("recvmsg");
+   if(received < 0) {
+      perror("sctp_recvmsg");
    }
    if(socketModeUDP == 0) {
       ext_close(fd);
