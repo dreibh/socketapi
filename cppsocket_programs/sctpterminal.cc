@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpterminal.cc,v 1.2 2003/06/01 22:45:45 dreibh Exp $
+ *  $Id: sctpterminal.cc,v 1.3 2003/06/02 17:29:42 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -383,7 +383,7 @@ int main(int argc, char** argv)
       else if(!(strncasecmp(argv[i],"-local=",7))) {
          if(localAddresses < SCTP_MAXADDRESSES) {
             localAddressArray[localAddresses] =
-               SocketAddress::createSocketAddress(SocketAddress::PF_HidePort,
+               SocketAddress::createSocketAddress(0,
                                                   &argv[i][7]);
             if(localAddressArray[localAddresses] == NULL) {
                cerr << "ERROR: Argument \"" << argv[i] << "\" specifies an invalid local address!" << endl;
@@ -445,6 +445,12 @@ int main(int argc, char** argv)
          exit(1);
       }
    }
+   for(cardinal i = 1;i < localAddresses;i++) {
+      localAddressArray[i]->setPort(localAddressArray[0]->getPort());
+   }
+   for(cardinal i = 1;i < remoteAddresses;i++) {
+      remoteAddressArray[i]->setPort(remoteAddressArray[0]->getPort());
+   }
    unreliable = min(outstreams,unreliable);
 
 
@@ -458,7 +464,7 @@ int main(int argc, char** argv)
       localAddressArray[i]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_HidePort);
       cout << "                       " << *(localAddressArray[i]) << endl;
    }
-   cout << "Remote Addresses:       " << *(remoteAddressArray[0]) << endl;
+   cout << "Remote Addresses:      " << *(remoteAddressArray[0]) << endl;
    for(cardinal i = 1;i < remoteAddresses;i++) {
       remoteAddressArray[i]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_HidePort);
       cout << "                       " << *(remoteAddressArray[i]) << endl;

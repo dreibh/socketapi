@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.3 2003/06/01 22:45:45 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.4 2003/06/02 17:29:42 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -353,15 +353,12 @@ void SCTPSocket::unbind(bool sendAbort)
 void SCTPSocket::listen(const unsigned int backlog)
 {
    SCTPSocketMaster::MasterInstance.lock();
-   Flags |= SSF_Listening;
-   /*
    if(backlog > 0) {
       Flags |= SSF_Listening;
    }
    else {
       Flags &= ~SSF_Listening;
    }
-   */
    SCTPSocketMaster::MasterInstance.unlock();
 }
 
