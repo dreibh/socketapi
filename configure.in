@@ -233,7 +233,7 @@ if test ! -f $ac_sctplib_libraries/libsctp.a ; then
 fi
 
 
-sctplib_LIBS="$ac_sctplib_libraries/libsctp.a"
+sctplib_LIBS="$ac_sctplib_libraries"
 AC_SUBST(sctplib_LIBS)
 sctplib_INCLUDES="$ac_sctplib_includes"
 AC_SUBST(sctplib_INCLUDES)
@@ -339,11 +339,11 @@ AC_SUBST(sctplib_INCLUDES)
 
 
 
-socketapi_LIBS="../socketapi/libsctpsocket.la"
-AC_SUBST(socketapi_LIBS)
+#socketapi_LIBS="../socketapi/libsctpsocket.la"
+#AC_SUBST(socketapi_LIBS)
 
-cppsocketapi_LIBS="../cppsocketapi/libcppsctpsocket.la"
-AC_SUBST(cppsocketapi_LIBS)
+#cppsocketapi_LIBS="../cppsocketapi/libcppsctpsocket.la"
+#AC_SUBST(cppsocketapi_LIBS)
 
 
 SOCKETAPI_CURRENT=1
