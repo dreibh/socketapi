@@ -1,0 +1,8 @@
+.deps
+.libs
+Makefile
+Makefile.in
+sctpmultiserver
+sctpportscanner
+sctpterminal
+sctptftp

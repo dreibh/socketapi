@@ -1,0 +1,9 @@
+.deps
+.libs
+combined_server_1to1
+combined_server_1toM
+idexample1to1
+idexample1toM
+newexample1to1
+Makefile
+Makefile.in

@@ -1,0 +1,9 @@
+config.h
+config.log
+config.status
+configure
+libtool
+Makefile
+Makefile.in
+*.tar.gz
+stamp-h1
