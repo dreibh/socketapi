@@ -1,5 +1,5 @@
 /*
- *  $Id: tdsocket.h,v 1.3 2003/06/04 17:21:00 dreibh Exp $
+ *  $Id: tdsocket.h,v 1.4 2003/08/04 11:04:54 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -784,10 +784,8 @@ O     * Bind socket to one or more given addresses. If no addresses are given,
 
 
    // ====== Private data ===================================================
-   protected:
+   private:
    friend class TrafficShaper;
-
-
    void init();
    bool setTypeOfService(const card8 trafficClass);
    ssize_t recvFrom(int              fd,
@@ -799,6 +797,9 @@ O     * Bind socket to one or more given addresses. If no addresses are given,
    bool multicastMembership(const SocketAddress& address,
                             const char*          interface,
                             const bool           add);
+   void packSocketAddressArray(const sockaddr_storage* addrArray,
+                               const size_t            addrs,
+                               sockaddr*               packedArray);
 
 
    card64    BytesSent;

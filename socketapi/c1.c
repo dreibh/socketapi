@@ -40,7 +40,7 @@ print_addresses(struct sockaddr_storage *addrs, int num)
             printf("Unknown family %d\n", fam);
             break;
       }
-      sa = (struct sockaddr *)((unsigned int)sa + sizeof(struct sockaddr_storage));
+      sa = (struct sockaddr *)((unsigned int)sa + incr);
    }
 }
 
@@ -212,7 +212,7 @@ int main(int argc, char **argv)
    local_addr.sin_port        = htons(atoi(argv[1]));
    if (ext_bind(fd, (struct sockaddr *) &local_addr, sizeof(local_addr)) != 0)
       perror("bind");
-      
+
    remote_addr.sin_family      = AF_INET;
    remote_addr.sin_port        = htons(atoi(argv[3]));
 #ifdef HAVE_SIN_LEN

@@ -114,7 +114,7 @@ sctp_print_notification(char *notify_buf)
    }
 }
 
-int main(int argc, char **argv) 
+int main(int argc, char **argv)
 {
    int fd, n, addr_len, len, msg_flags, close_time;
    size_t buffer_size;
@@ -197,7 +197,7 @@ int main(int argc, char **argv)
          printf("Reading from network.\n");
          addr_len = sizeof(struct sockaddr_in);
          buffer_size = sizeof(buffer);
-         if ((len = sctp_recvmsg(fd, (void *) buffer, &buffer_size , (struct sockaddr *)&remote_addr, &addr_len, &sri, &msg_flags)) < 0)
+         if ((len = sctp_recvmsg(fd, (void *) buffer, buffer_size , (struct sockaddr *)&remote_addr, &addr_len, &sri, &msg_flags)) < 0)
             perror("sctp_recvmsg");
          else {
             if(msg_flags & MSG_NOTIFICATION) {

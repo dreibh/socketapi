@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.16 2003/07/31 09:29:36 tuexen Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.17 2003/08/04 11:04:54 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -99,6 +99,73 @@ inline static void SAFE_FD_ZERO(fd_set* fdset)
       FD_ZERO(fdset);
    }
 }
+
+
+// ###### Unpack sockaddr blocks to sockaddr_storage array ##################
+void unpack_sockaddr(sockaddr* addrArray, const size_t addrs, sockaddr_storage* newArray)
+{
+   for(size_t i = 0;i < addrs;i++) {
+      switch(addrArray->sa_family) {
+         case AF_INET:
+            memcpy((void*)&newArray[i], addrArray, sizeof(struct sockaddr_in));
+            addrArray = (sockaddr*)((long)addrArray + (long)sizeof(sockaddr_in));
+          break;
+         case AF_INET6:
+            memcpy((void*)&newArray[i], addrArray, sizeof(struct sockaddr_in6));
+            addrArray = (sockaddr*)((long)addrArray + (long)sizeof(sockaddr_in6));
+          break;
+         default:
+            cerr << "ERROR: unpack_sockaddr() - Unknown address type #" << addrArray->sa_family << "!" << endl;
+            cerr << "IMPORTANT NOTE:" << endl
+                 << "The standardizers have changed the socket API; the sockaddr_storage array has been replaced by a variable-sized sockaddr_in/in6 blocks. Do not blame us for this change, send your complaints to the standardizers at sctp-impl@external.cisco.com!" << endl;
+            exit(1);
+          break;
+      }
+   }
+}
+
+
+// ###### Pack sockaddr_storage array to sockaddr blocks ####################
+sockaddr* pack_sockaddr_storage(const sockaddr_storage* addrArray, const size_t addrs)
+{
+   size_t required = 0;
+   for(size_t i = 0;i < addrs;i++) {
+      switch(((sockaddr*)&addrArray[i])->sa_family) {
+         case AF_INET:
+            required += sizeof(struct sockaddr_in);
+          break;
+         case AF_INET6:
+            required += sizeof(struct sockaddr_in6);
+          break;
+         default:
+            cerr << "ERROR: pack_sockaddr_storage() - Unknown address type #" << ((sockaddr*)&addrArray[i])->sa_family << "!" << endl;
+            cerr << "IMPORTANT NOTE:" << endl
+                 << "The standardizers have changed the socket API; the sockaddr_storage array has been replaced by a variable-sized sockaddr_in/in6 blocks. Do not blame us for this change, send your complaints to the standardizers at sctp-impl@external.cisco.com!" << endl;
+            exit(1);
+          break;
+      }
+   }
+
+   sockaddr* newArray = NULL;
+   if(required > 0) {
+      newArray = (sockaddr*)new char[required];
+      sockaddr* a = newArray;
+      for(size_t i = 0;i < addrs;i++) {
+         switch(((sockaddr*)&addrArray[i])->sa_family) {
+            case AF_INET:
+               memcpy((void*)a, (void*)&addrArray[i], sizeof(struct sockaddr_in));
+               a = (sockaddr*)((long)a + (long)sizeof(sockaddr_in));
+             break;
+            case AF_INET6:
+               memcpy((void*)a, (void*)&addrArray[i], sizeof(struct sockaddr_in6));
+               a = (sockaddr*)((long)a + (long)sizeof(sockaddr_in6));
+             break;
+         }
+      }
+   }
+   return(newArray);
+}
+
 
 
 // ###### Constructor #######################################################
@@ -525,7 +592,7 @@ int ext_bind(int sockfd, struct sockaddr* my_addr, socklen_t addrlen)
    if(tdSocket != NULL) {
       switch(tdSocket->Type) {
          case ExtSocketDescriptor::ESDT_SCTP:
-             return(ext_bindx(sockfd,(sockaddr_storage*)my_addr,1,SCTP_BINDX_ADD_ADDR));
+             return(ext_bindx(sockfd,my_addr,1,SCTP_BINDX_ADD_ADDR));
           break;
          case ExtSocketDescriptor::ESDT_System:
             return(bind(tdSocket->Socket.SystemSocketID,(sockaddr*)my_addr,addrlen));
@@ -540,11 +607,14 @@ int ext_bind(int sockfd, struct sockaddr* my_addr, socklen_t addrlen)
 
 
 // ###### ext_bind() wrapper ################################################
-int ext_bindx(int                      sockfd,
-              struct sockaddr_storage* addrs,
-              int                      addrcnt,
-              int                      flags)
+int ext_bindx(int              sockfd,
+              struct sockaddr* packedAddrs,
+              int              addrcnt,
+              int              flags)
 {
+   sockaddr_storage addrs[addrcnt];
+   unpack_sockaddr(packedAddrs, addrcnt, (sockaddr_storage*)addrs);
+
    ExtSocketDescriptor* tdSocket = ExtSocketDescriptorMaster::getSocket(sockfd);
    if(tdSocket != NULL) {
       switch(tdSocket->Type) {
@@ -1749,7 +1819,7 @@ int ext_connect(int sockfd, const struct sockaddr* serv_addr, socklen_t addrlen)
       if(tdSocket->Type == ExtSocketDescriptor::ESDT_SCTP) {
          struct sockaddr_storage addressArray[1];
          memcpy((char*)&addressArray[0], serv_addr, min(sizeof(sockaddr_storage), addrlen));
-         return(ext_connectx(sockfd, (sockaddr_storage*)&addressArray, 1));
+         return(ext_connectx(sockfd, (sockaddr*)&addressArray, 1));
       }
       else {
          return(connect(tdSocket->Socket.SystemSocketID, serv_addr, addrlen));
@@ -1760,10 +1830,13 @@ int ext_connect(int sockfd, const struct sockaddr* serv_addr, socklen_t addrlen)
 
 
 // ###### connectx() wrapper ################################################
-int ext_connectx(int                      sockfd,
-                 struct sockaddr_storage* addrs,
-                 int                      addrcnt)
+int ext_connectx(int              sockfd,
+                 struct sockaddr* packedAddrs,
+                 int              addrcnt)
 {
+   sockaddr_storage addrs[addrcnt];
+   unpack_sockaddr(packedAddrs, addrcnt, (sockaddr_storage*)addrs);
+
    ExtSocketDescriptor* tdSocket = ExtSocketDescriptorMaster::getSocket(sockfd);
    if(tdSocket != NULL) {
       switch(tdSocket->Type) {
@@ -2181,8 +2254,10 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                   flags |= MSG_DONTWAIT;
                }
                if(msg->msg_name != NULL) {
+puts("DEST0");
                   SocketAddress* destination = SocketAddress::createSocketAddress(
                                                   0, (sockaddr*)msg->msg_name,msg->msg_namelen);
+puts("DEST1");
                   if(destination == NULL) {
                      errno_return(-EADDRNOTAVAIL);
                   }
@@ -2855,7 +2930,7 @@ int sctp_isavailable()
 
 // ###### Peel association off ##############################################
 int sctp_peeloff(int              sockfd,
-                 sctp_assoc_t*    id,
+                 sctp_assoc_t     id,
                  struct sockaddr* addr,
                  socklen_t*       addrlen)
 {
@@ -2867,10 +2942,7 @@ int sctp_peeloff(int              sockfd,
                SCTPAssociation* association = NULL;
                if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
                   if(tdSocket->Socket.SCTPSocketDesc.Type == SOCK_DGRAM) {
-                     if(id != NULL) {
-                        association = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->peelOff(*id);
-                     }
-                     else if((addr != NULL) && (addrlen != NULL)) {
+                     if((addr != NULL) && (addrlen != NULL)) {
                         SocketAddress* address = SocketAddress::createSocketAddress(
                                                     0,
                                                     (sockaddr*)addr,
@@ -2882,6 +2954,9 @@ int sctp_peeloff(int              sockfd,
                         else {
                            errno_return(-EINVAL);
                         }
+                     }
+                     else {
+                        association = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->peelOff(id);
                      }
                   }
                }
@@ -2910,12 +2985,14 @@ int sctp_peeloff(int              sockfd,
 
 
 // ###### sctp_getpaddrs() implementation ###################################
-int sctp_getlpaddrs(int                       sockfd,
-                    sctp_assoc_t              id,
-                    struct sockaddr_storage** addrs,
-                    const bool                peerAddresses)
+int sctp_getlpaddrs(int               sockfd,
+                    sctp_assoc_t      id,
+                    struct sockaddr** packedAddrs,
+                    const bool        peerAddresses)
 {
-   *addrs = NULL;
+   sockaddr_storage* addrs;
+
+   *packedAddrs = NULL;
    ExtSocketDescriptor* tdSocket = ExtSocketDescriptorMaster::getSocket(sockfd);
    if(tdSocket != NULL) {
       switch(tdSocket->Type) {
@@ -2961,9 +3038,9 @@ int sctp_getlpaddrs(int                       sockfd,
                   }
                   if(count > 0) {
                      result = (int)count;
-                     *addrs = new sockaddr_storage[count];
-                     if(*addrs != NULL) {
-                        sockaddr* ptr = (sockaddr*)*addrs;
+                     addrs = new sockaddr_storage[count];
+                     if(addrs != NULL) {
+                        sockaddr* ptr = (sockaddr*)addrs;
                         for(cardinal i = 0;i < count;i++) {
                            int family = addressArray[i]->getFamily();
                            if(family == AF_INET6) {
@@ -2979,8 +3056,8 @@ int sctp_getlpaddrs(int                       sockfd,
                                  sizeof(sockaddr_storage),
                                  family) <= 0) {
                               result = -ENAMETOOLONG;
-                              delete *addrs;
-                              *addrs = NULL;
+                              delete addrs;
+                              addrs = NULL;
                               break;
                            }
                            ptr = (sockaddr*)((long)ptr + (long)sizeof(sockaddr_storage));
@@ -2993,6 +3070,10 @@ int sctp_getlpaddrs(int                       sockfd,
                }
 
                SocketAddress::deleteAddressList(addressArray);
+               if(addrs) {
+                  *packedAddrs = pack_sockaddr_storage(addrs, result);
+                  delete addrs;
+               }
                errno_return(result);
             }
           break;
@@ -3007,28 +3088,28 @@ int sctp_getlpaddrs(int                       sockfd,
 
 
 // ###### sctp_getpaddrs() implementation ###################################
-int sctp_getpaddrs(int sockfd, sctp_assoc_t id, struct sockaddr_storage** addrs)
+int sctp_getpaddrs(int sockfd, sctp_assoc_t id, struct sockaddr** addrs)
 {
    return(sctp_getlpaddrs(sockfd,id,addrs,true));
 }
 
 
 // ###### sctp_freepaddrs() #################################################
-void sctp_freepaddrs(struct sockaddr_storage* addrs)
+void sctp_freepaddrs(struct sockaddr* addrs)
 {
    delete [] addrs;
 }
 
 
 // ###### sctp_getladdrs() implementation ###################################
-int sctp_getladdrs(int sockfd, sctp_assoc_t id, struct sockaddr_storage** addrs)
+int sctp_getladdrs(int sockfd, sctp_assoc_t id, struct sockaddr** addrs)
 {
    return(sctp_getlpaddrs(sockfd,id,addrs,false));
 }
 
 
 // ###### sctp_freeladdrs() #################################################
-void sctp_freeladdrs(struct sockaddr_storage* addrs)
+void sctp_freeladdrs(struct sockaddr* addrs)
 {
    delete [] addrs;
 }
@@ -3110,16 +3191,13 @@ int sctp_sendmsg(int              s,
 // ###### sctp_recvmsg() implementation #####################################
 int sctp_recvmsg(int                     s,
                  void*                   data,
-                 size_t*                 len,
+                 size_t                  len,
                  struct sockaddr*        from,
                  socklen_t*              fromlen,
                  struct sctp_sndrcvinfo* sinfo,
                  int*                    msg_flags)
 {
-   if(len == NULL) {
-      errno_return(-EINVAL);
-   }
-   struct iovec    iov = { (char*)data, *len };
+   struct iovec    iov = { (char*)data, len };
    struct cmsghdr* cmsg;
    size_t          cmsglen = CSpace(sizeof(struct sctp_sndrcvinfo));
    char            cbuf[CSpace(sizeof(struct sctp_sndrcvinfo))];
@@ -3138,7 +3216,6 @@ int sctp_recvmsg(int                     s,
 
    cc = ext_recvmsg(s, &msg, 0);
 
-   *len = iov.iov_len;
    if((cc > 0) && (msg.msg_control != NULL) && (msg.msg_controllen > 0)) {
       cmsg = (struct cmsghdr*)CFirst(&msg);
       if((sinfo != NULL) &&
@@ -3155,7 +3232,6 @@ int sctp_recvmsg(int                     s,
    if(fromlen != NULL) {
       *fromlen = msg.msg_namelen;
    }
-   *len = cc;
    return(cc);
 }
 

@@ -25,3 +25,4 @@ ln -s ../socketapi/tools.h .
 ln -s ../socketapi/tools.icc .
 ln -s ../socketapi/unixaddress.h .
 ln -s ../socketapi/unixaddress.icc .
+ln -s ../socketapi/tdin6.h .

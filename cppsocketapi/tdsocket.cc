@@ -1,5 +1,5 @@
 /*
- *  $Id: tdsocket.cc,v 1.5 2003/07/31 09:12:19 tuexen Exp $
+ *  $Id: tdsocket.cc,v 1.6 2003/08/04 11:04:54 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2001 by Thomas Dreibholz
@@ -36,9 +36,6 @@
 #include "tdsocket.h"
 #include "randomizer.h"
 #include "tdmessage.h"
-
-
-//#include "tdin6.h"
 
 
 #include <netdb.h>
@@ -100,6 +97,33 @@ Socket::Socket(const integer communicationDomain,
 Socket::~Socket()
 {
    close();
+}
+
+
+// ###### Pack sockaddr_storage array to sockaddr_in/in6 blocks #############
+void Socket::packSocketAddressArray(const sockaddr_storage* addrArray,
+                                    const size_t            addrs,
+                                    sockaddr*               packedArray)
+{
+   sockaddr* a = packedArray;
+   for(size_t i = 0;i < addrs;i++) {
+      switch(((sockaddr*)&addrArray[i])->sa_family) {
+         case AF_INET:
+            memcpy((void*)a, (void*)&addrArray[i], sizeof(struct sockaddr_in));
+            a = (sockaddr*)((long)a + (long)sizeof(sockaddr_in));
+          break;
+         case AF_INET6:
+            memcpy((void*)a, (void*)&addrArray[i], sizeof(struct sockaddr_in6));
+            a = (sockaddr*)((long)a + (long)sizeof(sockaddr_in6));
+          break;
+         default:
+            cerr << "ERROR: pack_sockaddr_storage() - Unknown address type #" << ((sockaddr*)&addrArray[i])->sa_family << "!" << endl;
+            cerr << "IMPORTANT NOTE:" << endl
+                 << "The standardizers have changed the socket API; the sockaddr_storage array has been replaced by a variable-sized sockaddr_in/in6 blocks. Do not blame us for this change, send your complaints to the standardizers at sctp-impl@external.cisco.com!" << endl;
+            exit(1);
+          break;
+      }
+   }
 }
 
 
@@ -292,9 +316,12 @@ bool Socket::bindx(const SocketAddress** addressArray,
                address2->sin6_port = socketAddress->sin6_port;
             }
          }
+         sockaddr_storage packedSocketAddressArray[addresses];
+         packSocketAddressArray(storage, addresses, (sockaddr*)&packedSocketAddressArray);
          result = ext_bindx(SocketDescriptor,
-                           (sockaddr_storage*)&storage[0],
-                           addresses, (int)flags);
+                            (sockaddr*)&packedSocketAddressArray,
+                            addresses,
+                            (int)flags);
          if(result == 0) {
             break;
          }
@@ -308,9 +335,12 @@ bool Socket::bindx(const SocketAddress** addressArray,
       if(result != 0) {
          for(cardinal i = Socket::MinAutoSelectPort;i < Socket::MaxAutoSelectPort;i += 2) {
             socketAddress->sin6_port = (card16)htons(i);
+            sockaddr_storage packedSocketAddressArray[addresses];
+            packSocketAddressArray(storage, addresses, (sockaddr*)&packedSocketAddressArray);
             result = ext_bindx(SocketDescriptor,
-                              (sockaddr_storage*)&storage[0],
-                              addresses, (int)flags);
+                               (sockaddr*)&packedSocketAddressArray,
+                               addresses,
+                               (int)flags);
             for(cardinal n = 1;n < addresses;n++) {
                sockaddr_in6* address2 = (sockaddr_in6*)&storage[n];
                if((address2->sin6_family == AF_INET6) ||
@@ -331,9 +361,12 @@ bool Socket::bindx(const SocketAddress** addressArray,
       }
    }
    else {
+      sockaddr_storage packedSocketAddressArray[addresses];
+      packSocketAddressArray(storage, addresses, (sockaddr*)&packedSocketAddressArray);
       result = ext_bindx(SocketDescriptor,
-                        (sockaddr_storage*)&storage[0],
-                        addresses, (int)flags);
+                         (sockaddr*)&packedSocketAddressArray,
+                         addresses,
+                         (int)flags);
       if(result < 0) {
          LastError = errno;
       }
@@ -622,8 +655,10 @@ bool Socket::connectx(const SocketAddress** addressArray,
    Destination = NULL;
 
    // ====== Connect ========================================================
+   sockaddr_storage packedSocketAddressArray[addresses];
+   packSocketAddressArray(socketAddressArray, addresses, (sockaddr*)&packedSocketAddressArray);
    int result = ext_connectx(SocketDescriptor,
-                             (sockaddr_storage*)&socketAddressArray,
+                             (sockaddr*)&packedSocketAddressArray,
                              addresses);
    if(result != 0) {
       LastError = errno;

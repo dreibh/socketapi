@@ -40,7 +40,7 @@ print_addresses(struct sockaddr_storage *addrs, int num)
             printf("Unknown family %d\n", fam);
             break;
       }
-      sa = (struct sockaddr *)((unsigned int)sa + sizeof(struct sockaddr_storage));
+      sa = (struct sockaddr *)((unsigned int)sa + incr);
    }
 }
 

@@ -1,5 +1,5 @@
 /*
- *  $Id: ext_socket.h,v 1.11 2003/07/16 14:29:33 tuexen Exp $
+ *  $Id: ext_socket.h,v 1.12 2003/08/04 11:04:54 dreibh Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -54,7 +54,7 @@
 
 
 #define SOCKETAPI_MAJOR_VERSION  1
-#define SOCKETAPI_MINOR_VERSION  2100
+#define SOCKETAPI_MINOR_VERSION  3000
 
 
 #if defined(__APPLE__)
@@ -412,24 +412,24 @@ int ext_recvmsg2(int sockfd, struct msghdr* msg, int flags,
 #define SCTP_BINDX_ADD_ADDR 1
 #define SCTP_BINDX_REM_ADDR 2
 
-int ext_bindx(int                     sockfd,
-             struct sockaddr_storage* addrs,
-             int                      addrcnt,
-             int                      flags);
+int ext_bindx(int             sockfd,
+             struct sockaddr* addrs,
+             int              addrcnt,
+             int              flags);
 #define sctp_bindx ext_bindx
 
-int ext_connectx(int                      sockfd,
-                 struct sockaddr_storage* addrs,
-                 int                      addrcnt);
+int ext_connectx(int              sockfd,
+                 struct sockaddr* addrs,
+                 int              addrcnt);
 #define sctp_connectx ext_connectx
 
-int sctp_peeloff(int sockfd, sctp_assoc_t* id, struct sockaddr* addr, socklen_t* addrlen);
+int sctp_peeloff(int sockfd, sctp_assoc_t id, struct sockaddr* addr, socklen_t* addrlen);
 
-int sctp_getpaddrs(int sockfd, sctp_assoc_t id, struct sockaddr_storage** addrs);
-void sctp_freepaddrs(struct sockaddr_storage* addrs);
+int sctp_getpaddrs(int sockfd, sctp_assoc_t id, struct sockaddr** addrs);
+void sctp_freepaddrs(struct sockaddr* addrs);
 
-int sctp_getladdrs(int sockfd, sctp_assoc_t id, struct sockaddr_storage** addrs);
-void sctp_freeladdrs(struct sockaddr_storage* addrs);
+int sctp_getladdrs(int sockfd, sctp_assoc_t id, struct sockaddr** addrs);
+void sctp_freeladdrs(struct sockaddr* addrs);
 
 int sctp_opt_info(int sd, sctp_assoc_t assocID, int opt, void* arg, socklen_t* size);
 
@@ -445,7 +445,7 @@ int sctp_sendmsg(int              s,
                  uint32_t         context);
 int sctp_recvmsg(int                     s,
                  void*                   msg,
-                 size_t*                 len,
+                 size_t                  len,
                  struct sockaddr*        from,
                  socklen_t*              fromlen,
                  struct sctp_sndrcvinfo* sinfo,
