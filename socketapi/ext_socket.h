@@ -1,5 +1,5 @@
 /*
- *  $Id: ext_socket.h,v 1.13 2003/08/11 18:12:41 tuexen Exp $
+ *  $Id: ext_socket.h,v 1.14 2003/08/15 15:14:18 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -426,23 +426,23 @@ void sctp_freeladdrs(struct sockaddr* addrs);
 
 int sctp_opt_info(int sd, sctp_assoc_t assocID, int opt, void* arg, socklen_t* size);
 
-int sctp_sendmsg(int              s,
-                 void*            data,
-                 size_t           len,
-                 struct sockaddr* to,
-                 socklen_t        tolen,
-                 uint32_t         ppid,
-                 uint32_t         flags,
-                 uint16_t         stream_no,
-                 uint32_t         timetolive,
-                 uint32_t         context);
-int sctp_recvmsg(int                     s,
-                 void*                   msg,
-                 size_t                  len,
-                 struct sockaddr*        from,
-                 socklen_t*              fromlen,
-                 struct sctp_sndrcvinfo* sinfo,
-                 int*                    msg_flags);
+ssize_t sctp_sendmsg(int              s,
+                     void*            data,
+                     size_t           len,
+                     struct sockaddr* to,
+                     socklen_t        tolen,
+                     uint32_t         ppid,
+                     uint32_t         flags,
+                     uint16_t         stream_no,
+                     uint32_t         timetolive,
+                     uint32_t         context);
+ssize_t sctp_recvmsg(int                     s,
+                     void*                   msg,
+                     size_t                  len,
+                     struct sockaddr*        from,
+                     socklen_t*              fromlen,
+                     struct sctp_sndrcvinfo* sinfo,
+                     int*                    msg_flags);
 
 
 /**
