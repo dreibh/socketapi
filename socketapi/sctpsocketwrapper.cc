@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.19 2003/08/12 09:15:24 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.20 2003/08/15 15:44:22 tuexen Exp $
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
@@ -3141,16 +3141,16 @@ int sctp_opt_info(int sd, sctp_assoc_t assocID,
 
 
 // ###### sctp_sendmsg() implementation #####################################
-int sctp_sendmsg(int              s,
-                 void*            data,
-                 size_t           len,
-                 struct sockaddr* to,
-                 socklen_t        tolen,
-                 uint32_t         ppid,
-                 uint32_t         flags,
-                 uint16_t         stream_no,
-                 uint32_t         timetolive,
-                 uint32_t         context)
+ssize_t sctp_sendmsg(int              s,
+                     void*            data,
+                     size_t           len,
+                     struct sockaddr* to,
+                     socklen_t        tolen,
+                     uint32_t         ppid,
+                     uint32_t         flags,
+                     uint16_t         stream_no,
+                     uint32_t         timetolive,
+                     uint32_t         context)
 {
    sctp_sndrcvinfo* sri;
    struct iovec     iov = { (char*)data, len };
@@ -3190,13 +3190,13 @@ int sctp_sendmsg(int              s,
 
 
 // ###### sctp_recvmsg() implementation #####################################
-int sctp_recvmsg(int                     s,
-                 void*                   data,
-                 size_t                  len,
-                 struct sockaddr*        from,
-                 socklen_t*              fromlen,
-                 struct sctp_sndrcvinfo* sinfo,
-                 int*                    msg_flags)
+ssize_t sctp_recvmsg(int                     s,
+                     void*                   data,
+                     size_t                  len,
+                     struct sockaddr*        from,
+                     socklen_t*              fromlen,
+                     struct sctp_sndrcvinfo* sinfo,
+                     int*                    msg_flags)
 {
    struct iovec    iov = { (char*)data, len };
    struct cmsghdr* cmsg;
