@@ -79,7 +79,7 @@ handle_event(void *buf)
       break;
     case SCTP_PEER_ADDR_CHANGE:
       spc = &snp->sn_paddr_change;
-      if (((struct sockaddr_in *)&spc->spc_aaddr)->sin_family == AF_INET) {
+      if (spc->spc_aaddr.ss_family == AF_INET) {
         sin = (struct sockaddr_in *)&spc->spc_aaddr;
         ap = inet_ntop(AF_INET, &sin->sin_addr, addrbuf, INET6_ADDRSTRLEN);
       } else {
@@ -90,7 +90,7 @@ handle_event(void *buf)
       break;
     case SCTP_REMOTE_ERROR:
       sre = &snp->sn_remote_error;
-      printf("^^^ remote_error: err=%hu\n", ntohs(sre->sre_error));
+      printf("^^^ remote_error: err=%hu len=%hu\n", ntohs(sre->sre_error), ntohs(sre->sre_length));
       break;
     case SCTP_SHUTDOWN_EVENT:
       printf("^^^ shutdown event\n");
@@ -102,27 +102,33 @@ handle_event(void *buf)
 }
 
 static void *
-my_recvmsg(int fd, struct msghdr *msg, void *buf, size_t *buflen, ssize_t *nrp, size_t cmsglen)
+mysctp_recvmsg(int fd, struct msghdr *msg, void *buf, size_t *buflen, ssize_t *nrp, size_t cmsglen)
 {
-  ssize_t nr = 0;
+  ssize_t nr = 0, nnr = 0;
   struct iovec iov[1];
 
   *nrp = 0;
   iov->iov_base = buf;
+  iov->iov_len = *buflen;
   msg->msg_iov = iov;
   msg->msg_iovlen = 1;
 
   for (;;) {
-    msg->msg_flags = 0;
-    msg->msg_iov->iov_len = *buflen;
+#ifndef MSG_XPG4_2
+#define MSG_XPG4_2 0
+#endif
+
+    msg->msg_flags = MSG_XPG4_2;
     msg->msg_controllen = cmsglen;
 
-    nr += ext_recvmsg(fd, msg, 0);
-    if (nr <= 0) {
+    nnr = ext_recvmsg(fd, msg, 0);
+    if (nnr <= 0) {
       /* EOF or error */
       *nrp = nr;
       return (NULL);
     }
+
+    nr += nnr;
 
     if ((msg->msg_flags & MSG_EOR) != 0) {
       *nrp = nr;
@@ -146,7 +152,7 @@ my_recvmsg(int fd, struct msghdr *msg, void *buf, size_t *buflen, ssize_t *nrp, 
 }
 
 static void
-echo(int fd, int socketModeUDP)
+echo(int fd, int socketModeone_to_many)
 {
   ssize_t nr;
   struct sctp_sndrcvinfo *sri;
@@ -174,7 +180,7 @@ echo(int fd, int socketModeUDP)
   sri = (struct sctp_sndrcvinfo *)(cmsg + 1);
 
   /* Wait for something to echo */
-  while ((buf = my_recvmsg(fd, msg, buf, &buflen, &nr, cmsglen))) {
+  while ((buf = mysctp_recvmsg(fd, msg, buf, &buflen, &nr, cmsglen))) {
 
     /* Intercept notifications here */
     if (msg->msg_flags & MSG_NOTIFICATION) {
@@ -188,11 +194,10 @@ echo(int fd, int socketModeUDP)
     msg->msg_iovlen = 1;
   
     printf("got %u bytes on stream %hu:\n", nr, sri->sinfo_stream);
-    fflush(stdout);
     write(0, buf, nr);
   
     /* Echo it back */
-    msg->msg_flags = 0;
+    msg->msg_flags = MSG_XPG4_2;
     if (ext_sendmsg(fd, msg, 0) < 0) {
       perror("sendmsg");
       exit(1);
@@ -202,14 +207,14 @@ echo(int fd, int socketModeUDP)
   if (nr < 0) {
     perror("recvmsg");
   }
-	if(socketModeUDP == 0)
+	if(socketModeone_to_many == 0)
 	  ext_close(fd);
 }
 
 int main()
 {
   int lfd, cfd;
-  struct sctp_event_subscribe events;
+  struct sctp_event_subscribe event;
   struct sockaddr_in sin[1];
 
   if ((lfd = ext_socket(AF_INET, SOCK_STREAM, IPPROTO_SCTP)) == -1) {
@@ -237,9 +242,17 @@ int main()
       exit(1);
     }
 
-    /* Enable ancillary data and notifications */
-    memset((char*)&events,1,sizeof(events));
-    if (ext_setsockopt(cfd, IPPROTO_SCTP, SCTP_EVENTS, &events, sizeof(events)) < 0) {
+    /* Enable all events */
+   	event.sctp_data_io_event = 1;
+   	event.sctp_association_event = 1;
+    event.sctp_address_event = 1;
+    event.sctp_send_failure_event = 1;
+    event.sctp_peer_error_event = 1;
+    event.sctp_shutdown_event = 1;
+    event.sctp_partial_delivery_event = 1;
+    event.sctp_adaption_layer_event = 1;
+
+    if (ext_setsockopt(cfd, IPPROTO_SCTP, SCTP_EVENTS, &event, sizeof(event)) < 0) {
       perror("setsockopt SCTP_EVENTS");
       exit(1);
     }
