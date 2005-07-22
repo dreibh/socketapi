@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.cc,v 1.11 2004/07/30 11:03:43 dreibh Exp $
+ *  $Id: sctpassociation.cc,v 1.12 2005/07/22 14:30:13 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -73,6 +73,7 @@ SCTPAssociation::SCTPAssociation(SCTPSocket*        socket,
    FirstPreEstablishmentPacket   = NULL;
    LastPreEstablishmentPacket    = NULL;
    PreEstablishmentAddressList   = NULL;
+   PeeledOff                     = false;
 
    EstablishCondition.setName("SCTPAssociation::EstablishCondition");
    ShutdownCompleteCondition.setName("SCTPAssociation::ShutdownCompleteCondition");

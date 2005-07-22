@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.31 2005/03/08 12:50:30 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.32 2005/07/22 14:30:13 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -2874,7 +2874,7 @@ int sctp_peeloff(int              sockfd,
             {
                SCTPAssociation* association = NULL;
                if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
-                  if(tdSocket->Socket.SCTPSocketDesc.Type == SOCK_DGRAM) {
+                  if(tdSocket->Socket.SCTPSocketDesc.Type != SOCK_STREAM) {
                      if((addr != NULL) && (addrlen != NULL)) {
                         SocketAddress* address = SocketAddress::createSocketAddress(
                                                     0,
@@ -2899,6 +2899,7 @@ int sctp_peeloff(int              sockfd,
                   newExtSocketDescriptor.Socket.SCTPSocketDesc.SCTPSocketPtr      = NULL;
                   newExtSocketDescriptor.Socket.SCTPSocketDesc.SCTPAssociationPtr = association;
                   newExtSocketDescriptor.Socket.SCTPSocketDesc.Parent             = sockfd;
+                  newExtSocketDescriptor.Socket.SCTPSocketDesc.ConnectionOriented = true;
                   const int newFD = ExtSocketDescriptorMaster::setSocket(newExtSocketDescriptor);
                   if(newFD < 0) {
                      delete newExtSocketDescriptor.Socket.SCTPSocketDesc.SCTPAssociationPtr;

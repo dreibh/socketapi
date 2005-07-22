@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.28 2005/03/04 13:22:14 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.29 2005/07/22 14:30:13 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -41,34 +41,31 @@
 #include "sctpsocketmaster.h"
 
 
-/*
-#define PRINT_BIND
-#define PRINT_UNBIND
-#define PRINT_ADDIP
-#define PRINT_ACCEPT
-#define PRINT_ASSOCIATE
-#define PRINT_NEW_ASSOCIATIONS
-#define PRINT_SEND_TO_ALL
-#define PRINT_SHUTDOWNS
-#define PRINT_PRSCTP
-#define PRINT_NOTIFICATION_SKIP
-#define PRINT_DATA
-#define PRINT_RECVSTATUS
-#define PRINT_SENDSTATUS
-#define PRINT_SETPRIMARY
-*/
-
-/*
-#define PRINT_AUTOCLOSE_TIMEOUT
-#define PRINT_AUTOCLOSE_CHECK
-
-#define PRINT_RECVWAIT
-#define PRINT_ISSHUTDOWN
-#define PRINT_PATHFORINDEX
-#define PRINT_ASSOCSEARCH
-#define PRINT_ASSOC_USECOUNT
-#define PRINT_RTO
-*/
+// #define PRINT_BIND
+// #define PRINT_UNBIND
+// #define PRINT_ADDIP
+// #define PRINT_ACCEPT
+// #define PRINT_ASSOCIATE
+// #define PRINT_NEW_ASSOCIATIONS
+// #define PRINT_SEND_TO_ALL
+// #define PRINT_SHUTDOWNS
+// #define PRINT_PRSCTP
+// #define PRINT_NOTIFICATION_SKIP
+// #define PRINT_DATA
+// #define PRINT_RECVSTATUS
+// #define PRINT_SENDSTATUS
+// #define PRINT_SETPRIMARY
+//
+//
+// #define PRINT_AUTOCLOSE_TIMEOUT
+// #define PRINT_AUTOCLOSE_CHECK
+//
+// #define PRINT_RECVWAIT
+// #define PRINT_ISSHUTDOWN
+// #define PRINT_PATHFORINDEX
+// #define PRINT_ASSOCSEARCH
+// #define PRINT_ASSOC_USECOUNT
+// #define PRINT_RTO
 
 
 // ###### Constructor #######################################################
@@ -1408,8 +1405,9 @@ SCTPAssociation* SCTPSocket::peelOff(const SocketAddress& destinationAddress)
          if( (!iterator->second->IsShuttingDown)               &&
              (destinationAddress.getPort() == status.destPort) &&
              (destinationAddress.getAddressString(InternetAddress::PF_HidePort|InternetAddress::PF_Address|InternetAddress::PF_Legacy) == String((const char*)&status.primaryDestinationAddress)) ) {
-            ConnectionlessAssociationList.erase(iterator);
             association = iterator->second;
+            association->PeeledOff = true;
+            ConnectionlessAssociationList.erase(iterator);
             break;
          }
       }
@@ -1432,6 +1430,7 @@ SCTPAssociation* SCTPSocket::peelOff(const unsigned int assocID)
    if( (iterator != ConnectionlessAssociationList.end()) &&
        (!iterator->second->IsShuttingDown) ) {
       association = iterator->second;
+      association->PeeledOff = true;
       ConnectionlessAssociationList.erase(iterator);
    }
    SCTPSocketMaster::MasterInstance.unlock();

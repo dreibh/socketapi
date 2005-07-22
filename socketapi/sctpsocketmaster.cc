@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.20 2005/03/11 10:23:05 dreibh Exp $
+ *  $Id: sctpsocketmaster.cc,v 1.21 2005/07/22 14:30:13 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -51,7 +51,7 @@
 
 // #define PRINT_NOTIFICATIONS
 // #define PRINT_ARRIVENOTIFICATION
-
+//
 // #define PRINT_PIPE
 // #define PRINT_GC
 // #define PRINT_ASSOC_USECOUNT
@@ -1205,7 +1205,7 @@ void SCTPSocketMaster::addNotification(SCTPSocket*             socket,
                                        const SCTPNotification& notification)
 {
    // ====== Get notification flags =========================================
-   SCTPAssociation* association = socket->getAssociationForAssociationID(assocID,false);
+   SCTPAssociation* association = socket->getAssociationForAssociationID(assocID, false);
    if(association == NULL) {
       // Association not found -> already closed.
       return;
@@ -1214,10 +1214,6 @@ void SCTPSocketMaster::addNotification(SCTPSocket*             socket,
 
    // ====== Check, if notification has to be added =========================
    if((notification.Content.sn_header.sn_type == SCTP_DATA_ARRIVE)    ||
-/* ????? Deprecated!
-      ((notification.Content.sn_header.sn_type == SCTP_ASSOC_CHANGE) && (notification.Content.sn_assoc_change.sac_state == SCTP_SHUTDOWN_COMP)) ||
-      ((notification.Content.sn_header.sn_type == SCTP_ASSOC_CHANGE) && (notification.Content.sn_assoc_change.sac_state == SCTP_COMM_LOST))     ||
-*/
       ((notification.Content.sn_header.sn_type == SCTP_ASSOC_CHANGE)     && (notificationFlags & SCTP_RECVASSOCEVNT))    ||
       ((notification.Content.sn_header.sn_type == SCTP_PEER_ADDR_CHANGE) && (notificationFlags & SCTP_RECVPADDREVNT))    ||
       ((notification.Content.sn_header.sn_type == SCTP_REMOTE_ERROR)     && (notificationFlags & SCTP_RECVPEERERR))      ||
@@ -1233,7 +1229,8 @@ void SCTPSocketMaster::addNotification(SCTPSocket*             socket,
 #ifdef PRINT_ASSOC_USECOUNT
       cout << association->UseCount << ". Notification Type = " << notification.Content.sn_header.sn_type << endl;
 #endif
-      if(socket->Flags & SCTPSocket::SSF_GlobalQueue) {
+      if( (socket->Flags & SCTPSocket::SSF_GlobalQueue) &&
+          (association->PeeledOff == false) ) {
          socket->GlobalQueue.addNotification(notification);
          socket->ReadReady = socket->hasData() || (socket->ConnectionRequests != NULL);
       }
