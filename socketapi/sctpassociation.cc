@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.cc,v 1.12 2005/07/22 14:30:13 dreibh Exp $
+ *  $Id: sctpassociation.cc,v 1.13 2005/07/28 12:18:31 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -163,7 +163,7 @@ SCTPAssociation::~SCTPAssociation()
    PreEstablishmentPacket* packet = FirstPreEstablishmentPacket;
    while(packet != NULL) {
       PreEstablishmentPacket* nextPacket = packet->Next;
-      delete packet->Data;
+      delete [] packet->Data;
       packet->Data = NULL;
       delete packet;
       packet = nextPacket;

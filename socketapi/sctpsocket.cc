@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.29 2005/07/22 14:30:13 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.30 2005/07/28 12:18:31 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -82,6 +82,8 @@ SCTPSocket::SCTPSocket(const int family, const cardinal flags)
    WriteReady          = false;
    HasException        = false;
    Family              = family;
+
+   AutoCloseRecursion  = false;
 
    EstablishCondition.setName("SCTPSocket::EstablishCondition");
    ReadUpdateCondition.setName("SCTPSocket::ReadUpdateCondition");
@@ -1040,7 +1042,10 @@ int SCTPSocket::internalSend(const char*          buffer,
    if(result == SCTP_PARAMETER_PROBLEM) {
       return(-EINVAL);
    }
-   return(EIO);
+   if(result == SCTP_QUEUE_EXCEEDED) {
+      return(-ENOBUFS);
+   }
+   return(-EIO);
 }
 
 
@@ -1852,53 +1857,68 @@ bool SCTPSocket::deleteAddress(const unsigned int   assocID,
 // ###### Check for necessity to auto-close associations ####################
 void SCTPSocket::checkAutoClose()
 {
-   const card64 now = getMicroTime();
-   multimap<unsigned int, SCTPAssociation*>::iterator iterator =
-      ConnectionlessAssociationList.begin();
-   while(iterator != ConnectionlessAssociationList.end()) {
-
-      SCTPAssociation* association = iterator->second;
-#ifdef PRINT_AUTOCLOSE_CHECK
-      cout << "AutoConnect: Check for AutoClose:" << endl
-           << "   AssocID          = " << association->getID() << endl
-           << "   UseCount         = " << association->UseCount << endl
-           << "   LastUsage        = " << now - association->LastUsage << endl
-           << "   AutoCloseTimeout = " << AutoCloseTimeout << endl;
-#endif
-      if((association->UseCount == 0) &&
-         (AutoCloseTimeout > 0) &&
-         (now - association->LastUsage > AutoCloseTimeout)) {
-#ifdef PRINT_AUTOCLOSE_TIMEOUT
-         const unsigned int assocID = association->getID();
-         cout << "AutoConnect: Doing shutdown of association #" << assocID << " due to timeout" << endl;
-#endif
-         association->shutdown();
-         iterator++;
-      }
-      else if((association->ShutdownCompleteNotification)         ||
-              (association->CommunicationLostNotification)) {
-#ifdef PRINT_AUTOCLOSE_TIMEOUT
-         const unsigned int assocID = association->getID();
-         cout << "AutoConnect: Removing association #" << assocID << ": ";
-         if(association->ShutdownCompleteNotification) {
-            cout << "shutdown complete";
-         }
-         else if(association->CommunicationLostNotification) {
-            cout << "communication lost";
-         }
-         cout << "..." << endl;
-#endif
-         delete association;
-#ifdef PRINT_AUTOCLOSE_TIMEOUT
-         cout << "AutoConnect: AutoClose of association #" << assocID << " completed!" << endl;
-#endif
-         ConnectionlessAssociationList.erase(iterator);
-         iterator = ConnectionlessAssociationList.begin();
-      }
-      else {
-         iterator++;
-      }
+   if(AutoCloseRecursion) {
+      AutoCloseNewCheckRequired = true;
+      return;
    }
+   AutoCloseRecursion = true;
+
+   do {
+      AutoCloseNewCheckRequired = false;
+
+      const card64 now = getMicroTime();
+      multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+         ConnectionlessAssociationList.begin();
+      while(iterator != ConnectionlessAssociationList.end()) {
+         SCTPAssociation* association = iterator->second;
+#ifdef PRINT_AUTOCLOSE_CHECK
+         cout << "AutoConnect: Check for AutoClose:" << endl
+            << "   AssocID          = " << association->getID() << endl
+            << "   UseCount         = " << association->UseCount << endl
+            << "   LastUsage        = " << now - association->LastUsage << endl
+            << "   AutoCloseTimeout = " << AutoCloseTimeout << endl;
+#endif
+
+         if((association->UseCount == 0) &&
+            (AutoCloseTimeout > 0) &&
+            (now - association->LastUsage > AutoCloseTimeout)) {
+#ifdef PRINT_AUTOCLOSE_TIMEOUT
+            const unsigned int assocID = association->getID();
+            cout << "AutoConnect: Doing shutdown of association #" << assocID << " due to timeout" << endl;
+#endif
+            iterator++;   // Important! shutdown() may invalidate iterator!
+            association->shutdown();
+         }
+         else if((association->ShutdownCompleteNotification)         ||
+               (association->CommunicationLostNotification)) {
+#ifdef PRINT_AUTOCLOSE_TIMEOUT
+            const unsigned int assocID = association->getID();
+            cout << "AutoConnect: Removing association #" << assocID << ": ";
+            if(association->ShutdownCompleteNotification) {
+               cout << "shutdown complete";
+            }
+            else if(association->CommunicationLostNotification) {
+               cout << "communication lost";
+            }
+            cout << "..." << endl;
+#endif
+
+            // Important! Removal will invalidate iterator!
+            multimap<unsigned int, SCTPAssociation*>::iterator delIterator = iterator;
+            iterator++;
+            ConnectionlessAssociationList.erase(delIterator);
+
+            delete association;
+#ifdef PRINT_AUTOCLOSE_TIMEOUT
+            cout << "AutoConnect: AutoClose of association #" << assocID << " completed!" << endl;
+#endif
+         }
+         else {
+            iterator++;
+         }
+      }
+   } while(AutoCloseNewCheckRequired == true);
+   AutoCloseRecursion = false;
 }
 
 

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.h,v 1.8 2004/11/23 10:13:45 dreibh Exp $
+ *  $Id: sctpsocket.h,v 1.9 2005/07/28 12:18:32 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -589,6 +589,9 @@ class SCTPSocket
    bool                                     WriteReady;
    bool                                     ReadReady;
    bool                                     HasException;
+
+   bool                                     AutoCloseRecursion;
+   bool                                     AutoCloseNewCheckRequired;
 
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19)
    unsigned int                             NoOfLocalAddresses;
