@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.32 2005/07/22 14:30:13 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.33 2005/08/01 10:01:31 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -2863,9 +2863,7 @@ int sctp_isavailable()
 
 // ###### Peel association off ##############################################
 int sctp_peeloff(int              sockfd,
-                 sctp_assoc_t     id,
-                 struct sockaddr* addr,
-                 socklen_t*       addrlen)
+                 sctp_assoc_t     id)
 {
    ExtSocketDescriptor* tdSocket = ExtSocketDescriptorMaster::getSocket(sockfd);
    if(tdSocket != NULL) {
@@ -2875,22 +2873,7 @@ int sctp_peeloff(int              sockfd,
                SCTPAssociation* association = NULL;
                if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
                   if(tdSocket->Socket.SCTPSocketDesc.Type != SOCK_STREAM) {
-                     if((addr != NULL) && (addrlen != NULL)) {
-                        SocketAddress* address = SocketAddress::createSocketAddress(
-                                                    0,
-                                                    (sockaddr*)addr,
-                                                    (socklen_t)*addrlen);
-                        if(address != NULL) {
-                           association = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->peelOff(*address);
-                           delete address;
-                        }
-                        else {
-                           errno_return(-EINVAL);
-                        }
-                     }
-                     else {
-                        association = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->peelOff(id);
-                     }
+                     association = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->peelOff(id);
                   }
                }
 
