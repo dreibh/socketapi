@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.cc,v 1.13 2005/07/28 12:18:31 dreibh Exp $
+ *  $Id: sctpassociation.cc,v 1.14 2005/08/03 11:21:18 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -683,6 +683,13 @@ int SCTPAssociation::getTrafficClass(const int streamID)
 bool SCTPAssociation::setTrafficClass(const card8 trafficClass,
                                       const int   streamID)
 {
+   return(true);
+
+/*
+   To set a traffic class, some changes would be necessary for the sctplib:
+   An association may be in a state where it is not fully established yet.
+   This code here will not work in this case!
+
    bool result = false;
    SCTPSocketMaster::MasterInstance.lock();
    SCTP_Association_Status status;
@@ -694,6 +701,7 @@ bool SCTPAssociation::setTrafficClass(const card8 trafficClass,
    }
    SCTPSocketMaster::MasterInstance.unlock();
    return(result);
+*/
 }
 
 
