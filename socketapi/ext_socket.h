@@ -1,5 +1,5 @@
 /*
- *  $Id: ext_socket.h,v 1.25 2005/08/01 10:01:31 dreibh Exp $
+ *  $Id: ext_socket.h,v 1.26 2005/08/03 08:44:01 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
