@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.33 2005/08/01 10:01:31 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.34 2005/08/04 15:49:54 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -1781,6 +1781,10 @@ int ext_connectx(int                    sockfd,
                                      true,
                                      (const SocketAddress**)&addressArray,
                                      tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_num_ostreams);
+                     for(int i = 0;i < addrcnt;i++) {
+                        delete addressArray[i];
+                        addressArray[i] = NULL;
+                     }
                      if(result > 0) {
                         errno_return(result);
                      }

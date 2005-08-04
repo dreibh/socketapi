@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.30 2005/07/28 12:18:31 dreibh Exp $
+ *  $Id: sctpsocket.cc,v 1.31 2005/08/04 15:49:54 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -870,17 +870,22 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
             flags |= MSG_NOTIFICATION;
          }
          else {
+            if(flags & MSG_PEEK) {
+               notification.ContentPosition = 0;
+               queue.updateNotification(notification);
+               updatedNotification = true;
+            }
             flags |= (MSG_EOR|MSG_NOTIFICATION);
          }
 
 #ifdef PRINT_DATA
-            cout << "Received " << bufferSize << " bytes notification data from association " << assocID << ", stream " << streamID << ":" << endl;
-            for(size_t i = 0;i < bufferSize;i++) {
-               char str[32];
-               snprintf((char*)&str,sizeof(str),"%02x ",((unsigned char*)buffer)[i]);
-               cout << str;
-            }
-            cout << endl;
+         cout << "Received " << bufferSize << " bytes notification data from association " << assocID << ", stream " << streamID << ":" << endl;
+         for(size_t i = 0;i < bufferSize;i++) {
+            char str[32];
+            snprintf((char*)&str,sizeof(str),"%02x ",((unsigned char*)buffer)[i]);
+            cout << str;
+         }
+         cout << endl;
 #endif
          result = (int)bufferSize;
       }
