@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.34 2005/08/04 15:49:54 dreibh Exp $
+ *  $Id: sctpsocketwrapper.cc,v 1.35 2005/08/08 11:26:12 dreibh Exp $
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -1116,7 +1116,7 @@ static int configurePeerAddressParams(ExtSocketDescriptor* tdSocket,
       newParams->spp_pathmaxrxt = 0;
       newParams->spp_pathmtu    = parameters.mtu;
       newParams->spp_sackdelay  = 0;
-      newParams->spp_flags      = (newParams->spp_hbinterval > 0) ? SPP_HB_ENABLED : SPP_HB_DISABLED;
+      newParams->spp_flags      = (newParams->spp_hbinterval > 0) ? SPP_HB_ENABLE : SPP_HB_DISABLE;
       *optlen = sizeof(sctp_paddrparams);
 
       parameters.heartbeatIntervall = newParams->spp_hbinterval;
