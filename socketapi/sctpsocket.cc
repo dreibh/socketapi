@@ -865,6 +865,9 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
          bufferSize = toCopy;
          notification.ContentPosition += toCopy;
          if(notification.ContentPosition < notification.Content.sn_header.sn_length) {
+            if(flags & MSG_PEEK) {
+               notification.ContentPosition = 0;
+            }
             queue.updateNotification(notification);
             updatedNotification = true;
             flags |= MSG_NOTIFICATION;
