@@ -1247,15 +1247,17 @@ int SCTPSocket::sendTo(const char*           buffer,
 #ifdef PRINT_ASSOC_USECOUNT
          cout << association->UseCount << endl;
 #endif
+
+         if(flags & MSG_ABORT) {
+#ifdef PRINT_SHUTDOWNS
+            cout << "Sending ABORT for association " << association->AssociationID << endl;
+#endif
+            association->abort();
+            SCTPSocketMaster::MasterInstance.unlock();
+            return(0);
+         }
       }
 
-     if(flags & MSG_ABORT) {
-#ifdef PRINT_SHUTDOWNS
-        cout << "Sending ABORT for association " << association->AssociationID << endl;
-#endif
-        association->abort();
-        return(0);
-     }
 
      SCTPSocketMaster::MasterInstance.unlock();
 
