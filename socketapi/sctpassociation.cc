@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpassociation.cc,v 1.14 2005/08/03 11:21:18 dreibh Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz

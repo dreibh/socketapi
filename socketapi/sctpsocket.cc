@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.cc,v 1.31 2005/08/04 15:49:54 dreibh Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -1249,8 +1249,15 @@ int SCTPSocket::sendTo(const char*           buffer,
 #endif
       }
 
-      SCTPSocketMaster::MasterInstance.unlock();
+     if(flags & MSG_ABORT) {
+#ifdef PRINT_SHUTDOWNS
+        cout << "Sending ABORT for association " << association->AssociationID << endl;
+#endif
+        association->abort();
+        return(0);
+     }
 
+     SCTPSocketMaster::MasterInstance.unlock();
 
       // ====== Create new association ======================================
       if((Flags & SSF_AutoConnect) && (association == NULL) && (destinationAddressList != NULL)) {
@@ -1307,7 +1314,7 @@ int SCTPSocket::sendTo(const char*           buffer,
             if(flags & MSG_ABORT) {
                association->abort();
             }
-            else if(flags & MSG_EOF) {
+            if(flags & MSG_EOF) {
                association->shutdown();
             }
             if(Flags & SSF_AutoConnect) {
