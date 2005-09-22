@@ -2840,6 +2840,7 @@ int ext_poll(struct pollfd* fdlist, long unsigned int count, int time)
 
    // ====== Prepare FD settings ============================================
    int    fdcount = 0;
+   int    n       = 0;
    fd_set readfdset;
    fd_set writefdset;
    fd_set exceptfdset;
@@ -2857,6 +2858,7 @@ int ext_poll(struct pollfd* fdlist, long unsigned int count, int time)
          FD_SET(fdlist[i].fd,&writefdset);
       }
       FD_SET(fdlist[i].fd,&exceptfdset);
+      n = max(n, fdlist[i].fd);
       fdcount++;
    }
    if(fdcount == 0) {
@@ -2867,8 +2869,7 @@ int ext_poll(struct pollfd* fdlist, long unsigned int count, int time)
    }
 
    // ====== Do ext_select() ================================================
-   const int tsize  = getdtablesize();
-   int       result = ext_select(tsize,&readfdset,&writefdset,&exceptfdset,to);
+   int result = ext_select(n + 1,&readfdset,&writefdset,&exceptfdset,to);
    if(result < 0) {
       return(result);
    }

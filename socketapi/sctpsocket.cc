@@ -824,9 +824,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
             }
          }
          else {
-#ifndef DISABLE_WARNINGS
-            cerr << "WARNING: SCTPSocket::internalReceive() - sctp_receive() failed!" << endl;
-#endif
+            // cerr << "WARNING: SCTPSocket::internalReceive() - sctp_receive() failed!" << endl;
             result = -ECONNABORTED;
          }
       }
@@ -1102,9 +1100,7 @@ int SCTPSocket::receiveFrom(char*           buffer,
 {
    // ====== Receive ========================================================
    if(!(Flags & SSF_GlobalQueue)) {
-#ifndef DISABLE_WARNINGS
-      cerr << "WARNING: SCTPSocket::receiveFrom() - No global queue!" << endl;
-#endif
+      // cerr << "WARNING: SCTPSocket::receiveFrom() - No global queue!" << endl;
       return(-EBADF);
    }
    assocID = 0;
