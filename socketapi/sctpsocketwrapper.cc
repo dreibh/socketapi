@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketwrapper.cc,v 1.35 2005/08/08 11:26:12 dreibh Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -486,6 +486,37 @@ int ext_creat(const char* pathname, mode_t mode)
       errno_return(result);
    }
    errno_return(tdSocket.Socket.SystemSocketID);
+}
+
+
+// ###### pipe() wrapper ####################################################
+int ext_pipe(int fds[2])
+{
+   ExtSocketDescriptor tdSocket1;
+   ExtSocketDescriptor tdSocket2;
+   int                 newPipe[2];
+
+   if(pipe((int*)&newPipe) == 0) {
+      tdSocket1.Type = ExtSocketDescriptor::ESDT_System;
+      tdSocket1.Socket.SystemSocketID = newPipe[0];
+      tdSocket2.Type = ExtSocketDescriptor::ESDT_System;
+      tdSocket2.Socket.SystemSocketID = newPipe[1];
+
+      fds[0] = ExtSocketDescriptorMaster::setSocket(tdSocket1);
+      if(fds[0] < 0) {
+         close(tdSocket1.Socket.SystemSocketID);
+         close(tdSocket2.Socket.SystemSocketID);
+         errno_return(fds[0]);
+      }
+      fds[1] = ExtSocketDescriptorMaster::setSocket(tdSocket2);
+      if(fds[1] < 0) {
+         ext_close(fds[0]);
+         close(tdSocket2.Socket.SystemSocketID);
+         errno_return(fds[1]);
+      }
+      errno_return(0);
+   }
+   return(-1);
 }
 
 
