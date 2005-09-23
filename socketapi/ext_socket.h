@@ -80,7 +80,6 @@
 #define SCTP_NOTIFICATION MSG_NOTIFICATION
 #define SCTP_ABORT        MSG_ABORT
 #define SCTP_EOF          MSG_EOF
-#define SCTP_SHUTDOWN     MSG_SHUTDOWN
 #define SCTP_ADDR_OVER    MSG_ADDR_OVER
 #define SCTP_SEND_TO_ALL  MSG_SEND_TO_ALL
 #define SCTP_MULTIADDRS   MSG_MULTIADDRS
@@ -531,7 +530,7 @@ int sctp_enableCRC32(const unsigned int enable);
 #define ext_read(a,b,c) ::read(a,b,c)
 #define ext_write(a,b,c) ::write(a,b,c)
 #define ext_select(a,b,c,d,e) ::select(a,b,c,d,e)
-#define ext_poll(a,b,c,d,e) ::poll(a,b,c,d,e)
+#define ext_poll(a,b,c) ::poll(a,b,c)
 #define ext_pipe(a) ::pipe(a)
 #else
 #define ext_socket(a,b,c) socket(a,b,c)
@@ -556,7 +555,7 @@ int sctp_enableCRC32(const unsigned int enable);
 #define ext_read(a,b,c) read(a,b,c)
 #define ext_write(a,b,c) write(a,b,c)
 #define ext_select(a,b,c,d,e) select(a,b,c,d,e)
-#define ext_poll(a,b,c,d,e) poll(a,b,c,d,e)
+#define ext_poll(a,b,c) poll(a,b,c)
 #define ext_pipe(a) pipe(a)
 #endif
 

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocket.h,v 1.9 2005/07/28 12:18:32 dreibh Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz

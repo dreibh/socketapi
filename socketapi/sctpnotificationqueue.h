@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpnotificationqueue.h,v 1.4 2003/08/19 19:20:00 tuexen Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz

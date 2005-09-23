@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.cc,v 1.21 2005/07/22 14:30:13 dreibh Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz

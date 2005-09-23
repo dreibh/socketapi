@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpsocketmaster.h,v 1.6 2004/11/19 17:12:35 dreibh Exp $
+ *  $Id$
  *
  * SCTP implementation according to RFC 2960.
  * Copyright (C) 1999-2002 by Thomas Dreibholz
