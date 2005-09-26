@@ -1,5 +1,5 @@
 /*
- *  $Id: ringbuffer.cc,v 1.2 2003/08/19 19:24:25 tuexen Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -52,7 +52,7 @@
 
 // ###### Constructor #######################################################
 RingBuffer::RingBuffer()
-   : Condition("RingBufferCondition", NULL, true)
+   : Condition("RingBufferCondition", NULL)
 {
    Buffer = NULL;
 }
