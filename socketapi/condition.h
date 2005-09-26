@@ -63,8 +63,7 @@ class Condition : public Synchronizable
      * @param recursive true to make condition's mutex recursive; false otherwise (default for Condition!).
      */
    Condition(const char* name            = "Condition",
-             Condition*  parentCondition = NULL,
-             const bool  recursive       = false);
+             Condition*  parentCondition = NULL);
 
    /**
      * Destructor.
@@ -77,13 +76,13 @@ class Condition : public Synchronizable
      * Fire condition: One thread waiting for this variable will be
      * resumed.
      */
-   inline void signal();
+   void signal();
 
    /**
      * Broadcast condition: All threads waiting for this variable will be
      * resumed.
      */
-   inline void broadcast();
+   void broadcast();
 
    /**
      * Check, if condition has been fired. This call will reset
@@ -104,7 +103,7 @@ class Condition : public Synchronizable
    /**
      * Wait for condition without timeout.
      */
-   inline void wait();
+   void wait();
 
    /**
      * Wait for condition with timeout.

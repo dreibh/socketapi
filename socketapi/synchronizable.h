@@ -118,7 +118,7 @@ class Synchronizable
      */
    ~Synchronizable();
 
-   
+
    // ====== Synchronization ================================================
    /**
      * synchronized() begins a synchronized block. The block has to be
@@ -139,7 +139,7 @@ class Synchronizable
      * @see unsynchronized
      */
    inline bool synchronizedTry();
-   
+
    /**
      * unsynchronized() ends a synchronized block, which has begun by
      * synchronized().

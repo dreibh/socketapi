@@ -122,25 +122,23 @@ SCTPAssociation* SCTPSocket::getAssociationForAssociationID(const unsigned int a
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19)
 bool SCTPSocket::getLocalAddresses(SocketAddress**& addressArray)
 {
-   // ====== Initialize =====================================================
-   unsigned int i;
-   bool         result = true;
-   addressArray = SocketAddress::newAddressList(NoOfLocalAddresses);
-   if(addressArray == NULL) {
-      return(false);
-   }
-
    // ====== Get local addresses ============================================
+   bool         result = true;
    SCTPSocketMaster::MasterInstance.lock();
-   for(i = 0;i < NoOfLocalAddresses;i++) {
-      addressArray[i] = SocketAddress::createSocketAddress(0,(char*)LocalAddressList[i],LocalPort);
-      if(addressArray[i] == NULL) {
+   if(InstanceName > 0) {
+      addressArray = SocketAddress::newAddressList(NoOfLocalAddresses);
+      if(addressArray == NULL) {
+         for(int i = 0;i < NoOfLocalAddresses;i++) {
+            addressArray[i] = SocketAddress::createSocketAddress(0,(char*)LocalAddressList[i],LocalPort);
+            if(addressArray[i] == NULL) {
 #ifndef DISABLE_WARNINGS
-         cerr << "WARNING: SCTPSocket::getLocalAddresses() - Bad address "
-              << *(LocalAddressList[i]) << ", port " << LocalPort << "!" << endl;
+               cerr << "WARNING: SCTPSocket::getLocalAddresses() - Bad address "
+                  << *(LocalAddressList[i]) << ", port " << LocalPort << "!" << endl;
 #endif
-         SocketAddress::deleteAddressList(addressArray);
-         result = false;
+               SocketAddress::deleteAddressList(addressArray);
+               result = false;
+            }
+         }
       }
    }
    SCTPSocketMaster::MasterInstance.unlock();

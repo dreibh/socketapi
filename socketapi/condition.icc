@@ -47,62 +47,6 @@
 
 
 
-// #define PRINT_SIGNAL
-
-
-
-// ###### Wait for condition ################################################
-inline void Condition::wait()
-{
-   while(!timedWait(100000)) {
-      sched_yield();
-   }
-}
-
-
-// ###### Fire condition ####################################################
-inline void Condition::signal()
-{
-   synchronized();
-   Fired = true;
-   pthread_cond_signal(&ConditionVariable);
-
-#ifdef PRINT_SIGNAL
-   cout << "signal: " << getName() << endl;
-#endif
-
-   set<Condition*>::iterator iterator = ParentSet.begin();
-   while(iterator != ParentSet.end()) {
-      (*iterator)->signal();
-      iterator++;
-   }
-
-   unsynchronized();
-}
-
-
-// ###### Broadcast condition ###############################################
-inline void Condition::broadcast()
-{
-   synchronized();
-   Fired = true;
-
-   pthread_cond_broadcast(&ConditionVariable);
-
-#ifdef PRINT_SIGNAL
-   cout << "broadcast: " << getName() << endl;
-#endif
-
-   set<Condition*>::iterator iterator = ParentSet.begin();
-   while(iterator != ParentSet.end()) {
-      (*iterator)->broadcast();
-      iterator++;
-   }
-
-   unsynchronized();
-}
-
-
 // ###### Check, if condition has been fired ################################
 inline bool Condition::fired()
 {

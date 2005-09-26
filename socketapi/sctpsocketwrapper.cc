@@ -588,7 +588,7 @@ static int bindToAny(struct ExtSocketDescriptor* tdSocket)
    int result = 0;
    if((tdSocket->Type == ExtSocketDescriptor::ESDT_SCTP)      &&
       (tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) &&
-      (tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->getID() == 0)) {
+      (tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->getID() <= 0)) {
       InternetAddress anyAddress;
       anyAddress.reset();
 
@@ -686,7 +686,7 @@ int sctp_bindx(int              sockfd,
 
                // ====== Bind socket ========================================
                int result = -EINVAL;
-               if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->getID() == 0) {
+               if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->getID() <= 0) {
                   if(flags == SCTP_BINDX_ADD_ADDR) {
                      result = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->bind(
                                  addressArray[0]->getPort(),

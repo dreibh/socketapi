@@ -39,16 +39,17 @@
 #include "condition.h"
 #include "thread.h"
 
-
 #include <sys/time.h>
+
+
+// #define PRINT_SIGNAL
 
 
 
 // ###### Constructor #######################################################
 Condition::Condition(const char* name,
-                     Condition*  parentCondition,
-                     const bool  recursive)
-   : Synchronizable(name,recursive)
+                     Condition*  parentCondition)
+   : Synchronizable(name,false)
 {
    Valid = true;
    addParent(parentCondition);
@@ -94,6 +95,58 @@ void Condition::removeParent(Condition* parentCondition)
       ParentSet.erase(parentCondition);
       unsynchronized();
    }
+}
+
+
+// ###### Wait for condition ################################################
+void Condition::wait()
+{
+   while(!timedWait(3600000000ULL)) {
+      sched_yield();
+   }
+}
+
+
+// ###### Fire condition ####################################################
+void Condition::signal()
+{
+   synchronized();
+   Fired = true;
+   pthread_cond_signal(&ConditionVariable);
+
+#ifdef PRINT_SIGNAL
+   cout << "signal: " << getName() << endl;
+#endif
+
+   set<Condition*>::iterator iterator = ParentSet.begin();
+   while(iterator != ParentSet.end()) {
+      (*iterator)->signal();
+      iterator++;
+   }
+
+   unsynchronized();
+}
+
+
+// ###### Broadcast condition ###############################################
+void Condition::broadcast()
+{
+   synchronized();
+   Fired = true;
+
+   pthread_cond_broadcast(&ConditionVariable);
+
+#ifdef PRINT_SIGNAL
+   cout << "broadcast: " << getName() << endl;
+#endif
+
+   set<Condition*>::iterator iterator = ParentSet.begin();
+   while(iterator != ParentSet.end()) {
+      (*iterator)->broadcast();
+      iterator++;
+   }
+
+   unsynchronized();
 }
 
 
