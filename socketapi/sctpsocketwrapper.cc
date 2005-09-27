@@ -1819,9 +1819,10 @@ int ext_connectx(int                    sockfd,
                      if(result > 0) {
                         errno_return(result);
                      }
-                     else if(tdSocket->Socket.SCTPSocketDesc.Flags & O_NONBLOCK) {
+                     else if((result == 0) && (tdSocket->Socket.SCTPSocketDesc.Flags & O_NONBLOCK)) {
                         errno_return(-EINPROGRESS);
                      }
+                     errno_return(result);
                   }
                   errno_return(0);
                }

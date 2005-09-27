@@ -1236,6 +1236,18 @@ int SCTPSocket::sendTo(const char*           buffer,
          }
       }
       if(association != NULL) {
+         /* Is sendTo called by ext_connect() (buffer = NULL, length = 0 and
+            no EOF or ABORT flags): association is not zero => there
+            already is an association. */
+         if( ((buffer == NULL) || (length == 0)) &&
+             (!((flags & MSG_ABORT) || (flags & MSG_EOF))) ) {
+#ifdef PRINT_ASSOCSEARCH
+            cout << "Already connected (association " << association->AssociationID << ") -> returning!" << endl;
+#endif
+            SCTPSocketMaster::MasterInstance.unlock();
+            return(-EISCONN);
+         }
+
 #ifdef PRINT_ASSOC_USECOUNT
          cout << "Send: UseCount increment for A" << association->getID() << ": "
             << association->UseCount << " -> ";
@@ -1311,9 +1323,15 @@ int SCTPSocket::sendTo(const char*           buffer,
          // ====== Remove association, if SHUTDOWN flag is set ==============
          if((flags & MSG_EOF) || (flags & MSG_ABORT)) {
             if(flags & MSG_ABORT) {
+#ifdef PRINT_SHUTDOWNS
+               cout << "Sending ABORT..." << endl;
+#endif
                association->abort();
             }
             if(flags & MSG_EOF) {
+#ifdef PRINT_SHUTDOWNS
+               cout << "Sending SHUTDOWN..." << endl;
+#endif
                association->shutdown();
             }
             if(Flags & SSF_AutoConnect) {
