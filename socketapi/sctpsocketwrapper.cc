@@ -2849,18 +2849,20 @@ int ext_poll(struct pollfd* fdlist, long unsigned int count, int time)
    FD_ZERO(&writefdset);
    FD_ZERO(&exceptfdset);
    for(unsigned int i = 0; i < count; i++) {
-      if(fdlist[i].fd < 0) {
-         continue;
+      if((fdlist[i].fd >= 0) && (fdlist[i].fd < FD_SETSIZE)) {
+         if(fdlist[i].events & POLLIN) {
+            FD_SET(fdlist[i].fd,&readfdset);
+         }
+         if(fdlist[i].events & POLLOUT) {
+            FD_SET(fdlist[i].fd,&writefdset);
+         }
+         FD_SET(fdlist[i].fd,&exceptfdset);
+         n = max(n, fdlist[i].fd);
+         fdcount++;
       }
-      if(fdlist[i].events & POLLIN) {
-         FD_SET(fdlist[i].fd,&readfdset);
+      else {
+         fdlist[i].revents = POLLNVAL;
       }
-      if(fdlist[i].events & POLLOUT) {
-         FD_SET(fdlist[i].fd,&writefdset);
-      }
-      FD_SET(fdlist[i].fd,&exceptfdset);
-      n = max(n, fdlist[i].fd);
-      fdcount++;
    }
    if(fdcount == 0) {
       return(0);
@@ -2877,14 +2879,16 @@ int ext_poll(struct pollfd* fdlist, long unsigned int count, int time)
 
    // ====== Set result flags ===============================================
    for(unsigned int i = 0;i < count;i++) {
-      if(SAFE_FD_ISSET(fdlist[i].fd,&readfdset) && (fdlist[i].events & POLLIN)) {
-         fdlist[i].revents |= POLLIN;
-      }
-      if(SAFE_FD_ISSET(fdlist[i].fd,&writefdset) && (fdlist[i].events & POLLOUT)) {
-         fdlist[i].revents |= POLLOUT;
-      }
-      if(SAFE_FD_ISSET(fdlist[i].fd,&exceptfdset)) {
-         fdlist[i].revents |= POLLERR;
+      if((fdlist[i].fd >= 0) && (fdlist[i].fd < FD_SETSIZE)) {
+         if(SAFE_FD_ISSET(fdlist[i].fd,&readfdset) && (fdlist[i].events & POLLIN)) {
+            fdlist[i].revents |= POLLIN;
+         }
+         if(SAFE_FD_ISSET(fdlist[i].fd,&writefdset) && (fdlist[i].events & POLLOUT)) {
+            fdlist[i].revents |= POLLOUT;
+         }
+         if(SAFE_FD_ISSET(fdlist[i].fd,&exceptfdset)) {
+            fdlist[i].revents |= POLLERR;
+         }
       }
    }
    return(result);
