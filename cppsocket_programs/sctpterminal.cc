@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpterminal.cc,v 1.9 2004/11/23 10:13:45 dreibh Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -135,7 +135,7 @@ void EchoThread::run()
                (cmsg->cmsg_type  == SCTP_SNDRCV)) {
                sctp_sndrcvinfo* info = (sctp_sndrcvinfo*)CData(cmsg);
                streamID = info->sinfo_stream;
-               protoID  = info->sinfo_ppid;
+               protoID  = ntohl(info->sinfo_ppid);
             }
             cmsg = message.getNextHeader(cmsg);
          }
@@ -282,7 +282,7 @@ void CopyThread::run()
          info->sinfo_assoc_id = 0;
          info->sinfo_stream   = (unsigned short)stream;
          info->sinfo_flags    = MSG_PR_SCTP_TTL;
-         info->sinfo_ppid     = ppid;
+         info->sinfo_ppid     = htonl(ppid);
          if((Unreliable > 0) && (info->sinfo_stream <= Unreliable - 1)) {
             info->sinfo_flags      = MSG_PR_SCTP_TTL;
             info->sinfo_timetolive = 0;

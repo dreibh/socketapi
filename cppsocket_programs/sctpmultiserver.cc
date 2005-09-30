@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpmultiserver.cc,v 1.4 2003/08/19 19:28:34 tuexen Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -240,7 +240,7 @@ void EchoServer::run()
                sctp_sndrcvinfo* info = (sctp_sndrcvinfo*)CData(cmsg);
                assocID  = info->sinfo_assoc_id;
                streamID = info->sinfo_stream;
-               protoID  = info->sinfo_ppid;
+               protoID  = ntohl(info->sinfo_ppid);
             }
             cmsg = message.getNextHeader(cmsg);
          }
@@ -256,7 +256,7 @@ void EchoServer::run()
             sctp_sndrcvinfo* info = (sctp_sndrcvinfo*)message.addHeader(sizeof(sctp_sndrcvinfo),IPPROTO_SCTP,SCTP_SNDRCV);
             info->sinfo_assoc_id  = 0;
             info->sinfo_stream    = (streamID % outStreams);
-            info->sinfo_ppid      = protoID;
+            info->sinfo_ppid      = htonl(protoID);
             if((Unreliable > 0) && (info->sinfo_stream <= Unreliable - 1)) {
                info->sinfo_flags      = MSG_PR_SCTP_TTL;
                info->sinfo_timetolive = 0;

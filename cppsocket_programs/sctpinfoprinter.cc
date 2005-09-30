@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpinfoprinter.cc,v 1.4 2004/11/20 21:06:00 tuexen Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -124,7 +124,7 @@ void printControl(const msghdr* header)
             char str1[16];
             char str2[16];
             snprintf((char*)&str1,sizeof(str1),"$%04x",info->sinfo_flags);
-            snprintf((char*)&str2,sizeof(str2),"$%08x",info->sinfo_ppid);
+            snprintf((char*)&str2,sizeof(str2),"$%08x",ntohl(info->sinfo_ppid));
             cout << "   SCTP_SNDRCV"  << endl;
             cout << "    AssocID    = #" << info->sinfo_assoc_id    << endl;
             cout << "    Stream     = #" << info->sinfo_stream      << endl;
