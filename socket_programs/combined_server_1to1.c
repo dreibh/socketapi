@@ -1,6 +1,4 @@
 /*
- *
- *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Michael Tuexen
  *
@@ -38,7 +36,7 @@
  * Purpose: Example
  *
  */
- 
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -84,8 +82,8 @@ void printUsage(void)
     printf("Usage:   combined_server [options]\n");
     printf("options:\n");
     printf("-s       source address\n");
-    printf("-v       verbose mode\n");   
-    printf("-V       very verbose mode\n");   
+    printf("-v       verbose mode\n");
+    printf("-V       very verbose mode\n");
 }
 
 void getArgs(int argc, char **argv)
@@ -113,7 +111,7 @@ void getArgs(int argc, char **argv)
             } else {
                 tooManyAddresses = 1;
             }
-            break;  
+            break;
         case 'v':
             verbose = 1;
             break;
@@ -132,12 +130,12 @@ void checkArgs(void)
 {
     int abortProgram;
     int printUsageInfo;
-    
+
     abortProgram = 0;
     printUsageInfo = 0;
-    
+
     if (noOfLocalAddresses == 0) {
-      bzero(&local_addr[noOfLocalAddresses], sizeof(local_addr[0]));    
+      bzero(&local_addr[noOfLocalAddresses], sizeof(local_addr[0]));
 #if !defined (LINUX) && !defined (SOLARIS)
       local_addr[noOfLocalAddresses].sin_len    = sizeof(local_addr[0]);
 #endif
@@ -153,7 +151,7 @@ void checkArgs(void)
          printf("Error:   Unkown options in command.\n");
          printUsageInfo = 1;
     }
-    
+
     if (printUsageInfo == 1)
         printUsage();
     if (abortProgram == 1)
@@ -169,9 +167,9 @@ handle_chargen(void *arg)
 
     fd = *((int *) arg);
     free(arg);
-    
+
     pthread_detach(pthread_self());
-    
+
     length = 1 + (random() % 512);
     memset(buffer, 'A', length);
     buffer[length-1] = '\n';
@@ -202,19 +200,19 @@ handle_discard(void *arg)
     int fd;
     int n;
     char buffer[BUFFER_SIZE];
-    
+
     fd = *((int *) arg);
     free(arg);
-    
+
     pthread_detach(pthread_self());
-        
+
     while ((n=ext_read(fd, buffer, sizeof(buffer))) >  0){
         if (vverbose) {
             printf("%-6d: Discarding %u bytes.\n", fd, n);
             fflush(stdout);
         }
     }
-    
+
     ext_close(fd);
     if (verbose) {
         printf("%-6d: Connection closed.\n", fd);
@@ -232,7 +230,7 @@ handle_echo(void *arg)
 
     fd = *((int *) arg);
     free(arg);
-    
+
     pthread_detach(pthread_self());
 
     while ((n=ext_read(fd, buffer, sizeof(buffer))) >  0){
@@ -262,13 +260,13 @@ handle_daytime(void *arg)
 
     fd = *((int *) arg);
     free(arg);
-    
+
     pthread_detach(pthread_self());
-    
+
     time(&now);
     timeAsString = ctime(&now);
     timeAsStringLen = strlen(timeAsString);
-    
+
     if (timeAsStringLen != ext_write(fd, timeAsString, timeAsStringLen)) {
             printf("%-6d: Writing the daytime failed.\n", fd);
     }
@@ -291,9 +289,9 @@ start_server(void *arg)
     pthread_t tid;
     int *fdp;
     struct sockaddr_in remote_addr;
-    int remote_addr_len;
+    socklen_t remote_addr_len;
     struct server_data data;
-    
+
     data = *((struct server_data *) arg);
     free(arg);
 
@@ -318,18 +316,18 @@ init_server(struct sockaddr_in local_addr, int port, void *(connection_handler (
     pthread_t tid;
     int fd;
     struct server_data *server_data_p;
-    
+
     if ((fd = ext_socket(PF_INET, SOCK_STREAM, IPPROTO_SCTP)) < 0)
         perror("socket call failed");
-    
-    
+
+
     local_addr.sin_port= htons(port);
     if(ext_bind(fd, (struct sockaddr *)&local_addr, sizeof(local_addr)) < 0)
         perror("bind call failed");
 
     if(ext_listen(fd, 1) < 0)
         perror("listen call failed");
-        
+
     server_data_p = malloc(sizeof(struct server_data));
     server_data_p->fd = fd;
     server_data_p->connection_handler = connection_handler;
@@ -344,15 +342,15 @@ init_server(struct sockaddr_in local_addr, int port, void *(connection_handler (
 int main (int argc, char * argv[])
 {
     pthread_t echo_tid, discard_tid, daytime_tid, chargen_tid;
-    
+
     getArgs(argc, argv);
     checkArgs();
-      
+
     echo_tid    = init_server(local_addr[0], ECHO_PORT,    &handle_echo);
     discard_tid = init_server(local_addr[0], DISCARD_PORT, &handle_discard);
     daytime_tid = init_server(local_addr[0], DAYTIME_PORT, &handle_daytime);
     chargen_tid = init_server(local_addr[0], CHARGEN_PORT, &handle_chargen);
-            
+
     pthread_join(echo_tid, NULL);
     pthread_join(discard_tid, NULL);
     pthread_join(daytime_tid, NULL);

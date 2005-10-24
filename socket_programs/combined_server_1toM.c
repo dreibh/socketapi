@@ -1,6 +1,4 @@
 /*
- *
- *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Michael Tuexen
  *
@@ -64,14 +62,15 @@
 #define BUFFER_SIZE  3000
 
 int main (int argc, const char * argv[]) {
-  int chargen_fd, daytime_fd, discard_fd, echo_fd, backlog, remote_addr_size, length, idle_time, nfds;
+  int chargen_fd, daytime_fd, discard_fd, echo_fd, backlog, length, idle_time, nfds;
   struct sockaddr_in local_addr, remote_addr;
+  socklen_t remote_addr_size;
   char buffer[BUFFER_SIZE];
   fd_set rset;
   time_t now;
   char *time_as_string;
   struct sctp_event_subscribe evnts;
-  
+
   /* get sockets */
   if ((chargen_fd = ext_socket(PF_INET, SOCK_SEQPACKET, IPPROTO_SCTP)) < 0)
     perror("socket call failed");
@@ -103,7 +102,7 @@ int main (int argc, const char * argv[]) {
         perror("bind call failed");
 
   /* make the sockets 'active' */
-  backlog = 1; 
+  backlog = 1;
   if (ext_listen(chargen_fd, backlog) < 0)
     perror("listen call failed");
   if (ext_listen(daytime_fd, backlog) < 0)
@@ -199,6 +198,6 @@ int main (int argc, const char * argv[]) {
       }
     }
   }
-    
+
   return 0;
 }
