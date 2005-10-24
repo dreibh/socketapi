@@ -44,9 +44,10 @@
 #include "sctpsocket.h"
 #include "sctpnotificationqueue.h"
 
-
 #include <sctp.h>
 
+
+class SCTPSocket;
 
 
 /**

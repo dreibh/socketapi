@@ -46,9 +46,11 @@
 #include "sctpassociation.h"
 #include "sctpnotificationqueue.h"
 
-
 #include <sctp.h>
 #include <map>
+
+
+class SCTPAssociation;
 
 
 /**
