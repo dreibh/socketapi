@@ -1,5 +1,5 @@
 /*
- *  $Id: multitimerthread.h,v 1.2 2003/08/19 19:24:25 tuexen Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -257,7 +257,6 @@ typedef MultiTimerThread<1> SingleTimerThread;
 
 
 #include "multitimerthread.icc"
-#include "multitimerthread.cc"
 
 
 #endif

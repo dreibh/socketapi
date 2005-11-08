@@ -93,18 +93,6 @@ using namespace std;
  #define __USE_EXTERN_INLINES 1
 #endif
 
-#ifndef HAVE_SOCKLEN_T
- typedef int socklen_t;
- #define HAVE_SOCKLEN_T
-#endif
-
-#ifndef max
- #define max(a, b) ((a) < (b) ? (b) : (a))
-#endif
-#ifndef min
- #define min(a, b) ((a) > (b) ? (b) : (a))
-#endif
-
 
 // ###### Operating system definitions ######################################
 #define OS_Linux   1

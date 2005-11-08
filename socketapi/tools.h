@@ -68,6 +68,47 @@ inline card64 getMicroTime();
 
 
 /**
+  * Translate 16-bit value to network byte order.
+  *
+  * @param x Value to be translated.
+  * @return Translated value.
+  */
+inline card16 translate16(const card16 x);
+
+/**
+  * Translate 32-bit value to network byte order.
+  *
+  * @param x Value to be translated.
+  * @return Translated value.
+  */
+inline card32 translate32(const card32 x);
+
+/**
+  * Translate 64-bit value to network byte order.
+  *
+  * @param x Value to be translated.
+  * @return Translated value.
+  */
+inline card64 translate64(const card64 x);
+
+/**
+  * Translate double to 64-bit binary.
+  *
+  * @param x Value to be translated.
+  * @return Translated value.
+  */
+inline card64 translateToBinary(const double x);
+
+/**
+  * Translate 64-bit binary to double.
+  *
+  * @param x Value to be translated.
+  * @return Translated value.
+  */
+inline double translateToDouble(const card64 x);
+
+
+/**
   * Calculate packets per second.
   *
   * Asumption: Every frame has it's own packets.
@@ -202,13 +243,13 @@ extern Synchronizable MemoryManagementLock;
 
 /**
   * operator new() replacement for usage with libefence.
-  */ 
+  */
 void* operator new(size_t size) throw (std::bad_alloc);
 
 
 /**
   * operator delete() replacement for usage with libefence.
-  */ 
+  */
 void operator delete(void* ptr) throw ();
 
 
