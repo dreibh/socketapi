@@ -833,6 +833,7 @@ void SCTPSocketMaster::communicationLostNotif(unsigned int assocID,
          association->CommunicationLostNotification = true;
          association->ShutdownCompleteNotification  = true;
          association->ShutdownCompleteCondition.broadcast();
+         association->ReadUpdateCondition.broadcast();
 
 
          // ====== Generate "Communication Lost" notification ===============
@@ -993,6 +994,7 @@ void SCTPSocketMaster::shutdownCompleteNotif(unsigned int assocID, void* ulpData
          association->ShutdownCompleteNotification = true;
          association->ShutdownCompleteCondition.broadcast();
          association->ReadyForTransmit.broadcast();
+         association->ReadUpdateCondition.broadcast();
 
          // ====== Generate "Shutdown Complete" notification ================
          SCTPNotification notification;
