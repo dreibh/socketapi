@@ -2,6 +2,8 @@
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Michael Tuexen
  *
+ * $Id$
+ *
  * Realized in co-operation between
  * - Siemens AG
  * - University of Essen, Institute of Computer Networking Technology

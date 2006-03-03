@@ -1,8 +1,8 @@
 /*
- *
- *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Michael Tuexen
+ *
+ * $Id$
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -40,13 +40,13 @@
  */
 
 #include <stdio.h>
-#include <sys/types.h> 
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <arpa/inet.h> 
+#include <arpa/inet.h>
 #include <stdlib.h>
-#include <unistd.h> 
-#include <sys/uio.h> 
+#include <unistd.h>
+#include <sys/uio.h>
 #include <ext_socket.h>
 #include <string.h>
 
@@ -187,15 +187,15 @@ echo(int fd, int socketModeone_to_many)
       handle_event(buf);
       continue;
     }
-  
+
     iov->iov_base = buf;
     iov->iov_len = nr;
     msg->msg_iov = iov;
     msg->msg_iovlen = 1;
-  
+
     printf("got %u bytes on stream %hu:\n", nr, sri->sinfo_stream);
     write(0, buf, nr);
-  
+
     /* Echo it back */
     msg->msg_flags = MSG_XPG4_2;
     if (ext_sendmsg(fd, msg, 0) < 0) {
@@ -240,7 +240,7 @@ int main()
   event.sctp_shutdown_event = 1;
   event.sctp_partial_delivery_event = 1;
   event.sctp_adaption_layer_event = 1;
-  
+
   if (ext_setsockopt(fd, IPPROTO_SCTP, SCTP_EVENTS, &event, sizeof(event)) < 0) {
    perror("setsockopt SCTP_EVENTS");
    exit(1);
