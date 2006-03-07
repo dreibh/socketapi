@@ -928,8 +928,8 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
          }
 #ifndef DISABLE_WARNINGS
          else {
-            cerr << "INTERNAL ERROR: SCTPSocket::internalReceive() - Too many association usecount decrements!" << endl;
-            exit(1);
+            cerr << "INTERNAL ERROR: SCTPSocket::internalReceive() - Too many association usecount decrements for association ID " << assocID << "!" << endl;
+            abort();
          }
 #endif
          association->ReadReady = (association->hasData() || (getErrorCode(association->AssociationID) < 0));

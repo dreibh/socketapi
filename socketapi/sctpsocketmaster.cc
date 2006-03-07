@@ -115,7 +115,7 @@ SCTPSocketMaster::SCTPSocketMaster()
       if(sd >= 0) {
          close(sd);
          cerr << "ERROR: Kernel SCTP seems to be available! You cannout use sctplib and kernel SCTP simultaneously!" << endl;
-         ::exit(1);
+         ::abort();
       }
 
       InitializationResult = sctp_initLibrary();

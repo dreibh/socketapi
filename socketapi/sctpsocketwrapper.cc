@@ -123,7 +123,7 @@ static void unpack_sockaddr(const sockaddr*   addrArray,
             cerr << "ERROR: unpack_sockaddr() - Unknown address type #" << addrArray->sa_family << "!" << endl;
             cerr << "IMPORTANT NOTE:" << endl
                  << "The standardizers have changed the socket API; the sockaddr_storage array has been replaced by a variable-sized sockaddr_in/in6 blocks. Do not blame us for this change, send your complaints to the standardizers at sctp-impl@external.cisco.com!" << endl;
-            exit(1);
+            abort();
           break;
       }
    }
@@ -146,7 +146,7 @@ static sockaddr* pack_sockaddr_storage(const sockaddr_storage* addrArray, const 
             cerr << "ERROR: pack_sockaddr_storage() - Unknown address type #" << ((sockaddr*)&addrArray[i])->sa_family << "!" << endl;
             cerr << "IMPORTANT NOTE:" << endl
                  << "The standardizers have changed the socket API; the sockaddr_storage array has been replaced by a variable-sized sockaddr_in/in6 blocks. Do not blame us for this change, send your complaints to the standardizers at sctp-impl@external.cisco.com!" << endl;
-            exit(1);
+            abort();
           break;
       }
    }

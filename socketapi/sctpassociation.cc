@@ -145,7 +145,7 @@ SCTPAssociation::~SCTPAssociation()
 #ifndef DISABLE_WARNINGS
       cerr << "INTERNAL ERROR: SCTPAssociation::~SCTPAssociation() - "
               "Erase of association #" << AssociationID << " failed!" << endl;
-      ::exit(1);
+      ::abort();
 #endif
    }
 
@@ -223,7 +223,7 @@ bool SCTPAssociation::getRemoteAddresses(SocketAddress**& addressArray)
 #ifndef DISABLE_WARNINGS
             cerr << "INTERNAL ERROR: SCTPAssociation::getRemoteAddress() - sctp_getPathStatus() failure!"
                  << endl;
-            ::exit(1);
+            ::abort();
 #endif
          }
          else {
