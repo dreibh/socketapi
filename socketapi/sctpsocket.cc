@@ -41,22 +41,22 @@
 #include "sctpsocketmaster.h"
 
 
-// #define PRINT_BIND
-// #define PRINT_UNBIND
-// #define PRINT_ADDIP
-// #define PRINT_ACCEPT
-// #define PRINT_ASSOCIATE
-// #define PRINT_NEW_ASSOCIATIONS
-// #define PRINT_SEND_TO_ALL
-// #define PRINT_SHUTDOWNS
-// #define PRINT_PRSCTP
-// #define PRINT_NOTIFICATION_SKIP
-// #define PRINT_DATA
-// #define PRINT_RECVSTATUS
-// #define PRINT_SENDSTATUS
-// #define PRINT_SETPRIMARY
-//
-//
+#define PRINT_BIND
+#define PRINT_UNBIND
+#define PRINT_ADDIP
+#define PRINT_ACCEPT
+#define PRINT_ASSOCIATE
+#define PRINT_NEW_ASSOCIATIONS
+#define PRINT_SEND_TO_ALL
+#define PRINT_SHUTDOWNS
+#define PRINT_PRSCTP
+#define PRINT_NOTIFICATION_SKIP
+#define PRINT_DATA
+#define PRINT_RECVSTATUS
+#define PRINT_SENDSTATUS
+#define PRINT_SETPRIMARY
+
+
 // #define PRINT_AUTOCLOSE_TIMEOUT
 // #define PRINT_AUTOCLOSE_CHECK
 //
@@ -64,7 +64,7 @@
 // #define PRINT_ISSHUTDOWN
 // #define PRINT_PATHFORINDEX
 // #define PRINT_ASSOCSEARCH
-// #define PRINT_ASSOC_USECOUNT
+#define PRINT_ASSOC_USECOUNT
 // #define PRINT_RTO
 
 
@@ -1387,7 +1387,7 @@ int SCTPSocket::sendTo(const char*           buffer,
          }
 #ifndef DISABLE_WARNINGS
          else {
-            cerr << "INTERNAL ERROR: SCTPSocket::sendTo() - Too many association usecount decrements!" << endl;
+            cerr << "INTERNAL ERROR: SCTPSocket::sendTo() - Too many association usecount decrements for association ID " << assocID << "!" << endl;
             exit(1);
          }
 #endif
