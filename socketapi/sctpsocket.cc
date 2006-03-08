@@ -53,7 +53,7 @@
 #define PRINT_RECVSTATUS
 #define PRINT_SENDSTATUS
 #define PRINT_SETPRIMARY
-
+#define PRINT_SENDTO
 
 #define PRINT_AUTOCLOSE_TIMEOUT
 #define PRINT_AUTOCLOSE_CHECK
@@ -337,7 +337,7 @@ void SCTPSocket::unbind(bool sendAbort)
 #ifndef DISABLE_WARNINGS
          cerr << "INTERNAL ERROR: SCTPSocket::unbind() - Erase failed for instance "
               << InstanceName << "!" << endl;
-         exit(1);
+         abort();
 #endif
       }
 
@@ -1194,6 +1194,9 @@ int SCTPSocket::sendTo(const char*           buffer,
    int result;
 
    SCTPSocketMaster::MasterInstance.lock();
+#ifdef PRINT_SENDTO
+   cout << "SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags << endl;
+#endif
 
    // ====== Send to one association ========================================
    if(!(flags & MSG_SEND_TO_ALL)) {
@@ -1263,6 +1266,11 @@ int SCTPSocket::sendTo(const char*           buffer,
             SCTPSocketMaster::MasterInstance.unlock();
             return(0);
          }
+
+#ifdef PRINT_SENDTO
+   cout << "SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
+        << ": association=" << association->getID() << endl;
+#endif
       }
 
 
@@ -1320,6 +1328,10 @@ int SCTPSocket::sendTo(const char*           buffer,
 
          // ====== Remove association, if SHUTDOWN flag is set ==============
          if((flags & MSG_EOF) || (flags & MSG_ABORT)) {
+#ifdef PRINT_SENDTO
+   cout << "SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
+        << ", association=" << association->getID() << ": handling MSG_EOF or MSG_ABORT" << endl;
+#endif
             if(flags & MSG_ABORT) {
 #ifdef PRINT_SHUTDOWNS
                cout << "Sending ABORT..." << endl;
@@ -1362,6 +1374,9 @@ int SCTPSocket::sendTo(const char*           buffer,
                cout << " completed!" << endl;
 #endif
             }
+#ifdef PRINT_SENDTO
+            cout << "SendTo: handling AutoConnect" << endl;
+#endif
             checkAutoConnect();
          }
       }
@@ -1372,6 +1387,10 @@ int SCTPSocket::sendTo(const char*           buffer,
 
       SCTPSocketMaster::MasterInstance.lock();
       if(association != NULL) {
+#ifdef PRINT_SENDTO
+         cout << "SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
+              << ", association=" << association->getID() << ": handling UseCount decrement" << endl;
+#endif
          association->LastUsage = getMicroTime();
          if(association->UseCount > 0) {
 #ifdef PRINT_ASSOC_USECOUNT
@@ -1386,7 +1405,7 @@ int SCTPSocket::sendTo(const char*           buffer,
 #ifndef DISABLE_WARNINGS
          else {
             cerr << "INTERNAL ERROR: SCTPSocket::sendTo() - Too many association usecount decrements for association ID " << assocID << "!" << endl;
-            exit(1);
+            abort();
          }
 #endif
       }
