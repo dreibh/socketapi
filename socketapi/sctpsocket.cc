@@ -34,8 +34,6 @@
  *
  */
 
-
-
 #include "tdsystem.h"
 #include "sctpsocket.h"
 #include "sctpsocketmaster.h"
