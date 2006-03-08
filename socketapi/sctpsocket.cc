@@ -1192,10 +1192,12 @@ int SCTPSocket::sendTo(const char*           buffer,
                        const cardinal        noOfOutgoingStreams)
 {
    int result;
+static int yyy=0;
+int zzz=yyy++;
 
    SCTPSocketMaster::MasterInstance.lock();
 #ifdef PRINT_SENDTO
-   cout << "SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags << endl;
+   cout << zzz<<"SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags << endl;
 #endif
 
    // ====== Send to one association ========================================
@@ -1268,21 +1270,24 @@ int SCTPSocket::sendTo(const char*           buffer,
          }
 
 #ifdef PRINT_SENDTO
-   cout << "SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
+   cout << zzz<<"SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
         << ": association=" << association->getID() << endl;
 #endif
       }
 
-
-     SCTPSocketMaster::MasterInstance.unlock();
+cout << zzz<<"sendTo: U1"<< endl;
+      SCTPSocketMaster::MasterInstance.unlock();
+cout << zzz<<"sendTo: U2"<< endl;
 
       // ====== Create new association ======================================
       if((Flags & SSF_AutoConnect) && (association == NULL) && (destinationAddressList != NULL)) {
+cout << zzz<<"sendTo: U3"<< endl;
 #ifdef PRINT_NEW_ASSOCIATIONS
          cout << "AutoConnect: New outgoing association to "
             << destinationAddressList[0]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
             << "..." << endl;
 #endif
+cout << zzz<<"sendTo: U4"<< endl;
          association = associate(noOfOutgoingStreams,
                                  maxAttempts, maxInitTimeout,
                                  destinationAddressList,
@@ -1312,25 +1317,30 @@ int SCTPSocket::sendTo(const char*           buffer,
                << " failed!" << endl;
          }
 #endif
+cout << zzz<<"sendTo: U5"<< endl;
       }
+cout << zzz<<"sendTo: U6"<< endl;
 
 
       // ====== Send data ===================================================
       if(association != NULL) {
+cout << zzz<<"sendTo: U7 id="<< association->getID() << endl;
          if((buffer != NULL) && (length > 0)) {
             result = association->sendTo(buffer, length, flags,
                                          streamID, protoID, timeToLive, useDefaults,
                                          destinationAddressList ? destinationAddressList[0] : NULL);
+cout << zzz<<"sendTo: U8 id="<< association->getID() << endl;
          }
          else {
             result = 0;
          }
 
          // ====== Remove association, if SHUTDOWN flag is set ==============
+cout << zzz<<"sendTo: U9 id="<< association->getID() << endl;
          if((flags & MSG_EOF) || (flags & MSG_ABORT)) {
 #ifdef PRINT_SENDTO
-   cout << "SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
-        << ", association=" << association->getID() << ": handling MSG_EOF or MSG_ABORT" << endl;
+            cout << zzz<<"SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
+                 << ", association=" << association->getID() << ": handling MSG_EOF or MSG_ABORT" << endl;
 #endif
             if(flags & MSG_ABORT) {
 #ifdef PRINT_SHUTDOWNS
@@ -1344,6 +1354,7 @@ int SCTPSocket::sendTo(const char*           buffer,
 #endif
                association->shutdown();
             }
+cout << zzz<<"sendTo: U10 id="<< association->getID() << endl;
             if(Flags & SSF_AutoConnect) {
 #ifdef PRINT_SHUTDOWNS
                cout << "AutoConnect: Shutdown of outgoing association ";
@@ -1375,9 +1386,11 @@ int SCTPSocket::sendTo(const char*           buffer,
 #endif
             }
 #ifdef PRINT_SENDTO
-            cout << "SendTo: handling AutoConnect" << endl;
+            cout << zzz<<"SendTo: handling AutoConnect" << endl;
 #endif
+cout << zzz<<"sendTo: U11" << endl;
             checkAutoConnect();
+cout << zzz<<"sendTo: U12" << endl;
          }
       }
       else {
@@ -1388,7 +1401,7 @@ int SCTPSocket::sendTo(const char*           buffer,
       SCTPSocketMaster::MasterInstance.lock();
       if(association != NULL) {
 #ifdef PRINT_SENDTO
-         cout << "SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
+         cout << zzz<<"SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
               << ", association=" << association->getID() << ": handling UseCount decrement" << endl;
 #endif
          association->LastUsage = getMicroTime();
