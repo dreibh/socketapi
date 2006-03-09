@@ -844,6 +844,15 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
          case SCTP_SHUTDOWN_EVENT:
             assocID = notification.Content.sn_shutdown_event.sse_assoc_id;
           break;
+         case SCTP_PEER_ADDR_CHANGE:
+            assocID = notification.Content.sn_paddr_change.spc_assoc_id;
+          break;
+#ifndef DISABLE_WARNINGS
+         default:
+            cerr << "INTERNAL ERROR: Unexpected notification type #" << notification.Content.sn_header.sn_type << endl;
+            abort();
+          break;
+#endif
       }
 
       // ====== Copy notification ===========================================
@@ -911,7 +920,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
    // ====== Drop notification, if not updated ==============================
    if(!updatedNotification) {
       queue.dropNotification();
-      SCTPAssociation* association = getAssociationForAssociationID(assocID,false);
+      SCTPAssociation* association = getAssociationForAssociationID(assocID, false);
       if(association != NULL) {
          association->LastUsage = getMicroTime();
          if(association->UseCount > 0) {
@@ -1194,6 +1203,7 @@ int SCTPSocket::sendTo(const char*           buffer,
    int result;
 static int yyy=0;
 int zzz=yyy++;
+unsigned int aOLD=0;
 
    SCTPSocketMaster::MasterInstance.lock();
 #ifdef PRINT_SENDTO
@@ -1324,12 +1334,17 @@ cout << zzz<<"sendTo: U6"<< endl;
 
       // ====== Send data ===================================================
       if(association != NULL) {
-cout << zzz<<"sendTo: U7 id="<< association->getID() << endl;
+aOLD=association->getID();
+cout << zzz<<"sendTo: U7 id="<< association->getID() << " ptr=" << (void*)association << endl;
          if((buffer != NULL) && (length > 0)) {
             result = association->sendTo(buffer, length, flags,
                                          streamID, protoID, timeToLive, useDefaults,
                                          destinationAddressList ? destinationAddressList[0] : NULL);
-cout << zzz<<"sendTo: U8 id="<< association->getID() << endl;
+cout << zzz<<"sendTo: U8 id="<< association->getID() << " ptr=" << (void*)association << endl;
+if(aOLD!=association->getID()) {
+   cout << zzz<<"sendTo: Scheiße!" << endl;
+   abort();
+}
          }
          else {
             result = 0;
@@ -1402,7 +1417,7 @@ cout << zzz<<"sendTo: U12" << endl;
       if(association != NULL) {
 #ifdef PRINT_SENDTO
          cout << zzz<<"SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
-              << ", association=" << association->getID() << ": handling UseCount decrement" << endl;
+              << ", association=" << association->getID() << ": handling UseCount decrement;  ptr=" << (void*)association << endl;
 #endif
          association->LastUsage = getMicroTime();
          if(association->UseCount > 0) {
@@ -1417,7 +1432,7 @@ cout << zzz<<"sendTo: U12" << endl;
          }
 #ifndef DISABLE_WARNINGS
          else {
-            cerr <<zzz<< "INTERNAL ERROR: SCTPSocket::sendTo() - Too many association usecount decrements for association ID " << assocID << "?????????!" << endl;
+            cerr <<zzz<< "INTERNAL ERROR: SCTPSocket::sendTo() - Too many association usecount decrements for association ID " << assocID << "!" << endl;
             abort();
          }
 #endif
@@ -1948,8 +1963,9 @@ void SCTPSocket::checkAutoClose()
             iterator++;   // Important! shutdown() may invalidate iterator!
             association->shutdown();
          }
-         else if((association->ShutdownCompleteNotification)         ||
-               (association->CommunicationLostNotification)) {
+         else if((association->UseCount == 0) &&   // Important: Only remove association when there are no users!
+                 ((association->ShutdownCompleteNotification) ||
+                  (association->CommunicationLostNotification))) {
 #ifdef PRINT_AUTOCLOSE_TIMEOUT
             const unsigned int assocID = association->getID();
             cout << "AutoConnect: Removing association #" << assocID << ": ";
@@ -1972,6 +1988,17 @@ void SCTPSocket::checkAutoClose()
             cout << "AutoConnect: AutoClose of association #" << assocID << " completed!" << endl;
 #endif
          }
+
+
+         else if((association->UseCount != 0) &&
+                 ((association->ShutdownCompleteNotification) ||
+                  (association->CommunicationLostNotification))) {
+            const unsigned int assocID = association->getID();
+cout << "TESTTEST: Association #" << assocID << " is disconnected but still has users!" << endl;
+            iterator++;
+         }
+
+
          else {
             iterator++;
          }

@@ -51,11 +51,11 @@
 
 #define PRINT_NOTIFICATIONS
 #define PRINT_ARRIVENOTIFICATION
+#define PRINT_ASSOC_USECOUNT
+#define PRINT_RTOMAXRESTORE
 
 // #define PRINT_PIPE
 // #define PRINT_GC
-// #define PRINT_ASSOC_USECOUNT
-// #define PRINT_RTOMAXRESTORE
 
 // Do not show a warning on initialization failure.
 // #define NO_INITFAIL_WARNING
@@ -1222,14 +1222,15 @@ void SCTPSocketMaster::addNotification(SCTPSocket*             socket,
       ((notification.Content.sn_header.sn_type == SCTP_SEND_FAILED)      && (notificationFlags & SCTP_RECVSENDFAILEVNT)) ||
       ((notification.Content.sn_header.sn_type == SCTP_SHUTDOWN_EVENT)   && (notificationFlags & SCTP_RECVSHUTDOWNEVNT))) {
 
+      association->UseCount++;
+#ifdef PRINT_ASSOC_USECOUNT
+      cout << association->UseCount << ". Notification Type = " << notification.Content.sn_header.sn_type << endl;
+#endif
+
       // ====== Add notification to global or association's queue ===========
 #ifdef PRINT_ASSOC_USECOUNT
       cout << "AddNotification: UseCount increment for A" << association->getID() << ": "
            << association->UseCount << " -> ";
-#endif
-      association->UseCount++;
-#ifdef PRINT_ASSOC_USECOUNT
-      cout << association->UseCount << ". Notification Type = " << notification.Content.sn_header.sn_type << endl;
 #endif
       if( (socket->Flags & SCTPSocket::SSF_GlobalQueue) &&
           (association->PeeledOff == false) ) {
