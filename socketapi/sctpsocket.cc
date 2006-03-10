@@ -39,6 +39,7 @@
 #include "sctpsocketmaster.h"
 
 
+/*
 #define PRINT_BIND
 #define PRINT_UNBIND
 #define PRINT_ADDIP
@@ -54,16 +55,19 @@
 #define PRINT_SENDSTATUS
 #define PRINT_SETPRIMARY
 #define PRINT_SENDTO
+*/
 
-#define PRINT_AUTOCLOSE_TIMEOUT
-#define PRINT_AUTOCLOSE_CHECK
+// #define PRINT_AUTOCLOSE_TIMEOUT
+// #define PRINT_AUTOCLOSE_CHECK
 
+/*
 #define PRINT_RECVWAIT
 #define PRINT_ISSHUTDOWN
 #define PRINT_PATHFORINDEX
 #define PRINT_ASSOCSEARCH
 #define PRINT_ASSOC_USECOUNT
 #define PRINT_RTO
+*/
 
 
 // ###### Constructor #######################################################
@@ -1320,9 +1324,7 @@ int SCTPSocket::sendTo(const char*           buffer,
                << " failed!" << endl;
          }
 #endif
-cout << "sendTo: U5"<< endl;
       }
-cout << "sendTo: U6"<< endl;
 
 
       // ====== Send data ===================================================
@@ -1935,54 +1937,76 @@ void SCTPSocket::checkAutoClose()
             << "   AutoCloseTimeout = " << AutoCloseTimeout << endl;
 #endif
 
-         if((association->UseCount == 0) &&
-            (AutoCloseTimeout > 0) &&
-            (now - association->LastUsage > AutoCloseTimeout)) {
+         /* ====== Association has no active users ======================= */
+         if(association->UseCount == 0) {
+            /* ====== Association is closed -> remove it ================= */
+            if((association->ShutdownCompleteNotification) ||
+               (association->CommunicationLostNotification)) {
 #ifdef PRINT_AUTOCLOSE_TIMEOUT
-            const unsigned int assocID = association->getID();
-            cout << "AutoConnect: Doing shutdown of association #" << assocID << " due to timeout" << endl;
+               const unsigned int assocID = association->getID();
+               cout << "AutoConnect: Removing association #" << assocID << ": ";
+               if(association->ShutdownCompleteNotification) {
+                  cout << "shutdown complete";
+               }
+               else if(association->CommunicationLostNotification) {
+                  cout << "communication lost";
+               }
+               cout << "..." << endl;
 #endif
-            iterator++;   // Important! shutdown() may invalidate iterator!
-            association->shutdown();
-         }
-         else if((association->UseCount == 0) &&   // Important: Only remove association when there are no users!
-                 ((association->ShutdownCompleteNotification) ||
-                  (association->CommunicationLostNotification))) {
+
+               // Important! Removal will invalidate iterator!
+               multimap<unsigned int, SCTPAssociation*>::iterator delIterator = iterator;
+               iterator++;
+               ConnectionlessAssociationList.erase(delIterator);
+
+               delete association;
 #ifdef PRINT_AUTOCLOSE_TIMEOUT
-            const unsigned int assocID = association->getID();
-            cout << "AutoConnect: Removing association #" << assocID << ": ";
-            if(association->ShutdownCompleteNotification) {
-               cout << "shutdown complete";
+               cout << "AutoConnect: AutoClose of association #" << assocID << " completed!" << endl;
+#endif
             }
-            else if(association->CommunicationLostNotification) {
-               cout << "communication lost";
-            }
-            cout << "..." << endl;
-#endif
 
-            // Important! Removal will invalidate iterator!
-            multimap<unsigned int, SCTPAssociation*>::iterator delIterator = iterator;
-            iterator++;
-            ConnectionlessAssociationList.erase(delIterator);
-
-            delete association;
+            /* ====== Association still active, time to send ABORT! ====== */
+            else if((AutoCloseTimeout > 0) &&
+                    (now - association->LastUsage > 4 * AutoCloseTimeout)) {
 #ifdef PRINT_AUTOCLOSE_TIMEOUT
-            cout << "AutoConnect: AutoClose of association #" << assocID << " completed!" << endl;
+               const unsigned int assocID = association->getID();
+               cout << "AutoConnect: Abort of association #" << assocID << " due to timeout" << endl;
 #endif
+               iterator++;   // Important! shutdown() may invalidate iterator!
+               association->abort();
+            }
+
+            /* ====== Association still active, but timeout has expired == */
+            else if((AutoCloseTimeout > 0) &&
+                    (now - association->LastUsage > AutoCloseTimeout) &&
+                    (!association->IsShuttingDown)) {
+#ifdef PRINT_AUTOCLOSE_TIMEOUT
+               const unsigned int assocID = association->getID();
+               cout << "AutoConnect: Doing shutdown of association #" << assocID << " due to timeout" << endl;
+#endif
+               iterator++;   // Important! shutdown() may invalidate iterator!
+               association->shutdown();
+            }
+
+            /* ====== Association is waiting for shutdown/abort ========== */
+            else {
+               iterator++;
+            }
          }
 
-
-         else if((association->UseCount != 0) &&
-                 ((association->ShutdownCompleteNotification) ||
-                  (association->CommunicationLostNotification))) {
-            const unsigned int assocID = association->getID();
-cout << "TESTTEST: Association #" << assocID << " is disconnected but still has users!" << endl;
-            iterator++;
-         }
-
-
+         /* ====== Association is still in use =========================== */
          else {
+            // Skip this association
             iterator++;
+
+            // The association is closed, but somebody is still using it.
+            // We will remove it later ...
+            if((association->ShutdownCompleteNotification) ||
+               (association->CommunicationLostNotification)) {
+#ifdef PRINT_AUTOCLOSE_TIMEOUT
+               cout << "AutoConnect: Association #" << association->getID() << " is disconnected but still has users!" << endl;
+#endif
+            }
          }
       }
    } while(AutoCloseNewCheckRequired == true);

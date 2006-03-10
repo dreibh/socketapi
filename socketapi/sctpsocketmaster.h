@@ -5,7 +5,7 @@
  * Copyright (C) 1999-2002 by Thomas Dreibholz
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 1999-2003 by Thomas Dreibholz
+ * Copyright (C) 1999-2006 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG

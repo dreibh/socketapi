@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 1999-2003 by Thomas Dreibholz
+ * Copyright (C) 1999-2006 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -48,11 +48,11 @@
 #endif
 
 
-
-#define PRINT_NOTIFICATIONS
-#define PRINT_ARRIVENOTIFICATION
-#define PRINT_ASSOC_USECOUNT
-#define PRINT_RTOMAXRESTORE
+// #define PRINT_NOTIFICATIONS
+// #define PRINT_ARRIVENOTIFICATION
+// #define PRINT_USERCALLBACK
+// #define PRINT_ASSOC_USECOUNT
+// #define PRINT_RTOMAXRESTORE
 
 // #define PRINT_PIPE
 // #define PRINT_GC
@@ -1068,7 +1068,7 @@ void SCTPSocketMaster::userCallback(int        fileDescriptor,
                                     void*      userData)
 {
    char str[256];
-#ifdef PRINT_NOTIFICATIONS
+#ifdef PRINT_USERCALLBACK
    snprintf((char*)&str,sizeof(str),
                "F%04d: User Callback, mask=$%x",
                fileDescriptor,eventMask);
