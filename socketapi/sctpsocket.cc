@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 1999-2003 by Thomas Dreibholz
+ * Copyright (C) 1999-2006 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -1201,13 +1201,10 @@ int SCTPSocket::sendTo(const char*           buffer,
                        const cardinal        noOfOutgoingStreams)
 {
    int result;
-static int yyy=0;
-int zzz=yyy++;
-unsigned int aOLD=0;
 
    SCTPSocketMaster::MasterInstance.lock();
 #ifdef PRINT_SENDTO
-   cout << zzz<<"SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags << endl;
+   cout << "SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags << endl;
 #endif
 
    // ====== Send to one association ========================================
@@ -1280,24 +1277,20 @@ unsigned int aOLD=0;
          }
 
 #ifdef PRINT_SENDTO
-   cout << zzz<<"SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
+   cout << "SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
         << ": association=" << association->getID() << endl;
 #endif
       }
 
-cout << zzz<<"sendTo: U1"<< endl;
       SCTPSocketMaster::MasterInstance.unlock();
-cout << zzz<<"sendTo: U2"<< endl;
 
       // ====== Create new association ======================================
       if((Flags & SSF_AutoConnect) && (association == NULL) && (destinationAddressList != NULL)) {
-cout << zzz<<"sendTo: U3"<< endl;
 #ifdef PRINT_NEW_ASSOCIATIONS
          cout << "AutoConnect: New outgoing association to "
             << destinationAddressList[0]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
             << "..." << endl;
 #endif
-cout << zzz<<"sendTo: U4"<< endl;
          association = associate(noOfOutgoingStreams,
                                  maxAttempts, maxInitTimeout,
                                  destinationAddressList,
@@ -1327,34 +1320,26 @@ cout << zzz<<"sendTo: U4"<< endl;
                << " failed!" << endl;
          }
 #endif
-cout << zzz<<"sendTo: U5"<< endl;
+cout << "sendTo: U5"<< endl;
       }
-cout << zzz<<"sendTo: U6"<< endl;
+cout << "sendTo: U6"<< endl;
 
 
       // ====== Send data ===================================================
       if(association != NULL) {
-aOLD=association->getID();
-cout << zzz<<"sendTo: U7 id="<< association->getID() << " ptr=" << (void*)association << endl;
          if((buffer != NULL) && (length > 0)) {
             result = association->sendTo(buffer, length, flags,
                                          streamID, protoID, timeToLive, useDefaults,
                                          destinationAddressList ? destinationAddressList[0] : NULL);
-cout << zzz<<"sendTo: U8 id="<< association->getID() << " ptr=" << (void*)association << endl;
-if(aOLD!=association->getID()) {
-   cout << zzz<<"sendTo: Scheiße!" << endl;
-   abort();
-}
          }
          else {
             result = 0;
          }
 
          // ====== Remove association, if SHUTDOWN flag is set ==============
-cout << zzz<<"sendTo: U9 id="<< association->getID() << endl;
          if((flags & MSG_EOF) || (flags & MSG_ABORT)) {
 #ifdef PRINT_SENDTO
-            cout << zzz<<"SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
+            cout << "SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
                  << ", association=" << association->getID() << ": handling MSG_EOF or MSG_ABORT" << endl;
 #endif
             if(flags & MSG_ABORT) {
@@ -1369,7 +1354,6 @@ cout << zzz<<"sendTo: U9 id="<< association->getID() << endl;
 #endif
                association->shutdown();
             }
-cout << zzz<<"sendTo: U10 id="<< association->getID() << endl;
             if(Flags & SSF_AutoConnect) {
 #ifdef PRINT_SHUTDOWNS
                cout << "AutoConnect: Shutdown of outgoing association ";
@@ -1401,11 +1385,9 @@ cout << zzz<<"sendTo: U10 id="<< association->getID() << endl;
 #endif
             }
 #ifdef PRINT_SENDTO
-            cout << zzz<<"SendTo: handling AutoConnect" << endl;
+            cout << "SendTo: handling AutoConnect" << endl;
 #endif
-cout << zzz<<"sendTo: U11" << endl;
             checkAutoConnect();
-cout << zzz<<"sendTo: U12" << endl;
          }
       }
       else {
@@ -1416,7 +1398,7 @@ cout << zzz<<"sendTo: U12" << endl;
       SCTPSocketMaster::MasterInstance.lock();
       if(association != NULL) {
 #ifdef PRINT_SENDTO
-         cout << zzz<<"SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
+         cout << "SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
               << ", association=" << association->getID() << ": handling UseCount decrement;  ptr=" << (void*)association << endl;
 #endif
          association->LastUsage = getMicroTime();
@@ -1432,7 +1414,7 @@ cout << zzz<<"sendTo: U12" << endl;
          }
 #ifndef DISABLE_WARNINGS
          else {
-            cerr <<zzz<< "INTERNAL ERROR: SCTPSocket::sendTo() - Too many association usecount decrements for association ID " << assocID << "!" << endl;
+            cerr << "INTERNAL ERROR: SCTPSocket::sendTo() - Too many association usecount decrements for association ID " << assocID << "!" << endl;
             abort();
          }
 #endif
