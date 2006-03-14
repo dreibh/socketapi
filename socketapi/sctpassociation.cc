@@ -40,12 +40,12 @@
 #include "sctpsocketmaster.h"
 
 
-/*
+
 #define PRINT_PREESTABLISHMENT_SEND
 #define PRINT_SHUTDOWN
 #define PRINT_SOCKTYPE
 #define PRINT_RTOMAX
-*/
+
 
 
 // ###### Constructor #######################################################

@@ -39,7 +39,7 @@
 #include "sctpsocketmaster.h"
 
 
-/*
+
 #define PRINT_BIND
 #define PRINT_UNBIND
 #define PRINT_ADDIP
@@ -55,19 +55,19 @@
 #define PRINT_SENDSTATUS
 #define PRINT_SETPRIMARY
 #define PRINT_SENDTO
-*/
 
-// #define PRINT_AUTOCLOSE_TIMEOUT
-// #define PRINT_AUTOCLOSE_CHECK
 
-/*
+#define PRINT_AUTOCLOSE_TIMEOUT
+#define PRINT_AUTOCLOSE_CHECK
+
+
 #define PRINT_RECVWAIT
 #define PRINT_ISSHUTDOWN
 #define PRINT_PATHFORINDEX
 #define PRINT_ASSOCSEARCH
 #define PRINT_ASSOC_USECOUNT
 #define PRINT_RTO
-*/
+
 
 
 // ###### Constructor #######################################################
