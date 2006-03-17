@@ -1010,8 +1010,8 @@ void SCTPSocketMaster::shutdownCompleteNotif(unsigned int assocID, void* ulpData
          sac->sac_assoc_id         = assocID;
          addNotification(socket,assocID,notification);
       }
+      socket->checkAutoClose();
    }
-   socket->checkAutoClose();
 }
 
 
