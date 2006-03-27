@@ -1398,8 +1398,8 @@ static int setEvents(ExtSocketDescriptor* tdSocket,
    if(events->sctp_partial_delivery_event) {
       flags |= SCTP_RECVPDEVNT;
    }
-   if(events->sctp_adaption_layer_event) {
-      flags |= SCTP_RECVADAPIONINDICATION;
+   if(events->sctp_adaptation_layer_event) {
+      flags |= SCTP_RECVADAPTATIONINDICATION;
    }
 
    if((tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr != NULL) && (tdSocket->Socket.SCTPSocketDesc.ConnectionOriented)) {

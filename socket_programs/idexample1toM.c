@@ -239,7 +239,7 @@ int main()
   event.sctp_peer_error_event = 1;
   event.sctp_shutdown_event = 1;
   event.sctp_partial_delivery_event = 1;
-  event.sctp_adaption_layer_event = 1;
+  event.sctp_adaptation_layer_event = 1;
 
   if (ext_setsockopt(fd, IPPROTO_SCTP, SCTP_EVENTS, &event, sizeof(event)) < 0) {
    perror("setsockopt SCTP_EVENTS");

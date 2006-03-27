@@ -46,14 +46,14 @@
 
 
 
-#define SCTP_RECVDATAIOEVNT        (1 << 0)
-#define SCTP_RECVASSOCEVNT         (1 << 1)
-#define SCTP_RECVPADDREVNT         (1 << 2)
-#define SCTP_RECVPEERERR           (1 << 3)
-#define SCTP_RECVSENDFAILEVNT      (1 << 4)
-#define SCTP_RECVSHUTDOWNEVNT      (1 << 5)
-#define SCTP_RECVADAPIONINDICATION (1 << 6)
-#define SCTP_RECVPDEVNT            (1 << 7)
+#define SCTP_RECVDATAIOEVNT           (1 << 0)
+#define SCTP_RECVASSOCEVNT            (1 << 1)
+#define SCTP_RECVPADDREVNT            (1 << 2)
+#define SCTP_RECVPEERERR              (1 << 3)
+#define SCTP_RECVSENDFAILEVNT         (1 << 4)
+#define SCTP_RECVSHUTDOWNEVNT         (1 << 5)
+#define SCTP_RECVADAPTATIONINDICATION (1 << 6)
+#define SCTP_RECVPDEVNT               (1 << 7)
 
 
 
