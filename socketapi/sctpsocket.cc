@@ -328,6 +328,18 @@ void SCTPSocket::unbind(bool sendAbort)
          iterator = ConnectionlessAssociationList.begin();
       }
 
+      // ====== Delete associations created with associate() or accepted ====
+      iterator = AssociationList.begin();
+      while(iterator != AssociationList.end()) {
+         SCTPAssociation* association = iterator->second;
+         AssociationList.erase(iterator);
+         if(sendAbort) {
+            association->abort();
+         }
+         delete association;
+         iterator = AssociationList.begin();
+      }
+
       // ====== Mark SCTP instance for unregistering ========================
       SCTPSocketMaster::delayedDeleteSocket(InstanceName);
 

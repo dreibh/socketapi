@@ -373,7 +373,7 @@ void SCTPSocketMaster::socketGarbageCollection()
       socketIterator++;
    }
 
-   // ====== Try to delete sockets already removed sockets using sctplib ====
+   // ====== Try to delete already removed sockets using sctplib ============
    set<int>::iterator iterator = ClosingSockets.begin();
    while(iterator != ClosingSockets.end()) {
       const unsigned short instanceID = *iterator;
