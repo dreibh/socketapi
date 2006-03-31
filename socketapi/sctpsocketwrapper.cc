@@ -48,8 +48,8 @@
 
 // Print note, if no SCTP is available in kernel.
 // #define PRINT_NOSCTP_NOTE
-// #define PRINT_SELECT
 // #define PRINT_RANDOM_PORTSELECTION
+// #define PRINT_SELECT
 
 
 
