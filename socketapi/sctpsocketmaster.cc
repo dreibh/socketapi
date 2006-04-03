@@ -416,7 +416,6 @@ bool SCTPSocketMaster::associationGarbageCollection(const unsigned int assocID,
    // ====== Delayed removal ================================================
    multimap<unsigned int, int>::iterator iterator = ClosingAssociations.find(assocID);
    if(iterator != ClosingAssociations.end()) {
-      const unsigned short instanceID = iterator->second;
 #ifdef PRINT_GC
       cout << "associationGarbageCollection: Removing association #" << assocID << "." << endl;
 #endif
