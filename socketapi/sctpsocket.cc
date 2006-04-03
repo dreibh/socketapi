@@ -340,6 +340,15 @@ void SCTPSocket::unbind(bool sendAbort)
          iterator = AssociationList.begin();
       }
 
+      // ====== Remove incoming associations ================================
+      while(ConnectionRequests != NULL) {
+         SCTPAssociation* association   = ConnectionRequests->Association;
+         IncomingConnection* oldRequest = ConnectionRequests;
+         ConnectionRequests = oldRequest->NextConnection;
+         delete association;
+         delete oldRequest;
+      }
+
       // ====== Remove socket from global list ==============================
       multimap<int, SCTPSocket*>::iterator socketIterator =
          SCTPSocketMaster::SocketList.find(InstanceName);
@@ -352,15 +361,6 @@ void SCTPSocket::unbind(bool sendAbort)
               << InstanceName << "!" << endl;
          abort();
 #endif
-      }
-
-      // ====== Remove incoming associations ================================
-      while(ConnectionRequests != NULL) {
-         SCTPAssociation* association   = ConnectionRequests->Association;
-         IncomingConnection* oldRequest = ConnectionRequests;
-         ConnectionRequests = oldRequest->NextConnection;
-         delete association;
-         delete oldRequest;
       }
 
       // ====== Mark SCTP instance for unregistering ========================
