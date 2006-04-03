@@ -432,33 +432,7 @@ bool SCTPSocketMaster::associationGarbageCollection(const unsigned int assocID,
       sctp_deleteAssociation(assocID);
       ClosingAssociations.erase(iterator);
 
-      // ====== Check, if instance can be deleted ===========================
-      if(ClosingSockets.find(instanceID) != ClosingSockets.end()) {
-         // ====== Check, if instance is still in use =======================
-         bool deleteInstance = true;
-         iterator = ClosingAssociations.begin();
-         while(iterator != ClosingAssociations.end()) {
-            if(iterator->second == instanceID) {
-#ifdef PRINT_GC
-               cout << "associationGarbageCollection: Instance #" << instanceID
-                    << " is still in use -> no unregistering." << endl;
-#endif
-               deleteInstance = false;
-               break;
-            }
-            iterator++;
-         }
-
-         // ====== Delete instance ==========================================
-         if(deleteInstance) {
-#ifdef PRINT_GC
-            cout << "associationGarbageCollection: Removing instance #" << instanceID << "." << endl;
-#endif
-            ClosingSockets.erase(instanceID);
-            sctp_unregisterInstance(instanceID);
-         }
-      }
-
+      socketGarbageCollection();
       return(true);
    }
    return(false);

@@ -340,9 +340,6 @@ void SCTPSocket::unbind(bool sendAbort)
          iterator = AssociationList.begin();
       }
 
-      // ====== Mark SCTP instance for unregistering ========================
-      SCTPSocketMaster::delayedDeleteSocket(InstanceName);
-
       // ====== Remove socket from global list ==============================
       multimap<int, SCTPSocket*>::iterator socketIterator =
          SCTPSocketMaster::SocketList.find(InstanceName);
@@ -365,6 +362,9 @@ void SCTPSocket::unbind(bool sendAbort)
          delete association;
          delete oldRequest;
       }
+
+      // ====== Mark SCTP instance for unregistering ========================
+      SCTPSocketMaster::delayedDeleteSocket(InstanceName);
 
       SCTPSocketMaster::MasterInstance.unlock();
 
