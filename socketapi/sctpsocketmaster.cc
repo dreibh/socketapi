@@ -394,7 +394,12 @@ void SCTPSocketMaster::socketGarbageCollection()
 #endif
          iterator++;
          ClosingSockets.erase(instanceID);
-         sctp_unregisterInstance(instanceID);
+         if(sctp_unregisterInstance(instanceID) != SCTP_SUCCESS) {
+#ifndef DISABLE_WARNINGS
+            cerr << "INTERNAL ERROR: SCTPSocketMaster::socketGarbageCollection() - sctp_unregisterInstance() failed!" << endl;
+#endif
+            ::abort();
+         }
       }
       else {
          iterator++;
@@ -428,7 +433,12 @@ bool SCTPSocketMaster::associationGarbageCollection(const unsigned int assocID,
          sctp_abort(assocID);
 #endif
       }
-      sctp_deleteAssociation(assocID);
+      if(sctp_deleteAssociation(assocID) != SCTP_SUCCESS) {
+#ifndef DISABLE_WARNINGS
+         cerr << "INTERNAL ERROR: SCTPSocketMaster::associationGarbageCollection() - sctp_deleteAssociation() failed!" << endl;
+#endif
+         ::abort();
+      }
       ClosingAssociations.erase(iterator);
 
       socketGarbageCollection();
@@ -1247,7 +1257,11 @@ void SCTPSocketMaster::addUserSocketNotification(UserSocketNotification* usn)
 void SCTPSocketMaster::deleteUserSocketNotification(UserSocketNotification* usn)
 {
    lock();
-   sctp_unregisterUserCallback(usn->FileDescriptor);
+   if(sctp_unregisterUserCallback(usn->FileDescriptor) != SCTP_SUCCESS) {
+#ifndef DISABLE_WARNINGS
+      cerr << "INTERNAL ERROR: SCTPSocketMaster::deleteUserSocketNotification() - sctp_unregisterUserCallback() failed!" << endl;
+#endif
+   }
    unlock();
 }
 

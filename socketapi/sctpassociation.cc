@@ -116,6 +116,7 @@ SCTPAssociation::~SCTPAssociation()
       cerr << "ERROR: SCTPAssociation::~SCTPAssociation() - "
               "AssociationID is 0! Destructor called twice?!" << endl;
 #endif
+      ::abort();
       return;
    }
 
@@ -134,7 +135,13 @@ SCTPAssociation::~SCTPAssociation()
 #ifdef PRINT_SHUTDOWN
       cout << "Passive shutdown of association #" << AssociationID << "!" << endl;
 #endif
-      sctp_deleteAssociation(AssociationID);
+
+      ifsctp_deleteAssociation(AssociationID) != SCTP_SUCCESS) {
+#ifndef DISABLE_WARNINGS
+         cerr << "INTERNAL ERROR: SCTPAssociation::~SCTPAssociation() - sctp_deleteAssociation() failed!" << endl;
+#endif
+         ::abort();
+      }
    }
 
    // ====== Remove association from list ================================
@@ -147,8 +154,8 @@ SCTPAssociation::~SCTPAssociation()
 #ifndef DISABLE_WARNINGS
       cerr << "INTERNAL ERROR: SCTPAssociation::~SCTPAssociation() - "
               "Erase of association #" << AssociationID << " failed!" << endl;
-      ::abort();
 #endif
+      ::abort();
    }
 
    // ====== Clear ID, to make finding dangling references easier ===========
