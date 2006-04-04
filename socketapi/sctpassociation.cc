@@ -136,7 +136,7 @@ SCTPAssociation::~SCTPAssociation()
       cout << "Passive shutdown of association #" << AssociationID << "!" << endl;
 #endif
 
-      ifsctp_deleteAssociation(AssociationID) != SCTP_SUCCESS) {
+      if(sctp_deleteAssociation(AssociationID) != SCTP_SUCCESS) {
 #ifndef DISABLE_WARNINGS
          cerr << "INTERNAL ERROR: SCTPAssociation::~SCTPAssociation() - sctp_deleteAssociation() failed!" << endl;
 #endif
