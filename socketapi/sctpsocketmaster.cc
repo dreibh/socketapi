@@ -659,6 +659,10 @@ void* SCTPSocketMaster::communicationUpNotif(unsigned int   assocID,
 #endif
                                              void*          dummy)
 {
+   SCTPAssociation* association = NULL;
+   SCTPNotification notification;
+   initNotification(notification, assocID, 0);
+
 #ifdef PRINT_NOTIFICATIONS
    char str[256];
    snprintf((char*)&str,sizeof(str),
@@ -668,11 +672,8 @@ void* SCTPSocketMaster::communicationUpNotif(unsigned int   assocID,
 
    SCTPSocket* socket = getSocketForAssociationID(assocID);
    if(socket != NULL) {
-      SCTPNotification notification;
-      initNotification(notification,assocID,0);
-
       // ====== Successfull associate() execution ===========================
-      SCTPAssociation* association = socket->getAssociationForAssociationID(assocID);
+      association = socket->getAssociationForAssociationID(assocID);
       if(association != NULL) {
          // ====== Correct RTOMax ============================================
          if(association->RTOMaxIsInitTimeout) {
@@ -733,31 +734,41 @@ void* SCTPSocketMaster::communicationUpNotif(unsigned int   assocID,
       }
       // ====== Unwanted incoming association ===============================
       else {
+         cerr << "Incoming association, but not in listen mode -> rejecting association!" << endl;
+         association = NULL;
+      }
+   }
+
+   // ====== Generate "Communication Up" notification =======================
+   if(association != NULL) {
+      sctp_assoc_change* sac = &notification.Content.sn_assoc_change;
+      sac->sac_type   = SCTP_ASSOC_CHANGE;
+      sac->sac_flags  = 0;
+      sac->sac_length = sizeof(sctp_assoc_change);
+      sac->sac_state  = SCTP_COMM_UP;
+      sac->sac_error  = 0;
+      sac->sac_outbound_streams = noOfOutStreams;
+      sac->sac_inbound_streams  = noOfInStreams;
+      sac->sac_assoc_id         = assocID;
+      addNotification(socket,assocID,notification);
+   }
+   // ====== We do not want this new association -> remove it! ==============
+   else {
 #ifdef PRINT_NOTIFICATIONS
-         cerr << "Rejecting unwanted incoming association" << endl;
+      cerr << "Aborting and deleting unwanted incoming association!" << endl;
 #endif
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
-         sctp_abort(assocID, 0, NULL);
+      sctp_abort(assocID, 0, NULL);
 #elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
-         sctp_abort(assocID);
+      sctp_abort(assocID);
 #else
 #error Wrong sctplib version!
 #endif
-      }
-
-
-      // ====== Generate "Communication Up" notification ====================
-      if(association != NULL) {
-         sctp_assoc_change* sac = &notification.Content.sn_assoc_change;
-         sac->sac_type   = SCTP_ASSOC_CHANGE;
-         sac->sac_flags  = 0;
-         sac->sac_length = sizeof(sctp_assoc_change);
-         sac->sac_state  = SCTP_COMM_UP;
-         sac->sac_error  = 0;
-         sac->sac_outbound_streams = noOfOutStreams;
-         sac->sac_inbound_streams  = noOfInStreams;
-         sac->sac_assoc_id         = assocID;
-         addNotification(socket,assocID,notification);
+      if(sctp_deleteAssociation(assocID) != SCTP_SUCCESS) {
+#ifndef DISABLE_WARNINGS
+         cerr << "INTERNAL ERROR: SCTPSocketMaster::communicationUpNotif() - sctp_deleteAssociation() or rejected association failed!" << endl;
+#endif
+         ::abort();
       }
    }
 
