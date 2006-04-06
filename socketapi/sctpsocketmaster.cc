@@ -48,14 +48,14 @@
 #endif
 
 
-#define PRINT_NOTIFICATIONS
-#define PRINT_ARRIVENOTIFICATION
-#define PRINT_USERCALLBACK
-#define PRINT_ASSOC_USECOUNT
-#define PRINT_RTOMAXRESTORE
-
-#define PRINT_PIPE
-#define PRINT_GC
+// #define PRINT_NOTIFICATIONS
+// #define PRINT_ARRIVENOTIFICATION
+// #define PRINT_USERCALLBACK
+// #define PRINT_ASSOC_USECOUNT
+// #define PRINT_RTOMAXRESTORE
+//
+// #define PRINT_PIPE
+// #define PRINT_GC
 
 // Do not show a warning on initialization failure.
 // #define NO_INITFAIL_WARNING
