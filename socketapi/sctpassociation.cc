@@ -196,13 +196,11 @@ bool SCTPAssociation::getLocalAddresses(SocketAddress**& addressArray)
 // ###### Get remote address ################################################
 bool SCTPAssociation::getRemoteAddresses(SocketAddress**& addressArray)
 {
-   if(addressArray != NULL) {
-      addressArray = NULL;
-   }
    bool                    result = true;
    SCTP_Association_Status status;
-   addressArray = NULL;
+   int                     ok;
 
+   addressArray = NULL;
    SCTPSocketMaster::MasterInstance.lock();
 
    if(sctp_getAssocStatus(AssociationID,&status) == 0) {
@@ -228,16 +226,19 @@ bool SCTPAssociation::getRemoteAddresses(SocketAddress**& addressArray)
 #endif
 
          SCTP_Path_Status pathStatus;
-         if(sctp_getPathStatus(AssociationID,index,&pathStatus) != 0) {
+         ok = sctp_getPathStatus(AssociationID, index, &pathStatus);
+         if(ok != SCTP_SUCCESS) {
 #ifndef DISABLE_WARNINGS
-            cerr << "INTERNAL ERROR: SCTPAssociation::getRemoteAddress() - sctp_getPathStatus() failure!"
-                 << endl;
-            ::abort();
+            cerr << "WARNING: SCTPAssociation::getRemoteAddress() - sctp_getPathStatus() failure!" << endl
+                 << "return code: " << ok << endl;
 #endif
+            SocketAddress::deleteAddressList(addressArray);
+            result = false;
+            break;
          }
          else {
             addressArray[i] = SocketAddress::createSocketAddress(
-                                 0,(char*)&pathStatus.destinationAddress,status.destPort);
+                                 0, (char*)&pathStatus.destinationAddress,status.destPort);
             if(addressArray[i] == NULL) {
 #ifndef DISABLE_WARNINGS
                cerr << "WARNING: SCTPAssociation::getRemoteAddresses() - Bad address "
@@ -245,6 +246,7 @@ bool SCTPAssociation::getRemoteAddresses(SocketAddress**& addressArray)
 #endif
                SocketAddress::deleteAddressList(addressArray);
                result = false;
+               break;
             }
          }
       }
