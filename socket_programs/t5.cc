@@ -2,7 +2,7 @@
  * A SCTP terminal using the socket API.
  * Copyright (C) 2005-2006 by Thomas Dreibholz, dreibh@exp-math.uni-essen.de
  *
- * $Id$
+ * $Id: terminal.c 1045 2006-03-27 13:47:32Z dreibh $
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -209,7 +209,7 @@ int main(int argc, char** argv)
    uint32_t                    ppid;
 
    if(argc < 2) {
-      fprintf(stderr, "Usage: %s [Remote address:Port]\n", argv[0]);
+      fprintf(stderr, "ERROR: Bad argument <%s>!\n", argv[0]);
       exit(1);
    }
    if(!string2address(argv[1], &remoteAddress)) {
@@ -223,10 +223,7 @@ int main(int argc, char** argv)
 
 
    /* ====== Create socket =============================================== */
-   sd = ext_socket(AF_INET6, SOCK_STREAM, IPPROTO_SCTP);
-   if(sd < 0) {
-      sd = ext_socket(AF_INET, SOCK_STREAM, IPPROTO_SCTP);
-   }
+   sd = ext_socket(AF_INET, SOCK_STREAM, IPPROTO_SCTP);
    if(sd < 0) {
       perror("Unable to create SCTP socket");
       exit(1);
@@ -264,6 +261,24 @@ int main(int argc, char** argv)
       exit(1);
    }
    printf("okay!\n\n");
+
+int f0;
+socklen_t fl = sizeof(f0);
+if(ext_getsockopt(sd, SOL_SOCKET,SO_REUSEADDR, &f0, &fl) < 0) {
+   perror("GetSockOpt");
+}
+int f = 1;
+if(ext_setsockopt(sd, SOL_SOCKET,SO_REUSEADDR, &f, sizeof(f)) < 0) {
+   perror("SetSockOpt");
+}
+
+sockaddr_storage ss;
+socklen_t l = sizeof(ss);
+if(ext_getsockname(sd, (sockaddr*)&ss, &l) != 0) {
+   perror("Scheiße");
+exit(1);
+}
+else puts("OK!");
 
    /* ====== Terminal ==================================================== */
    streamID = 0;

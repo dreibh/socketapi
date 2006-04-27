@@ -417,7 +417,7 @@ String InternetAddress::getAddressString(const cardinal format) const
                   }
                   compressed = true;
                   i = j - 1;
-               }                        
+               }
             }
             strcat((char*)&addressString,(char*)&str);
             if(i < 7) {
@@ -427,7 +427,7 @@ String InternetAddress::getAddressString(const cardinal format) const
          if(addressString[l0 + 1] == 0x00) { // Any-Adress "::"
             strcat((char*)&addressString,":");
          }
-               
+
          // ====== Print embedded IPv4 address in IPv4 notation =============
          if(length == 6) {
             card32 a = ntohl(*((card32*)&Host[6]));
@@ -438,7 +438,7 @@ String InternetAddress::getAddressString(const cardinal format) const
                                    (a & 0x000000ff));
             strcat((char*)&addressString,(char*)&str);
          }
-               
+
          // ====== Add port number ==========================================
          if(!(format & PF_HidePort)) {
             snprintf((char*)&str,sizeof(str),"]:%d",ntohs(Port));

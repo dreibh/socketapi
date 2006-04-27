@@ -882,12 +882,16 @@ int ext_getsockname(int sockfd, struct sockaddr* name, socklen_t* namelen)
                if((localAddressArray != NULL)    &&
                   (localAddressArray[0] != NULL) &&
                   (name != NULL) && (namelen != NULL)) {
-                  if(localAddressArray[0]->getSystemAddress(name,*namelen,
-                                              tdSocket->Socket.SCTPSocketDesc.Domain)) {
-                     result = 0;
-                  }
-                  else {
-                     result = -ENAMETOOLONG;
+                  result = -ENAMETOOLONG;
+                  size_t i = 0;
+                  while(localAddressArray[i] != NULL) {
+                     if(localAddressArray[i]->getSystemAddress(
+                           name,*namelen,
+                           tdSocket->Socket.SCTPSocketDesc.Domain)) {
+                        result = 0;
+                        break;
+                     }
+                     i++;
                   }
                }
 
@@ -925,11 +929,16 @@ int ext_getpeername(int sockfd, struct sockaddr* name, socklen_t* namelen)
                if((remoteAddressArray != NULL)    &&
                   (remoteAddressArray[0] != NULL) &&
                   (name != NULL) && (namelen != NULL)) {
-                  if(remoteAddressArray[0]->getSystemAddress(name,*namelen,tdSocket->Socket.SCTPSocketDesc.Domain) > 0) {
-                     result = 0;
-                  }
-                  else {
-                     result = -ENAMETOOLONG;
+                  result = -ENAMETOOLONG;
+                  size_t i = 0;
+                  while(remoteAddressArray[i] != NULL) {
+                     if(remoteAddressArray[i]->getSystemAddress(
+                           name,*namelen,
+                           tdSocket->Socket.SCTPSocketDesc.Domain)) {
+                        result = 0;
+                        break;
+                     }
+                     i++;
                   }
                }
 
@@ -1248,6 +1257,9 @@ int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* 
                             }
                             errno_return(-EBADF);
                           break;
+                         default:
+                            errno_return(-EOPNOTSUPP);
+                          break;
                       }
                    break;
 
@@ -1283,6 +1295,9 @@ int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* 
                             *((linger*)optval) = tdSocket->Socket.SCTPSocketDesc.Linger;
                             *optlen = sizeof(linger);
                             errno_return(0);
+                          break;
+                         default:
+                            errno_return(-EOPNOTSUPP);
                           break;
                       }
                    break;
@@ -1685,6 +1700,9 @@ int ext_setsockopt(int sockfd, int level, int optname, const void* optval, sockl
                             }
                             tdSocket->Socket.SCTPSocketDesc.Linger = *((linger*)optval);
                             errno_return(0);
+                          break;
+                         default:
+                            errno_return(-EOPNOTSUPP);
                           break;
                       }
                    break;
