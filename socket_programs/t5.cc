@@ -332,6 +332,34 @@ else puts("OK!");
 
                }
                else {
+                  sctp_assoc_value value;
+                  value.assoc_id = sinfo.sinfo_assoc_id;
+                  socklen_t l = sizeof(value);
+                  if(ext_getsockopt(sd, IPPROTO_SCTP,SCTP_DELAYED_ACK_TIME, &value, &l) < 0) {
+                     perror("getSockOpt AckTime1");
+                  }
+                  printf("AckTime0=%d\n", value.assoc_value);
+                  value.assoc_id = 0;
+                  l = sizeof(value);
+                  if(ext_getsockopt(sd, IPPROTO_SCTP,SCTP_DELAYED_ACK_TIME, &value, &l) < 0) {
+                     perror("getSockOpt AckTime1");
+                  }
+                  printf("AckTime1=%d\n", value.assoc_value);
+
+                  value.assoc_id    = sinfo.sinfo_assoc_id;
+                  value.assoc_value = 111;
+                  if(ext_setsockopt(sd, IPPROTO_SCTP,SCTP_DELAYED_ACK_TIME, &value, sizeof(value)) < 0) {
+                     perror("setSockOpt AckTime0");
+                  }
+                  printf("NewAckTime0=%d\n", value.assoc_value);
+                  value.assoc_id    = 0;
+                  value.assoc_value = 1;
+                  if(ext_setsockopt(sd, IPPROTO_SCTP,SCTP_DELAYED_ACK_TIME, &value, sizeof(value)) < 0) {
+                     perror("setSockOpt AckTime1");
+                  }
+                  printf("NewAckTime1=%d\n", value.assoc_value);
+
+
                   /* ====== Replace non-printable characters ============= */
                   for(i = 0;i < received;i++) {
                      if((unsigned char)buffer[i] < 30) {

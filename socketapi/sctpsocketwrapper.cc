@@ -1063,6 +1063,48 @@ static int getRTOInfo(ExtSocketDescriptor* tdSocket,
 }
 
 
+// ###### Get delayed ack time ##############################################
+static int getDelayedAckTime(ExtSocketDescriptor*     tdSocket,
+                             void* optval, socklen_t* optlen)
+{
+   if((optval == NULL) || ((size_t)*optlen < sizeof(sctp_assoc_value))) {
+      errno_return(-EINVAL);
+   }
+   sctp_assoc_value* value   = (sctp_assoc_value*)optval;
+   unsigned int      assocID = value->assoc_id;
+
+   if((assocID == 0) && (tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr)) {
+      assocID = tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->getID();
+   }
+
+   if(assocID != 0) {
+      SCTP_Association_Status parameters;
+      int result = getAssocParams(tdSocket, assocID, parameters);
+      if(result == 0) {
+         value->assoc_value = parameters.delay;
+         *optlen = sizeof(sctp_assoc_value);
+      }
+      errno_return(result);
+   }
+   else {
+      SCTP_Instance_Parameters parameters;
+      if(tdSocket->Type == ExtSocketDescriptor::ESDT_SCTP) {
+         if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr) {
+            if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->getAssocDefaults(parameters)) {
+               value->assoc_value = parameters.delay;
+               *optlen = sizeof(sctp_assoc_value);
+               errno_return(0);
+            }
+         }
+      }
+      else {
+         errno_return(-ENOTSUP);
+      }
+   }
+   errno_return(-EINVAL);
+}
+
+
 // ###### Get RTO info ######################################################
 static int getAssocInfo(ExtSocketDescriptor* tdSocket,
                           void* optval, socklen_t* optlen)
@@ -1235,11 +1277,13 @@ int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* 
                             }
                           break;
                          case SCTP_GET_PEER_ADDR_INFO:
-                             return(getPeerAddressInfo(tdSocket,optval,optlen));
+                            return(getPeerAddressInfo(tdSocket,optval,optlen));
                           break;
-                         case SCTP_RTOINFO: {
-                               return(getRTOInfo(tdSocket,optval,optlen));
-                            }
+                         case SCTP_RTOINFO:
+                            return(getRTOInfo(tdSocket,optval,optlen));
+                          break;
+                         case SCTP_DELAYED_ACK_TIME:
+                            return(getDelayedAckTime(tdSocket,optval,optlen));
                           break;
                          case SCTP_ASSOCINFO:
                             return(getAssocInfo(tdSocket,optval,optlen));
@@ -1460,6 +1504,50 @@ static int setRTOInfo(ExtSocketDescriptor* tdSocket,
 }
 
 
+// ###### Set delayed ack time ##############################################
+static int setDelayedAckTime(ExtSocketDescriptor* tdSocket,
+                             const void*          optval,
+                             const socklen_t      optlen)
+{
+   if((optval == NULL) || (optlen < sizeof(sctp_assoc_value))) {
+      errno_return(-EINVAL);
+   }
+   const sctp_assoc_value* value   = (const sctp_assoc_value*)optval;
+   unsigned int            assocID = value->assoc_id;
+
+   if((assocID == 0) && (tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr)) {
+      assocID = tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->getID();
+   }
+
+   if(assocID != 0) {
+      SCTP_Association_Status parameters;
+      int result = getAssocParams(tdSocket, assocID, parameters);
+      if(result == 0) {
+         parameters.delay = value->assoc_value;
+         result = setAssocParams(tdSocket, assocID, parameters);
+      }
+      errno_return(result);
+   }
+   else {
+      SCTP_Instance_Parameters parameters;
+      if(tdSocket->Type == ExtSocketDescriptor::ESDT_SCTP) {
+         if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr) {
+            if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->getAssocDefaults(parameters)) {
+               parameters.delay = value->assoc_value;
+               if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->setAssocDefaults(parameters)) {
+                  errno_return(0);
+               }
+            }
+         }
+      }
+      else {
+         errno_return(-ENOTSUP);
+      }
+   }
+   errno_return(-EINVAL);
+}
+
+
 // ###### Set association info ##############################################
 static int setAssocInfo(ExtSocketDescriptor* tdSocket,
                         const void*          optval,
@@ -1635,6 +1723,9 @@ int ext_setsockopt(int sockfd, int level, int optname, const void* optval, sockl
                           break;
                          case SCTP_RTOINFO:
                             return(setRTOInfo(tdSocket,optval,optlen));
+                          break;
+                         case SCTP_DELAYED_ACK_TIME:
+                            return(setDelayedAckTime(tdSocket,optval,optlen));
                           break;
                          case SCTP_ASSOCINFO:
                             return(setAssocInfo(tdSocket,optval,optlen));

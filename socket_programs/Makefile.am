@@ -26,6 +26,6 @@ terminal_SOURCES = terminal.c
 terminal_CFLAGS =  -I../socketapi
 terminal_LDADD = ../socketapi/libsctpsocket.la -lstdc++
 
-# t5_SOURCES = t5.cc
-# t5_CFLAGS =  -I../socketapi
-# t5_LDADD = ../socketapi/libsctpsocket.la -lstdc++
+#t5_SOURCES = t5.cc
+#t5_CFLAGS =  -I../socketapi
+#t5_LDADD = ../socketapi/libsctpsocket.la -lstdc++
