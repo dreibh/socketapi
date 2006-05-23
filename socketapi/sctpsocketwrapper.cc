@@ -79,7 +79,7 @@ inline static int getErrnoResult(const int result)
       errno = -result;
       return(-1);
    }
-   errno = 0;
+   // errno = 0;
    return(result);
 }
 #define errno_return(x) return(getErrnoResult(x))
@@ -224,7 +224,7 @@ inline ExtSocketDescriptor* ExtSocketDescriptorMaster::getSocket(const int id)
 // ###### Set ExtSocketDescriptor of given ID ##########################################
 int ExtSocketDescriptorMaster::setSocket(const ExtSocketDescriptor& newSocket)
 {
-   for(int i = (int)(MaxSockets - 1);i >= 0;i--) {
+   for(int i = (int)(getdtablesize() - 1);i >= 0;i--) {
       if(Sockets[i].Type == ExtSocketDescriptor::ESDT_Invalid) {
          Sockets[i] = newSocket;
          return(i);
@@ -2813,7 +2813,7 @@ int ext_select(int             n,
 #endif
       }
       else {
-         select(0,NULL,NULL,NULL,timeout);
+         result = select(0, NULL, NULL, NULL,timeout);
       }
 
       SCTPSocketMaster::MasterInstance.lock();
@@ -2987,8 +2987,10 @@ int ext_poll(struct pollfd* fdlist, long unsigned int count, int time)
    }
 
    // ====== Set result flags ===============================================
+   result = 0;
    for(unsigned int i = 0;i < count;i++) {
       if((fdlist[i].fd >= 0) && (fdlist[i].fd < FD_SETSIZE)) {
+         fdlist[i].revents = 0;
          if(SAFE_FD_ISSET(fdlist[i].fd,&readfdset) && (fdlist[i].events & POLLIN)) {
             fdlist[i].revents |= POLLIN;
          }
@@ -2997,6 +2999,9 @@ int ext_poll(struct pollfd* fdlist, long unsigned int count, int time)
          }
          if(SAFE_FD_ISSET(fdlist[i].fd,&exceptfdset)) {
             fdlist[i].revents |= POLLERR;
+         }
+         if(fdlist[i].revents != 0) {
+            result++;
          }
       }
    }

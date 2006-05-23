@@ -578,9 +578,6 @@ bool InternetAddress::checkIPv6()
    int result = socket(AF_INET6,SOCK_DGRAM,0);
    if(result != -1) {
       close(result);
-#if (SYSTEM != OS_Darwin)
-      _res.options |= RES_USE_INET6;
-#endif
       return(true);
    }
    else {
@@ -611,7 +608,13 @@ cardinal InternetAddress::getHostByName(const String& hostName, card16* myadr)
    addrinfo* res = NULL;
    memset((char*)&hints,0,sizeof(hints));
    hints.ai_socktype = SOCK_DGRAM;
-   hints.ai_family   = (UseIPv6 == true) ? AF_UNSPEC : AF_INET;
+   if(UseIPv6 == true) {
+      hints.ai_family = AF_UNSPEC;
+      hints.ai_flags  = AI_ADDRCONFIG;
+   }
+   else {
+      hints.ai_family = AF_INET;
+   }
    const char* name = hostName.getData();
 
    // Avoid DNS lookups for IP addresses
