@@ -279,6 +279,8 @@ int main(int argc, char** argv)
          if(ufds[0].revents & POLLIN) {
             received = ext_read(STDIN_FILENO, (char*)&buffer, sizeof(buffer));
             if(received > 0) {
+               buffer[received] = 0x00;
+
                /* ====== Check for stream ID and PPID settings =========== */
                position = 0;
                if(sscanf(buffer, "#%d/$%x:%n", &streamID, &ppid, &position) < 2) {
