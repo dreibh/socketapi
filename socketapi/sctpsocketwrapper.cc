@@ -1773,7 +1773,7 @@ int ext_setsockopt(int sockfd, int level, int optname, const void* optval, sockl
                                errno_return(-EINVAL);
                             }
                             if((tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr != NULL) && (tdSocket->Socket.SCTPSocketDesc.ConnectionOriented)) {
-                               errno_return((tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->setSendBuffer(*((unsigned int*)optval)) == true) ? 0 : -EIO);
+                               errno_return((tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->setReceiveBuffer(*((unsigned int*)optval)) == true) ? 0 : -EIO);
                             }
                             else if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
                                errno_return((tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->setReceiveBuffer(*((unsigned int*)optval)) == true) ? 0 : -EIO);
