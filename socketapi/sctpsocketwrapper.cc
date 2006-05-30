@@ -224,7 +224,7 @@ inline ExtSocketDescriptor* ExtSocketDescriptorMaster::getSocket(const int id)
 // ###### Set ExtSocketDescriptor of given ID ##########################################
 int ExtSocketDescriptorMaster::setSocket(const ExtSocketDescriptor& newSocket)
 {
-   for(int i = (int)(getdtablesize() - 1);i >= 0;i--) {
+   for(int i = (int)(min(FD_SETSIZE, getdtablesize())) - 1;i >= 0;i--) {
       if(Sockets[i].Type == ExtSocketDescriptor::ESDT_Invalid) {
          Sockets[i] = newSocket;
          return(i);
