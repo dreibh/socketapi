@@ -1175,7 +1175,8 @@ static int getPeerAddressInfo(ExtSocketDescriptor* tdSocket,
 // ###### Configure address parameters ######################################
 static int configurePeerAddressParams(ExtSocketDescriptor* tdSocket,
                                       void*                optval,
-                                      socklen_t*           optlen)
+                                      socklen_t*           optlen,
+                                      const bool           readOnly)
 {
    if((optval == NULL) || ((size_t)*optlen < sizeof(sctp_paddrparams))) {
       errno_return(-EINVAL);
@@ -1201,11 +1202,13 @@ static int configurePeerAddressParams(ExtSocketDescriptor* tdSocket,
       newParams->spp_flags      = (newParams->spp_hbinterval > 0) ? SPP_HB_ENABLE : SPP_HB_DISABLE;
       *optlen = sizeof(sctp_paddrparams);
 
-      parameters.heartbeatIntervall = newParams->spp_hbinterval;
-      result = setPathStatus(tdSocket,assocID,
-                             (sockaddr*)&newParams->spp_address,
-                             sizeof(newParams->spp_address),
-                             parameters);
+      if(!readOnly) {
+         parameters.heartbeatIntervall = newParams->spp_hbinterval;
+         result = setPathStatus(tdSocket,assocID,
+                              (sockaddr*)&newParams->spp_address,
+                              sizeof(newParams->spp_address),
+                              parameters);
+      }
    }
    SCTPSocketMaster::MasterInstance.unlock();
 
@@ -1261,7 +1264,7 @@ int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* 
                   case IPPROTO_SCTP:
                       switch(optname) {
                          case SCTP_PEER_ADDR_PARAMS:
-                            return(configurePeerAddressParams(tdSocket,optval,optlen));
+                            return(configurePeerAddressParams(tdSocket,optval,optlen,true));
                           break;
                          case SCTP_STATUS:
                             return(getAssocStatus(tdSocket,optval,optlen));
@@ -1714,6 +1717,9 @@ int ext_setsockopt(int sockfd, int level, int optname, const void* optval, sockl
                                }
                                errno_return(0);
                             }
+                          break;
+                         case SCTP_PEER_ADDR_PARAMS:
+                            return(configurePeerAddressParams(tdSocket,(void*)optval,&optlen,false));
                           break;
                          case SCTP_PRIMARY_ADDR:
                             return(setPrimaryAddr(tdSocket,optval,optlen));
@@ -3194,14 +3200,14 @@ int sctp_opt_info(int sd, sctp_assoc_t assocID,
    if((opt == SCTP_RTOINFO)            ||
       (opt == SCTP_ASSOCINFO)          ||
       (opt == SCTP_STATUS)             ||
-      (opt == SCTP_GET_PEER_ADDR_INFO) ||
-      (opt == SCTP_PEER_ADDR_PARAMS)) {
+      (opt == SCTP_GET_PEER_ADDR_INFO)) {
          *(sctp_assoc_t *)arg = assocID;
          return(ext_getsockopt(sd,IPPROTO_SCTP,opt,arg,size));
     }
     else if((opt == SCTP_PRIMARY_ADDR)          ||
             (opt == SCTP_SET_PEER_PRIMARY_ADDR) ||
-            (opt == SCTP_SET_STREAM_TIMEOUTS)) {
+            (opt == SCTP_SET_STREAM_TIMEOUTS)   ||
+            (opt == SCTP_PEER_ADDR_PARAMS)) {
        return(ext_setsockopt(sd,IPPROTO_SCTP,opt,arg,*size));
     }
     else {
