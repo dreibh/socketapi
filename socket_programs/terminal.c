@@ -345,6 +345,9 @@ int main(int argc, char** argv)
                   fflush(stdout);
                }
             }
+            else if(received == 0) {
+               break;
+            }
             else {
                perror("sctp_recvmsg() failed");
             }
