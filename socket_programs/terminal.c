@@ -320,12 +320,20 @@ int main(int argc, char** argv)
                }
                else {
                   /* ====== Replace non-printable characters ============= */
-                  for(i = 0;i < received;i++) {
+                  buffer[received] = 0x00;
+                  for(i = received;i >= 0;i--) {
+                     if(buffer[i] < ' ') {
+                        buffer[i] = 0x00;
+                     }
+                     else {
+                        break;
+                     }
+                  }
+                  for(   ;i >= 0;i--) {
                      if((unsigned char)buffer[i] < 30) {
                         buffer[i] = '.';
                      }
                   }
-                  buffer[i] = 0x00;
 
                   /* ====== Print server's response ====================== */
                   color = ((sinfo.sinfo_stream + 1) % 15);

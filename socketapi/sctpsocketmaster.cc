@@ -409,7 +409,7 @@ void SCTPSocketMaster::socketGarbageCollection()
    MasterInstance.unlock();
 #ifdef PRINT_GC
    cout << "Socket garbage collection completed in "
-        << getMicroTime() - LastGarbageCollection << " µs" << endl;
+        << getMicroTime() - LastGarbageCollection << " s" << endl;
 #endif
 }
 

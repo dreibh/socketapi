@@ -69,6 +69,9 @@
 // #define PRINT_RTO
 
 
+// #define TEST_PARTIAL_DELIVERY
+
+
 
 // ###### Constructor #######################################################
 SCTPSocket::SCTPSocket(const int family, const cardinal flags)
@@ -705,7 +708,6 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
       return(-EINVAL);
    }
 
-
    // ====== Get next data or notification from queue =====================
 #ifdef PRINT_RECVWAIT
    cout << "Waiting...";
@@ -750,6 +752,13 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
    bool updatedNotification = false;
    int result               = 0;
    if(notification.Content.sn_header.sn_type == SCTP_DATA_ARRIVE) {
+      // ====== Some test stuff for the partial delivery API ================
+#ifdef TEST_PARTIAL_DELIVERY
+      cout << "Partial Delivery Test: " << bufferSize << " -> ";
+      bufferSize = MIN(bufferSize, 13);
+      cout << bufferSize << endl;
+#endif
+
       flags &= ~MSG_NOTIFICATION;
       sctp_data_arrive* sda = &notification.Content.sn_data_arrive;
       if(sda->sda_bytes_arrived > 0) {
@@ -819,7 +828,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
                }
             }
 
-            // ====== Peek mode: Restore chunk arrival information ===================
+            // ====== Peek mode: Restore chunk arrival information ==========
             if(flags & MSG_PEEK) {
                queue.updateNotification(notification);
                updatedNotification = true;
@@ -828,6 +837,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
                sda->sda_bytes_arrived -= receivedBytes;
                if(sda->sda_bytes_arrived > 0) {
                   queue.updateNotification(notification);
+puts("~~~~~~~~~~~~~~~~~~~~~~~~");
                   updatedNotification = true;
                }
                else {
@@ -966,6 +976,10 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
       cout << "Instance " << InstanceName << ": ReadReady=" << ReadReady << endl;
 #endif
    }
+
+#ifdef TEST_PARTIAL_DELIVERY
+   cout << "got " << result << " bytes " << ((flags & MSG_EOR) ? "---EOR---" : "") << endl;
+#endif
 
    SCTPSocketMaster::MasterInstance.unlock();
    return(result);

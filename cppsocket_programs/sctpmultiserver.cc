@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 1999-2003 by Thomas Dreibholz
+ * Copyright (C) 1999-2006 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -277,11 +277,28 @@ void EchoServer::run()
 
          // ====== Print information ========================================
          char str[16384 + 256];
+         char outputDataBuffer[dataLength];
          dataBuffer[dataLength - 1] = 0x00;
+         for(size_t i = 0;i < (size_t)dataLength - 1;i++) {
+            if(dataBuffer[i] >= ' ') {
+               outputDataBuffer[i] = dataBuffer[i];
+            }
+            else {
+               outputDataBuffer[i] = '.';
+            }
+         }
+         for(int i = dataLength - 1;i >= 0;i--) {
+            if(dataBuffer[i] < ' ') {
+               outputDataBuffer[i] = 0x00;
+            }
+            else {
+               break;
+            }
+         }
          snprintf((char*)&str,sizeof(str),"#%d.%d/$%08x: %s [%s]",
                      assocID, streamID, protoID,
                      (DiscardMode == true) ? "Discard" : "Echo",
-                     dataBuffer);
+                     outputDataBuffer);
          if(ColorMode) {
             cout << "\x1b[" << getANSIColor(streamID + 1) << "m";
          }
@@ -923,7 +940,7 @@ int main(int argc, char** argv)
 
 
    // ====== Print information ==============================================
-   cout << "SCTP Multi Server - Copyright (C) 2001-2003 Thomas Dreibholz" << endl;
+   cout << "SCTP Multi Server - Copyright (C) 2001-2006 Thomas Dreibholz" << endl;
    cout << "------------------------------------------------------------" << endl;
    cout << "Version:           " << __DATE__ << ", " << __TIME__ << endl;
    localAddressArray[0]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_Legacy|SocketAddress::PF_HidePort);

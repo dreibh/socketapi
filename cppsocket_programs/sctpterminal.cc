@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 1999-2003 by Thomas Dreibholz
+ * Copyright (C) 1999-2006 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -163,8 +163,24 @@ void EchoThread::run()
                }
                cout << str;
             }
+
+            int i;
             buffer[dataLength] = 0x00;
-            cout << buffer;
+            for(i = dataLength - 1;i >= 0;i--) {
+               if(buffer[i] < ' ') {
+                  buffer[i] = 0x00;
+               }
+               else {
+                  break;
+               }
+            }
+            for(   ;i >= 0;i--) {
+               if(buffer[i] < ' ') {
+                  buffer[i] = '.';
+               }
+            }
+
+            cout << buffer << endl;
             if(ColorMode) {
                cout << "\x1b[" << getANSIColor(0) << "m";
             }
@@ -265,7 +281,7 @@ void CopyThread::run()
          char str2[128];
          snprintf((char*)&str2,sizeof(str2),"Via stream #%d, protocol $%08x...",
                   stream,ppid);
-         cout << str2 << endl;
+         cout << str2;
          if(ColorMode) {
             cout << "\x1b[" << getANSIColor(0) << "m";
          }
@@ -276,6 +292,9 @@ void CopyThread::run()
       // ====== Send message ================================================
       cardinal length = strlen(toSend);
       if(length > 0) {
+         toSend[length]   = '\n';
+         toSend[length++] = 0x00;
+
          SocketMessage<CSpace(sizeof(sctp_sndrcvinfo))> message;
          message.setBuffer(toSend,length);
          sctp_sndrcvinfo* info = (sctp_sndrcvinfo*)message.addHeader(sizeof(sctp_sndrcvinfo),IPPROTO_SCTP,SCTP_SNDRCV);
@@ -467,7 +486,7 @@ int main(int argc, char** argv)
 
 
    // ====== Print information ==============================================
-   cout << "SCTP Terminal - Copyright (C) 2001-2003 Thomas Dreibholz" << endl;
+   cout << "SCTP Terminal - Copyright (C) 2001-2006 Thomas Dreibholz" << endl;
    cout << "--------------------------------------------------------" << endl;
    cout << "Version:               " << __DATE__ << ", " << __TIME__ << endl;
    localAddressArray[0]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_Legacy|SocketAddress::PF_HidePort);
