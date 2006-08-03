@@ -39,37 +39,38 @@
 #include "sctpsocketmaster.h"
 
 
+/*
+#define PRINT_BIND
+#define PRINT_UNBIND
+#define PRINT_ADDIP
+#define PRINT_ACCEPT
+#define PRINT_ASSOCIATE
+#define PRINT_NEW_ASSOCIATIONS
+#define PRINT_SEND_TO_ALL
+#define PRINT_SHUTDOWNS
+#define PRINT_PRSCTP
+#define PRINT_NOTIFICATION_SKIP
+#define PRINT_DATA
+#define PRINT_RECVSTATUS
+#define PRINT_SENDSTATUS
+#define PRINT_SETPRIMARY
+#define PRINT_SENDTO
 
-// #define PRINT_BIND
-// #define PRINT_UNBIND
-// #define PRINT_ADDIP
-// #define PRINT_ACCEPT
-// #define PRINT_ASSOCIATE
-// #define PRINT_NEW_ASSOCIATIONS
-// #define PRINT_SEND_TO_ALL
-// #define PRINT_SHUTDOWNS
-// #define PRINT_PRSCTP
-// #define PRINT_NOTIFICATION_SKIP
-// #define PRINT_DATA
-// #define PRINT_RECVSTATUS
-// #define PRINT_SENDSTATUS
-// #define PRINT_SETPRIMARY
-// #define PRINT_SENDTO
-//
-//
-// #define PRINT_AUTOCLOSE_TIMEOUT
-// #define PRINT_AUTOCLOSE_CHECK
-//
-//
-// #define PRINT_RECVWAIT
-// #define PRINT_ISSHUTDOWN
-// #define PRINT_PATHFORINDEX
-// #define PRINT_ASSOCSEARCH
-// #define PRINT_ASSOC_USECOUNT
-// #define PRINT_RTO
 
+#define PRINT_AUTOCLOSE_TIMEOUT
+#define PRINT_AUTOCLOSE_CHECK
+
+
+#define PRINT_RECVWAIT
+#define PRINT_ISSHUTDOWN
+#define PRINT_PATHFORINDEX
+#define PRINT_ASSOCSEARCH
+#define PRINT_ASSOC_USECOUNT
+#define PRINT_RTO
+*/
 
 // #define TEST_PARTIAL_DELIVERY
+// #define PARTIAL_DELIVERY_MAXSIZE 3
 
 
 
@@ -755,7 +756,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
       // ====== Some test stuff for the partial delivery API ================
 #ifdef TEST_PARTIAL_DELIVERY
       cout << "Partial Delivery Test: " << bufferSize << " -> ";
-      bufferSize = MIN(bufferSize, 13);
+      bufferSize = MIN(bufferSize, PARTIAL_DELIVERY_MAXSIZE);
       cout << bufferSize << endl;
 #endif
 
@@ -837,7 +838,6 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
                sda->sda_bytes_arrived -= receivedBytes;
                if(sda->sda_bytes_arrived > 0) {
                   queue.updateNotification(notification);
-puts("~~~~~~~~~~~~~~~~~~~~~~~~");
                   updatedNotification = true;
                }
                else {
