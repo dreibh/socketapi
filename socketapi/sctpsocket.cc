@@ -70,7 +70,8 @@
 */
 
 // #define TEST_PARTIAL_DELIVERY
-// #define PARTIAL_DELIVERY_MAXSIZE 3
+// #define PRINT_PARTIAL_DELIVERY
+// #define PARTIAL_DELIVERY_MAXSIZE 67
 
 
 
@@ -755,9 +756,13 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
    if(notification.Content.sn_header.sn_type == SCTP_DATA_ARRIVE) {
       // ====== Some test stuff for the partial delivery API ================
 #ifdef TEST_PARTIAL_DELIVERY
+#ifdef PRINT_PARTIAL_DELIVERY
       cout << "Partial Delivery Test: " << bufferSize << " -> ";
+#endif
       bufferSize = MIN(bufferSize, PARTIAL_DELIVERY_MAXSIZE);
+#ifdef PRINT_PARTIAL_DELIVERY
       cout << bufferSize << endl;
+#endif
 #endif
 
       flags &= ~MSG_NOTIFICATION;
@@ -978,7 +983,9 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
    }
 
 #ifdef TEST_PARTIAL_DELIVERY
+#ifdef PRINT_PARTIAL_DELIVERY
    cout << "got " << result << " bytes " << ((flags & MSG_EOR) ? "---EOR---" : "") << endl;
+#endif
 #endif
 
    SCTPSocketMaster::MasterInstance.unlock();
