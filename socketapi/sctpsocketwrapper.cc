@@ -412,7 +412,6 @@ int ext_socket(int domain, int type, int protocol)
       tdSocket.Socket.SCTPSocketDesc.Domain             = domain;
       tdSocket.Socket.SCTPSocketDesc.Type               = type;
       tdSocket.Socket.SCTPSocketDesc.Flags              = 0;
-      tdSocket.Socket.SCTPSocketDesc.Parent             = 0;
       tdSocket.Socket.SCTPSocketDesc.Linger.l_onoff     = 1;
       tdSocket.Socket.SCTPSocketDesc.Linger.l_linger    = 10;
       tdSocket.Socket.SCTPSocketDesc.SCTPAssociationPtr = NULL;
@@ -520,17 +519,21 @@ int ext_pipe(int fds[2])
 }
 
 
-// ###### Delete all childs of a parent socket ##############################
-static void ext_closeChilds(const int parent)
+// ###### Check whether the SCTP socket is still referenced #######
+static bool mayRemoveSocket(ExtSocketDescriptor* tdSocket)
 {
+   const SCTPSocket* sctpSocket = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr;
+
    for(unsigned int i = 1;i <= ExtSocketDescriptorMaster::MaxSockets;i++) {
-      ExtSocketDescriptor* tdSocket = ExtSocketDescriptorMaster::getSocket(i);
-      if((tdSocket != NULL) &&
-         (tdSocket->Type == ExtSocketDescriptor::ESDT_SCTP) &&
-         (tdSocket->Socket.SCTPSocketDesc.Parent == parent)) {
-         ext_close(i);
+      ExtSocketDescriptor* td = ExtSocketDescriptorMaster::getSocket(i);
+      if((td != NULL) &&
+         (td != tdSocket) &&
+         (td->Type == ExtSocketDescriptor::ESDT_SCTP) &&
+         (td->Socket.SCTPSocketDesc.SCTPSocketPtr == sctpSocket)) {
+         return(false);
       }
    }
+   return(true);
 }
 
 
@@ -541,7 +544,6 @@ int ext_close(int sockfd)
    if(tdSocket != NULL) {
       switch(tdSocket->Type) {
          case ExtSocketDescriptor::ESDT_SCTP:
-            ext_closeChilds(sockfd);
             if(tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr != NULL) {
                if(tdSocket->Socket.SCTPSocketDesc.Linger.l_onoff == 1) {
                   if(tdSocket->Socket.SCTPSocketDesc.Linger.l_linger > 0) {
@@ -555,16 +557,18 @@ int ext_close(int sockfd)
                tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr = NULL;
             }
             if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
-               if(tdSocket->Socket.SCTPSocketDesc.Linger.l_onoff == 1) {
-                  if(tdSocket->Socket.SCTPSocketDesc.Linger.l_linger > 0) {
-                     tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->unbind(false);
+               if(mayRemoveSocket(tdSocket)) {
+                  if(tdSocket->Socket.SCTPSocketDesc.Linger.l_onoff == 1) {
+                     if(tdSocket->Socket.SCTPSocketDesc.Linger.l_linger > 0) {
+                        tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->unbind(false);
+                     }
+                     else {
+                        tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->unbind(true);
+                     }
                   }
-                  else {
-                     tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->unbind(true);
-                  }
+                  delete tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr;
+                  tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr = NULL;
                }
-               delete tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr;
-               tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr = NULL;
             }
           break;
          case ExtSocketDescriptor::ESDT_System:
@@ -770,6 +774,7 @@ int ext_listen(int sockfd, int backlog)
    if(tdSocket != NULL) {
       switch(tdSocket->Type) {
          case ExtSocketDescriptor::ESDT_SCTP:
+            bindToAny(tdSocket);
             if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
                tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->listen(backlog);
                errno_return(0);
@@ -814,9 +819,8 @@ int ext_accept(int sockfd, struct sockaddr* addr, socklen_t* addrlen)
 
                      ExtSocketDescriptor newExtSocketDescriptor = *tdSocket;
                      newExtSocketDescriptor.Socket.SCTPSocketDesc.ConnectionOriented = true;
-                     newExtSocketDescriptor.Socket.SCTPSocketDesc.SCTPSocketPtr      = NULL;
+                     newExtSocketDescriptor.Socket.SCTPSocketDesc.SCTPSocketPtr      = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr;
                      newExtSocketDescriptor.Socket.SCTPSocketDesc.SCTPAssociationPtr = association;
-                     newExtSocketDescriptor.Socket.SCTPSocketDesc.Parent             = sockfd;
                      const int newFD = ExtSocketDescriptorMaster::setSocket(newExtSocketDescriptor);
                      SocketAddress::deleteAddressList(remoteAddressArray);
                      if(newFD < 0) {
@@ -3040,9 +3044,8 @@ int sctp_peeloff(int              sockfd,
 
                if(association != NULL) {
                   ExtSocketDescriptor newExtSocketDescriptor = *tdSocket;
-                  newExtSocketDescriptor.Socket.SCTPSocketDesc.SCTPSocketPtr      = NULL;
+                  newExtSocketDescriptor.Socket.SCTPSocketDesc.SCTPSocketPtr      = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr;
                   newExtSocketDescriptor.Socket.SCTPSocketDesc.SCTPAssociationPtr = association;
-                  newExtSocketDescriptor.Socket.SCTPSocketDesc.Parent             = sockfd;
                   newExtSocketDescriptor.Socket.SCTPSocketDesc.ConnectionOriented = true;
                   const int newFD = ExtSocketDescriptorMaster::setSocket(newExtSocketDescriptor);
                   if(newFD < 0) {

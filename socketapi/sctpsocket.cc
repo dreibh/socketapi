@@ -39,35 +39,34 @@
 #include "sctpsocketmaster.h"
 
 
-/*
-#define PRINT_BIND
-#define PRINT_UNBIND
-#define PRINT_ADDIP
-#define PRINT_ACCEPT
-#define PRINT_ASSOCIATE
-#define PRINT_NEW_ASSOCIATIONS
-#define PRINT_SEND_TO_ALL
-#define PRINT_SHUTDOWNS
-#define PRINT_PRSCTP
-#define PRINT_NOTIFICATION_SKIP
-#define PRINT_DATA
-#define PRINT_RECVSTATUS
-#define PRINT_SENDSTATUS
-#define PRINT_SETPRIMARY
-#define PRINT_SENDTO
+// #define PRINT_BIND
+// #define PRINT_UNBIND
+// #define PRINT_ADDIP
+// #define PRINT_ACCEPT
+// #define PRINT_ASSOCIATE
+// #define PRINT_NEW_ASSOCIATIONS
+// #define PRINT_SEND_TO_ALL
+// #define PRINT_SHUTDOWNS
+// #define PRINT_PRSCTP
+// #define PRINT_NOTIFICATION_SKIP
+// #define PRINT_DATA
+// #define PRINT_RECVSTATUS
+// #define PRINT_SENDSTATUS
+// #define PRINT_SETPRIMARY
+// #define PRINT_SENDTO
+//
+//
+// #define PRINT_AUTOCLOSE_TIMEOUT
+// #define PRINT_AUTOCLOSE_CHECK
+//
+//
+// #define PRINT_RECVWAIT
+// #define PRINT_ISSHUTDOWN
+// #define PRINT_PATHFORINDEX
+// #define PRINT_ASSOCSEARCH
+// #define PRINT_ASSOC_USECOUNT
+// #define PRINT_RTO
 
-
-#define PRINT_AUTOCLOSE_TIMEOUT
-#define PRINT_AUTOCLOSE_CHECK
-
-
-#define PRINT_RECVWAIT
-#define PRINT_ISSHUTDOWN
-#define PRINT_PATHFORINDEX
-#define PRINT_ASSOCSEARCH
-#define PRINT_ASSOC_USECOUNT
-#define PRINT_RTO
-*/
 
 // #define TEST_PARTIAL_DELIVERY
 // #define PRINT_PARTIAL_DELIVERY
@@ -674,11 +673,11 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
 // ###### Get error code for given association ID ###########################
 int SCTPSocket::getErrorCode(const unsigned int assocID)
 {
-   SCTPAssociation* association = getAssociationForAssociationID(assocID,false);
+   SCTPAssociation* association = getAssociationForAssociationID(assocID, false);
    if(association != NULL) {
       if(association->ShutdownCompleteNotification) {
          association->HasException = true;
-         return(-ESHUTDOWN);
+         return(-ECONNRESET);
       }
       else if(association->CommunicationLostNotification) {
          association->HasException = true;
@@ -725,7 +724,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
       // ====== No chunk available -> wait for chunk ======================
       if(errorCode != 0) {
          bufferSize = 0;
-         if((errorCode == -ESHUTDOWN) && !(queue.hasData(notificationFlags))) {
+         if((errorCode == -ECONNRESET) && !(queue.hasData(notificationFlags))) {
 #ifdef PRINT_ISSHUTDOWN
             cout << "Socket has been shut down -> leaving waiting loop!" << endl;
 #endif

@@ -63,7 +63,6 @@ struct ExtSocketDescriptor
          int              Type;
          SCTPSocket*      SCTPSocketPtr;
          SCTPAssociation* SCTPAssociationPtr;
-         int              Parent;
          int              Flags;
          sctp_initmsg     InitMsg;
          linger           Linger;

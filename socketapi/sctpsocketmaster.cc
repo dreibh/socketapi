@@ -48,11 +48,11 @@
 #endif
 
 
-// #define PRINT_NOTIFICATIONS
-// #define PRINT_ARRIVENOTIFICATION
-// #define PRINT_USERCALLBACK
-// #define PRINT_ASSOC_USECOUNT
-// #define PRINT_RTOMAXRESTORE
+/*#define PRINT_NOTIFICATIONS
+#define PRINT_ARRIVENOTIFICATION
+#define PRINT_USERCALLBACK
+#define PRINT_ASSOC_USECOUNT
+#define PRINT_RTOMAXRESTORE*/
 //
 // #define PRINT_PIPE
 // #define PRINT_GC
@@ -946,7 +946,7 @@ void SCTPSocketMaster::shutdownReceivedNotif(unsigned int assocID, void* ulpData
 
    SCTPSocket* socket = getSocketForAssociationID(assocID);
    if(socket != NULL) {
-      SCTPAssociation* association = socket->getAssociationForAssociationID(assocID,false);
+      SCTPAssociation* association = socket->getAssociationForAssociationID(assocID, false);
       if(association != NULL) {
          // ====== Generate "Shutdown Complete" notification ================
          SCTPNotification notification;
@@ -1234,6 +1234,16 @@ void SCTPSocketMaster::addNotification(SCTPSocket*             socket,
       else {
          association->InQueue.addNotification(notification);
          association->ReadReady = association->hasData();
+      }
+   }
+
+   else {
+      /* The user does not want a notification, but an action has to be
+         signallised in order to end waiting for events (e.g. interrupting
+         SCTPSocket::interalReceive() in case of a shutdown complete)! */
+      if(!((socket->Flags & SCTPSocket::SSF_GlobalQueue) &&
+           (association->PeeledOff == false))) {
+         association->InQueue.signal();
       }
    }
 }
