@@ -25,7 +25,7 @@ libsctpsocket_la_LDFLAGS = \
    -release $(SOCKETAPI_RELEASE)
 
 
-noinst_PROGRAMS = t1
+#noinst_PROGRAMS = t1
 
-t1_SOURCES = t1.cc
-t1_LDADD = libsctpsocket.la
+#t1_SOURCES = t1.cc
+#t1_LDADD = libsctpsocket.la
