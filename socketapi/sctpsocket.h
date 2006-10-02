@@ -579,7 +579,7 @@ class SCTPSocket
    private:
    void checkAutoConnect();
    void checkAutoClose();
-   SCTPAssociation* SCTPSocket::findAssociationForDestinationAddress(
+   SCTPAssociation* findAssociationForDestinationAddress(
                        multimap<unsigned int, SCTPAssociation*>& list,
                        const SocketAddress** destinationAddressList);
 
