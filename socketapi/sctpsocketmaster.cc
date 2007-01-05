@@ -113,9 +113,13 @@ SCTPSocketMaster::SCTPSocketMaster()
       int sd;
       sd = socket(AF_INET, SOCK_SEQPACKET, IPPROTO_SCTP);
       if(sd >= 0) {
+#ifndef SCTP_OVER_UDP
          close(sd);
          cerr << "ERROR: Kernel SCTP seems to be available! You cannout use sctplib and kernel SCTP simultaneously!" << endl;
          ::abort();
+#else
+         cerr << "NOTE: The socket API assumes SCTP over UDP. Kernel SCTP has been found, but this should be okay." << endl;
+#endif
       }
 
       InitializationResult = sctp_initLibrary();
