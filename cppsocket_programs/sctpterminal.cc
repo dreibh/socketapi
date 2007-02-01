@@ -150,7 +150,7 @@ void EchoThread::run()
       else {
          if(dataLength > 0) {
             if(ColorMode) {
-               cout << "\x1b[" << getANSIColor(streamID + 1) << "m";
+               std::cout << "\x1b[" << getANSIColor(streamID + 1) << "m";
             }
             if(Incoming > 1) {
                char str[128];
@@ -159,9 +159,9 @@ void EchoThread::run()
                }
                else {
                   snprintf((char*)&str,sizeof(str),"#%d/$%08x: ",
-                              streamID,protoID);
+                           streamID,protoID);
                }
-               cout << str;
+               std::cout << str;
             }
 
             int i;
@@ -180,11 +180,11 @@ void EchoThread::run()
                }
             }
 
-            cout << buffer << endl;
+            std::cout << buffer << std::endl;
             if(ColorMode) {
-               cout << "\x1b[" << getANSIColor(0) << "m";
+               std::cout << "\x1b[" << getANSIColor(0) << "m";
             }
-            cout.flush();
+            std::cout.flush();
          }
       }
    }
@@ -266,26 +266,26 @@ void CopyThread::run()
       if(stream >= Outgoing) {
          stream = 0;
          if(ColorMode) {
-            cerr << "\x1b[" << getANSIColor(ERROR_COLOR) << "m\x07";
+            std::cerr << "\x1b[" << getANSIColor(ERROR_COLOR) << "m\x07";
          }
-         cerr << "*** Bad stream setting! Using #0. ***" << endl;
+         std::cerr << "*** Bad stream setting! Using #0. ***" << std::endl;
          if(ColorMode) {
-            cerr << "\x1b[" << getANSIColor(0) << "m";
+            std::cerr << "\x1b[" << getANSIColor(0) << "m";
          }
-         cerr.flush();
+         std::cerr.flush();
       }
       if(update == true) {
          if(ColorMode) {
-            cout << "\x1b[" << getANSIColor(INFO_COLOR) << "m";
+            std::cout << "\x1b[" << getANSIColor(INFO_COLOR) << "m";
          }
          char str2[128];
          snprintf((char*)&str2,sizeof(str2),"Via stream #%d, protocol $%08x...",
                   stream,ppid);
-         cout << str2;
+         std::cout << str2;
          if(ColorMode) {
-            cout << "\x1b[" << getANSIColor(0) << "m";
+            std::cout << "\x1b[" << getANSIColor(0) << "m";
          }
-         cout.flush();
+         std::cout.flush();
       }
 
 
@@ -313,11 +313,11 @@ void CopyThread::run()
          const ssize_t result = CopySocket->sendMsg(&message.Header,0);
          if(result < 0) {
             if(ColorMode) {
-               cerr << "\x1b[" << getANSIColor(ERROR_COLOR) << "m\x07";
+               std::cerr << "\x1b[" << getANSIColor(ERROR_COLOR) << "m\x07";
             }
-            cerr << "*** sendMsg() error #" << result << "! ***" << endl;
+            std::cerr << "*** sendMsg() error #" << result << "! ***" << std::endl;
             if(ColorMode) {
-               cerr << "\x1b[" << getANSIColor(0) << "m";
+               std::cerr << "\x1b[" << getANSIColor(0) << "m";
             }
          }
       }
@@ -338,20 +338,20 @@ int main(int argc, char** argv)
    SocketAddress** localAddressArray  = SocketAddress::newAddressList(SCTP_MAXADDRESSES);
    SocketAddress** remoteAddressArray = SocketAddress::newAddressList(SCTP_MAXADDRESSES);
    if((localAddressArray == NULL) || (remoteAddressArray == NULL)) {
-      cerr << "ERROR: Out of memory!" << endl;
+      std::cerr << "ERROR: Out of memory!" << std::endl;
       exit(1);
    }
    PrintControl       = false;
    PrintNotifications = false;
    if(!sctp_isavailable()) {
 #ifdef HAVE_KERNEL_SCTP
-      cerr << "ERROR: Kernel-based SCTP is not available!" << endl;
+      std::cerr << "ERROR: Kernel-based SCTP is not available!" << std::endl;
 #else
      if(getuid() != 0) {
-        cerr << "ERROR: You need root permissions to use the SCTP Library!" << endl;
+        std::cerr << "ERROR: You need root permissions to use the SCTP Library!" << std::endl;
      }
      else {
-        cerr << "ERROR: SCTP is not available!" << endl;
+        std::cerr << "ERROR: SCTP is not available!" << std::endl;
      }
 #endif
       exit(1);
@@ -360,9 +360,9 @@ int main(int argc, char** argv)
 
    // ====== Get arguments ==================================================
    if(argc < 2) {
-      cerr << "Usage: " << argv[0] << " "
+      std::cerr << "Usage: " << argv[0] << " "
            << "[Remote address 1] {{Remote address 2} ...} {-force-ipv4|-use-ipv6} {-local=address1} ... {-local=addressN} {-in=instreams} {-out=outstreams} {-nocolor} {-color} {-control|-nocontrol} {-notif|-nonotif}"
-           << endl;
+           << std::endl;
       exit(1);
    }
    for(unsigned int i = 1;i < (cardinal)argc;i++) {
@@ -417,13 +417,13 @@ int main(int argc, char** argv)
                SocketAddress::createSocketAddress(0,
                                                   &argv[i][7]);
             if(localAddressArray[localAddresses] == NULL) {
-               cerr << "ERROR: Argument \"" << argv[i] << "\" specifies an invalid local address!" << endl;
+               std::cerr << "ERROR: Argument \"" << argv[i] << "\" specifies an invalid local address!" << std::endl;
                exit(1);
             }
             localAddresses++;
          }
          else {
-            cerr << "ERROR: Too many local addresses!" << endl;
+            std::cerr << "ERROR: Too many local addresses!" << std::endl;
             exit(1);
          }
       }
@@ -432,13 +432,13 @@ int main(int argc, char** argv)
             remoteAddressArray[remoteAddresses] =
                SocketAddress::createSocketAddress(0, argv[i]);
             if(remoteAddressArray[remoteAddresses] == NULL) {
-               cerr << "ERROR: Argument \"" << argv[i] << "\" is an invalid remote address!" << endl;
+               std::cerr << "ERROR: Argument \"" << argv[i] << "\" is an invalid remote address!" << std::endl;
                exit(1);
             }
             remoteAddresses++;
          }
          else {
-            cerr << "ERROR: Too many remote addresses!" << endl;
+            std::cerr << "ERROR: Too many remote addresses!" << std::endl;
             exit(1);
          }
       }
@@ -447,18 +447,18 @@ int main(int argc, char** argv)
       InternetAddress::UseIPv6 = false;
    }
    if(remoteAddresses < 1) {
-      cerr << "ERROR: No remote addresses given!" << endl;
+      std::cerr << "ERROR: No remote addresses given!" << std::endl;
       exit(1);
    }
    if(remoteAddressArray[0]->getPort() == 0) {
-      cerr << "ERROR: No remote port number is given with first remote address!" << endl;
+      std::cerr << "ERROR: No remote port number is given with first remote address!" << std::endl;
       exit(1);
    }
    if(localAddresses < 1) {
 /*
       localAddressArray[0] = new InternetAddress(0);
       if(localAddressArray[0] == NULL) {
-         cerr << "ERROR: Out of memory!" << endl;
+         std::cerr << "ERROR: Out of memory!" << std::endl;
          exit(1);
       }
       localAddresses = 1;
@@ -467,12 +467,12 @@ int main(int argc, char** argv)
             localAddressArray,
             localAddresses,
             Socket::GLAF_HideBroadcast|Socket::GLAF_HideMulticast|Socket::GLAF_HideAnycast)) {
-         cerr << "ERROR: Cannot obtain local addresses!" << endl;
+         std::cerr << "ERROR: Cannot obtain local addresses!" << std::endl;
          exit(1);
       }
       if(localAddresses < 1) {
-         cerr << "ERROR: No valid local addresses have been found?!" << endl
-              << "       Check your network interface configuration!" << endl;
+         std::cerr << "ERROR: No valid local addresses have been found?!" << std::endl
+                   << "       Check your network interface configuration!" << std::endl;
          exit(1);
       }
    }
@@ -486,25 +486,25 @@ int main(int argc, char** argv)
 
 
    // ====== Print information ==============================================
-   cout << "SCTP Terminal - Copyright (C) 2001-2006 Thomas Dreibholz" << endl;
-   cout << "--------------------------------------------------------" << endl;
-   cout << "Version:               " << __DATE__ << ", " << __TIME__ << endl;
+   std::cout << "SCTP Terminal - Copyright (C) 2001-2007 Thomas Dreibholz" << std::endl;
+   std::cout << "--------------------------------------------------------" << std::endl;
+   std::cout << "Version:               " << __DATE__ << ", " << __TIME__ << std::endl;
    localAddressArray[0]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_Legacy|SocketAddress::PF_HidePort);
-   cout << "Local Addresses:       " << *(localAddressArray[0]) << endl;
+   std::cout << "Local Addresses:       " << *(localAddressArray[0]) << std::endl;
    for(cardinal i = 1;i < localAddresses;i++) {
       localAddressArray[i]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_Legacy|SocketAddress::PF_HidePort);
-      cout << "                       " << *(localAddressArray[i]) << endl;
+      std::cout << "                       " << *(localAddressArray[i]) << std::endl;
    }
-   cout << "Remote Addresses:      " << *(remoteAddressArray[0]) << endl;
+   std::cout << "Remote Addresses:      " << *(remoteAddressArray[0]) << std::endl;
    remoteAddressArray[0]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_Legacy|SocketAddress::PF_HidePort);
    for(cardinal i = 1;i < remoteAddresses;i++) {
       remoteAddressArray[i]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_Legacy|SocketAddress::PF_HidePort);
-      cout << "                       " << *(remoteAddressArray[i]) << endl;
+      std::cout << "                       " << *(remoteAddressArray[i]) << std::endl;
    }
-   cout << "Outgoing Streams:      " << outstreams     << endl;
-   cout << "Max. Incoming Streams: " << instreams      << endl;
-   cout << "Unreliable:            " << unreliable     << endl;
-   cout << endl << endl;
+   std::cout << "Outgoing Streams:      " << outstreams << std::endl;
+   std::cout << "Max. Incoming Streams: " << instreams  << std::endl;
+   std::cout << "Unreliable:            " << unreliable << std::endl;
+   std::cout << std::endl << std::endl;
 
 
    // ====== Create socket and connect ======================================
@@ -512,7 +512,7 @@ int main(int argc, char** argv)
    if(clientSocket.bindx((const SocketAddress**)localAddressArray,
                          localAddresses,
                          SCTP_BINDX_ADD_ADDR) == false) {
-      cerr << "ERROR: Unable to bind socket!" << endl;
+      std::cerr << "ERROR: Unable to bind socket!" << std::endl;
       exit(1);
    }
 
@@ -522,26 +522,26 @@ int main(int argc, char** argv)
    init.sinit_max_attempts   = 0;
    init.sinit_max_init_timeo = 60;
    if(clientSocket.setSocketOption(IPPROTO_SCTP,SCTP_INITMSG,(char*)&init,sizeof(init)) < 0) {
-      cerr << "ERROR: Unable to set SCTP_INITMSG parameters!" << endl;
+      std::cerr << "ERROR: Unable to set SCTP_INITMSG parameters!" << std::endl;
       exit(1);
    }
 
    sctp_event_subscribe events;
    memset((char*)&events,1,sizeof(events));
    if(clientSocket.setSocketOption(IPPROTO_SCTP,SCTP_EVENTS,&events,sizeof(events)) < 0) {
-      cerr << "ERROR: SCTP_EVENTS failed!" << endl;
+      std::cerr << "ERROR: SCTP_EVENTS failed!" << std::endl;
       exit(1);
    }
 
-   cout << "Connecting... ";
-   cout.flush();
+   std::cout << "Connecting... ";
+   std::cout.flush();
    if(clientSocket.connectx((const SocketAddress**)remoteAddressArray,
                             remoteAddresses) == false) {
-      cout << "failed!" << endl;
-      cerr << "ERROR: Unable to connect to remote address(es)!" << endl;
+      std::cout << "failed!" << std::endl;
+      std::cerr << "ERROR: Unable to connect to remote address(es)!" << std::endl;
       exit(1);
    }
-   cout << "done. Use Ctrl-D to end transmission." << endl << endl;
+   std::cout << "done. Use Ctrl-D to end transmission." << std::endl << std::endl;
 
 
    // ====== Start threads ==================================================
@@ -561,6 +561,6 @@ int main(int argc, char** argv)
    echo.stop();
    SocketAddress::deleteAddressList(localAddressArray);
    SocketAddress::deleteAddressList(remoteAddressArray);
-   cout << "\x1b[" << getANSIColor(0) << "mTerminated!" << endl;
+   std::cout << "\x1b[" << getANSIColor(0) << "mTerminated!" << std::endl;
    return 0;
 }

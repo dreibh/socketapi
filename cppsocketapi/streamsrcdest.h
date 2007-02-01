@@ -1,5 +1,5 @@
 /*
- *  $Id: streamsrcdest.h,v 1.2 2003/08/19 19:24:25 tuexen Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -96,7 +96,7 @@ class StreamSrcDest
    public:
    /**
      * Source address of the stream in portable address format.
-     */           
+     */
    PortableAddress Source;
 
    /**
@@ -106,30 +106,30 @@ class StreamSrcDest
 
    /**
      * Flow label for IPv6 support.
-     */            
+     */
    card32 FlowLabel;
 
    /**
      * Traffic class.
      */
    card8 TrafficClass;
-   
+
    /**
      * Is this StreamSrcDest valid?
      */
    bool IsValid;
-   
+
    /**
      * Padding for alignment.
      */
-   card16 pad;  
+   card16 pad;
 };
 
 
 /**
   * << operator.
   */
-ostream& operator<<(ostream& os, const StreamSrcDest& ssd);
+std::ostream& operator<<(std::ostream& os, const StreamSrcDest& ssd);
 
 
 #endif

@@ -1,5 +1,5 @@
 /*
- *  $Id: sctpportscanner.cc,v 1.3 2003/08/19 19:28:34 tuexen Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -79,18 +79,18 @@ int main(int argc, char** argv)
    card64          connectTimeout    = 10000000;
    SocketAddress** localAddressArray = SocketAddress::newAddressList(SCTP_MAXADDRESSES);
    if(localAddressArray == NULL) {
-      cerr << "ERROR: Out of memory!" << endl;
+      std::cerr << "ERROR: Out of memory!" << std::endl;
       exit(1);
    }
    if(!sctp_isavailable()) {
 #ifdef HAVE_KERNEL_SCTP
-      cerr << "ERROR: Kernel-based SCTP is not available!" << endl;
+      std::cerr << "ERROR: Kernel-based SCTP is not available!" << std::endl;
 #else
      if(getuid() != 0) {
-        cerr << "ERROR: You need root permissions to use the SCTP Library!" << endl;
+        std::cerr << "ERROR: You need root permissions to use the SCTP Library!" << std::endl;
      }
      else {
-        cerr << "ERROR: SCTP is not available!" << endl;
+        std::cerr << "ERROR: SCTP is not available!" << std::endl;
      }
 #endif
       exit(1);
@@ -99,9 +99,9 @@ int main(int argc, char** argv)
 
    // ====== Get arguments ==================================================
    if(argc < 2) {
-      cerr << "Usage: " << argv[0] << " "
-           << "[Remote address] {-force-ipv4|-use-ipv6} {-local=address1} ... {-local=addressN} {-in=instreams} {-out=outstreams} {-start=first port} {-end=last port} {-simultaneous=connections} {-timeout=seconds}"
-           << endl;
+      std::cerr << "Usage: " << argv[0] << " "
+                << "[Remote address] {-force-ipv4|-use-ipv6} {-local=address1} ... {-local=addressN} {-in=instreams} {-out=outstreams} {-start=first port} {-end=last port} {-simultaneous=connections} {-timeout=seconds}"
+                << std::endl;
       exit(1);
    }
    for(unsigned int i = 2;i < (cardinal)argc;i++) {
@@ -113,13 +113,13 @@ int main(int argc, char** argv)
                SocketAddress::createSocketAddress(SocketAddress::PF_HidePort,
                                                   &argv[i][7]);
             if(localAddressArray[localAddresses] == NULL) {
-               cerr << "ERROR: Argument #" << i << " is an invalid address!" << endl;
+               std::cerr << "ERROR: Argument #" << i << " is an invalid address!" << std::endl;
                exit(1);
             }
             localAddresses++;
          }
          else {
-            cerr << "ERROR: Too many local addresses!" << endl;
+            std::cerr << "ERROR: Too many local addresses!" << std::endl;
             exit(1);
          }
       }
@@ -154,7 +154,7 @@ int main(int argc, char** argv)
          }
       }
       else {
-         cerr << "ERROR: Bad parameter " << argv[i] << "!" << endl;
+         std::cerr << "ERROR: Bad parameter " << argv[i] << "!" << std::endl;
          exit(1);
       }
    }
@@ -163,7 +163,7 @@ int main(int argc, char** argv)
    }
    SocketAddress* remoteAddress = SocketAddress::createSocketAddress(0,argv[1]);
    if(remoteAddress == NULL) {
-      cerr << "ERROR: Bad remote address! Use <address>:<port> format." << endl;
+      std::cerr << "ERROR: Bad remote address! Use <address>:<port> format." << std::endl;
       exit(1);
    }
    if(localAddresses < 1) {
@@ -171,7 +171,7 @@ int main(int argc, char** argv)
 /*
       localAddressArray[0] = new InternetAddress(0);
       if(localAddressArray[0] == NULL) {
-         cerr << "ERROR: Out of memory!" << endl;
+         std::cerr << "ERROR: Out of memory!" << std::endl;
          exit(1);
       }
       localAddresses = 1;
@@ -180,12 +180,12 @@ int main(int argc, char** argv)
             localAddressArray,
             localAddresses,
             Socket::GLAF_HideBroadcast|Socket::GLAF_HideMulticast|Socket::GLAF_HideAnycast)) {
-         cerr << "ERROR: Cannot obtain local addresses!" << endl;
+         std::cerr << "ERROR: Cannot obtain local addresses!" << std::endl;
          exit(1);
       }
       if(localAddresses < 1) {
-         cerr << "ERROR: No valid local addresses have been found?!" << endl
-              << "       Check your network interface configuration!" << endl;
+         std::cerr << "ERROR: No valid local addresses have been found?!" << std::endl
+              << "       Check your network interface configuration!" << std::endl;
          exit(1);
       }
    }
@@ -216,23 +216,23 @@ int main(int argc, char** argv)
 
 
    // ====== Print information ==============================================
-   cout << "SCTP Port Scanner - Copyright (C) 2001-2002 Thomas Dreibholz" << endl;
-   cout << "------------------------------------------------------------" << endl;
-   cout << "Version:               " << __DATE__ << ", " << __TIME__ << endl;
+   std::cout << "SCTP Port Scanner - Copyright (C) 2001-2007 Thomas Dreibholz" << std::endl;
+   std::cout << "------------------------------------------------------------" << std::endl;
+   std::cout << "Version:               " << __DATE__ << ", " << __TIME__ << std::endl;
    localAddressArray[0]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_HidePort);
-   cout << "Local Addresses:       " << *(localAddressArray[0]) << endl;
+   std::cout << "Local Addresses:       " << *(localAddressArray[0]) << std::endl;
    for(cardinal i = 1;i < localAddresses;i++) {
       localAddressArray[i]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_HidePort);
-      cout << "                       " << *(localAddressArray[i]) << endl;
+      std::cout << "                       " << *(localAddressArray[i]) << std::endl;
    }
    remoteAddress->setPrintFormat(SocketAddress::PF_Address);
-   cout << "Remote Address:        " << *remoteAddress << endl;
-   cout << "Outgoing Streams:      " << outstreams     << endl;
-   cout << "Max. Incoming Streams: " << instreams      << endl;
-   cout << "Simultaneous Connects: " << simultaneous << endl;
-   cout << "Connect Timeout:       " << connectTimeout << " [µs]" << endl;
-   cout << "Port Range:            " << startPort << " - " << endPort << endl;
-   cout << endl << endl;
+   std::cout << "Remote Address:        " << *remoteAddress << std::endl;
+   std::cout << "Outgoing Streams:      " << outstreams     << std::endl;
+   std::cout << "Max. Incoming Streams: " << instreams      << std::endl;
+   std::cout << "Simultaneous Connects: " << simultaneous << std::endl;
+   std::cout << "Connect Timeout:       " << connectTimeout << " [s]" << std::endl;
+   std::cout << "Port Range:            " << startPort << " - " << endPort << std::endl;
+   std::cout << std::endl << std::endl;
 
 
    installBreakDetector();
@@ -240,9 +240,9 @@ int main(int argc, char** argv)
 
    // ====== Create socket and connect ======================================
    cardinal nextPort = startPort;
-   Socket* clientSocket[simultaneous];
-   card64  timeout[simultaneous];
-   card16  port[simultaneous];
+   Socket*  clientSocket[simultaneous];
+   card64   timeout[simultaneous];
+   card16   port[simultaneous];
    for(cardinal i = 0;i < simultaneous;i++) {
       clientSocket[i] = NULL;
       port[i]         = 0;
@@ -258,7 +258,7 @@ int main(int argc, char** argv)
          if(clientSocket[i] == NULL) {
             clientSocket[i] = new Socket(Socket::IP,Socket::Stream,Socket::SCTP);
             if(clientSocket[i] == NULL) {
-               cerr << "ERROR: Out of memory!" << endl;
+               std::cerr << "ERROR: Out of memory!" << std::endl;
                exit(1);
             }
             clientSocket[i]->setBlockingMode(false);
@@ -268,7 +268,7 @@ int main(int argc, char** argv)
             init.sinit_max_attempts   = 0;
             init.sinit_max_init_timeo = 60;
             if(clientSocket[i]->setSocketOption(IPPROTO_SCTP,SCTP_INITMSG,(char*)&init,sizeof(init)) < 0) {
-               cerr << "ERROR: Unable to set SCTP_INITMSG parameters!" << endl;
+               std::cerr << "ERROR: Unable to set SCTP_INITMSG parameters!" << std::endl;
                exit(1);
             }
 
@@ -280,24 +280,24 @@ int main(int argc, char** argv)
             if(clientSocket[i]->bindx((const SocketAddress**)localAddressArray,
                                          localAddresses,
                                          SCTP_BINDX_ADD_ADDR) == false) {
-               cerr << "ERROR: Unable to bind socket!" << endl;
+               std::cerr << "ERROR: Unable to bind socket!" << std::endl;
                exit(1);
             }
 
             sctp_event_subscribe events;
             memset((char*)&events,1,sizeof(events));
             if(clientSocket[i]->setSocketOption(IPPROTO_SCTP,SCTP_EVENTS,&events,sizeof(events)) < 0) {
-               cerr << "ERROR: SCTP_EVENTS failed!" << endl;
+               std::cerr << "ERROR: SCTP_EVENTS failed!" << std::endl;
                exit(1);
             }
 
             port[i]    = nextPort;
             timeout[i] = connectTimeout + getMicroTime();
             remoteAddress->setPort(port[i]);
-            cout << "Trying " << *remoteAddress << "..." << endl;
+            std::cout << "Trying " << *remoteAddress << "..." << std::endl;
             if((clientSocket[i]->connect(*remoteAddress) == false) && (clientSocket[i]->getLastError() != EINPROGRESS)) {
-               cout << "failed!" << endl;
-               cerr << "ERROR: Unable to connect to remote address!" << endl;
+               std::cout << "failed!" << std::endl;
+               std::cerr << "ERROR: Unable to connect to remote address!" << std::endl;
                exit(1);
             }
             nextPort++;
@@ -327,11 +327,11 @@ int main(int argc, char** argv)
                if(FD_ISSET(fd,&readfds)) {
                   result = ext_write(fd,"Test\n",5);
                   if(result > 0) {
-                     cerr << "Port #" << port[i] << " is active!" << endl;
+                     std::cerr << "Port #" << port[i] << " is active!" << std::endl;
                      success[port[i]] = true;
                   }
                   else {
-                     cerr << "Port #" << port[i] << " is unused." << endl;
+                     std::cerr << "Port #" << port[i] << " is unused." << std::endl;
                   }
                   delete clientSocket[i];
                   clientSocket[i] = NULL;
@@ -343,7 +343,7 @@ int main(int argc, char** argv)
       else {
          for(cardinal i = 0;i < simultaneous;i++) {
             if((clientSocket[i] != NULL) && (timeout[i] <= getMicroTime())) {
-               cerr << "Port #" << port[i] << " is inactive, timeout reached." << endl;
+               std::cerr << "Port #" << port[i] << " is inactive, timeout reached." << std::endl;
                delete clientSocket[i];
                clientSocket[i] = NULL;
                running--;
@@ -354,13 +354,13 @@ int main(int argc, char** argv)
 
 
    // ====== Print summary ==================================================
-   cout << endl << "Summary of active ports:" << endl;
+   std::cout << std::endl << "Summary of active ports:" << std::endl;
    for(cardinal i = 1;i <= endPort;i++) {
       if(success[i]) {
-         cout << "Port #" << i << endl;
+         std::cout << "Port #" << i << std::endl;
       }
    }
-   cout << endl;
+   std::cout << std::endl;
 
 
    // ====== Clean up =======================================================
@@ -373,6 +373,6 @@ int main(int argc, char** argv)
    Thread::delay(500000);
    SocketAddress::deleteAddressList(localAddressArray);
    delete remoteAddress;
-   cout << "\x1b[" << getANSIColor(0) << "mTerminated!" << endl;
+   std::cout << "\x1b[" << getANSIColor(0) << "mTerminated!" << std::endl;
    return 0;
 }

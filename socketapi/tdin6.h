@@ -124,6 +124,7 @@ struct in6_flowlabel_req
  *	IPV6 socket options
  */
 
+/*
 #define IPV6_ADDRFORM		1
 #define IPV6_PKTINFO		2
 #define IPV6_HOPOPTS		3
@@ -134,14 +135,8 @@ struct in6_flowlabel_req
 #define IPV6_HOPLIMIT		8
 #define IPV6_NEXTHOP		9
 #define IPV6_AUTHHDR		10
+*/
 #define IPV6_FLOWINFO		11
-
-#if 0
-/* Aliases for obsolete names */
-#define IPV6_RXHOPOPTS		IPV6_HOPOPTS
-#define IPV6_RXDSTOPTS		IPV6_DSTOPTS
-#define IPV6_RXSRCRT		IPV6_RTHDR
-#endif
 
 /*
  *	Alternative names

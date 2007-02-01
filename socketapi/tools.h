@@ -229,7 +229,7 @@ template<class T> cardinal removeDuplicates(T*             array,
   *
   * @param os Output stream.
   */
-void printTimeStamp(ostream& os = cout);
+void printTimeStamp(std::ostream& os = std::cout);
 
 
 #ifdef USE_EFENCE

@@ -64,9 +64,9 @@ Condition::~Condition()
    Valid = false;
    if(pthread_cond_destroy(&ConditionVariable) != 0) {
 #ifndef DISABLE_WARNINGS
-      cerr << "ERROR: Condition::~Condition() - "
-              "Another thread is still waiting for this condition!" << endl;
-      cerr << "Condition name is \"" << MutexName << "\"." << endl;
+      std::cerr << "ERROR: Condition::~Condition() - "
+                   "Another thread is still waiting for this condition!" << std::endl;
+      std::cerr << "Condition name is \"" << MutexName << "\"." << std::endl;
       exit(1);
 #endif
    }
@@ -115,10 +115,10 @@ void Condition::signal()
    pthread_cond_signal(&ConditionVariable);
 
 #ifdef PRINT_SIGNAL
-   cout << "signal: " << getName() << endl;
+   cout << "signal: " << getName() << std::endl;
 #endif
 
-   set<Condition*>::iterator iterator = ParentSet.begin();
+   std::set<Condition*>::iterator iterator = ParentSet.begin();
    while(iterator != ParentSet.end()) {
       (*iterator)->signal();
       iterator++;
@@ -137,10 +137,10 @@ void Condition::broadcast()
    pthread_cond_broadcast(&ConditionVariable);
 
 #ifdef PRINT_SIGNAL
-   cout << "broadcast: " << getName() << endl;
+   cout << "broadcast: " << getName() << std::endl;
 #endif
 
-   set<Condition*>::iterator iterator = ParentSet.begin();
+   std::set<Condition*>::iterator iterator = ParentSet.begin();
    while(iterator != ParentSet.end()) {
       (*iterator)->broadcast();
       iterator++;

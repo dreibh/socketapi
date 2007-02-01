@@ -106,7 +106,7 @@ template<const size_t size> inline void SocketMessage<size>::setControl(const si
 {
    Header.msg_control = (char*)&Control;
    if(controlsize > size) {
-      cerr << "WARNING: SocketMessage<" << size << ">:setControl() - Size too large!" << endl;
+      std::cerr << "WARNING: SocketMessage<" << size << ">:setControl() - Size too large!" << std::endl;
       Header.msg_controllen = size;
       return;
    }
@@ -128,7 +128,7 @@ template<const size_t size> inline char* SocketMessage<size>::addHeader(
    const cardinal length = payload + sizeof(cmsghdr);
 
    if(Header.msg_controllen + length > size) {
-      cerr << "WARNING: SocketMessage<" << size << ">:addHeader() - Too much control data!" << endl;
+      std::cerr << "WARNING: SocketMessage<" << size << ">:addHeader() - Too much control data!" << std::endl;
       return(NULL);
    }
 
@@ -173,7 +173,7 @@ inline static cmsghdr* CFirst(const msghdr* header)
    if(header->msg_controllen > 0) {
       return(CMSG_FIRSTHDR((msghdr*)header));
    }
-   return(NULL);   
+   return(NULL);
 }
 
 

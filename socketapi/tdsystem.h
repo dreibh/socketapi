@@ -83,10 +83,6 @@
 #include <iostream>
 
 
-// gcc3.1 and new STL define all standard functions in namespace std!
-using namespace std;
-
-
 // In socket.cc: CMSG_NXTHDR: (__cmsg_nxthdr) is not found,
 // if compiled with -O0 -> extern inline definition required.
 #if !defined __USE_EXTERN_INLINES
@@ -138,12 +134,13 @@ using namespace std;
 #endif
 
 
-// ###### sctplib versions ###################################################
-//#include <sctp.h>
-//#define SCTPLIB_VERSION ((SCTP_MAJOR_VERSION << 16) | SCTP_MINOR_VERSION)
-//#define SCTPLIB_1_0_0_PRE19 19
-//#define SCTPLIB_1_0_0_PRE20 20
-//#define SCTPLIB_1_0_0       0x10000
+// ###### Minimum/maximum ###################################################
+#ifndef max
+#define max(a, b) ((a) < (b) ? (b) : (a))
+#endif
+#ifndef min
+#define min(a, b) ((a) > (b) ? (b) : (a))
+#endif
 
 
 // ###### Type definitions ##################################################

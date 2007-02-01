@@ -89,7 +89,7 @@ SCTPAssociation::SCTPAssociation(SCTPSocket*        socket,
 
    if(!udpLike) {
 #ifdef PRINT_SOCKTYPE
-      cout << "SCTPAssociation::SCTPAssociation() - Initializing TCP-like socket" << endl;
+      cout << "SCTPAssociation::SCTPAssociation() - Initializing TCP-like socket" << std::endl;
 #endif
       ShutdownCompleteCondition.addParent(&ExceptUpdateCondition);
       EstablishCondition.addParent(&WriteUpdateCondition);
@@ -97,12 +97,12 @@ SCTPAssociation::SCTPAssociation(SCTPSocket*        socket,
    }
 #ifdef PRINT_SOCKTYPE
    else {
-      cout << "SCTPAssociation::SCTPAssociation() - Initializing UDP-like socket" << endl;
+      cout << "SCTPAssociation::SCTPAssociation() - Initializing UDP-like socket" << std::endl;
    }
 #endif
 
    SCTPSocketMaster::MasterInstance.lock();
-   Socket->AssociationList.insert(pair<unsigned int, SCTPAssociation*>(AssociationID,this));
+   Socket->AssociationList.insert(std::pair<unsigned int, SCTPAssociation*>(AssociationID,this));
    SCTPSocketMaster::MasterInstance.unlock();
 }
 
@@ -113,8 +113,8 @@ SCTPAssociation::~SCTPAssociation()
    SCTPSocketMaster::MasterInstance.lock();
    if(AssociationID == 0) {
 #ifndef DISABLE_WARNINGS
-      cerr << "ERROR: SCTPAssociation::~SCTPAssociation() - "
-              "AssociationID is 0! Destructor called twice?!" << endl;
+      std::cerr << "ERROR: SCTPAssociation::~SCTPAssociation() - "
+                   "AssociationID is 0! Destructor called twice?!" << std::endl;
 #endif
       ::abort();
       return;
@@ -123,37 +123,37 @@ SCTPAssociation::~SCTPAssociation()
    // ====== Do shutdown ====================================================
    if(!ShutdownCompleteNotification) {
 #ifdef PRINT_SHUTDOWN
-      cout << "Active shutdown of association #" << AssociationID << " started..." << endl;
+      cout << "Active shutdown of association #" << AssociationID << " started..." << std::endl;
 #endif
       SCTPSocketMaster::delayedDeleteAssociation(Socket->getID(),AssociationID);
       shutdown();
 #ifdef PRINT_SHUTDOWN
-      cout << "Active shutdown of association #" << AssociationID << " complete!" << endl;
+      cout << "Active shutdown of association #" << AssociationID << " complete!" << std::endl;
 #endif
    }
    else {
 #ifdef PRINT_SHUTDOWN
-      cout << "Passive shutdown of association #" << AssociationID << "!" << endl;
+      cout << "Passive shutdown of association #" << AssociationID << "!" << std::endl;
 #endif
 
       if(sctp_deleteAssociation(AssociationID) != SCTP_SUCCESS) {
 #ifndef DISABLE_WARNINGS
-         cerr << "INTERNAL ERROR: SCTPAssociation::~SCTPAssociation() - sctp_deleteAssociation() failed!" << endl;
+         std::cerr << "INTERNAL ERROR: SCTPAssociation::~SCTPAssociation() - sctp_deleteAssociation() failed!" << std::endl;
 #endif
          ::abort();
       }
    }
 
    // ====== Remove association from list ================================
-   multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+   std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
       Socket->AssociationList.find(AssociationID);
    if(iterator != Socket->AssociationList.end()) {
       Socket->AssociationList.erase(iterator);
    }
    else {
 #ifndef DISABLE_WARNINGS
-      cerr << "INTERNAL ERROR: SCTPAssociation::~SCTPAssociation() - "
-              "Erase of association #" << AssociationID << " failed!" << endl;
+      std::cerr << "INTERNAL ERROR: SCTPAssociation::~SCTPAssociation() - "
+                   "Erase of association #" << AssociationID << " failed!" << std::endl;
 #endif
       ::abort();
    }
@@ -229,8 +229,8 @@ bool SCTPAssociation::getRemoteAddresses(SocketAddress**& addressArray)
          ok = sctp_getPathStatus(AssociationID, index, &pathStatus);
          if(ok != SCTP_SUCCESS) {
 #ifndef DISABLE_WARNINGS
-            cerr << "WARNING: SCTPAssociation::getRemoteAddress() - sctp_getPathStatus() failure!" << endl
-                 << "return code: " << ok << endl;
+            std::cerr << "WARNING: SCTPAssociation::getRemoteAddress() - sctp_getPathStatus() failure!" << std::endl
+                      << "return code: " << ok << std::endl;
 #endif
             SocketAddress::deleteAddressList(addressArray);
             result = false;
@@ -241,8 +241,8 @@ bool SCTPAssociation::getRemoteAddresses(SocketAddress**& addressArray)
                                  0, (char*)&pathStatus.destinationAddress,status.destPort);
             if(addressArray[i] == NULL) {
 #ifndef DISABLE_WARNINGS
-               cerr << "WARNING: SCTPAssociation::getRemoteAddresses() - Bad address "
-                    << pathStatus.destinationAddress << ", port " << status.destPort << "!" << endl;
+               std::cerr << "WARNING: SCTPAssociation::getRemoteAddresses() - Bad address "
+                         << pathStatus.destinationAddress << ", port " << status.destPort << "!" << std::endl;
 #endif
                SocketAddress::deleteAddressList(addressArray);
                result = false;
@@ -401,7 +401,7 @@ bool SCTPAssociation::sendPreEstablishmentPackets()
       snprintf((char*)&str,sizeof(str),
                   "A%04d: sendPreEstablishmentPackets() - Sending %u bytes, PPID $%08x, stream %u",
                   AssociationID, packet->Length, packet->ProtoID, packet->StreamID);
-      cerr << str << endl;
+      std::cerr << str << std::endl;
 #endif
       result = sendTo(packet->Data,
                       packet->Length,
@@ -413,7 +413,7 @@ bool SCTPAssociation::sendPreEstablishmentPackets()
                       NULL);
       if(result == (ssize_t)packet->Length) {
 #ifdef PRINT_PREESTABLISHMENT_SEND
-         cerr << "Successfully sent packet" << endl;
+         std::cerr << "Successfully sent packet" << std::endl;
 #endif
          FirstPreEstablishmentPacket = packet->Next;
          if(LastPreEstablishmentPacket == packet) {
@@ -425,7 +425,7 @@ bool SCTPAssociation::sendPreEstablishmentPackets()
       }
       else {
 #ifdef PRINT_PREESTABLISHMENT_SEND
-         cerr << "Sending failed" << endl;
+         std::cerr << "Sending failed" << std::endl;
 #endif
          return(false);
       }
@@ -472,7 +472,7 @@ bool SCTPAssociation::getAssocStatus(
 #ifdef PRINT_RTOMAX
          char str[256];
          snprintf((char*)&str,sizeof(str),"getAssocStatus() - Replying RTOMax=%d instead of InitTimeout=%d\n",assocStatus.rtoMax,RTOMax);
-         cerr << str << endl;
+         std::cerr << str << std::endl;
 #endif
          assocStatus.rtoMax = RTOMax;
       }
@@ -490,7 +490,7 @@ bool SCTPAssociation::setAssocStatus(
 #ifdef PRINT_RTOMAX
       char str[256];
       snprintf((char*)&str,sizeof(str),"setAssocStatus() - Saving RTOMax=%d, using InitTimeout=%d\n",assocStatus.rtoMax,InitTimeout);
-      cerr << str << endl;
+      std::cerr << str << std::endl;
 #endif
       newStatus.rtoMax = InitTimeout;
       RTOMax = assocStatus.rtoMax;

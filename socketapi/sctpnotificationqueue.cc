@@ -80,7 +80,7 @@ bool SCTPNotificationQueue::addNotification(const SCTPNotification& notification
       return(true);
    }
 #ifndef DISABLE_WARNINGS
-   cerr << "ERROR: SCTPNotificationQueue::addNotification() - Out of memory!" << endl;
+   std::cerr << "ERROR: SCTPNotificationQueue::addNotification() - Out of memory!" << std::endl;
 #endif
    return(false);
 }
@@ -107,7 +107,7 @@ void SCTPNotificationQueue::updateNotification(const SCTPNotification& notificat
    }
    else {
 #ifndef DISABLE_WARNINGS
-      cerr << "ERROR: SCTPNotificationQueue::updateHeadNotification() - Queue is empty!" << endl;
+      std::cerr << "ERROR: SCTPNotificationQueue::updateHeadNotification() - Queue is empty!" << std::endl;
 #endif
    }
 }

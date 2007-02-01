@@ -96,19 +96,19 @@ class ServerSet : public Thread
    // ====== Protected data =================================================
    protected:
    void        killMe();
-   static void garbageCollection(set<ServerSet*>& gcSet);
+   static void garbageCollection(std::set<ServerSet*>& gcSet);
 
-   Socket*                ServerSocket;
-   static Synchronizable  ServersSynchronizable;
-   static set<ServerSet*> Servers;
-   static set<ServerSet*> DeletedServers;
+   Socket*                     ServerSocket;
+   static Synchronizable       ServersSynchronizable;
+   static std::set<ServerSet*> Servers;
+   static std::set<ServerSet*> DeletedServers;
 };
 
 
 // ###### Static variables ##################################################
-Synchronizable  ServerSet::ServersSynchronizable("ServerSet::ServersSynchronizable");
-set<ServerSet*> ServerSet::Servers;
-set<ServerSet*> ServerSet::DeletedServers;
+Synchronizable       ServerSet::ServersSynchronizable("ServerSet::ServersSynchronizable");
+std::set<ServerSet*> ServerSet::Servers;
+std::set<ServerSet*> ServerSet::DeletedServers;
 
 
 // ###### Constructor #######################################################
@@ -144,10 +144,10 @@ void ServerSet::killMe()
 
 
 // ###### Do garbage collection #############################################
-void ServerSet::garbageCollection(set<ServerSet*>& gcSet)
+void ServerSet::garbageCollection(std::set<ServerSet*>& gcSet)
 {
    ServerSet::ServersSynchronizable.synchronized();
-   set<ServerSet*>::iterator iterator = gcSet.begin();
+   std::set<ServerSet*>::iterator iterator = gcSet.begin();
    while(iterator != gcSet.end()) {
       ServerSet* server = *iterator;
       delete server;
@@ -214,14 +214,14 @@ void EchoServer::run()
       // ====== Receive string from association =============================
       const ssize_t dataLength = ServerSocket->receiveMsg(&message.Header,0);
       if(dataLength <= 0) {
-         printTimeStamp(cout);
+         printTimeStamp(std::cout);
          if(dataLength < 0) {
-            cout << "Thread shutdown due to receive error #"
-                 << -dataLength << "." << endl
-                 << "   Description: " << strerror(-dataLength) << "!" << endl;
+            std::cout << "Thread shutdown due to receive error #"
+                 << -dataLength << "." << std::endl
+                 << "   Description: " << strerror(-dataLength) << "!" << std::endl;
          }
          else {
-            cout << "Thread shutdown!" << endl;
+            std::cout << "Thread shutdown!" << std::endl;
          }
          killMe();
          return;
@@ -267,9 +267,9 @@ void EchoServer::run()
             }
             const ssize_t result = ServerSocket->sendMsg(&message.Header,0);
             if(result < 0) {
-               printTimeStamp(cout);
-               cout << "Thread shutdown due to send error #"
-                    << -dataLength << "!" << endl;
+               printTimeStamp(std::cout);
+               std::cout << "Thread shutdown due to send error #"
+                    << -dataLength << "!" << std::endl;
                killMe();
                return;
             }
@@ -300,11 +300,11 @@ void EchoServer::run()
                      (DiscardMode == true) ? "Discard" : "Echo",
                      outputDataBuffer);
          if(ColorMode) {
-            cout << "\x1b[" << getANSIColor(streamID + 1) << "m";
+            std::cout << "\x1b[" << getANSIColor(streamID + 1) << "m";
          }
-         cout << str << endl;
+         std::cout << str << std::endl;
          if(ColorMode) {
-            cout << "\x1b[" << getANSIColor(0) << "m";
+            std::cout << "\x1b[" << getANSIColor(0) << "m";
          }
       }
 
@@ -322,8 +322,8 @@ void EchoServer::run()
          }
       }
    }
-   printTimeStamp(cout);
-   cout << "Thread shutdown!" << endl;
+   printTimeStamp(std::cout);
+   std::cout << "Thread shutdown!" << std::endl;
    killMe();
 }
 
@@ -390,9 +390,9 @@ void CharGenServer::run()
       }
       const ssize_t result = ServerSocket->sendMsg(&message.Header,0);
       if(result < 0) {
-         printTimeStamp(cout);
-         cout << "Thread shutdown due to send error #"
-              << -result << "!" << endl;
+         printTimeStamp(std::cout);
+         std::cout << "Thread shutdown due to send error #"
+              << -result << "!" << std::endl;
          killMe();
          return;
       }
@@ -552,13 +552,13 @@ void TrivialFileTransferServer::run()
    }
 
    if(result < 0) {
-      printTimeStamp(cout);
-      cout << "Thread shutdown due to send error #"
-           << -result << "!" << endl;
+      printTimeStamp(std::cout);
+      std::cout << "Thread shutdown due to send error #"
+                << -result << "!" << std::endl;
    }
    else {
-      printTimeStamp(cout);
-      cout << "Thread shutdown!" << endl;
+      printTimeStamp(std::cout);
+      std::cout << "Thread shutdown!" << std::endl;
    }
 
    killMe();
@@ -606,9 +606,9 @@ void DaytimeServer::run()
 
    const int result = ServerSocket->send(str1,strlen(str1),0);
    if(result < 0) {
-      printTimeStamp(cout);
-      cout << "Daytime server got send error #"
-           << -result << "!" << endl;
+      printTimeStamp(std::cout);
+      std::cout << "Daytime server got send error #"
+                << -result << "!" << std::endl;
    }
 
    killMe();
@@ -694,7 +694,7 @@ bool MultiServer::init(SocketAddress** addressArray,
    }
    ServerSocket = new Socket(Socket::IP,Socket::Stream,Socket::SCTP);
    if(ServerSocket == NULL) {
-      cerr << "ERROR: MultiServer::init() - Out of memory!" << endl;
+      std::cerr << "ERROR: MultiServer::init() - Out of memory!" << std::endl;
       return(false);
    }
 
@@ -705,7 +705,7 @@ bool MultiServer::init(SocketAddress** addressArray,
    init.sinit_max_attempts   = 0;
    init.sinit_max_init_timeo = 60;
    if(ServerSocket->setSocketOption(IPPROTO_SCTP,SCTP_INITMSG,(char*)&init,sizeof(init)) < 0) {
-      cerr << "ERROR: MultiServer::init() - Unable to set SCTP_INITMSG parameters!" << endl;
+      std::cerr << "ERROR: MultiServer::init() - Unable to set SCTP_INITMSG parameters!" << std::endl;
       delete ServerSocket;
       return(false);
    }
@@ -715,7 +715,7 @@ bool MultiServer::init(SocketAddress** addressArray,
    if(ServerSocket->bindx((const SocketAddress**)&socketAddressArray,
                           addresses,
                           SCTP_BINDX_ADD_ADDR) == false) {
-      cerr << "ERROR: MultiServer::init() - Unable to bind socket!" << endl;
+      std::cerr << "ERROR: MultiServer::init() - Unable to bind socket!" << std::endl;
       delete ServerSocket;
       return(false);
    }
@@ -723,7 +723,7 @@ bool MultiServer::init(SocketAddress** addressArray,
    sctp_event_subscribe events;
    memset((char*)&events,1,sizeof(events));
    if(ServerSocket->setSocketOption(IPPROTO_SCTP,SCTP_EVENTS,&events,sizeof(events)) < 0) {
-      cerr << "ERROR: MultiServer::init() - SCTP_EVENTS failed!" << endl;
+      std::cerr << "ERROR: MultiServer::init() - SCTP_EVENTS failed!" << std::endl;
       delete ServerSocket;
       return(false);
    }
@@ -746,23 +746,23 @@ void MultiServer::run()
             sctp_event_subscribe events;
             memset((char*)&events,1,sizeof(events));
             if(newSocket->setSocketOption(IPPROTO_SCTP,SCTP_EVENTS,&events,sizeof(events)) < 0) {
-               cerr << "WARNING: MultiServer::run() - SCTP_EVENTS failed!" << endl;
+               std::cerr << "WARNING: MultiServer::run() - SCTP_EVENTS failed!" << std::endl;
             }
 
-            printTimeStamp(cout);
+            printTimeStamp(std::cout);
             if(peer != NULL) {
                peer->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_Legacy);
-               cout << "Accepted association from " << *peer << " to ";
+               std::cout << "Accepted association from " << *peer << " to ";
                delete peer;
             }
             else {
-               cout << "Accepted association from (Unknown) to ";
+               std::cout << "Accepted association from (Unknown) to ";
             }
 
             switch(Type) {
                case MST_Echo:
                   {
-                     cout << "Echo server." << endl;
+                     std::cout << "Echo server." << std::endl;
                      EchoServer* server = new EchoServer(newSocket,Unreliable,false);
                      if(server == NULL) {
                         delete newSocket;
@@ -771,7 +771,7 @@ void MultiServer::run()
                 break;
                case MST_Discard:
                   {
-                     cout << "Discard server." << endl;
+                     std::cout << "Discard server." << std::endl;
                      EchoServer* server = new EchoServer(newSocket,0,true);
                      if(server == NULL) {
                         delete newSocket;
@@ -780,7 +780,7 @@ void MultiServer::run()
                 break;
                case MST_CharGen:
                   {
-                     cout << "CharGen server." << endl;
+                     std::cout << "CharGen server." << std::endl;
                      CharGenServer* server = new CharGenServer(newSocket,Unreliable);
                      if(server == NULL) {
                         delete newSocket;
@@ -789,7 +789,7 @@ void MultiServer::run()
                 break;
                case MST_TFTP:
                   {
-                     cout << "TFTP server." << endl;
+                     std::cout << "TFTP server." << std::endl;
                      TrivialFileTransferServer* server = new TrivialFileTransferServer(newSocket);
                      if(server == NULL) {
                         delete newSocket;
@@ -797,14 +797,14 @@ void MultiServer::run()
                   }
                 break;
                case MST_Test: {
-                     cout << "Test server." << endl;
+                     std::cout << "Test server." << std::endl;
                      delete newSocket;
                   }
                 break;
                case MST_Daytime:
                default:
                   {
-                     cout << "Daytime server." << endl;
+                     std::cout << "Daytime server." << std::endl;
                      DaytimeServer* server = new DaytimeServer(newSocket);
                      if(server == NULL) {
                         delete newSocket;
@@ -833,13 +833,13 @@ int main(int argc, char** argv)
    PrintNotifications = false;
    if(!sctp_isavailable()) {
 #ifdef HAVE_KERNEL_SCTP
-      cerr << "ERROR: Kernel-based SCTP is not available!" << endl;
+      std::cerr << "ERROR: Kernel-based SCTP is not available!" << std::endl;
 #else
      if(getuid() != 0) {
-        cerr << "ERROR: You need root permissions to use the SCTP Library!" << endl;
+        std::cerr << "ERROR: You need root permissions to use the SCTP Library!" << std::endl;
      }
      else {
-        cerr << "ERROR: SCTP is not available!" << endl;
+        std::cerr << "ERROR: SCTP is not available!" << std::endl;
      }
 #endif
       exit(1);
@@ -873,7 +873,7 @@ int main(int argc, char** argv)
             if(localAddressArray == NULL) {
                localAddressArray = SocketAddress::newAddressList(SCTP_MAXADDRESSES);
                if(localAddressArray == NULL) {
-                  cerr << "ERROR: Out of memory!" << endl;
+                  std::cerr << "ERROR: Out of memory!" << std::endl;
                   exit(1);
                }
             }
@@ -881,13 +881,13 @@ int main(int argc, char** argv)
                                                    SocketAddress::PF_HidePort,
                                                    &argv[i][7]);
             if(localAddressArray[localAddresses] == NULL) {
-               cerr << "ERROR: Argument #" << i << " is an invalid address!" << endl;
+               std::cerr << "ERROR: Argument #" << i << " is an invalid address!" << std::endl;
                exit(1);
             }
             localAddresses++;
          }
          else {
-            cerr << "ERROR: Too many local addresses!" << endl;
+            std::cerr << "ERROR: Too many local addresses!" << std::endl;
             exit(1);
          }
       }
@@ -913,9 +913,9 @@ int main(int argc, char** argv)
          PrintNotifications = false;
       }
       else {
-         cerr << "Usage: " << argv[0] << " "
-                 "{-force-ipv4|-use-ipv6} {-local=address1} ... {-local=addressN}  {-nocolor} {-color} {-control|-nocontrol} {-notif|-nonotif}"
-              << endl;
+         std::cerr << "Usage: " << argv[0] << " "
+                      "{-force-ipv4|-use-ipv6} {-local=address1} ... {-local=addressN}  {-nocolor} {-color} {-control|-nocontrol} {-notif|-nonotif}"
+              << std::endl;
          exit(1);
       }
    }
@@ -927,12 +927,12 @@ int main(int argc, char** argv)
             localAddressArray,
             localAddresses,
             Socket::GLAF_HideBroadcast|Socket::GLAF_HideMulticast|Socket::GLAF_HideAnycast)) {
-         cerr << "ERROR: Cannot obtain local addresses!" << endl;
+         std::cerr << "ERROR: Cannot obtain local addresses!" << std::endl;
          exit(1);
       }
       if(localAddresses < 1) {
-         cerr << "ERROR: No valid local addresses have been found?!" << endl
-              << "       Check your network interface configuration!" << endl;
+         std::cerr << "ERROR: No valid local addresses have been found?!" << std::endl
+                   << "       Check your network interface configuration!" << std::endl;
          exit(1);
       }
    }
@@ -940,19 +940,19 @@ int main(int argc, char** argv)
 
 
    // ====== Print information ==============================================
-   cout << "SCTP Multi Server - Copyright (C) 2001-2006 Thomas Dreibholz" << endl;
-   cout << "------------------------------------------------------------" << endl;
-   cout << "Version:           " << __DATE__ << ", " << __TIME__ << endl;
+   std::cout << "SCTP Multi Server - Copyright (C) 2001-2007 Thomas Dreibholz" << std::endl;
+   std::cout << "------------------------------------------------------------" << std::endl;
+   std::cout << "Version:           " << __DATE__ << ", " << __TIME__ << std::endl;
    localAddressArray[0]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_Legacy|SocketAddress::PF_HidePort);
-   cout << "Local Addresses:   " << *(localAddressArray[0]) << endl;
+   std::cout << "Local Addresses:   " << *(localAddressArray[0]) << std::endl;
    for(cardinal i = 1;i < localAddresses;i++) {
       localAddressArray[i]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_Legacy|SocketAddress::PF_HidePort);
-      cout << "                   " << *(localAddressArray[i]) << endl;
+      std::cout << "                   " << *(localAddressArray[i]) << std::endl;
    }
-   cout << "Max Incoming:      " << maxIncoming << endl;
-   cout << "Max Outgoing:      " << maxOutgoing << endl;
-   cout << "Unreliable:        " << unreliable     << endl;
-   cout << endl << endl;
+   std::cout << "Max Incoming:      " << maxIncoming << std::endl;
+   std::cout << "Max Outgoing:      " << maxOutgoing << std::endl;
+   std::cout << "Unreliable:        " << unreliable     << std::endl;
+   std::cout << std::endl << std::endl;
 
 
    // ====== Execute main program ===========================================
@@ -961,7 +961,7 @@ int main(int argc, char** argv)
    if((echoServer == NULL) ||
       (echoServer->init(localAddressArray,localAddresses,
                         ECHO_PORT,MultiServer::MST_Echo,maxIncoming,maxOutgoing,unreliable) == false)) {
-      cerr << "ERROR: Unable to initialize Echo server!" << endl;
+      std::cerr << "ERROR: Unable to initialize Echo server!" << std::endl;
       exit(1);
    }
 #endif
@@ -971,7 +971,7 @@ int main(int argc, char** argv)
    if((discardServer == NULL) ||
       (discardServer->init(localAddressArray,localAddresses,
                            DISCARD_PORT,MultiServer::MST_Discard,maxIncoming,1,unreliable) == false)) {
-      cerr << "ERROR: Unable to initialize Discard server!" << endl;
+      std::cerr << "ERROR: Unable to initialize Discard server!" << std::endl;
       exit(1);
    }
 #endif
@@ -981,7 +981,7 @@ int main(int argc, char** argv)
    if((daytimeServer == NULL) ||
       (daytimeServer->init(localAddressArray,localAddresses,
                            DAYTIME_PORT,MultiServer::MST_Daytime,1,1,unreliable) == false)) {
-      cerr << "ERROR: Unable to initialize Daytime server!" << endl;
+      std::cerr << "ERROR: Unable to initialize Daytime server!" << std::endl;
       exit(1);
    }
 #endif
@@ -991,7 +991,7 @@ int main(int argc, char** argv)
    if((charGenServer == NULL) ||
       (charGenServer->init(localAddressArray,localAddresses,
                           CHARGEN_PORT,MultiServer::MST_CharGen,1,1,unreliable) == false)) {
-      cerr << "ERROR: Unable to initialize CharGen server!" << endl;
+      std::cerr << "ERROR: Unable to initialize CharGen server!" << std::endl;
       exit(1);
    }
 #endif
@@ -1001,7 +1001,7 @@ int main(int argc, char** argv)
    if((tftpServer == NULL) ||
       (tftpServer->init(localAddressArray,localAddresses,
                           TFTP_PORT,MultiServer::MST_TFTP,1,1,unreliable) == false)) {
-      cerr << "ERROR: Unable to initialize TFTP server!" << endl;
+      std::cerr << "ERROR: Unable to initialize TFTP server!" << std::endl;
       exit(1);
    }
 #endif
@@ -1011,7 +1011,7 @@ int main(int argc, char** argv)
    if((testServer == NULL) ||
       (testServer->init(localAddressArray,localAddresses,
                         COMTEST_PORT,MultiServer::MST_Test,maxIncoming,maxOutgoing,unreliable)) == false) {
-      cerr << "ERROR: Unable to initialize test server!" << endl;
+      std::cerr << "ERROR: Unable to initialize test server!" << std::endl;
       exit(1);
    }
 #endif
@@ -1045,6 +1045,6 @@ int main(int argc, char** argv)
 #endif
    SocketAddress::deleteAddressList(localAddressArray);
 
-   cout << "\x1b[" << getANSIColor(0) << "mTerminated!" << endl;
+   std::cout << "\x1b[" << getANSIColor(0) << "mTerminated!" << std::endl;
    return 0;
 }

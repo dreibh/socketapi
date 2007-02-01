@@ -108,7 +108,7 @@ bool scanURL(const String& location,
       return(false);
    }
    host = url.left(p2);
-   
+
    // ====== Get path =======================================================
    path = url.mid(p2 + 1);
 
@@ -119,7 +119,7 @@ bool scanURL(const String& location,
 
 
 // ###### Print time stamp ##################################################
-void printTimeStamp(ostream& os)
+void printTimeStamp(std::ostream& os)
 {
    char str[128];
    const card64 microTime = getMicroTime();

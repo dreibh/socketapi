@@ -53,7 +53,7 @@
   * @short   Socket Address
   * @author  Thomas Dreibholz (dreibh@exp-math.uni-essen.de)
   * @version 1.0
-  */            
+  */
 class SocketAddress
 {
    // ====== Destructor =====================================================
@@ -239,7 +239,7 @@ class SocketAddress
      * @param length Length of buffer.
      * @param type Socket address type, e.g. AF_INET or AF_INET6.
      * @return Length of written sockaddr structure.
-     */            
+     */
    virtual cardinal getSystemAddress(sockaddr*       buffer,
                                      const socklen_t length,
                                      const cardinal  type = AF_UNSPEC) const = 0;
@@ -289,14 +289,14 @@ class SocketAddress
    cardinal Format;
 
 
-   friend inline ostream& operator<<(ostream& os, const SocketAddress& sa);
+   friend inline std::ostream& operator<<(std::ostream& os, const SocketAddress& sa);
 };
 
 
 /**
   * Output operator.
   */
-inline ostream& operator<<(ostream& os, const SocketAddress& sa);
+inline std::ostream& operator<<(std::ostream& os, const SocketAddress& sa);
 
 
 #include "socketaddress.icc"

@@ -86,7 +86,7 @@ class Thread : public Synchronizable
      */
    Thread(const char*    name  = "Thread",
           const cardinal flags = TF_CancelDeferred);
-   
+
    /**
      * Destructor. The thread will be stopped (if running) and deleted.
      */
@@ -106,7 +106,7 @@ class Thread : public Synchronizable
      */
    inline pid_t getPID() const;
 
-   
+
    // ====== Delay ==========================================================
    /**
      * Delay execution of current thread for a given timeout.
@@ -118,7 +118,7 @@ class Thread : public Synchronizable
      */
    static card64 delay(const card64 delayTimeout, const bool interruptable = false);
 
-   
+
    // ====== Thread control =================================================
    /**
      * Start the thread, if not already started.
@@ -127,7 +127,7 @@ class Thread : public Synchronizable
      * @return true, if the thread has been started; false, if not.
      */
    virtual bool start(const char* name = NULL);
-   
+
    /**
      * Stop the thread, if not already stopped.
      * If the thread flag ThreadCancelAsynchronous is set, it will be stopped
@@ -139,7 +139,7 @@ class Thread : public Synchronizable
      * @return Return value from stopped thread.
      */
    virtual void* stop();
-   
+
    /**
      * Wait for the thread to be finished.
      *
@@ -183,7 +183,7 @@ class Thread : public Synchronizable
    /**
      * Set of all running threads.
      */
-   static set<Thread*> ThreadSet;
+   static std::set<Thread*> ThreadSet;
 
 
    // ====== Tests for cancellation =========================================

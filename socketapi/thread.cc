@@ -53,23 +53,23 @@
 #ifdef SYNCDEBUGGER
 bool Thread::checkSyncDebugger()
 {
-   cerr << "*****************************************" << endl
-        << "**** SyncDebugger mode is activated! ****" << endl
-        << "*****************************************" << endl;
-   cerr << "Testing SyncDebugger... ";
+   std::cerr << "*****************************************" << std::endl
+             << "**** SyncDebugger mode is activated! ****" << std::endl
+             << "*****************************************" << std::endl;
+   std::cerr << "Testing SyncDebugger... ";
    Synchronizable test("CheckSyncDebuggerTest");
    test.synchronized();
    Thread::pthread_descr pthread = (Thread::pthread_descr)(test.Mutex.__m_owner);
    if(pthread->p_pid != getpid()) {
-      cerr << "INTERNAL ERROR: _Thread::pthread_descr_struct definition is incompatible to your "
-              "libpthread version! Check linuxthreads/internals.h of your glibc "
-              "source package and update _Thread::pthread_descr_struct definition in Threads/thread.h!"
-           << endl;
-      cerr << "Your glibc version: " << __GLIBC__ << "." << __GLIBC_MINOR__ << "!" << endl;
+      std::cerr << "INTERNAL ERROR: _Thread::pthread_descr_struct definition is incompatible to your "
+                   "libpthread version! Check linuxthreads/internals.h of your glibc "
+                   "source package and update _Thread::pthread_descr_struct definition in Threads/thread.h!"
+                << std::endl;
+      std::cerr << "Your glibc version: " << __GLIBC__ << "." << __GLIBC_MINOR__ << "!" << std::endl;
       ::exit(1);
    }
    test.unsynchronized();
-   cerr << "okay!" << endl;
+   std::cerr << "okay!" << std::endl;
    return(true);
 }
 #endif
@@ -137,7 +137,7 @@ bool Thread::start(const char* name)
       }
       else {
 #ifndef DISABLE_WARNINGS
-         cerr << "WARNING: Thread::start() - Unable to create pthread!" << endl;
+         std::cerr << "WARNING: Thread::start() - Unable to create pthread!" << std::endl;
 #endif
       }
 
@@ -147,7 +147,7 @@ bool Thread::start(const char* name)
    }
    else {
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: Thread::start() - Thread already started!" << endl;
+      std::cerr << "WARNING: Thread::start() - Thread already started!" << std::endl;
 #endif
    }
 

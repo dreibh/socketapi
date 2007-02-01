@@ -120,9 +120,7 @@ static void unpack_sockaddr(const sockaddr*   addrArray,
             addrArray = (sockaddr*)((long)addrArray + (long)sizeof(sockaddr_in6));
           break;
          default:
-            cerr << "ERROR: unpack_sockaddr() - Unknown address type #" << addrArray->sa_family << "!" << endl;
-            cerr << "IMPORTANT NOTE:" << endl
-                 << "The standardizers have changed the socket API; the sockaddr_storage array has been replaced by a variable-sized sockaddr_in/in6 blocks. Do not blame us for this change, send your complaints to the standardizers at sctp-impl@external.cisco.com!" << endl;
+            std::cerr << "ERROR: unpack_sockaddr() - Unknown address type #" << addrArray->sa_family << "!" << std::endl;
             abort();
           break;
       }
@@ -143,9 +141,7 @@ static sockaddr* pack_sockaddr_storage(const sockaddr_storage* addrArray, const 
             required += sizeof(struct sockaddr_in6);
           break;
          default:
-            cerr << "ERROR: pack_sockaddr_storage() - Unknown address type #" << ((sockaddr*)&addrArray[i])->sa_family << "!" << endl;
-            cerr << "IMPORTANT NOTE:" << endl
-                 << "The standardizers have changed the socket API; the sockaddr_storage array has been replaced by a variable-sized sockaddr_in/in6 blocks. Do not blame us for this change, send your complaints to the standardizers at sctp-impl@external.cisco.com!" << endl;
+            std::cerr << "ERROR: pack_sockaddr_storage() - Unknown address type #" << ((sockaddr*)&addrArray[i])->sa_family << "!" << std::endl;
             abort();
           break;
       }
@@ -1882,7 +1878,7 @@ int ext_connectx(int                    sockfd,
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19)
                if(addrcnt != 1) {
 #ifndef DISABLE_WARNINGS
-                  cerr << "ERROR: connectx() with more than one address requires sctplib 1.0.0 or better!" << endl;
+                  std::cerr << "ERROR: connectx() with more than one address requires sctplib 1.0.0 or better!" << std::endl;
 #endif
                   errno_return(-EOPNOTSUPP);
                }
@@ -2572,7 +2568,7 @@ static int collectFDs(SelectData&     selectData,
    if(tdSocket != NULL) {
       if(tdSocket->Type == ExtSocketDescriptor::ESDT_Invalid) {
 #ifndef DISABLE_WARNINGS
-         cerr << "WARNING: Invalid socket FD given for collectFDs(): " << fd << "!" << endl;
+         std::cerr << "WARNING: Invalid socket FD given for collectFDs(): " << fd << "!" << std::endl;
 #endif
       }
       else if(tdSocket->Type == ExtSocketDescriptor::ESDT_System) {
@@ -2680,7 +2676,7 @@ static int select_wrapper(int             n,
             }
             else {
 #ifndef DISABLE_WARNINGS
-               cerr << "WARNING: select_wrapper() - Bad FD " << i << "!" << endl;
+               std::cerr << "WARNING: select_wrapper() - Bad FD " << i << "!" << std::endl;
 #endif
             }
          }
@@ -3404,7 +3400,7 @@ int sctp_isavailable()
    }
    else {
 #ifdef PRINT_NOSCTP_NOTE
-      cerr << "SCTP is unsupported on this host!" << endl;
+      std::cerr << "SCTP is unsupported on this host!" << std::endl;
 #endif
       errno_return(0);
    }

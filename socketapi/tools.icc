@@ -63,8 +63,8 @@ inline card64 getMicroTime()
 // ###### Debug output ######################################################
 inline void debug(const char* string)
 {
-   cerr << string << endl;
-   cerr.flush();
+   std::cerr << string << std::endl;
+   std::cerr.flush();
 }
 
 

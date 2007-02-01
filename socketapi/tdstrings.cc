@@ -71,7 +71,7 @@ String::String(const char* string, const cardinal length)
       memcpy((void*)&str,string,length);
       str[length] = 0x00;
       setData(stringDuplicate((char*)&str));
-   }   
+   }
    else {
       setData(NULL);
    }
@@ -243,7 +243,7 @@ bool String::scanSetting(String& s1, String& s2) const
 
 
 // ###### "<<"-operator #####################################################
-ostream& operator<<(ostream& os, const String& string)
+std::ostream& operator<<(std::ostream& os, const String& string)
 {
    const char* data = string.getData();
    if(data) {

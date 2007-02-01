@@ -171,18 +171,18 @@ class SCTPSocketMaster : public Thread
 
    // ====== Protected data =================================================
    protected:
-   static cardinal                    LockLevel;
-   static SCTP_ulpCallbacks           Callbacks;
-   static multimap<int, SCTPSocket*>  SocketList;
-   static set<int>                    ClosingSockets;
-   static multimap<unsigned int, int> ClosingAssociations;
-   static card64                      LastGarbageCollection;
-   static cardinal                    OldCancelState;
-   static int                         BreakPipe[2];
-   static int                         GarbageCollectionTimerID;
-   static UserSocketNotification      BreakNotification;
+   static cardinal                         LockLevel;
+   static SCTP_ulpCallbacks                Callbacks;
+   static std::multimap<int, SCTPSocket*>  SocketList;
+   static std::set<int>                    ClosingSockets;
+   static std::multimap<unsigned int, int> ClosingAssociations;
+   static card64                           LastGarbageCollection;
+   static cardinal                         OldCancelState;
+   static int                              BreakPipe[2];
+   static int                              GarbageCollectionTimerID;
+   static UserSocketNotification           BreakNotification;
 
-   static const card64                GarbageCollectionInterval = 1000000;
+   static const card64                     GarbageCollectionInterval = 1000000;
 
 
    static SCTPSocket* getSocketForAssociationID(const unsigned int assocID);

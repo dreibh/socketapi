@@ -69,7 +69,7 @@ class String
      * Constructor for a copy of a string.
      *
      * @param string String to be copied.
-     */  
+     */
    String(const char* string);
 
    /**
@@ -143,14 +143,14 @@ class String
      * Get uppercase string from string.
      *
      * @return Uppercase string.
-     */   
+     */
    String toUpper() const;
 
    /**
      * Get lowercase string from string.
      *
      * @return Lowercase string.
-     */   
+     */
    String toLower() const;
 
    /**
@@ -300,7 +300,7 @@ class String
 /**
   * Implementation of << operator.
   */
-ostream& operator<<(ostream& out, const String& string);
+std::ostream& operator<<(std::ostream& out, const String& string);
 
 /**
   * Implementation of + operator.

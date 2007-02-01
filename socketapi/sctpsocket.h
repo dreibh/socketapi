@@ -554,25 +554,25 @@ class SCTPSocket
       SCTPNotification    Notification;
    };
 
-   SCTPNotificationQueue                    GlobalQueue;
-   Condition                                EstablishCondition;
-   Condition                                ReadUpdateCondition;
-   Condition                                WriteUpdateCondition;
-   Condition                                ExceptUpdateCondition;
+   SCTPNotificationQueue                         GlobalQueue;
+   Condition                                     EstablishCondition;
+   Condition                                     ReadUpdateCondition;
+   Condition                                     WriteUpdateCondition;
+   Condition                                     ExceptUpdateCondition;
 
-   IncomingConnection*                      ConnectionRequests;
-   multimap<unsigned int, SCTPAssociation*> AssociationList;
+   IncomingConnection*                           ConnectionRequests;
+   std::multimap<unsigned int, SCTPAssociation*> AssociationList;
 
-   int                                      InstanceName;
-   unsigned short                           LocalPort;
-   unsigned short                           NoOfInStreams;
-   unsigned short                           NoOfOutStreams;
+   int                                           InstanceName;
+   unsigned short                                LocalPort;
+   unsigned short                                NoOfInStreams;
+   unsigned short                                NoOfOutStreams;
 
-   cardinal                                 Flags;
-   unsigned int                             NotificationFlags;
-   unsigned int                             CorrelationID;
+   cardinal                                      Flags;
+   unsigned int                                  NotificationFlags;
+   unsigned int                                  CorrelationID;
 
-   card64                                   AutoCloseTimeout;
+   card64                                        AutoCloseTimeout;
 
 
    // ====== Private data ===================================================
@@ -580,24 +580,24 @@ class SCTPSocket
    void checkAutoConnect();
    void checkAutoClose();
    SCTPAssociation* findAssociationForDestinationAddress(
-                       multimap<unsigned int, SCTPAssociation*>& list,
+                       std::multimap<unsigned int, SCTPAssociation*>& list,
                        const SocketAddress** destinationAddressList);
 
 
-   multimap<unsigned int, SCTPAssociation*> ConnectionlessAssociationList;
-   card8                                    DefaultTrafficClass;
+   std::multimap<unsigned int, SCTPAssociation*> ConnectionlessAssociationList;
+   card8                                         DefaultTrafficClass;
 
-   int                                      Family;
-   bool                                     WriteReady;
-   bool                                     ReadReady;
-   bool                                     HasException;
+   int                                           Family;
+   bool                                          WriteReady;
+   bool                                          ReadReady;
+   bool                                          HasException;
 
-   bool                                     AutoCloseRecursion;
-   bool                                     AutoCloseNewCheckRequired;
+   bool                                          AutoCloseRecursion;
+   bool                                          AutoCloseNewCheckRequired;
 
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19)
-   unsigned int                             NoOfLocalAddresses;
-   unsigned char                            LocalAddressList[SCTP_MAX_NUM_ADDRESSES][SCTP_MAX_IP_LEN];
+   unsigned int                                  NoOfLocalAddresses;
+   unsigned char                                 LocalAddressList[SCTP_MAX_NUM_ADDRESSES][SCTP_MAX_IP_LEN];
 #endif
 };
 

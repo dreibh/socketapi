@@ -113,7 +113,7 @@ SCTPSocket::~SCTPSocket()
 SCTPAssociation* SCTPSocket::getAssociationForAssociationID(const unsigned int assocID,
                                                             const bool activeOnly)
 {
-   multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+   std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
       AssociationList.find(assocID);
    if(iterator != AssociationList.end()) {
       if(!((iterator->second->IsShuttingDown) && (activeOnly))) {
@@ -138,8 +138,8 @@ bool SCTPSocket::getLocalAddresses(SocketAddress**& addressArray)
             addressArray[i] = SocketAddress::createSocketAddress(0,(char*)LocalAddressList[i],LocalPort);
             if(addressArray[i] == NULL) {
 #ifndef DISABLE_WARNINGS
-               cerr << "WARNING: SCTPSocket::getLocalAddresses() - Bad address "
-                  << *(LocalAddressList[i]) << ", port " << LocalPort << "!" << endl;
+               std::cerr << "WARNING: SCTPSocket::getLocalAddresses() - Bad address "
+                  << *(LocalAddressList[i]) << ", port " << LocalPort << "!" << std::endl;
 #endif
                SocketAddress::deleteAddressList(addressArray);
                result = false;
@@ -166,8 +166,8 @@ bool SCTPSocket::getLocalAddresses(SocketAddress**& addressArray)
             addressArray[i] = SocketAddress::createSocketAddress(0,(char*)&parameters.localAddressList[i],LocalPort);
             if(addressArray[i] == NULL) {
 #ifndef DISABLE_WARNINGS
-               cerr << "WARNING: SCTPSocket::getLocalAddresses() - Bad address "
-                    << parameters.localAddressList[i] << ", port " << LocalPort << "!" << endl;
+               std::cerr << "WARNING: SCTPSocket::getLocalAddresses() - Bad address "
+                    << parameters.localAddressList[i] << ", port " << LocalPort << "!" << std::endl;
 #endif
                SocketAddress::deleteAddressList(addressArray);
                addressArray = NULL;
@@ -194,7 +194,7 @@ bool SCTPSocket::getRemoteAddresses(SocketAddress**& addressArray,
    SCTPAssociation* association = getAssociationForAssociationID(assocID,false);
    if(association == NULL) {
       // ====== Try to find association in AutoConnect list =================
-      multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+      std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
          ConnectionlessAssociationList.find(assocID);
       if(iterator != ConnectionlessAssociationList.end()) {
          association = iterator->second;
@@ -219,7 +219,7 @@ int SCTPSocket::bind(const unsigned short    localPort,
 {
    if(SCTPSocketMaster::InitializationResult != 0) {
 #ifdef PRINT_BIND
-      cerr << "WARNING: SCTPSocket::bind() - SCTP is not initialized!" << endl;
+      std::cerr << "WARNING: SCTPSocket::bind() - SCTP is not initialized!" << std::endl;
 #endif
       return(-EPROTONOSUPPORT);
    }
@@ -229,7 +229,7 @@ int SCTPSocket::bind(const unsigned short    localPort,
       // Start SCTPSocketMaster thread.
       if(SCTPSocketMaster::MasterInstance.start() == false) {
 #ifndef DISABLE_WARNINGS
-         cerr << "WARNING: SCTPSocket::bind() - Unable to start master thread!" << endl;
+         std::cerr << "WARNING: SCTPSocket::bind() - Unable to start master thread!" << std::endl;
 #endif
          SCTPSocketMaster::MasterInstance.unlock();
          return(-EPROTONOSUPPORT);
@@ -277,11 +277,11 @@ int SCTPSocket::bind(const unsigned short    localPort,
    for(unsigned int i = 0;i < NoOfLocalAddresses;i++) {
       cout << " " << LocalAddressList[i] << " ";
    }
-   cout << "}, port " << LocalPort << "." << endl;
+   cout << "}, port " << LocalPort << "." << std::endl;
 #endif
    if(NoOfLocalAddresses < 1) {
 #ifndef DISABLE_WARNINGS
-      cerr << "ERROR: SCTPSocket::bind() - No local addresses!" << endl;
+      std::cerr << "ERROR: SCTPSocket::bind() - No local addresses!" << std::endl;
 #endif
       SCTPSocketMaster::MasterInstance.unlock();
       return(-EINVAL);
@@ -294,7 +294,7 @@ int SCTPSocket::bind(const unsigned short    localPort,
                                         SCTPSocketMaster::Callbacks);
    if(InstanceName <= 0) {
 #ifdef PRINT_BIND
-      cerr << "ERROR: SCTPSocket::bind() - sctp_registerInstance() failed!" << endl;
+      std::cerr << "ERROR: SCTPSocket::bind() - sctp_registerInstance() failed!" << std::endl;
 #endif
       SCTPSocketMaster::MasterInstance.unlock();
       return(-EADDRINUSE);
@@ -302,7 +302,7 @@ int SCTPSocket::bind(const unsigned short    localPort,
 
 
    // ====== Add socket to global list ======================================
-   SCTPSocketMaster::SocketList.insert(pair<unsigned short, SCTPSocket*>(InstanceName,this));
+   SCTPSocketMaster::SocketList.insert(std::pair<unsigned short, SCTPSocket*>(InstanceName,this));
 
 
    SCTPSocketMaster::MasterInstance.unlock();
@@ -320,7 +320,7 @@ void SCTPSocket::unbind(bool sendAbort)
 #endif
 
       // ====== Delete all associations made by sendTo() ====================
-      multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+      std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
          ConnectionlessAssociationList.begin();
       while(iterator != ConnectionlessAssociationList.end()) {
          SCTPAssociation* association = iterator->second;
@@ -354,15 +354,15 @@ void SCTPSocket::unbind(bool sendAbort)
       }
 
       // ====== Remove socket from global list ==============================
-      multimap<int, SCTPSocket*>::iterator socketIterator =
+      std::multimap<int, SCTPSocket*>::iterator socketIterator =
          SCTPSocketMaster::SocketList.find(InstanceName);
       if(socketIterator != SCTPSocketMaster::SocketList.end()) {
          SCTPSocketMaster::SocketList.erase(socketIterator);
       }
       else {
 #ifndef DISABLE_WARNINGS
-         cerr << "INTERNAL ERROR: SCTPSocket::unbind() - Erase failed for instance "
-              << InstanceName << "!" << endl;
+         std::cerr << "INTERNAL ERROR: SCTPSocket::unbind() - Erase failed for instance "
+                   << InstanceName << "!" << std::endl;
          abort();
 #endif
       }
@@ -378,7 +378,7 @@ void SCTPSocket::unbind(bool sendAbort)
       Flags &= ~SSF_Listening;
 
 #ifdef PRINT_UNBIND
-      cout << "Unbind complete." << endl;
+      cout << "Unbind complete." << std::endl;
 #endif
    }
 }
@@ -408,7 +408,7 @@ SCTPAssociation* SCTPSocket::accept(SocketAddress*** addressArray,
    SCTPSocketMaster::MasterInstance.lock();
    if(!(Flags & SSF_Listening)) {
 #ifndef DISABLE_WARNINGS
-      cerr << "ERROR: SCTPSocket::accept() - Socket is not in server mode, call listen() first!" << endl;
+      std::cerr << "ERROR: SCTPSocket::accept() - Socket is not in server mode, call listen() first!" << std::endl;
 #endif
       return(NULL);
    }
@@ -438,7 +438,7 @@ SCTPAssociation* SCTPSocket::accept(SocketAddress*** addressArray,
       *addressArray = SocketAddress::newAddressList(ConnectionRequests->Notification.RemoteAddresses);
       if(*addressArray == NULL) {
 #ifndef DISABLE_WARNINGS
-         cerr << "ERROR: SCTPSocket::accept() - Out of memory!" << endl;
+         std::cerr << "ERROR: SCTPSocket::accept() - Out of memory!" << std::endl;
 #endif
       }
       else {
@@ -450,8 +450,8 @@ SCTPAssociation* SCTPSocket::accept(SocketAddress*** addressArray,
                                     ConnectionRequests->Notification.RemotePort);
             if((*addressArray)[i] == NULL) {
 #ifndef DISABLE_WARNINGS
-               cerr << "WARNING: SCTPSocket::accept() - Bad address "
-                    << ConnectionRequests->Notification.RemoteAddress[i] << ", port " << ConnectionRequests->Notification.RemotePort << "!" << endl;
+               std::cerr << "WARNING: SCTPSocket::accept() - Bad address "
+                         << ConnectionRequests->Notification.RemoteAddress[i] << ", port " << ConnectionRequests->Notification.RemotePort << "!" << std::endl;
 #endif
                SocketAddress::deleteAddressList(*addressArray);
             }
@@ -465,7 +465,7 @@ SCTPAssociation* SCTPSocket::accept(SocketAddress*** addressArray,
       InternetAddress address(String((char*)&ConnectionRequests->Notification.RemoteAddress[i]),ConnectionRequests->Notification.RemotePort);
       cout << " " << address.getAddressString(SocketAddress::PF_Address|SocketAddress::PF_Legacy) << " ";
    }
-   cout << "}." << endl;
+   cout << "}." << std::endl;
 #endif
 
 
@@ -505,13 +505,13 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
       newParameters.rtoMax = maxInitTimeout;
       if(!setAssocDefaults(newParameters)) {
 #ifndef DISABLE_WARNINGS
-         cerr << "WARNING: SCTPSocket::associate() - Unable to set new instance parameters!" << endl;
+         std::cerr << "WARNING: SCTPSocket::associate() - Unable to set new instance parameters!" << std::endl;
 #endif
       }
    }
    else {
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: SCTPSocket::associate() - Unable to get instance parameters!" << endl;
+      std::cerr << "WARNING: SCTPSocket::associate() - Unable to get instance parameters!" << std::endl;
 #endif
    }
 
@@ -553,13 +553,13 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
    }
    else {
 #ifndef DISABLE_WARNINGS
-      cerr << "ERROR: SCTPSocket::associate() - No destination addresses given?!" << endl;
+      std::cerr << "ERROR: SCTPSocket::associate() - No destination addresses given?!" << std::endl;
 #endif
    }
 
    if(!setAssocDefaults(oldParameters)) {
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: SCTPSocket::associate() - Unable to restore old instance parameters!" << endl;
+      std::cerr << "WARNING: SCTPSocket::associate() - Unable to restore old instance parameters!" << std::endl;
 #endif
    }
 
@@ -572,7 +572,7 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
       }
    }
    cout << " }, port " << destinationAddressList[0]->getPort()
-        << " => ID #" << assocID << "." << endl;
+        << " => ID #" << assocID << "." << std::endl;
 #endif
 
 
@@ -591,7 +591,7 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
 #endif
          sctp_deleteAssociation(assocID);
 #ifndef DISABLE_WARNINGS
-         cerr << "ERROR: SCTPSocket::associate() - Out of memory!" << endl;
+         std::cerr << "ERROR: SCTPSocket::associate() - Out of memory!" << std::endl;
 #endif
       }
       else {
@@ -601,7 +601,7 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
 #endif
          association->UseCount++;
 #ifdef PRINT_ASSOC_USECOUNT
-         cout << association->UseCount << endl;
+         cout << association->UseCount << std::endl;
 #endif
          association->setTrafficClass(DefaultTrafficClass);
 
@@ -618,7 +618,7 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
          }
 
 #ifdef PRINT_RTO
-         cout << "associate() - InitTimeout=" << association->InitTimeout << " SavedMaxRTO=" << association->RTOMax << endl;
+         cout << "associate() - InitTimeout=" << association->InitTimeout << " SavedMaxRTO=" << association->RTOMax << std::endl;
 #endif
       }
    }
@@ -628,14 +628,14 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
    if(association != NULL) {
       if(blocking) {
 #ifdef PRINT_ASSOCIATE
-         cout << "Waiting for establishment of association #" << assocID << "..." << endl;
+         cout << "Waiting for establishment of association #" << assocID << "..." << std::endl;
 #endif
          while(association->EstablishCondition.timedWait(100000) == false) {
             checkAutoConnect();
          }
          if(!association->CommunicationUpNotification) {
 #ifdef PRINT_ASSOCIATE
-            cout << "Association #" << assocID << " failed!" << endl;
+            cout << "Association #" << assocID << " failed!" << std::endl;
 #endif
             delete association;
             association = NULL;
@@ -648,7 +648,7 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
 
 #ifdef PRINT_ASSOCIATE
    if(association != NULL) {
-      cout << "Association #" << assocID << " established." << endl;
+      cout << "Association #" << assocID << " established." << std::endl;
    }
 #endif
 
@@ -661,7 +661,7 @@ SCTPAssociation* SCTPSocket::associate(const unsigned short  noOfOutStreams,
 #endif
       association->UseCount--;
 #ifdef PRINT_ASSOC_USECOUNT
-      cout << association->UseCount << endl;
+      cout << association->UseCount << std::endl;
 #endif
    }
    SCTPSocketMaster::MasterInstance.unlock();
@@ -704,7 +704,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
    // ====== Check parameters ===============================================
    if(bufferSize == 0) {
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: SCTPSocket::internalReceive() - Data buffer size is zero!" << endl;
+      std::cerr << "WARNING: SCTPSocket::internalReceive() - Data buffer size is zero!" << std::endl;
 #endif
       return(-EINVAL);
    }
@@ -726,7 +726,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
          bufferSize = 0;
          if((errorCode == -ECONNRESET) && !(queue.hasData(notificationFlags))) {
 #ifdef PRINT_ISSHUTDOWN
-            cout << "Socket has been shut down -> leaving waiting loop!" << endl;
+            cout << "Socket has been shut down -> leaving waiting loop!" << std::endl;
 #endif
             flags &= ~MSG_NOTIFICATION;
             errorCode = 0;
@@ -743,7 +743,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
       received = queue.getNotification(notification);
    }
 #ifdef PRINT_RECVWAIT
-   cout << "Wakeup!" << endl;
+   cout << "Wakeup!" << std::endl;
 #endif
 
 
@@ -760,7 +760,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
 #endif
       bufferSize = MIN(bufferSize, PARTIAL_DELIVERY_MAXSIZE);
 #ifdef PRINT_PARTIAL_DELIVERY
-      cout << bufferSize << endl;
+      cout << bufferSize << std::endl;
 #endif
 #endif
 
@@ -798,13 +798,13 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
             bufferSize = receivedBytes;
 
 #ifdef PRINT_DATA
-            cout << "Received " << bufferSize << " bytes user data from association " << assocID << ", stream " << streamID << ":" << endl;
+            cout << "Received " << bufferSize << " bytes user data from association " << assocID << ", stream " << streamID << ":" << std::endl;
             for(size_t i = 0;i < bufferSize;i++) {
                char str[32];
                snprintf((char*)&str,sizeof(str),"%02x ",((unsigned char*)buffer)[i]);
                cout << str;
             }
-            cout << endl;
+            cout << std::endl;
 #endif
             result = (int)bufferSize;
 
@@ -812,21 +812,21 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
             SCTP_AssociationStatus assocStatus;
             if(address) {
                if(sctp_getPathStatus(assocID, pathIndex, &pathStatus) != 0) {
-                  cerr << "INTERNAL ERROR: SCTPSocket::internalReceiver() - sctp_getPathStatus() failed!" << endl;
+                  std::cerr << "INTERNAL ERROR: SCTPSocket::internalReceiver() - sctp_getPathStatus() failed!" << std::endl;
                }
                else {
                   if(sctp_getAssocStatus(assocID, &assocStatus) != 0) {
-                     cerr << "INTERNAL ERROR: SCTPSocket::internalReceiver() - sctp_getAssocStatus() failed!" << endl;
+                     std::cerr << "INTERNAL ERROR: SCTPSocket::internalReceiver() - sctp_getAssocStatus() failed!" << std::endl;
                   }
                   else {
                      *address = SocketAddress::createSocketAddress(
                                    0, (char*)&pathStatus.destinationAddress, assocStatus.destPort);
                      if(*address == NULL) {
-                        cerr << "INTERNAL ERROR: SCTPSocket::internalReceiver() - Unable to create destination address object!" << endl;
+                        std::cerr << "INTERNAL ERROR: SCTPSocket::internalReceiver() - Unable to create destination address object!" << std::endl;
                      }
 #ifdef PRINT_DATA
                      else {
-                        cout << "Received via address " << *(*address) << " (path index " << pathIndex << ")." << endl;
+                        cout << "Received via address " << *(*address) << " (path index " << pathIndex << ")." << std::endl;
                      }
 #endif
                   }
@@ -850,7 +850,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
             }
          }
          else {
-            // cerr << "WARNING: SCTPSocket::internalReceive() - sctp_receive() failed!" << endl;
+            // std::cerr << "WARNING: SCTPSocket::internalReceive() - sctp_receive() failed!" << std::endl;
             result = -ECONNABORTED;
          }
       }
@@ -879,7 +879,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
           break;
 #ifndef DISABLE_WARNINGS
          default:
-            cerr << "INTERNAL ERROR: Unexpected notification type #" << notification.Content.sn_header.sn_type << endl;
+            std::cerr << "INTERNAL ERROR: Unexpected notification type #" << notification.Content.sn_header.sn_type << std::endl;
             abort();
           break;
 #endif
@@ -915,20 +915,20 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
          }
 
 #ifdef PRINT_DATA
-         cout << "Received " << bufferSize << " bytes notification data from association " << assocID << ", stream " << streamID << ":" << endl;
+         cout << "Received " << bufferSize << " bytes notification data from association " << assocID << ", stream " << streamID << ":" << std::endl;
          for(size_t i = 0;i < bufferSize;i++) {
             char str[32];
             snprintf((char*)&str,sizeof(str),"%02x ",((unsigned char*)buffer)[i]);
             cout << str;
          }
-         cout << endl;
+         cout << std::endl;
 #endif
          result = (int)bufferSize;
       }
       else {
 #ifdef PRINT_NOTIFICATION_SKIP
             cout << "WARNING: Skipping " << notification.Content.sn_header.sn_length << " bytes notification data (type "
-                 << notification.Content.sn_header.sn_type << ") from association " << assocID << ", stream " << streamID << ":" << endl;
+                 << notification.Content.sn_header.sn_type << ") from association " << assocID << ", stream " << streamID << ":" << std::endl;
 #endif
 #ifdef PRINT_DATA
             for(size_t i = 0;i < notification.Content.sn_header.sn_length;i++) {
@@ -936,7 +936,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
                snprintf((char*)&str,sizeof(str),"%02x ",((unsigned char*)&notification.Content)[i]);
                cout << str;
             }
-            cout << endl;
+            cout << std::endl;
 #endif
          result = getErrorCode(assocID);
          if(result == 0) {
@@ -960,30 +960,30 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
 #endif
             association->UseCount--;
 #ifdef PRINT_ASSOC_USECOUNT
-            cout << association->UseCount << endl;
+            cout << association->UseCount << std::endl;
 #endif
          }
 #ifndef DISABLE_WARNINGS
          else {
-            cerr << "INTERNAL ERROR: SCTPSocket::internalReceive() - Too many association usecount decrements for association ID " << assocID << "!" << endl;
+            std::cerr << "INTERNAL ERROR: SCTPSocket::internalReceive() - Too many association usecount decrements for association ID " << assocID << "!" << std::endl;
             abort();
          }
 #endif
          association->ReadReady = (association->hasData() || (getErrorCode(association->AssociationID) < 0));
 #ifdef PRINT_RECVSTATUS
          cout << "Association " << association->AssociationID << ": ReadReady=" << association->ReadReady
-                                << " ErrorCode=" << getErrorCode(association->AssociationID) << endl;
+                                << " ErrorCode=" << getErrorCode(association->AssociationID) << std::endl;
 #endif
       }
       ReadReady = hasData() || (ConnectionRequests != NULL);
 #ifdef PRINT_RECVSTATUS
-      cout << "Instance " << InstanceName << ": ReadReady=" << ReadReady << endl;
+      cout << "Instance " << InstanceName << ": ReadReady=" << ReadReady << std::endl;
 #endif
    }
 
 #ifdef TEST_PARTIAL_DELIVERY
 #ifdef PRINT_PARTIAL_DELIVERY
-   cout << "got " << result << " bytes " << ((flags & MSG_EOR) ? "---EOR---" : "") << endl;
+   cout << "got " << result << " bytes " << ((flags & MSG_EOR) ? "---EOR---" : "") << std::endl;
 #endif
 #endif
 
@@ -1023,18 +1023,18 @@ int SCTPSocket::internalSend(const char*          buffer,
 #ifdef PRINT_DATA
       cout << "Sending " << length << " bytes of data to association "
            << assocID << ", stream " << streamID << ", PPID "
-           << protoID << ", path index " << pathIndex << ":" << endl;
+           << protoID << ", path index " << pathIndex << ":" << std::endl;
       for(size_t i = 0;i < length;i++) {
          char str[32];
          snprintf((char*)&str,sizeof(str),"%02x ",((unsigned char*)buffer)[i]);
          cout << str;
       }
-      cout << endl;
+      cout << std::endl;
 #endif
 
 #ifdef PRINT_PRSCTP
       if(timeToLive != SCTP_INFINITE_LIFETIME) {
-         cout << "Sending " << length << " bytes with lifetime " << timeToLive << "." << endl;
+         cout << "Sending " << length << " bytes with lifetime " << timeToLive << "." << std::endl;
       }
 #endif
 
@@ -1081,7 +1081,7 @@ int SCTPSocket::internalSend(const char*          buffer,
    }
 
 #ifdef PRINT_RECVSTATUS
-   cout << "Association " << assocID << ": WriteReady=" << WriteReady << " sctp_send()=" << result << endl;
+   cout << "Association " << assocID << ": WriteReady=" << WriteReady << " sctp_send()=" << result << std::endl;
 #endif
    if(result == 0) {
       return((int)length);
@@ -1141,7 +1141,7 @@ int SCTPSocket::receiveFrom(char*           buffer,
 {
    // ====== Receive ========================================================
    if(!(Flags & SSF_GlobalQueue)) {
-      // cerr << "WARNING: SCTPSocket::receiveFrom() - No global queue!" << endl;
+      // std::cerr << "WARNING: SCTPSocket::receiveFrom() - No global queue!" << std::endl;
       return(-EBADF);
    }
    assocID = 0;
@@ -1163,13 +1163,13 @@ int SCTPSocket::receiveFrom(char*           buffer,
 
 // ###### Find association for given destination address ####################
 SCTPAssociation* SCTPSocket::findAssociationForDestinationAddress(
-                    multimap<unsigned int, SCTPAssociation*>& list,
+                    std::multimap<unsigned int, SCTPAssociation*>& list,
                     const SocketAddress** destinationAddressList)
 {
    SCTP_PathStatus pathStatus;
    short           pathIndex;
 
-   multimap<unsigned int, SCTPAssociation*>::iterator iterator = list.begin();
+   std::multimap<unsigned int, SCTPAssociation*>::iterator iterator = list.begin();
    while(iterator != list.end()) {
       SCTP_Association_Status assocStatus;
       if(iterator->second->PreEstablishmentAddressList == NULL) {
@@ -1179,13 +1179,13 @@ SCTPAssociation* SCTPSocket::findAssociationForDestinationAddress(
 #ifdef PRINT_ASSOCSEARCH
                cout << "Check "
                   << destinationAddressList[i]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
-                  << " in AssocID=" << iterator->second->AssociationID << "?" << endl;
+                  << " in AssocID=" << iterator->second->AssociationID << "?" << std::endl;
 #endif
                if( (!iterator->second->IsShuttingDown) &&
                   (destinationAddressList[i]->getPort() == assocStatus.destPort) &&
                   ((pathIndex = getPathIndexForAddress(iterator->second->AssociationID, destinationAddressList[i], pathStatus)) >= 0) ) {
 #ifdef PRINT_ASSOCSEARCH
-                  cout << "Found: index=" << pathIndex << endl;
+                  cout << "Found: index=" << pathIndex << std::endl;
 #endif
                   return(iterator->second);
                }
@@ -1202,12 +1202,12 @@ SCTPAssociation* SCTPSocket::findAssociationForDestinationAddress(
                cout << "PreEstablishmentAddressList Check "
                     << destinationAddressList[i]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
                     << " == "
-                    << iterator->second->PreEstablishmentAddressList[j]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy) << endl;
+                    << iterator->second->PreEstablishmentAddressList[j]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy) << std::endl;
 #endif
                if(destinationAddressList[i]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy) ==
                   iterator->second->PreEstablishmentAddressList[j]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)) {
 #ifdef PRINT_ASSOCSEARCH
-                  cout << "Found" << endl;
+                  cout << "Found" << std::endl;
 #endif
                   return(iterator->second);
                }
@@ -1240,7 +1240,7 @@ int SCTPSocket::sendTo(const char*           buffer,
 
    SCTPSocketMaster::MasterInstance.lock();
 #ifdef PRINT_SENDTO
-   cout << "SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags << endl;
+   cout << "SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags << std::endl;
 #endif
 
    // ====== Send to one association ========================================
@@ -1250,14 +1250,14 @@ int SCTPSocket::sendTo(const char*           buffer,
       if(destinationAddressList != NULL) {
          if(Flags & SSF_AutoConnect) {
 #ifdef PRINT_ASSOCSEARCH
-            cout << "Assoc lookup in ConnectionlessAssociationList..." << endl;
+            cout << "Assoc lookup in ConnectionlessAssociationList..." << std::endl;
 #endif
             association = findAssociationForDestinationAddress(ConnectionlessAssociationList,
                                                                destinationAddressList);
          }
          if(association == NULL) {
 #ifdef PRINT_ASSOCSEARCH
-            cout << "Assoc lookup in AssociationList..." << endl;
+            cout << "Assoc lookup in AssociationList..." << std::endl;
 #endif
             association = findAssociationForDestinationAddress(AssociationList,
                                                                destinationAddressList);
@@ -1267,17 +1267,17 @@ int SCTPSocket::sendTo(const char*           buffer,
 #ifdef PRINT_ASSOCSEARCH
          cout << "AssocIDLookup " << assocID << "... ";
 #endif
-         multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+         std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
             AssociationList.find(assocID);
          if(iterator != AssociationList.end()) {
 #ifdef PRINT_ASSOCSEARCH
-            cout << "ok." << endl;
+            cout << "ok." << std::endl;
 #endif
             association = iterator->second;
          }
          else {
 #ifdef PRINT_ASSOCSEARCH
-            cout << "failed!" << endl;
+            cout << "failed!" << std::endl;
 #endif
          }
       }
@@ -1288,7 +1288,7 @@ int SCTPSocket::sendTo(const char*           buffer,
          if( ((buffer == NULL) || (length == 0)) &&
              (!((flags & MSG_ABORT) || (flags & MSG_EOF))) ) {
 #ifdef PRINT_ASSOCSEARCH
-            cout << "Already connected (association " << association->AssociationID << ") -> returning!" << endl;
+            cout << "Already connected (association " << association->AssociationID << ") -> returning!" << std::endl;
 #endif
             SCTPSocketMaster::MasterInstance.unlock();
             return(-EISCONN);
@@ -1300,12 +1300,12 @@ int SCTPSocket::sendTo(const char*           buffer,
 #endif
          association->UseCount++;
 #ifdef PRINT_ASSOC_USECOUNT
-         cout << association->UseCount << endl;
+         cout << association->UseCount << std::endl;
 #endif
 
          if(flags & MSG_ABORT) {
 #ifdef PRINT_SHUTDOWNS
-            cout << "Sending ABORT for association " << association->AssociationID << endl;
+            cout << "Sending ABORT for association " << association->AssociationID << std::endl;
 #endif
             association->abort();
             SCTPSocketMaster::MasterInstance.unlock();
@@ -1314,7 +1314,7 @@ int SCTPSocket::sendTo(const char*           buffer,
 
 #ifdef PRINT_SENDTO
    cout << "SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
-        << ": association=" << association->getID() << endl;
+        << ": association=" << association->getID() << std::endl;
 #endif
       }
 
@@ -1325,7 +1325,7 @@ int SCTPSocket::sendTo(const char*           buffer,
 #ifdef PRINT_NEW_ASSOCIATIONS
          cout << "AutoConnect: New outgoing association to "
             << destinationAddressList[0]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
-            << "..." << endl;
+            << "..." << std::endl;
 #endif
          association = associate(noOfOutgoingStreams,
                                  maxAttempts, maxInitTimeout,
@@ -1335,7 +1335,7 @@ int SCTPSocket::sendTo(const char*           buffer,
 #ifdef PRINT_NEW_ASSOCIATIONS
             cout << "AutoConnect: New outgoing association to "
                   << destinationAddressList[0]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
-                  << ", #" << association->getID() << " established!" << endl;
+                  << ", #" << association->getID() << " established!" << std::endl;
 #endif
             SCTPSocketMaster::MasterInstance.lock();
 #ifdef PRINT_ASSOC_USECOUNT
@@ -1344,16 +1344,16 @@ int SCTPSocket::sendTo(const char*           buffer,
 #endif
             association->UseCount++;
 #ifdef PRINT_ASSOC_USECOUNT
-            cout << association->UseCount << endl;
+            cout << association->UseCount << std::endl;
 #endif
-            ConnectionlessAssociationList.insert(pair<unsigned int, SCTPAssociation*>(association->getID(),association));
+            ConnectionlessAssociationList.insert(std::pair<unsigned int, SCTPAssociation*>(association->getID(),association));
             SCTPSocketMaster::MasterInstance.unlock();
          }
 #ifdef PRINT_NEW_ASSOCIATIONS
          else {
             cout << "AutoConnect: New outgoing association to "
                << destinationAddressList[0]->getAddressString(InternetAddress::PF_Address|InternetAddress::PF_Legacy)
-               << " failed!" << endl;
+               << " failed!" << std::endl;
          }
 #endif
       }
@@ -1374,17 +1374,17 @@ int SCTPSocket::sendTo(const char*           buffer,
          if((flags & MSG_EOF) || (flags & MSG_ABORT)) {
 #ifdef PRINT_SENDTO
             cout << "SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
-                 << ", association=" << association->getID() << ": handling MSG_EOF or MSG_ABORT" << endl;
+                 << ", association=" << association->getID() << ": handling MSG_EOF or MSG_ABORT" << std::endl;
 #endif
             if(flags & MSG_ABORT) {
 #ifdef PRINT_SHUTDOWNS
-               cout << "Sending ABORT..." << endl;
+               cout << "Sending ABORT..." << std::endl;
 #endif
                association->abort();
             }
             if(flags & MSG_EOF) {
 #ifdef PRINT_SHUTDOWNS
-               cout << "Sending SHUTDOWN..." << endl;
+               cout << "Sending SHUTDOWN..." << std::endl;
 #endif
                association->shutdown();
             }
@@ -1392,14 +1392,14 @@ int SCTPSocket::sendTo(const char*           buffer,
 #ifdef PRINT_SHUTDOWNS
                cout << "AutoConnect: Shutdown of outgoing association ";
                if(destinationAddressList != NULL) {
-                  cout << "to " << *(destinationAddressList[0]) << "..." << endl;
+                  cout << "to " << *(destinationAddressList[0]) << "..." << std::endl;
                }
                else {
-                  cout << "A" << assocID << "..." << endl;
+                  cout << "A" << assocID << "..." << std::endl;
                }
 #endif
                SCTPSocketMaster::MasterInstance.lock();
-               multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+               std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
                   ConnectionlessAssociationList.find(association->getID());
                if(iterator != ConnectionlessAssociationList.end()) {
                   ConnectionlessAssociationList.erase(iterator);
@@ -1410,16 +1410,16 @@ int SCTPSocket::sendTo(const char*           buffer,
 #ifdef PRINT_SHUTDOWNS
                cout << "AutoConnect: Shutdown of outgoing association ";
                if(destinationAddressList != NULL) {
-                  cout << "to " << *(destinationAddressList[0]) << endl;
+                  cout << "to " << *(destinationAddressList[0]) << std::endl;
                }
                else {
-                  cout << "A" << assocID << endl;
+                  cout << "A" << assocID << std::endl;
                }
-               cout << " completed!" << endl;
+               cout << " completed!" << std::endl;
 #endif
             }
 #ifdef PRINT_SENDTO
-            cout << "SendTo: handling AutoConnect" << endl;
+            cout << "SendTo: handling AutoConnect" << std::endl;
 #endif
             checkAutoConnect();
          }
@@ -1433,7 +1433,7 @@ int SCTPSocket::sendTo(const char*           buffer,
       if(association != NULL) {
 #ifdef PRINT_SENDTO
          cout << "SendTo: length=" << length << ", PPID=" << protoID << ", flags=" << flags
-              << ", association=" << association->getID() << ": handling UseCount decrement;  ptr=" << (void*)association << endl;
+              << ", association=" << association->getID() << ": handling UseCount decrement;  ptr=" << (void*)association << std::endl;
 #endif
          association->LastUsage = getMicroTime();
          if(association->UseCount > 0) {
@@ -1443,12 +1443,12 @@ int SCTPSocket::sendTo(const char*           buffer,
 #endif
             association->UseCount--;
 #ifdef PRINT_ASSOC_USECOUNT
-            cout << association->UseCount << endl;
+            cout << association->UseCount << std::endl;
 #endif
          }
 #ifndef DISABLE_WARNINGS
          else {
-            cerr << "INTERNAL ERROR: SCTPSocket::sendTo() - Too many association usecount decrements for association ID " << assocID << "!" << endl;
+            std::cerr << "INTERNAL ERROR: SCTPSocket::sendTo() - Too many association usecount decrements for association ID " << assocID << "!" << std::endl;
             abort();
          }
 #endif
@@ -1461,10 +1461,10 @@ int SCTPSocket::sendTo(const char*           buffer,
 
    // ====== Send to all ====================================================
    else {
-      multimap<unsigned int, SCTPAssociation*>::iterator iterator = ConnectionlessAssociationList.begin();
+      std::multimap<unsigned int, SCTPAssociation*>::iterator iterator = ConnectionlessAssociationList.begin();
       while(iterator != ConnectionlessAssociationList.end()) {
 #ifdef PRINT_SEND_TO_ALL
-         cout << "SendToAll: AssocID=" << iterator->second->AssociationID << endl;
+         cout << "SendToAll: AssocID=" << iterator->second->AssociationID << std::endl;
 #endif
          result = iterator->second->sendTo(buffer, length, flags,
                                            streamID, protoID, timeToLive, useDefaults,
@@ -1485,7 +1485,7 @@ SCTPAssociation* SCTPSocket::peelOff(const SocketAddress& destinationAddress)
    SCTPAssociation* association = NULL;
    SCTPSocketMaster::MasterInstance.lock();
 
-   multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+   std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
       ConnectionlessAssociationList.begin();
    while(iterator != ConnectionlessAssociationList.end()) {
       SCTP_Association_Status status;
@@ -1495,7 +1495,7 @@ SCTPAssociation* SCTPSocket::peelOff(const SocketAddress& destinationAddress)
               << destinationAddress.getAddressString(InternetAddress::PF_HidePort|InternetAddress::PF_Address|InternetAddress::PF_Legacy)
               << " == "
               << String((const char*)&status.primaryDestinationAddress)
-              << "?" << endl;
+              << "?" << std::endl;
 #endif
          if( (!iterator->second->IsShuttingDown)               &&
              (destinationAddress.getPort() == status.destPort) &&
@@ -1520,7 +1520,7 @@ SCTPAssociation* SCTPSocket::peelOff(const unsigned int assocID)
    SCTPAssociation* association = NULL;
 
    SCTPSocketMaster::MasterInstance.lock();
-   multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+   std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
       ConnectionlessAssociationList.find(assocID);
    if( (iterator != ConnectionlessAssociationList.end()) &&
        (!iterator->second->IsShuttingDown) ) {
@@ -1585,7 +1585,7 @@ int SCTPSocket::getPathIndexForAddress(const unsigned int          assocID,
 {
    if(address == NULL) {
 #ifdef PRINT_PATHFORINDEX
-      cout << "pathForIndex - primary" << endl;
+      cout << "pathForIndex - primary" << std::endl;
 #endif
       return(sctp_getPrimary(assocID));
    }
@@ -1594,7 +1594,7 @@ int SCTPSocket::getPathIndexForAddress(const unsigned int          assocID,
    SCTP_Association_Status status;
    if(sctp_getAssocStatus(assocID,&status) != 0) {
 #ifndef DISABLE_WARNINGS
-      cerr << "INTERNAL ERROR: SCTPSocket::getPathIndexForAddress() - Unable to get association status!" << endl;
+      std::cerr << "INTERNAL ERROR: SCTPSocket::getPathIndexForAddress() - Unable to get association status!" << std::endl;
 #endif
       return(-1);
    }
@@ -1616,17 +1616,17 @@ int SCTPSocket::getPathIndexForAddress(const unsigned int          assocID,
          break;
       }
 #ifdef PRINT_PATHFORINDEX
-      cout << "pathForIndex: " << index << ": " << addressString << " == " << pathParameters.destinationAddress << "?" << endl;
+      cout << "pathForIndex: " << index << ": " << addressString << " == " << pathParameters.destinationAddress << "?" << std::endl;
 #endif
       if(addressString == String((char*)&pathParameters.destinationAddress)) {
 #ifdef PRINT_PATHFORINDEX
-         cout << "   => " << index << endl;
+         cout << "   => " << index << std::endl;
 #endif
          return(index);
       }
    }
 #ifdef PRINT_PATHFORINDEX
-      cout << "pathForIndex - failed" << endl;
+      cout << "pathForIndex - failed" << std::endl;
 #endif
    return(-1);
 }
@@ -1681,7 +1681,7 @@ bool SCTPSocket::getAssocIODefaults(const unsigned int          assocID,
                                     struct AssocIODefaults& defaults)
 {
    SCTPSocketMaster::MasterInstance.lock();
-   multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+   std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
       ConnectionlessAssociationList.begin();
    if(iterator != ConnectionlessAssociationList.end()) {
       SCTPAssociation* association = iterator->second;
@@ -1697,7 +1697,7 @@ bool SCTPSocket::setAssocIODefaults(const unsigned int                assocID,
                                     const struct AssocIODefaults& defaults)
 {
    SCTPSocketMaster::MasterInstance.lock();
-   multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+   std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
       ConnectionlessAssociationList.begin();
    if(iterator != ConnectionlessAssociationList.end()) {
       SCTPAssociation* association = iterator->second;
@@ -1715,7 +1715,7 @@ bool SCTPSocket::setDefaultStreamTimeouts(const unsigned int   assocID,
                                           const unsigned short end)
 {
    SCTPSocketMaster::MasterInstance.lock();
-   multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+   std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
       ConnectionlessAssociationList.begin();
    if(iterator != ConnectionlessAssociationList.end()) {
       SCTPAssociation* association = iterator->second;
@@ -1732,7 +1732,7 @@ bool SCTPSocket::getDefaultStreamTimeout(const unsigned int   assocID,
                                          unsigned int&        timeout)
 {
    SCTPSocketMaster::MasterInstance.lock();
-   multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+   std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
       ConnectionlessAssociationList.begin();
    if(iterator != ConnectionlessAssociationList.end()) {
       SCTPAssociation* association = iterator->second;
@@ -1748,7 +1748,7 @@ bool SCTPSocket::setSendBuffer(const size_t size)
 {
    bool ok = true;
    SCTPSocketMaster::MasterInstance.lock();
-   multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+   std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
       ConnectionlessAssociationList.begin();
    if(iterator != ConnectionlessAssociationList.end()) {
       SCTPAssociation* association = iterator->second;
@@ -1767,7 +1767,7 @@ bool SCTPSocket::setReceiveBuffer(const size_t size)
 {
    bool ok = true;
    SCTPSocketMaster::MasterInstance.lock();
-   multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+   std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
       ConnectionlessAssociationList.begin();
    if(iterator != ConnectionlessAssociationList.end()) {
       SCTPAssociation* association = iterator->second;
@@ -1788,7 +1788,7 @@ bool SCTPSocket::setTrafficClass(const card8 trafficClass,
    bool ok = true;
    SCTPSocketMaster::MasterInstance.lock();
    DefaultTrafficClass = trafficClass;
-   multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+   std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
       ConnectionlessAssociationList.begin();
    if(iterator != ConnectionlessAssociationList.end()) {
       SCTPAssociation* association = iterator->second;
@@ -1833,12 +1833,12 @@ bool SCTPSocket::setPrimary(const unsigned int   assocID,
    int index = getPathIndexForAddress(assocID,&primary,pathParameters);
    if(index >= 0) {
 #ifdef PRINT_SETPRIMARY
-      cout << "setPrimary: Setting primary address to " << primary << endl;
+      cout << "setPrimary: Setting primary address to " << primary << std::endl;
 #endif
       result = sctp_setPrimary(assocID,index);
 #ifdef PRINT_SETPRIMARY
       if(result != 0) {
-         cerr << "WARNING: sctp_setPrimary() failed, error #" << result << endl;
+         std::cerr << "WARNING: sctp_setPrimary() failed, error #" << result << std::endl;
       }
 #endif
    }
@@ -1873,7 +1873,7 @@ bool SCTPSocket::addAddress(const unsigned int   assocID,
    if(assocID == 0) {
       bool ok = true;
       SCTPSocketMaster::MasterInstance.lock();
-      multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+      std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
          ConnectionlessAssociationList.begin();
       if(iterator != ConnectionlessAssociationList.end()) {
          SCTPAssociation* association = iterator->second;
@@ -1891,13 +1891,13 @@ bool SCTPSocket::addAddress(const unsigned int   assocID,
    snprintf((char*)&address,sizeof(address),"%s",
             addAddress.getAddressString().getData());
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_0_0) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
-   cerr << "NOT IMPLEMENTED: sctp_addIPAddress()" << endl;
+   std::cerr << "NOT IMPLEMENTED: sctp_addIPAddress()" << std::endl;
    const int result = -1;
 #else
    const int result = sctp_addIPAddress(assocID,address,&CorrelationID);
 #endif
 #ifdef PRINT_ADDIP
-   cout << "AddIP: " << addAddress << " -> result=" << result << endl;
+   cout << "AddIP: " << addAddress << " -> result=" << result << std::endl;
 #endif
    CorrelationID++;
    SCTPSocketMaster::MasterInstance.unlock();
@@ -1912,7 +1912,7 @@ bool SCTPSocket::deleteAddress(const unsigned int   assocID,
    if(assocID == 0) {
       bool ok = true;
       SCTPSocketMaster::MasterInstance.lock();
-      multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+      std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
          ConnectionlessAssociationList.begin();
       if(iterator != ConnectionlessAssociationList.end()) {
          SCTPAssociation* association = iterator->second;
@@ -1930,13 +1930,13 @@ bool SCTPSocket::deleteAddress(const unsigned int   assocID,
    snprintf((char*)&address,sizeof(address),"%s",
             delAddress.getAddressString().getData());
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_0_0) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
-   cerr << "NOT IMPLEMENTED: sctp_deleteIPAddress()" << endl;
+   std::cerr << "NOT IMPLEMENTED: sctp_deleteIPAddress()" << std::endl;
    const int result = -1;
 #else
    const int result = sctp_deleteIPAddress(assocID,address,&CorrelationID);
 #endif
 #ifdef PRINT_ADDIP
-   cout << "DeleteIP: " << delAddress << " -> result=" << result << endl;
+   cout << "DeleteIP: " << delAddress << " -> result=" << result << std::endl;
 #endif
    CorrelationID++;
    SCTPSocketMaster::MasterInstance.unlock();
@@ -1957,16 +1957,16 @@ void SCTPSocket::checkAutoClose()
       AutoCloseNewCheckRequired = false;
 
       const card64 now = getMicroTime();
-      multimap<unsigned int, SCTPAssociation*>::iterator iterator =
+      std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
          ConnectionlessAssociationList.begin();
       while(iterator != ConnectionlessAssociationList.end()) {
          SCTPAssociation* association = iterator->second;
 #ifdef PRINT_AUTOCLOSE_CHECK
-         cout << "AutoConnect: Check for AutoClose:" << endl
-            << "   AssocID          = " << association->getID() << endl
-            << "   UseCount         = " << association->UseCount << endl
-            << "   LastUsage        = " << now - association->LastUsage << endl
-            << "   AutoCloseTimeout = " << AutoCloseTimeout << endl;
+         cout << "AutoConnect: Check for AutoClose:" << std::endl
+            << "   AssocID          = " << association->getID() << std::endl
+            << "   UseCount         = " << association->UseCount << std::endl
+            << "   LastUsage        = " << now - association->LastUsage << std::endl
+            << "   AutoCloseTimeout = " << AutoCloseTimeout << std::endl;
 #endif
 
          /* ====== Association has no active users ======================= */
@@ -1983,17 +1983,17 @@ void SCTPSocket::checkAutoClose()
                else if(association->CommunicationLostNotification) {
                   cout << "communication lost";
                }
-               cout << "..." << endl;
+               cout << "..." << std::endl;
 #endif
 
                // Important! Removal will invalidate iterator!
-               multimap<unsigned int, SCTPAssociation*>::iterator delIterator = iterator;
+               std::multimap<unsigned int, SCTPAssociation*>::iterator delIterator = iterator;
                iterator++;
                ConnectionlessAssociationList.erase(delIterator);
 
                delete association;
 #ifdef PRINT_AUTOCLOSE_TIMEOUT
-               cout << "AutoConnect: AutoClose of association #" << assocID << " completed!" << endl;
+               cout << "AutoConnect: AutoClose of association #" << assocID << " completed!" << std::endl;
 #endif
             }
 
@@ -2002,7 +2002,7 @@ void SCTPSocket::checkAutoClose()
                     (now - association->LastUsage > 4 * AutoCloseTimeout)) {
 #ifdef PRINT_AUTOCLOSE_TIMEOUT
                const unsigned int assocID = association->getID();
-               cout << "AutoConnect: Abort of association #" << assocID << " due to timeout" << endl;
+               cout << "AutoConnect: Abort of association #" << assocID << " due to timeout" << std::endl;
 #endif
                iterator++;   // Important! shutdown() may invalidate iterator!
                association->abort();
@@ -2014,7 +2014,7 @@ void SCTPSocket::checkAutoClose()
                     (!association->IsShuttingDown)) {
 #ifdef PRINT_AUTOCLOSE_TIMEOUT
                const unsigned int assocID = association->getID();
-               cout << "AutoConnect: Doing shutdown of association #" << assocID << " due to timeout" << endl;
+               cout << "AutoConnect: Doing shutdown of association #" << assocID << " due to timeout" << std::endl;
 #endif
                iterator++;   // Important! shutdown() may invalidate iterator!
                association->shutdown();
@@ -2036,7 +2036,7 @@ void SCTPSocket::checkAutoClose()
             if((association->ShutdownCompleteNotification) ||
                (association->CommunicationLostNotification)) {
 #ifdef PRINT_AUTOCLOSE_TIMEOUT
-               cout << "AutoConnect: Association #" << association->getID() << " is disconnected but still has users!" << endl;
+               cout << "AutoConnect: Association #" << association->getID() << " is disconnected but still has users!" << std::endl;
 #endif
             }
          }
@@ -2058,9 +2058,9 @@ void SCTPSocket::checkAutoConnect()
       SCTPAssociation* association = accept(NULL,false);
       while(association != NULL) {
 #ifdef PRINT_NEW_ASSOCIATIONS
-         cout << "AutoConnect: New incoming association #" << association->getID() << "..." << endl;
+         cout << "AutoConnect: New incoming association #" << association->getID() << "..." << std::endl;
 #endif
-         ConnectionlessAssociationList.insert(pair<unsigned int, SCTPAssociation*>(association->getID(),association));
+         ConnectionlessAssociationList.insert(std::pair<unsigned int, SCTPAssociation*>(association->getID(),association));
          association = accept(NULL,false);
       }
       Flags = oldFlags;

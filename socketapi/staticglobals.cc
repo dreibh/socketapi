@@ -57,7 +57,7 @@ set<Synchronizable*> Synchronizable::MutexSet;
 #endif
 
 Synchronizable       Thread::SyncSetLock("SyncSetLock");
-set<Thread*>         Thread::ThreadSet;
+std::set<Thread*>    Thread::ThreadSet;
 Synchronizable       Thread::MemoryManagementLock("MemoryManagementLock");
 
 #ifdef SYNCDEBUGGER
@@ -86,22 +86,22 @@ bool InternetAddress::UseIPv6 = checkIPv6();
 #include "extsocketdescriptor.h"
 
 
-int                         SCTPSocketMaster::InitializationResult     = -1000;
-int                         SCTPSocketMaster::GarbageCollectionTimerID = -1;
-cardinal                    SCTPSocketMaster::LockLevel                = 0;
-cardinal                    SCTPSocketMaster::OldCancelState           = true;
-card64                      SCTPSocketMaster::LastGarbageCollection;
-set<int>                    SCTPSocketMaster::ClosingSockets;
-multimap<unsigned int, int> SCTPSocketMaster::ClosingAssociations;
-multimap<int, SCTPSocket*>  SCTPSocketMaster::SocketList;
-SCTP_ulpCallbacks           SCTPSocketMaster::Callbacks;
-SCTPSocketMaster            SCTPSocketMaster::MasterInstance;
-Randomizer                  SCTPSocketMaster::Random;
-int                         SCTPSocketMaster::BreakPipe[2];
+int                              SCTPSocketMaster::InitializationResult     = -1000;
+int                              SCTPSocketMaster::GarbageCollectionTimerID = -1;
+cardinal                         SCTPSocketMaster::LockLevel                = 0;
+cardinal                         SCTPSocketMaster::OldCancelState           = true;
+card64                           SCTPSocketMaster::LastGarbageCollection;
+std::set<int>                    SCTPSocketMaster::ClosingSockets;
+std::multimap<unsigned int, int> SCTPSocketMaster::ClosingAssociations;
+std::multimap<int, SCTPSocket*>  SCTPSocketMaster::SocketList;
+SCTP_ulpCallbacks                SCTPSocketMaster::Callbacks;
+SCTPSocketMaster                 SCTPSocketMaster::MasterInstance;
+Randomizer                       SCTPSocketMaster::Random;
+int                              SCTPSocketMaster::BreakPipe[2];
 struct SCTPSocketMaster::UserSocketNotification SCTPSocketMaster::BreakNotification;
 
-ExtSocketDescriptor         ExtSocketDescriptorMaster::Sockets[ExtSocketDescriptorMaster::MaxSockets];
-ExtSocketDescriptorMaster   ExtSocketDescriptorMaster::MasterInstance;
+ExtSocketDescriptor              ExtSocketDescriptorMaster::Sockets[ExtSocketDescriptorMaster::MaxSockets];
+ExtSocketDescriptorMaster        ExtSocketDescriptorMaster::MasterInstance;
 
 
 #endif

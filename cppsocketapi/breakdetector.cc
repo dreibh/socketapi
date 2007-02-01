@@ -1,5 +1,5 @@
 /*
- *  $Id: breakdetector.cc,v 1.2 2003/08/19 19:24:25 tuexen Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -79,7 +79,7 @@ void breakDetector(int signum)
       }
       else if(now - LastDetection >= 2000000) {
          PrintedKill = true;
-         cerr << endl << "*** Kill ***" << endl << endl;
+         std::cerr << std::endl << "*** Kill ***" << std::endl << std::endl;
          kill(MainThreadPID,SIGKILL);
       }
    }
@@ -120,7 +120,7 @@ bool breakDetected()
 {
    if((DetectedBreak) && (!PrintedBreak)) {
       if(!Quiet) {
-         cerr << endl << "*** Break ***    Signal #" << SIGINT << endl << endl;
+         std::cerr << std::endl << "*** Break ***    Signal #" << SIGINT << std::endl << std::endl;
       }
       PrintedBreak = getMicroTime();
    }

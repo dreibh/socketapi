@@ -1,5 +1,5 @@
 /*
- *  $Id: sctptftp.cc,v 1.3 2003/08/19 19:28:34 tuexen Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -65,13 +65,13 @@
 // ###### Print error #######################################################
 void printError(const TFTPPacket& packet, const ssize_t size)
 {
-   cerr << "TFTP ERROR #" << (cardinal)packet.Code << ": ";
+   std::cerr << "TFTP ERROR #" << (cardinal)packet.Code << ": ";
    if(size >= 3) {
       for(ssize_t i = 0;i < size - 2;i++) {
-         cerr << packet.Data[i];
+         std::cerr << packet.Data[i];
       }
    }
-   cerr << endl;
+   std::cerr << std::endl;
 }
 
 
@@ -92,30 +92,30 @@ void tftpGet(const char* name, Socket* socket)
          else {
             FILE* out = fopen(name,"w");
             if(out == NULL) {
-               cerr << "ERROR: Unable to create file \"" << name << "\"!" << endl;
+               std::cerr << "ERROR: Unable to create file \"" << name << "\"!" << std::endl;
                return;
             }
-            cout << name << " -> ";
-            cout.flush();
+            std::cout << name << " -> ";
+            std::cout.flush();
             while(result > 2) {
                if(packet.Type == TFTP_DAT) {
                   if(fwrite((char*)packet.Data,result - 2,1,out) != 1) {
-                     cerr << "ERROR: Write error!" << endl;
+                     std::cerr << "ERROR: Write error!" << std::endl;
                      break;
                   }
-                  cout << ".";
-                  cout.flush();
+                  std::cout << ".";
+                  std::cout.flush();
                }
                else if(packet.Type == TFTP_ERR) {
                   printError(packet,result);
                   break;
                }
                else {
-                  cerr << "ERROR: tftpGet() - Unexpected packet type #" << packet.Type << "!" << endl;
+                  std::cerr << "ERROR: tftpGet() - Unexpected packet type #" << packet.Type << "!" << std::endl;
                   break;
                }
                if(result < (ssize_t)sizeof(packet)) {
-                  cout << ". OK!" << endl;
+                  std::cout << ". OK!" << std::endl;
                   break;
                }
                result = socket->receive((char*)&packet,sizeof(packet));
@@ -126,7 +126,7 @@ void tftpGet(const char* name, Socket* socket)
    }
 
    if(result < 0) {
-      cerr << "ERROR: tftpGet() - I/O error!" << endl;
+      std::cerr << "ERROR: tftpGet() - I/O error!" << std::endl;
    }
 }
 
@@ -136,7 +136,7 @@ void tftpPut(const char* name, Socket* socket)
 {
    FILE* in = fopen(name,"r");
    if(in == NULL) {
-      cerr << "ERROR: Unable to open file \"" << name << "\"!" << endl;
+      std::cerr << "ERROR: Unable to open file \"" << name << "\"!" << std::endl;
       return;
    }
 
@@ -153,9 +153,9 @@ void tftpPut(const char* name, Socket* socket)
       snprintf((char*)&packet.Data,sizeof(packet.Data),"%s",name);
       result = socket->send((char*)&packet,2 + strlen(name));
    }
-   cout << "Local File:  " << name << endl
-        << "Remote File: " << (char*)&packet.Data << endl
-        << endl;
+   std::cout << "Local File:  " << name << std::endl
+             << "Remote File: " << (char*)&packet.Data << std::endl
+             << std::endl;
 
    if(result >= 0) {
       result = socket->receive((char*)&packet,sizeof(packet));
@@ -164,8 +164,8 @@ void tftpPut(const char* name, Socket* socket)
             printError(packet,result);
          }
          else if(packet.Type == TFTP_ACK) {
-            cout << name << " -> ";
-            cout.flush();
+            std::cout << name << " -> ";
+            std::cout.flush();
 
             packet.Type = TFTP_DAT;
             packet.Code = 0;
@@ -177,8 +177,8 @@ void tftpPut(const char* name, Socket* socket)
                      break;
                   }
                }
-               cout << ".";
-               cout.flush();
+               std::cout << ".";
+               std::cout.flush();
                packet.Code++;
             }
 
@@ -188,21 +188,21 @@ void tftpPut(const char* name, Socket* socket)
                   printError(packet,result);
                }
                else if(packet.Type == TFTP_ACK) {
-                  cout << " OK!" << endl;
+                  std::cout << " OK!" << std::endl;
                }
                else {
-                  cerr << "ERROR: tftpPut() - Unexpected packet type #" << (cardinal)packet.Type << "!" << endl;
+                  std::cerr << "ERROR: tftpPut() - Unexpected packet type #" << (cardinal)packet.Type << "!" << std::endl;
                }
             }
          }
          else {
-            cerr << "ERROR: tftpGet() - Received invalid packet type #" << (cardinal)packet.Type << "!" << endl;
+            std::cerr << "ERROR: tftpGet() - Received invalid packet type #" << (cardinal)packet.Type << "!" << std::endl;
          }
       }
    }
 
    if(result < 0) {
-      cerr << "ERROR: tftpGet() - I/O error!" << endl;
+      std::cerr << "ERROR: tftpGet() - I/O error!" << std::endl;
    }
 
    fclose(in);
@@ -217,18 +217,18 @@ int main(int argc, char** argv)
    cardinal        localAddresses     = 0;
    SocketAddress** localAddressArray  = SocketAddress::newAddressList(SCTP_MAXADDRESSES);
    if(localAddressArray == NULL) {
-      cerr << "ERROR: Out of memory!" << endl;
+      std::cerr << "ERROR: Out of memory!" << std::endl;
       exit(1);
    }
    if(!sctp_isavailable()) {
 #ifdef HAVE_KERNEL_SCTP
-      cerr << "ERROR: Kernel-based SCTP is not available!" << endl;
+      std::cerr << "ERROR: Kernel-based SCTP is not available!" << std::endl;
 #else
      if(getuid() != 0) {
-        cerr << "ERROR: You need root permissions to use the SCTP Library!" << endl;
+        std::cerr << "ERROR: You need root permissions to use the SCTP Library!" << std::endl;
      }
      else {
-        cerr << "ERROR: SCTP is not available!" << endl;
+        std::cerr << "ERROR: SCTP is not available!" << std::endl;
      }
 #endif
       exit(1);
@@ -237,9 +237,9 @@ int main(int argc, char** argv)
 
    // ====== Get arguments ==================================================
    if(argc < 2) {
-      cerr << "Usage: " << argv[0] << " "
-           << " [Remote address] [get|put] [Filename] {-force-ipv4|-use-ipv6} {-local=address1} ... {-local=addressN}"
-           << endl;
+      std::cerr << "Usage: " << argv[0] << " "
+                << " [Remote address] [get|put] [Filename] {-force-ipv4|-use-ipv6} {-local=address1} ... {-local=addressN}"
+                << std::endl;
       exit(1);
    }
    for(unsigned int i = 4;i < (cardinal)argc;i++) {
@@ -251,20 +251,20 @@ int main(int argc, char** argv)
                SocketAddress::createSocketAddress(SocketAddress::PF_HidePort,
                                                   &argv[i][7]);
             if(localAddressArray[localAddresses] == NULL) {
-               cerr << "ERROR: Argument #" << i << " is an invalid address!" << endl;
+               std::cerr << "ERROR: Argument #" << i << " is an invalid address!" << std::endl;
                exit(1);
             }
             localAddresses++;
          }
          else {
-            cerr << "ERROR: Too many local addresses!" << endl;
+            std::cerr << "ERROR: Too many local addresses!" << std::endl;
             exit(1);
          }
       }
       else {
-         cerr << "Usage: " << argv[0] << " "
-              << "[get|put] [Filename] [Remote address] {-force-ipv4|-use-ipv6} {-local=address1} ... {-local=addressN}"
-              << endl;
+         std::cerr << "Usage: " << argv[0] << " "
+                   << "[get|put] [Filename] [Remote address] {-force-ipv4|-use-ipv6} {-local=address1} ... {-local=addressN}"
+                   << std::endl;
          exit(1);
       }
    }
@@ -273,34 +273,34 @@ int main(int argc, char** argv)
    }
    SocketAddress* remoteAddress = SocketAddress::createSocketAddress(0,argv[1]);
    if(remoteAddress == NULL) {
-      cerr << "ERROR: Bad remote address! Use <address>:<port> format." << endl;
+      std::cerr << "ERROR: Bad remote address! Use <address>:<port> format." << std::endl;
       exit(1);
    }
    if(localAddresses < 1) {
       localAddressArray[0] = SocketAddress::getLocalAddress(*remoteAddress);
       if(localAddressArray[0] == NULL) {
-         cerr << "ERROR: Out of memory!" << endl;
+         std::cerr << "ERROR: Out of memory!" << std::endl;
          exit(1);
       }
       localAddresses = 1;
    }
    TFTPPacket packet;
    if(strlen(argv[3]) > sizeof(packet.Data) - 1) {
-      cerr << "ERROR: File name too long!" << endl;
+      std::cerr << "ERROR: File name too long!" << std::endl;
       exit(1);
    }
 
 
    // ====== Print information ==============================================
-   cout << "SCTP TFTP - Copyright (C) 2001-2003 Thomas Dreibholz" << endl;
-   cout << "----------------------------------------------------" << endl;
-   cout << "Version:               " << __DATE__ << ", " << __TIME__ << endl;
-   cout << "Local Addresses:       " << *(localAddressArray[0]) << endl;
+   std::cout << "SCTP TFTP - Copyright (C) 2001-2007 Thomas Dreibholz" << std::endl;
+   std::cout << "----------------------------------------------------" << std::endl;
+   std::cout << "Version:               " << __DATE__ << ", " << __TIME__ << std::endl;
+   std::cout << "Local Addresses:       " << *(localAddressArray[0]) << std::endl;
    for(cardinal i = 1;i < localAddresses;i++) {
-      cout << "                       " << *(localAddressArray[i]) << endl;
+      std::cout << "                       " << *(localAddressArray[i]) << std::endl;
    }
-   cout << "Remote Address:        " << *remoteAddress << endl;
-   cout << endl;
+   std::cout << "Remote Address:        " << *remoteAddress << std::endl;
+   std::cout << std::endl;
 
 
    // ====== Create socket and connect ======================================
@@ -311,59 +311,32 @@ int main(int argc, char** argv)
    init.sinit_max_attempts   = 0;
    init.sinit_max_init_timeo = 60;
    if(clientSocket.setSocketOption(IPPROTO_SCTP,SCTP_INITMSG,(char*)&init,sizeof(init)) < 0) {
-      cerr << "ERROR: Unable to set SCTP_INITMSG parameters!" << endl;
+      std::cerr << "ERROR: Unable to set SCTP_INITMSG parameters!" << std::endl;
       exit(1);
    }
    if(clientSocket.bindx((const SocketAddress**)localAddressArray,
                          localAddresses,
                          SCTP_BINDX_ADD_ADDR) == false) {
-      cerr << "ERROR: Unable to bind socket!" << endl;
+      std::cerr << "ERROR: Unable to bind socket!" << std::endl;
       exit(1);
    }
 
    sctp_event_subscribe events;
    memset((char*)&events,0,sizeof(events));
    if(clientSocket.setSocketOption(IPPROTO_SCTP,SCTP_EVENTS,&events,sizeof(events)) < 0) {
-      cerr << "ERROR: SCTP_EVENTS failed!" << endl;
+      std::cerr << "ERROR: SCTP_EVENTS failed!" << std::endl;
       exit(1);
    }
 
-/*
-   int on = 0;
-   if(clientSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVDATAIOEVNT,&on,sizeof(on)) < 0) {
-      cerr << "ERROR: SCTP_RECVDATAIOEVNT failed!" << endl;
-      exit(1);
-   }
-   if(clientSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVASSOCEVNT,&on,sizeof(on)) < 0) {
-      cerr << "ERROR: SCTP_RECVASSOCEVNT failed!" << endl;
-      exit(1);
-   }
-   if(clientSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVPADDREVNT,&on,sizeof(on)) < 0) {
-      cerr << "ERROR: SCTP_RECVPADDREVNT failed!" << endl;
-      exit(1);
-   }
-   if(clientSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVSENDFAILEVNT,&on,sizeof(on)) < 0) {
-      cerr << "ERROR: SCTP_RECVSENDFAILEVNT failed!" << endl;
-      exit(1);
-   }
-   if(clientSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVPEERERR,&on,sizeof(on)) < 0) {
-      cerr << "ERROR: SCTP_RECVPEERERR failed!" << endl;
-      exit(1);
-   }
-   if(clientSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVSHUTDOWNEVNT,&on,sizeof(on)) < 0) {
-      cerr << "ERROR: SCTP_RECVSHUTDOWNEVNT failed!" << endl;
-      exit(1);
-   }
-*/
 
-   cout << "Connecting... ";
-   cout.flush();
+   std::cout << "Connecting... ";
+   std::cout.flush();
    if(clientSocket.connect(*remoteAddress) == false) {
-      cout << "failed!" << endl;
-      cerr << "ERROR: Unable to connect to remote address!" << endl;
+      std::cout << "failed!" << std::endl;
+      std::cerr << "ERROR: Unable to connect to remote address!" << std::endl;
       exit(1);
    }
-   cout << "done." << endl << endl;
+   std::cout << "done." << std::endl << std::endl;
 
 
    if(!(strcasecmp(argv[2],"PUT"))) {

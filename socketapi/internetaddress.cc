@@ -344,8 +344,8 @@ String InternetAddress::getAddressString(const cardinal format) const
    addressString[0] = 0x00;
    if(!((format & PF_Hostname) || (format & PF_Address))) {
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: InternetAddress::getAddressString() - "
-              "Set PF_Hostname or PF_Address before printing!" << endl;
+      std::cerr << "WARNING: InternetAddress::getAddressString() - "
+                   "Set PF_Hostname or PF_Address before printing!" << std::endl;
 #endif
       return(String("(check print format)"));
    }
@@ -499,8 +499,8 @@ cardinal InternetAddress::getSystemAddress(sockaddr*       buffer,
          }
          else {
 #ifndef DISABLE_WARNINGS
-            cerr << "WARNING: InternetAddress::getSystemInternetAddress() - "
-                    "Buffer size too low for AF_INET6!" << endl;
+            std::cerr << "WARNING: InternetAddress::getSystemInternetAddress() - "
+                         "Buffer size too low for AF_INET6!" << std::endl;
 #endif
          }
         }
@@ -517,16 +517,16 @@ cardinal InternetAddress::getSystemAddress(sockaddr*       buffer,
          }
          else {
 #ifndef DISABLE_WARNINGS
-            cerr << "WARNING: InternetAddress::getSystemInternetAddress() - "
-                    "Buffer size too low for AF_INET!" << endl;
+            std::cerr << "WARNING: InternetAddress::getSystemInternetAddress() - "
+                         "Buffer size too low for AF_INET!" << std::endl;
 #endif
          }
         }
        break;
       default:
 #ifndef DISABLE_WARNINGS
-         cerr << "WARNING: InternetAddress::getSystemInternetAddress() - Unknown type "
-              << newType << "!" << endl;
+         std::cerr << "WARNING: InternetAddress::getSystemInternetAddress() - Unknown type "
+                   << newType << "!" << std::endl;
 #endif
        break;
    }
@@ -582,7 +582,7 @@ bool InternetAddress::checkIPv6()
    }
    else {
 #ifdef PRINT_NOIPV6_NOTE
-      cerr << "IPv6 is unsupported on this host!" << endl;
+      std::cerr << "IPv6 is unsupported on this host!" << std::endl;
 #endif
       return(false);
    }

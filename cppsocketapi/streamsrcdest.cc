@@ -1,5 +1,5 @@
 /*
- *  $Id: streamsrcdest.cc,v 1.3 2003/08/19 19:24:25 tuexen Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -93,19 +93,19 @@ int StreamSrcDest::operator!=(const StreamSrcDest& ssd) const
 
 
 // ###### Output operator ###################################################
-ostream& operator<<(ostream& os, const StreamSrcDest& ssd)
+std::ostream& operator<<(std::ostream& os, const StreamSrcDest& ssd)
 {
    if(ssd.IsValid) {
-      os << "   Source              = " << InternetAddress(ssd.Source) << endl;
-      os << "   Destination         = " << InternetAddress(ssd.Destination) << endl;
+      os << "   Source              = " << InternetAddress(ssd.Source) << std::endl;
+      os << "   Destination         = " << InternetAddress(ssd.Destination) << std::endl;
       char str[64];
       snprintf((char*)&str,sizeof(str),"$%02x",ssd.TrafficClass);
-      os << "   Traffic Class       = " << str << endl;
+      os << "   Traffic Class       = " << str << std::endl;
       snprintf((char*)&str,sizeof(str),"$%05x",ssd.FlowLabel);
-      os << "   Flow Label          = " << str << endl;
+      os << "   Flow Label          = " << str << std::endl;
    }
    else {
-      os << "   (not valid)" << endl;
+      os << "   (not valid)" << std::endl;
    }
    return(os);
 }

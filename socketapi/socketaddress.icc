@@ -43,7 +43,7 @@
 
 
 // ###### Socket address output operator ####################################
-inline ostream& operator<<(ostream& os, const SocketAddress& sa) {
+inline std::ostream& operator<<(std::ostream& os, const SocketAddress& sa) {
    os << sa.getAddressString(sa.Format);
    return os;
 }

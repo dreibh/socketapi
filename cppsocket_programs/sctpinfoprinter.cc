@@ -60,47 +60,47 @@ void printNotification(const sctp_notification* notification)
    }
 
    if(ColorMode) {
-      cout << "\x1b[" << getANSIColor(NOTIFICATION_COLOR)
-           << "mNotification:" << endl;
+      std::cout << "\x1b[" << getANSIColor(NOTIFICATION_COLOR)
+                << "mNotification:" << std::endl;
    }
    switch(notification->sn_header.sn_type) {
       case SCTP_ASSOC_CHANGE: {
            const sctp_assoc_change* sac = &notification->sn_assoc_change;
            char str[16];
            snprintf((char*)&str,sizeof(str),"$%04x",sac->sac_flags);
-           cout << "   Type    = SCTP_ASSOC_CHANGE"   << endl
-                << "   Length  = " << sac->sac_length << endl
-                << "   Flags   = " << str             << endl
-                << "   State   = " << sac->sac_state  << endl
-                << "   Error   = " << sac->sac_error  << endl
-                << "   OutStrs = " << sac->sac_outbound_streams << endl
-                << "   InStrs  = " << sac->sac_inbound_streams  << endl
-                << "   AssocID = #" << sac->sac_assoc_id        << endl;
+           std::cout << "   Type    = SCTP_ASSOC_CHANGE"   << std::endl
+                     << "   Length  = " << sac->sac_length << std::endl
+                     << "   Flags   = " << str             << std::endl
+                     << "   State   = " << sac->sac_state  << std::endl
+                     << "   Error   = " << sac->sac_error  << std::endl
+                     << "   OutStrs = " << sac->sac_outbound_streams << std::endl
+                     << "   InStrs  = " << sac->sac_inbound_streams  << std::endl
+                     << "   AssocID = #" << sac->sac_assoc_id        << std::endl;
          }
        break;
       case SCTP_SHUTDOWN_EVENT: {
            const sctp_shutdown_event* sse = &notification->sn_shutdown_event;
            char str[16];
            snprintf((char*)&str,sizeof(str),"$%04x",sse->sse_flags);
-           cout << "   Type    = SCTP_SHUTDOWN_EVENT"    << endl
-                << "   Length  = " << sse->sse_length    << endl
-                << "   Flags   = " << str                << endl
-                << "   AssocID = #" << sse->sse_assoc_id << endl;
+           std::cout << "   Type    = SCTP_SHUTDOWN_EVENT"    << std::endl
+                     << "   Length  = " << sse->sse_length    << std::endl
+                     << "   Flags   = " << str                << std::endl
+                     << "   AssocID = #" << sse->sse_assoc_id << std::endl;
          }
        break;
       default:
           char str[16];
           snprintf((char*)&str,sizeof(str),"$%04x",
                    notification->sn_header.sn_flags);
-          cout << "   Type   = " << notification->sn_header.sn_type   << endl
-               << "   Length = " << notification->sn_header.sn_length << endl
-               << "   Flags  = " << str                                             << endl;
+          std::cout << "   Type   = " << notification->sn_header.sn_type   << std::endl
+                    << "   Length = " << notification->sn_header.sn_length << std::endl
+                    << "   Flags  = " << str                               << std::endl;
        break;
    }
    if(ColorMode) {
-      cout << "\x1b[" << getANSIColor(0) << "m";
+      std::cout << "\x1b[" << getANSIColor(0) << "m";
    }
-   cout.flush();
+   std::cout.flush();
 }
 
 
@@ -114,8 +114,8 @@ void printControl(const msghdr* header)
    cmsghdr* cmsg = CFirst(header);
    if((cmsg != NULL) && (header->msg_controllen >= (socklen_t)sizeof(cmsghdr))) {
       if(ColorMode) {
-         cout << "\x1b[" << getANSIColor(CONTROL_COLOR)
-              << "mControl Data:" << endl;
+         std::cout << "\x1b[" << getANSIColor(CONTROL_COLOR)
+              << "mControl Data:" << std::endl;
       }
       while(cmsg != NULL) {
          if((cmsg->cmsg_level == IPPROTO_SCTP) &&
@@ -125,25 +125,25 @@ void printControl(const msghdr* header)
             char str2[16];
             snprintf((char*)&str1,sizeof(str1),"$%04x",info->sinfo_flags);
             snprintf((char*)&str2,sizeof(str2),"$%08x",ntohl(info->sinfo_ppid));
-            cout << "   SCTP_SNDRCV"  << endl;
-            cout << "    AssocID    = #" << info->sinfo_assoc_id    << endl;
-            cout << "    Stream     = #" << info->sinfo_stream      << endl;
-            cout << "    Flags      = " << str1 << endl;
-            cout << "    PPID       = " << str2 << endl;
-            cout << "    SSN        = " << info->sinfo_ssn        << endl;
-            cout << "    TSN        = " << info->sinfo_tsn        << endl;
-            cout << "    TimeToLive = " << info->sinfo_timetolive << endl;
+            std::cout << "   SCTP_SNDRCV"  << std::endl;
+            std::cout << "    AssocID    = #" << info->sinfo_assoc_id  << std::endl;
+            std::cout << "    Stream     = #" << info->sinfo_stream    << std::endl;
+            std::cout << "    Flags      = " << str1 << std::endl;
+            std::cout << "    PPID       = " << str2 << std::endl;
+            std::cout << "    SSN        = " << info->sinfo_ssn        << std::endl;
+            std::cout << "    TSN        = " << info->sinfo_tsn        << std::endl;
+            std::cout << "    TimeToLive = " << info->sinfo_timetolive << std::endl;
          }
          else {
-            cout << "   Level #"   << cmsg->cmsg_level
-                 << ", Type #"     << cmsg->cmsg_type
-                 << ". Length is " << cmsg->cmsg_len  << "." << endl;
+            std::cout << "   Level #"   << cmsg->cmsg_level
+                      << ", Type #"     << cmsg->cmsg_type
+                      << ". Length is " << cmsg->cmsg_len  << "." << std::endl;
          }
          cmsg = CNext(header,cmsg);
       }
       if(ColorMode) {
-         cout << "\x1b[" << getANSIColor(0) << "m";
+         std::cout << "\x1b[" << getANSIColor(0) << "m";
       }
-      cout.flush();
+      std::cout.flush();
    }
 }

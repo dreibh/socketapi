@@ -1,5 +1,5 @@
 /*
- *  $Id: packetaddress.cc,v 1.2 2003/08/19 19:24:25 tuexen Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -115,7 +115,7 @@ void PacketAddress::init(const String& name)
    }
    else {
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: PacketAddress::init() - Name too long!" << endl;
+      std::cerr << "WARNING: PacketAddress::init() - Name too long!" <<  std::endl;
 #endif
    }
 }
@@ -184,16 +184,16 @@ cardinal PacketAddress::getSystemAddress(sockaddr*       address,
          }
          else {
 #ifndef DISABLE_WARNINGS
-            cerr << "WARNING: PacketAddress::getSystemPacketAddress() - "
-                    "Buffer size too low for AF_PACKET!" << endl;
+            std::cerr << "WARNING: PacketAddress::getSystemPacketAddress() - "
+                         "Buffer size too low for AF_PACKET!" <<  std::endl;
 #endif
          }
         }
        break;
       default:
 #ifndef DISABLE_WARNINGS
-         cerr << "WARNING: PacketAddress::getSystemPacketAddress() - Unknown type "
-              << type << "!" << endl;
+         std::cerr << "WARNING: PacketAddress::getSystemPacketAddress() - Unknown type "
+                   << type << "!" <<  std::endl;
 #endif
        break;
    }

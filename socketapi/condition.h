@@ -132,10 +132,10 @@ class Condition : public Synchronizable
 
    // ====== Private data ===================================================
    private:
-   set<Condition*> ParentSet;
-   pthread_cond_t  ConditionVariable;
-   bool            Fired;
-   bool            Valid;
+   std::set<Condition*> ParentSet;
+   pthread_cond_t       ConditionVariable;
+   bool                 Fired;
+   bool                 Valid;
 };
 
 

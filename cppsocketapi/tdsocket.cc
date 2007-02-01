@@ -1,5 +1,5 @@
 /*
- *  $Id: tdsocket.cc,v 1.9 2004/11/11 21:35:41 dreibh Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -125,9 +125,9 @@ void Socket::packSocketAddressArray(const sockaddr_storage* addrArray,
             a = (sockaddr*)((long)a + (long)sizeof(sockaddr_in6));
           break;
          default:
-            cerr << "ERROR: pack_sockaddr_storage() - Unknown address type #" << ((sockaddr*)&addrArray[i])->sa_family << "!" << endl;
-            cerr << "IMPORTANT NOTE:" << endl
-                 << "The standardizers have changed the socket API; the sockaddr_storage array has been replaced by a variable-sized sockaddr_in/in6 blocks. Do not blame us for this change, send your complaints to the standardizers at sctp-impl@external.cisco.com!" << endl;
+            std::cerr << "ERROR: pack_sockaddr_storage() - Unknown address type #" << ((sockaddr*)&addrArray[i])->sa_family << "!" << std::endl;
+            std::cerr << "IMPORTANT NOTE:" << std::endl
+                      << "The standardizers have changed the socket API; the sockaddr_storage array has been replaced by a variable-sized sockaddr_in/in6 blocks. Do not blame us for this change, send your complaints to the standardizers at sctp-impl@external.cisco.com!" << std::endl;
             exit(1);
           break;
       }
@@ -173,7 +173,7 @@ bool Socket::create(const integer communicationDomain,
    int result = ext_socket(CommunicationDomain,socketType,socketProtocol);
    if(result < 0) {
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: Socket::Socket() - Unable to create socket!" << endl;
+      std::cerr << "WARNING: Socket::Socket() - Unable to create socket!" << std::endl;
 #endif
       return(false);
    }
@@ -300,8 +300,8 @@ bool Socket::bindx(const SocketAddress** addressArray,
                                            sizeof(sockaddr_storage),
                                            AF_UNSPEC) == false) {
 #ifndef DISABLE_WARNINGS
-         cerr << "ERROR: Socket::bindx() - Unable to get system socket address for "
-              << *(addressArray[i]) << "!" << endl;
+         std::cerr << "ERROR: Socket::bindx() - Unable to get system socket address for "
+                   << *(addressArray[i]) << "!" << std::endl;
 #endif
          return(false);
       }
@@ -582,7 +582,7 @@ Socket* Socket::accept(SocketAddress** address)
    }
    else {
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: Socket::accept() - Out of memory!" << endl;
+      std::cerr << "WARNING: Socket::accept() - Out of memory!" << std::endl;
 #endif
       ext_close(result);
    }
@@ -628,7 +628,7 @@ bool Socket::connect(const SocketAddress& address, const card8 trafficClass)
    }
    else {
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: Socket::connect() - Out of memory!" << endl;
+      std::cerr << "WARNING: Socket::connect() - Out of memory!" << std::endl;
 #endif
       return(false);
    }
@@ -958,7 +958,7 @@ InternetFlow Socket::allocFlow(const InternetAddress& address,
                                     sizeof(in6_flowlabel_req));
    if(result != 0) {
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: InternetFlow::allocFlow() - Unable to get flow label!" << endl;
+      std::cerr << "WARNING: InternetFlow::allocFlow() - Unable to get flow label!" << std::endl;
 #endif
       InternetFlow flow;
       return(flow);
@@ -993,7 +993,7 @@ void Socket::freeFlow(InternetFlow& flow)
                                     sizeof(in6_flowlabel_req));
    if(result != 0) {
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: InternetFlow::freeFlow() - Unable to free flow label!" << endl;
+      std::cerr << "WARNING: InternetFlow::freeFlow() - Unable to free flow label!" << std::endl;
 #endif
    }
 #endif
@@ -1024,7 +1024,7 @@ bool Socket::renewFlow(InternetFlow&  flow,
                                     sizeof(in6_flowlabel_req));
    if(result != 0) {
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: Socket::renew() - Unable to renew flow label!" << endl;
+      std::cerr << "WARNING: Socket::renew() - Unable to renew flow label!" << std::endl;
 #endif
       return(false);
    }
@@ -1057,7 +1057,7 @@ bool Socket::renewFlow(const cardinal expires,
                                     sizeof(in6_flowlabel_req));
    if(result != 0) {
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: Socket::renew() - Unable to renew flow label!" << endl;
+      std::cerr << "WARNING: Socket::renew() - Unable to renew flow label!" << std::endl;
 #endif
       return(false);
    }
@@ -1197,7 +1197,7 @@ bool Socket::multicastMembership(const SocketAddress& address,
       sockaddr_in addr;
       if(address.getSystemAddress((sockaddr*)&addr,sizeof(addr),AF_INET) == 0) {
 #ifndef DISABLE_WARNINGS
-         cerr << "ERROR: Socket::multicastMembership() - Bad address type for IPv4 socket!" << endl;
+         std::cerr << "ERROR: Socket::multicastMembership() - Bad address type for IPv4 socket!" << std::endl;
 #endif
       }
       else {
@@ -1208,7 +1208,7 @@ bool Socket::multicastMembership(const SocketAddress& address,
             strcpy(ifr.ifr_name,interface);
             if(ioctl(SIOCGIFADDR,&ifr) != 0) {
 #ifndef DISABLE_WARNINGS
-               cerr << "ERROR: Socket::multicastMembership() - Unable to get interface address!" << endl;
+               std::cerr << "ERROR: Socket::multicastMembership() - Unable to get interface address!" << std::endl;
 #endif
                return(false);
             }
@@ -1226,7 +1226,7 @@ bool Socket::multicastMembership(const SocketAddress& address,
       sockaddr_in6 addr;
       if(address.getSystemAddress((sockaddr*)&addr,sizeof(addr),AF_INET6) == 0) {
 #ifndef DISABLE_WARNINGS
-         cerr << "ERROR: Socket::multicastMembership() - Bad address type for IPv6 socket!" << endl;
+         std::cerr << "ERROR: Socket::multicastMembership() - Bad address type for IPv6 socket!" << std::endl;
 #endif
       }
       else {
@@ -1245,7 +1245,7 @@ bool Socket::multicastMembership(const SocketAddress& address,
    }
    else {
 #ifndef DISABLE_WARNINGS
-      cerr << "ERROR: Socket::multicastMembership() - Multicast is not supported for this socket type!" << endl;
+      std::cerr << "ERROR: Socket::multicastMembership() - Multicast is not supported for this socket type!" << std::endl;
 #endif
    }
    return(false);
@@ -1271,7 +1271,7 @@ bool Socket::getMulticastLoop()
    }
    else {
 #ifndef DISABLE_WARNINGS
-      cerr << "ERROR: Socket::getMulticastLoop() - Multicast is not supported for this socket type!" << endl;
+      std::cerr << "ERROR: Socket::getMulticastLoop() - Multicast is not supported for this socket type!" << std::endl;
 #endif
    }
    return(false);
@@ -1291,7 +1291,7 @@ bool Socket::setMulticastLoop(const bool on)
    }
    else {
 #ifndef DISABLE_WARNINGS
-      cerr << "ERROR: Socket::setMulticastLoop() - Multicast is not supported for this socket type!" << endl;
+      std::cerr << "ERROR: Socket::setMulticastLoop() - Multicast is not supported for this socket type!" << std::endl;
 #endif
    }
    return(false);
@@ -1317,7 +1317,7 @@ card8 Socket::getMulticastTTL()
    }
    else {
 #ifndef DISABLE_WARNINGS
-      cerr << "ERROR: Socket::getMulticastTTL() - Multicast is not supported for this socket type!" << endl;
+      std::cerr << "ERROR: Socket::getMulticastTTL() - Multicast is not supported for this socket type!" << std::endl;
 #endif
    }
    return(0);
@@ -1336,7 +1336,7 @@ bool Socket::setMulticastTTL(const card8 ttl)
    }
    else {
 #ifndef DISABLE_WARNINGS
-      cerr << "ERROR: Socket::setMulticastTTL() - Multicast is not supported for this socket type!" << endl;
+      std::cerr << "ERROR: Socket::setMulticastTTL() - Multicast is not supported for this socket type!" << std::endl;
 #endif
    }
    return(false);
@@ -1353,7 +1353,7 @@ bool Socket::setTypeOfService(const card8 trafficClass)
       char str[32];
       snprintf((char*)&str,sizeof(str),"$%02x!",trafficClass);
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: Socket::setTypeOfService() - Unable to set TOS to " << str << endl;
+      std::cerr << "WARNING: Socket::setTypeOfService() - Unable to set TOS to " << str << std::endl;
 #endif
       return(false);
    }
@@ -1406,7 +1406,7 @@ bool Socket::getLocalAddressList(SocketAddress**& addressList,
    }
    if(::ioctl(fd,SIOCGIFCONF,(char*)&config) == -1) {
 #ifndef DISABLE_WARNINGS
-      cerr << "ERROR: Socket::getLocalAddressList() - SIOCGIFCONF failed!" << endl;
+      std::cerr << "ERROR: Socket::getLocalAddressList() - SIOCGIFCONF failed!" << std::endl;
 #endif
       ::close(fd);
       return(false);
@@ -1537,7 +1537,7 @@ bool Socket::getLocalAddressList(SocketAddress**& addressList,
       memcpy(local.ifr_name,ifrequest->ifr_name,IFNAMSIZ);
       if(::ioctl(fd,SIOCGIFFLAGS,(char*)&local) < 0) {
 #ifndef DISABLE_WARNINGS
-         cerr << "ERROR: Socket::getLocalAddressList() - SIOCGIFFLAGS failed!" << endl;
+         std::cerr << "ERROR: Socket::getLocalAddressList() - SIOCGIFFLAGS failed!" << std::endl;
 #endif
          continue;
       }

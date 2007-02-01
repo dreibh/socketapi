@@ -71,7 +71,7 @@ static bool versionCheck()
    const unsigned int sctplibCompiledVersion = (SCTP_MAJOR_VERSION << 16) | SCTP_MINOR_VERSION;
 
    if(sctplibLinkedVersion != sctplibCompiledVersion) {
-      cerr << "INTERNAL ERROR: sctp.h and linked sctplib library are different!" << endl;
+      std::cerr << "INTERNAL ERROR: sctp.h and linked sctplib library are different!" << std::endl;
       result = false;
    }
 
@@ -80,7 +80,7 @@ static bool versionCheck()
       snprintf((char*)&str, sizeof(str),
                "Compiled = $%04x\nLinked   = $%04x\n",
                sctplibCompiledVersion, sctplibLinkedVersion);
-      cerr << str;
+      std::cerr << str;
    }
 
    return(result);
@@ -115,10 +115,10 @@ SCTPSocketMaster::SCTPSocketMaster()
       if(sd >= 0) {
 #ifndef SCTP_OVER_UDP
          close(sd);
-         cerr << "ERROR: Kernel SCTP seems to be available! You cannout use sctplib and kernel SCTP simultaneously!" << endl;
+         std::cerr << "ERROR: Kernel SCTP seems to be available! You cannout use sctplib and kernel SCTP simultaneously!" << std::endl;
          ::abort();
 #else
-         cerr << "NOTE: The socket API assumes SCTP over UDP. Kernel SCTP has been found, but this should be okay." << endl;
+         std::cerr << "NOTE: The socket API assumes SCTP over UDP. Kernel SCTP has been found, but this should be okay." << std::endl;
 #endif
       }
 
@@ -146,7 +146,7 @@ SCTPSocketMaster::SCTPSocketMaster()
                }
                else {
 #ifndef DISABLE_WARNINGS
-                  cerr << "WARNING: SCTPSocketMaster::SCTPSocketMaster() - Failed to set Break Pipe to non-blocking mode!" << endl;
+                  std::cerr << "WARNING: SCTPSocketMaster::SCTPSocketMaster() - Failed to set Break Pipe to non-blocking mode!" << std::endl;
 #endif
                   close(BreakPipe[0]);
                   close(BreakPipe[1]);
@@ -156,7 +156,7 @@ SCTPSocketMaster::SCTPSocketMaster()
             }
             else {
 #ifndef DISABLE_WARNINGS
-               cerr << "WARNING: SCTPSocketMaster::SCTPSocketMaster() - Failed reading Break Pipe flags!" << endl;
+               std::cerr << "WARNING: SCTPSocketMaster::SCTPSocketMaster() - Failed reading Break Pipe flags!" << std::endl;
 #endif
                close(BreakPipe[0]);
                close(BreakPipe[1]);
@@ -168,7 +168,7 @@ SCTPSocketMaster::SCTPSocketMaster()
             BreakPipe[0] = -1;
             BreakPipe[1] = -1;
 #ifndef DISABLE_WARNINGS
-            cerr << "WARNING: SCTPSocketMaster::SCTPSocketMaster() - Break Pipe not available!" << endl;
+            std::cerr << "WARNING: SCTPSocketMaster::SCTPSocketMaster() - Break Pipe not available!" << std::endl;
 #endif
          }
       }
@@ -176,17 +176,17 @@ SCTPSocketMaster::SCTPSocketMaster()
          BreakPipe[0] = -1;
          BreakPipe[1] = -1;
 #ifndef NO_INITFAIL_WARNING
-         cerr << "ERROR: SCTP Library initialization failed!" << endl;
+         std::cerr << "ERROR: SCTP Library initialization failed!" << std::endl;
          if(getuid() != 0) {
-            cerr << "       You need root permissions to use the SCTP Library!" << endl;
+            std::cerr << "       You need root permissions to use the SCTP Library!" << std::endl;
          }
 #endif
       }
    }
    else {
 #ifndef DISABLE_WARNINGS
-      cerr << "ERROR: SCTPSocketMaster::SCTPSocketMaster() - "
-              "Do not try to initialice SCTPSocketMaster singleton twice!" << endl;
+      std::cerr << "ERROR: SCTPSocketMaster::SCTPSocketMaster() - "
+              "Do not try to initialice SCTPSocketMaster singleton twice!" << std::endl;
 #endif
    }
 }
@@ -212,7 +212,7 @@ SCTPSocketMaster::~SCTPSocketMaster()
       GarbageCollectionTimerID = -1;
    }
 
-   multimap<unsigned int, int>::iterator iterator = ClosingAssociations.begin();
+   std::multimap<unsigned int, int>::iterator iterator = ClosingAssociations.begin();
    while(iterator != ClosingAssociations.end()) {
       // associationGarbageCollection(iterator->first,true) may not be called
       // here, since sctp_abort() directly calls communicationLostNotification(),
@@ -296,14 +296,14 @@ bool SCTPSocketMaster::enableOOTBHandling(const bool enable)
       parameters.sendOotbAborts    = (enable == false) ? 0 : 1;
       if(sctp_setLibraryParameters(&parameters) != SCTP_SUCCESS) {
 #ifndef DISABLE_WARNINGS
-         cerr << "WARNING: SCTPSocketMaster::enableOOTBHandling() - Setting of SCTP Library parameters failed!" << endl;
+         std::cerr << "WARNING: SCTPSocketMaster::enableOOTBHandling() - Setting of SCTP Library parameters failed!" << std::endl;
 #endif
          result = false;
       }
    }
    else {
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: SCTPSocketMaster::enableOOTBHandling() - Getting of SCTP Library parameters failed!" << endl;
+      std::cerr << "WARNING: SCTPSocketMaster::enableOOTBHandling() - Getting of SCTP Library parameters failed!" << std::endl;
 #endif
       result = false;
    }
@@ -323,14 +323,14 @@ bool SCTPSocketMaster::enableCRC32(const bool enable)
          (enable == true) ? SCTP_CHECKSUM_ALGORITHM_CRC32C : SCTP_CHECKSUM_ALGORITHM_ADLER32;
       if(sctp_setLibraryParameters(&parameters) != SCTP_SUCCESS) {
 #ifndef DISABLE_WARNINGS
-         cerr << "WARNING: SCTPSocketMaster::enableOOTBHandling() - Setting of SCTP Library parameters failed!" << endl;
+         std::cerr << "WARNING: SCTPSocketMaster::enableOOTBHandling() - Setting of SCTP Library parameters failed!" << std::endl;
 #endif
          result = false;
       }
    }
    else {
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: SCTPSocketMaster::enableOOTBHandling() - Getting of SCTP Library parameters failed!" << endl;
+      std::cerr << "WARNING: SCTPSocketMaster::enableOOTBHandling() - Getting of SCTP Library parameters failed!" << std::endl;
 #endif
       result = false;
    }
@@ -346,7 +346,7 @@ void SCTPSocketMaster::delayedDeleteAssociation(const unsigned short instanceID,
 #ifdef PRINT_GC
    cout << "delayedDeleteAssociation: A=" << assocID << " I=" << instanceID << endl;
 #endif
-   ClosingAssociations.insert(pair<unsigned int, unsigned short>(assocID,instanceID));
+   ClosingAssociations.insert(std::pair<unsigned int, unsigned short>(assocID,instanceID));
 }
 
 
@@ -370,7 +370,7 @@ void SCTPSocketMaster::socketGarbageCollection()
    LastGarbageCollection = getMicroTime();
 
    // ====== Try to auto-close connectionless associations ==================
-   multimap<int, SCTPSocket*>::iterator socketIterator = SocketList.begin();
+   std::multimap<int, SCTPSocket*>::iterator socketIterator = SocketList.begin();
    while(socketIterator != SCTPSocketMaster::SocketList.end()) {
       SCTPSocket* socket = socketIterator->second;
       socket->checkAutoClose();
@@ -378,12 +378,12 @@ void SCTPSocketMaster::socketGarbageCollection()
    }
 
    // ====== Try to delete already removed sockets using sctplib ============
-   set<int>::iterator iterator = ClosingSockets.begin();
+   std::set<int>::iterator iterator = ClosingSockets.begin();
    while(iterator != ClosingSockets.end()) {
       const unsigned short instanceID = *iterator;
 
       bool used = false;
-      multimap<unsigned int, int>::iterator assocIterator = ClosingAssociations.begin();
+      std::multimap<unsigned int, int>::iterator assocIterator = ClosingAssociations.begin();
       while(assocIterator != ClosingAssociations.end()) {
          if(instanceID == assocIterator->second) {
             used = true;
@@ -400,7 +400,7 @@ void SCTPSocketMaster::socketGarbageCollection()
          ClosingSockets.erase(instanceID);
          if(sctp_unregisterInstance(instanceID) != SCTP_SUCCESS) {
 #ifndef DISABLE_WARNINGS
-            cerr << "INTERNAL ERROR: SCTPSocketMaster::socketGarbageCollection() - sctp_unregisterInstance() failed!" << endl;
+            std::cerr << "INTERNAL ERROR: SCTPSocketMaster::socketGarbageCollection() - sctp_unregisterInstance() failed!" << std::endl;
 #endif
             ::abort();
          }
@@ -423,7 +423,7 @@ bool SCTPSocketMaster::associationGarbageCollection(const unsigned int assocID,
                                                     const bool         sendAbort)
 {
    // ====== Delayed removal ================================================
-   multimap<unsigned int, int>::iterator iterator = ClosingAssociations.find(assocID);
+   std::multimap<unsigned int, int>::iterator iterator = ClosingAssociations.find(assocID);
    if(iterator != ClosingAssociations.end()) {
 #ifdef PRINT_GC
       cout << "associationGarbageCollection: Removing association #" << assocID << "." << endl;
@@ -439,7 +439,7 @@ bool SCTPSocketMaster::associationGarbageCollection(const unsigned int assocID,
       }
       if(sctp_deleteAssociation(assocID) != SCTP_SUCCESS) {
 #ifndef DISABLE_WARNINGS
-         cerr << "INTERNAL ERROR: SCTPSocketMaster::associationGarbageCollection() - sctp_deleteAssociation() failed!" << endl;
+         std::cerr << "INTERNAL ERROR: SCTPSocketMaster::associationGarbageCollection() - sctp_deleteAssociation() failed!" << std::endl;
 #endif
          ::abort();
       }
@@ -467,7 +467,7 @@ void SCTPSocketMaster::dataArriveNotif(unsigned int   assocID,
    snprintf((char*)&str,sizeof(str),
                "A%04d S%02d: Data Arrive Notification - length=%d, PPID=%u",
                assocID, streamID, length, protoID);
-   cerr << str << endl;
+   std::cerr << str << std::endl;
 #endif
 
 
@@ -499,7 +499,7 @@ void SCTPSocketMaster::sendFailureNotif(unsigned int   assocID,
    char str[256];
    snprintf((char*)&str,sizeof(str),
                "A%04d: Send Failure Notification",assocID);
-   cerr << str << endl;
+   std::cerr << str << std::endl;
 #endif
 
 
@@ -547,7 +547,7 @@ void SCTPSocketMaster::networkStatusChangeNotif(unsigned int assocID,
    char str[256];
    snprintf((char*)&str,sizeof(str),
                "A%04d: Network Status Change",assocID);
-   cerr << str << endl;
+   std::cerr << str << std::endl;
 #endif
 
 
@@ -562,7 +562,7 @@ void SCTPSocketMaster::networkStatusChangeNotif(unsigned int assocID,
 #endif
    if(ok != 0) {
 #ifndef DISABLE_WARNINGS
-      cerr << "INTERNAL ERROR: SCTPSocketMaster::networkStatusChangeNotif() - sctp_getPathStatus() failed!" << endl;
+      std::cerr << "INTERNAL ERROR: SCTPSocketMaster::networkStatusChangeNotif() - sctp_getPathStatus() failed!" << std::endl;
 #endif
       return;
    }
@@ -575,7 +575,7 @@ void SCTPSocketMaster::networkStatusChangeNotif(unsigned int assocID,
                                       (char*)&pathStatus.destinationAddress);
    if(destination == NULL) {
 #ifndef DISABLE_WARNINGS
-      cerr << "INTERNAL ERROR: SCTPSocketMaster::networkStatusChangeNotif() - Bad destination address!" << endl;
+      std::cerr << "INTERNAL ERROR: SCTPSocketMaster::networkStatusChangeNotif() - Bad destination address!" << std::endl;
 #endif
       return;
    }
@@ -671,7 +671,7 @@ void* SCTPSocketMaster::communicationUpNotif(unsigned int   assocID,
    char str[256];
    snprintf((char*)&str,sizeof(str),
                "A%04d: Communication Up Notification",assocID);
-   cerr << str << endl;
+   std::cerr << str << std::endl;
 #endif
 
    SCTPSocket* socket = getSocketForAssociationID(assocID);
@@ -687,7 +687,7 @@ void* SCTPSocketMaster::communicationUpNotif(unsigned int   assocID,
                char str[256];
                snprintf((char*)&str,sizeof(str),
                            "A%04d: Setting InitTimeout %d to saved RTOMax %d",assocID,status.rtoMax,association->RTOMax);
-               cerr << str << endl;
+               std::cerr << str << std::endl;
 #endif
                status.rtoMax = association->RTOMax;
                socket->setAssocStatus(assocID,status);
@@ -738,7 +738,7 @@ void* SCTPSocketMaster::communicationUpNotif(unsigned int   assocID,
       }
       // ====== Unwanted incoming association ===============================
       else {
-         cerr << "Incoming association, but not in listen mode -> rejecting association!" << endl;
+         std::cerr << "Incoming association, but not in listen mode -> rejecting association!" << std::endl;
          association = NULL;
       }
    }
@@ -759,7 +759,7 @@ void* SCTPSocketMaster::communicationUpNotif(unsigned int   assocID,
    // ====== We do not want this new association -> remove it! ==============
    else {
 #ifdef PRINT_NOTIFICATIONS
-      cerr << "Aborting and deleting unwanted incoming association!" << endl;
+      std::cerr << "Aborting and deleting unwanted incoming association!" << std::endl;
 #endif
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
       sctp_abort(assocID, 0, NULL);
@@ -770,7 +770,7 @@ void* SCTPSocketMaster::communicationUpNotif(unsigned int   assocID,
 #endif
       if(sctp_deleteAssociation(assocID) != SCTP_SUCCESS) {
 #ifndef DISABLE_WARNINGS
-         cerr << "INTERNAL ERROR: SCTPSocketMaster::communicationUpNotif() - sctp_deleteAssociation() or rejected association failed!" << endl;
+         std::cerr << "INTERNAL ERROR: SCTPSocketMaster::communicationUpNotif() - sctp_deleteAssociation() or rejected association failed!" << std::endl;
 #endif
          ::abort();
       }
@@ -797,7 +797,7 @@ void SCTPSocketMaster::communicationLostNotif(unsigned int assocID,
    char str[256];
    snprintf((char*)&str,sizeof(str),
                "A%04d: Communication Lost Notification, Status=%d",assocID,status);
-   cerr << str << endl;
+   std::cerr << str << std::endl;
 #endif
 
 
@@ -819,7 +819,7 @@ void SCTPSocketMaster::communicationLostNotif(unsigned int assocID,
                char str[256];
                snprintf((char*)&str,sizeof(str),
                            "A%04d: Setting InitTimeout %d to saved RTOMax %d",assocID,status.rtoMax,association->RTOMax);
-               cerr << str << endl;
+               std::cerr << str << std::endl;
 #endif
                status.rtoMax = association->RTOMax;
                socket->setAssocStatus(assocID,status);
@@ -878,7 +878,7 @@ void SCTPSocketMaster::communicationErrorNotif(unsigned int assocID,
    char str[256];
    snprintf((char*)&str,sizeof(str),
                "A%04d: Communication Error Notification, Status=%d",assocID,status);
-   cerr << str << endl;
+   std::cerr << str << std::endl;
 #endif
 
 
@@ -905,7 +905,7 @@ void SCTPSocketMaster::restartNotif(unsigned int assocID, void* ulpDataPtr)
    char str[256];
    snprintf((char*)&str,sizeof(str),
                "A%04d: Restart Notification",assocID);
-   cerr << str << endl;
+   std::cerr << str << std::endl;
 #endif
 
 
@@ -927,7 +927,7 @@ void SCTPSocketMaster::restartNotif(unsigned int assocID, void* ulpDataPtr)
       }
       else {
 #ifndef DISABLE_WARNINGS
-         cerr << "WARNING: SCTPSocketMaster::restartNotif() - sctp_getAssocStatus() failed!" << endl;
+         std::cerr << "WARNING: SCTPSocketMaster::restartNotif() - sctp_getAssocStatus() failed!" << std::endl;
 #endif
          sac->sac_outbound_streams = 1;
          sac->sac_inbound_streams  = 1;
@@ -945,7 +945,7 @@ void SCTPSocketMaster::shutdownReceivedNotif(unsigned int assocID, void* ulpData
    char str[256];
    snprintf((char*)&str,sizeof(str),
                "A%04d: Shutdown Received Notification",assocID);
-   cerr << str << endl;
+   std::cerr << str << std::endl;
 #endif
 
    SCTPSocket* socket = getSocketForAssociationID(assocID);
@@ -973,7 +973,7 @@ void SCTPSocketMaster::shutdownCompleteNotif(unsigned int assocID, void* ulpData
    char str[256];
    snprintf((char*)&str,sizeof(str),
                "A%04d: Shutdown Complete Notification",assocID);
-   cerr << str << endl;
+   std::cerr << str << std::endl;
 #endif
 
    // ====== Delayed removal ================================================
@@ -1025,7 +1025,7 @@ void SCTPSocketMaster::queueStatusChangeNotif(unsigned int assocID,
    snprintf((char*)&str,sizeof(str),
                "A%04d: Queue Status Change Notification, Qid=%d Qtype=%d Qlength=%d",
                assocID,queueIdentifier,queueType,queueLength);
-   cerr << str << endl;
+   std::cerr << str << std::endl;
 #endif
 
    SCTPSocket* socket = getSocketForAssociationID(assocID);
@@ -1053,7 +1053,7 @@ void SCTPSocketMaster::asconfStatusNotif(unsigned int assocID,
    snprintf((char*)&str,sizeof(str),
                "A%04d: ASConf Status Change Notification, Cid=%d result=%d",
                assocID,correlationID,result);
-   cerr << str << endl;
+   std::cerr << str << std::endl;
 #endif
 }
 #endif
@@ -1070,7 +1070,7 @@ void SCTPSocketMaster::userCallback(int        fileDescriptor,
    snprintf((char*)&str,sizeof(str),
                "F%04d: User Callback, mask=$%x",
                fileDescriptor,eventMask);
-   cerr << str << endl;
+   std::cerr << str << std::endl;
 #endif
 
    UserSocketNotification* usn = (UserSocketNotification*)userData;
@@ -1112,7 +1112,7 @@ SCTPSocket* SCTPSocketMaster::getSocketForAssociationID(const unsigned int assoc
 
    if(sctp_getInstanceID(assocID,&instanceID) == 0) {
       if(instanceID != 0) {
-         multimap<int, SCTPSocket*>::iterator iterator =
+         std::multimap<int, SCTPSocket*>::iterator iterator =
             SocketList.find((int)instanceID);
          if(iterator != SocketList.end()) {
             return(iterator->second);
@@ -1120,15 +1120,15 @@ SCTPSocket* SCTPSocketMaster::getSocketForAssociationID(const unsigned int assoc
       }
 #ifdef DEBUG
       else {
-        cerr << "WARNING: SCTPSocketMaster::getSocketForAssociationID() - "
-                "Instance ID for association ID #" << assocID << " is zero!" << endl;
+        std::cerr << "WARNING: SCTPSocketMaster::getSocketForAssociationID() - "
+                     "Instance ID for association ID #" << assocID << " is zero!" << std::endl;
       }
 #endif
    }
 #ifdef DEBUG
    else {
-      cerr << "WARNING: SCTPSocketMaster::getSocketForAssociationID() - "
-              "No instance ID for association ID #" << assocID << " found!" << endl;
+      std::cerr << "WARNING: SCTPSocketMaster::getSocketForAssociationID() - "
+                   "No instance ID for association ID #" << assocID << " found!" << std::endl;
    }
 #endif
    return(NULL);
@@ -1178,8 +1178,8 @@ bool SCTPSocketMaster::initNotification(SCTPNotification& notification,
 #endif
 
 #ifndef DISABLE_WARNINGS
-            cerr << "WARNING: SCTPSocketMaster::initNotification() - sctp_getPathStatus() failure!"
-                 << endl;
+            std::cerr << "WARNING: SCTPSocketMaster::initNotification() - sctp_getPathStatus() failure!"
+                      << std::endl;
 #endif
 
          }
@@ -1192,8 +1192,8 @@ bool SCTPSocketMaster::initNotification(SCTPNotification& notification,
       return(true);
    }
 #ifndef DISABLE_WARNINGS
-         cerr << "WARNING: SCTPSocketMaster::initNotification() - sctp_getAssocStatus() failure!"
-              << endl;
+         std::cerr << "WARNING: SCTPSocketMaster::initNotification() - sctp_getAssocStatus() failure!"
+                   << std::endl;
 #endif
    return(false);
 }
@@ -1262,7 +1262,7 @@ void SCTPSocketMaster::addUserSocketNotification(UserSocketNotification* usn)
 
    if(result < 0) {
 #ifndef DISABLE_WARNINGS
-      cerr << "ERROR: SCTPSocketMaster::addUserSocketNotification() - sctp_registerUserCallback() failed!" << endl;
+      std::cerr << "ERROR: SCTPSocketMaster::addUserSocketNotification() - sctp_registerUserCallback() failed!" << std::endl;
 #endif
    }
 
@@ -1284,7 +1284,7 @@ void SCTPSocketMaster::deleteUserSocketNotification(UserSocketNotification* usn)
    lock();
    if(sctp_unregisterUserCallback(usn->FileDescriptor) != SCTP_SUCCESS) {
 #ifndef DISABLE_WARNINGS
-      cerr << "INTERNAL ERROR: SCTPSocketMaster::deleteUserSocketNotification() - sctp_unregisterUserCallback() failed!" << endl;
+      std::cerr << "INTERNAL ERROR: SCTPSocketMaster::deleteUserSocketNotification() - sctp_unregisterUserCallback() failed!" << std::endl;
 #endif
    }
    unlock();

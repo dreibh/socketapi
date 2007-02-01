@@ -62,7 +62,7 @@ UnixAddress::UnixAddress(const UnixAddress& address)
 
 
 // ###### Unix address constructor ######################################
-UnixAddress::~UnixAddress() 
+UnixAddress::~UnixAddress()
 {
 }
 
@@ -95,7 +95,7 @@ void UnixAddress::init(const String& name)
    }
    else {
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: UnixAddress::init() - Name too long!" << endl;
+      std::cerr << "WARNING: UnixAddress::init() - Name too long!" << std::endl;
 #endif
    }
 }
@@ -170,16 +170,16 @@ cardinal UnixAddress::getSystemAddress(sockaddr*       buffer,
          }
          else {
 #ifndef DISABLE_WARNINGS
-            cerr << "WARNING: UnixAddress::getSystemUnixAddress() - "
-                    "Buffer size too low for AF_UNIX!" << endl;
+            std::cerr << "WARNING: UnixAddress::getSystemUnixAddress() - "
+                         "Buffer size too low for AF_UNIX!" << std::endl;
 #endif
          }
         }
        break;
       default:
 #ifndef DISABLE_WARNINGS
-         cerr << "WARNING: UnixAddress::getSystemUnixAddress() - Unknown type "
-              << type << "!" << endl;
+         std::cerr << "WARNING: UnixAddress::getSystemUnixAddress() - Unknown type "
+                   << type << "!" << std::endl;
 #endif
        break;
    }
