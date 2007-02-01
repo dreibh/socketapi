@@ -257,7 +257,7 @@ int SCTPSocket::bind(const unsigned short    localPort,
 
 
    // ====== Initialize local addresses =====================================
-   for(unsigned int i = 0;i < min(NoOfLocalAddresses,(unsigned int)SCTP_MAX_NUM_ADDRESSES);i++) {
+   for(unsigned int i = 0;i < std::min(NoOfLocalAddresses,(unsigned int)SCTP_MAX_NUM_ADDRESSES);i++) {
       const InternetAddress* localAddress = dynamic_cast<const InternetAddress*>(localAddressList[i]);
       const bool isIPv6 = (localAddress != NULL) ? localAddress->isIPv6() : false;
       if(isIPv6 && (Family == AF_INET6)) {
@@ -773,7 +773,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
          if(sda->sda_flags & SCTP_ARRIVE_UNORDERED) {
             flags |= MSG_UNORDERED;
          }
-         size_t receivedBytes = min((size_t) sda->sda_bytes_arrived, (size_t) bufferSize);
+         size_t receivedBytes = std::min((size_t) sda->sda_bytes_arrived, (size_t) bufferSize);
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0)
          unsigned int pathIndex;
          const int ok = sctp_receivefrom(assocID, streamID,
@@ -892,7 +892,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
           ((notification.Content.sn_header.sn_type == SCTP_REMOTE_ERROR)     && (notificationFlags & SCTP_RECVPEERERR))   ||
           ((notification.Content.sn_header.sn_type == SCTP_SEND_FAILED)      && (notificationFlags & SCTP_RECVSENDFAILEVNT)) ||
           ((notification.Content.sn_header.sn_type == SCTP_SHUTDOWN_EVENT)   && (notificationFlags & SCTP_RECVSHUTDOWNEVNT)))) {
-         const cardinal toCopy = min((cardinal)notification.Content.sn_header.sn_length - notification.ContentPosition,(cardinal)bufferSize);
+         const cardinal toCopy = std::min((cardinal)notification.Content.sn_header.sn_length - notification.ContentPosition,(cardinal)bufferSize);
          const char* from = (char*)&notification.Content;
          memcpy(buffer,&from[notification.ContentPosition],toCopy);
          bufferSize = toCopy;

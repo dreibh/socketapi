@@ -52,7 +52,7 @@
 
 // ###### Constructor #######################################################
 RingBuffer::RingBuffer()
-   : Condition("RingBufferCondition", NULL)
+   : Condition("RingBufferCondition", NULL, true)
 {
    Buffer = NULL;
 }
@@ -115,7 +115,7 @@ ssize_t RingBuffer::write(char*        data,
    cardinal copy2 = 0;
    if(BytesStored < BufferSize) {
       if(WriteEnd >= WriteStart) {
-         copy1 = min(length, BufferSize - WriteEnd);
+         copy1 =std:: min(length, BufferSize - WriteEnd);
          memcpy(&Buffer[WriteEnd],data,copy1);
          WriteEnd += copy1;
          if(WriteEnd >= BufferSize) {
@@ -125,8 +125,7 @@ ssize_t RingBuffer::write(char*        data,
          printf("write #1: we=%d ws=%d   c1=%d\n",WriteEnd,WriteStart,copy1);
 #endif
       }
-      copy2 = min(length - copy1,
-                  WriteStart);
+      copy2 = std::min(length - copy1, WriteStart);
       if(copy2 > 0) {
          memcpy(&Buffer[WriteEnd],&data[copy1],copy2);
          WriteEnd += copy2;
@@ -161,7 +160,7 @@ ssize_t RingBuffer::read(char*        data,
    cardinal copy2 = 0;
    if(BytesStored > 0) {
       if(WriteStart >= WriteEnd) {
-         copy1 = min(length, BufferSize - WriteStart);
+         copy1 = std::min(length, BufferSize - WriteStart);
          memcpy(data,&Buffer[WriteStart],copy1);
          memset(&Buffer[WriteStart],'-',copy1);
          WriteStart += copy1;
@@ -172,7 +171,7 @@ ssize_t RingBuffer::read(char*        data,
          printf("read #1: we=%d ws=%d   c1=%d\n",WriteEnd,WriteStart,copy1);
 #endif
       }
-      copy2 = min(length - copy1, WriteEnd - WriteStart);
+      copy2 = std::min(length - copy1, WriteEnd - WriteStart);
       if(copy2 > 0) {
          memcpy(&data[copy1],&Buffer[WriteStart],copy2);
 #ifdef DEBUG

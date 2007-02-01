@@ -48,8 +48,9 @@
 
 // ###### Constructor #######################################################
 Condition::Condition(const char* name,
-                     Condition*  parentCondition)
-   : Synchronizable(name,false)
+                     Condition*  parentCondition,
+                     const bool  recursive)
+   : Synchronizable(name,recursive)
 {
    Valid = true;
    addParent(parentCondition);

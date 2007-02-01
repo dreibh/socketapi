@@ -134,15 +134,6 @@
 #endif
 
 
-// ###### Minimum/maximum ###################################################
-#ifndef max
-#define max(a, b) ((a) < (b) ? (b) : (a))
-#endif
-#ifndef min
-#define min(a, b) ((a) > (b) ? (b) : (a))
-#endif
-
-
 // ###### Type definitions ##################################################
 /**
   * Datatype for storing a signed char.

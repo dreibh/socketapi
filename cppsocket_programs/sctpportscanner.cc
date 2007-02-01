@@ -313,7 +313,7 @@ int main(int argc, char** argv)
          if(clientSocket[i] != NULL) {
             const int fd = clientSocket[i]->getSystemSocketDescriptor();
             FD_SET(fd,&readfds);
-            n = max(n,fd);
+            n = std::max(n,fd);
          }
       }
       timeval to;

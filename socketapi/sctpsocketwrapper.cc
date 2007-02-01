@@ -220,7 +220,7 @@ inline ExtSocketDescriptor* ExtSocketDescriptorMaster::getSocket(const int id)
 // ###### Set ExtSocketDescriptor of given ID ##########################################
 int ExtSocketDescriptorMaster::setSocket(const ExtSocketDescriptor& newSocket)
 {
-   for(int i = (int)(min(FD_SETSIZE, getdtablesize())) - 1;i >= 0;i--) {
+   for(int i = (int)(std::min(FD_SETSIZE, getdtablesize())) - 1;i >= 0;i--) {
       if(Sockets[i].Type == ExtSocketDescriptor::ESDT_Invalid) {
          Sockets[i] = newSocket;
          return(i);
@@ -1851,7 +1851,7 @@ int ext_connect(int sockfd, const struct sockaddr* serv_addr, socklen_t addrlen)
    if(tdSocket != NULL) {
       if(tdSocket->Type == ExtSocketDescriptor::ESDT_SCTP) {
          struct sockaddr_storage addressArray[1];
-         memcpy((char*)&addressArray[0], serv_addr, min(sizeof(sockaddr_storage), (size_t)addrlen));
+         memcpy((char*)&addressArray[0], serv_addr, std::min(sizeof(sockaddr_storage), (size_t)addrlen));
          return(ext_connectx(sockfd, (const sockaddr*)&addressArray, 1));
       }
       else {
@@ -2645,13 +2645,13 @@ static int select_wrapper(int             n,
    FD_ZERO(&e);
    int maxFD = 0;
    int reverseMapping[ExtSocketDescriptorMaster::MaxSockets];
-   for(unsigned int i = 0;i < min((const unsigned int)n,(const unsigned int)FD_SETSIZE);i++) {
+   for(unsigned int i = 0;i < std::min((const unsigned int)n,(const unsigned int)FD_SETSIZE);i++) {
       if(SAFE_FD_ISSET(i,readfds) || SAFE_FD_ISSET(i,writefds) || SAFE_FD_ISSET(i,exceptfds)) {
          ExtSocketDescriptor* socket = ExtSocketDescriptorMaster::getSocket(i);
          if(socket != NULL) {
             if(socket->Type == ExtSocketDescriptor::ESDT_System) {
                const int fd = socket->Socket.SystemSocketID;
-               maxFD = max(maxFD,fd);
+               maxFD = std::max(maxFD,fd);
 
                if(SAFE_FD_ISSET(i,readfds)) {
                   FD_SET(fd,&r);
@@ -2779,7 +2779,7 @@ int ext_select(int             n,
    selectData.ExceptCondition.addParent(&selectData.GlobalCondition);
 
    int result = 0;
-   for(int i = 0;i < min((const int)n,FD_SETSIZE);i++) {
+   for(int i = 0;i < std::min((const int)n,FD_SETSIZE);i++) {
       short int eventMask = 0;
       if(SAFE_FD_ISSET(i,readfds)) {
          eventMask |= POLLIN|POLLPRI;
@@ -2972,7 +2972,7 @@ int ext_poll(struct pollfd* fdlist, long unsigned int count, int time)
             FD_SET(fdlist[i].fd,&writefdset);
          }
          FD_SET(fdlist[i].fd,&exceptfdset);
-         n = max(n, fdlist[i].fd);
+         n = std::max(n, fdlist[i].fd);
          fdcount++;
       }
       else {

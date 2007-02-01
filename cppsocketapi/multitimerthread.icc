@@ -141,7 +141,7 @@ template<const cardinal Timers> void MultiTimerThread<Timers>::run()
       nextTimeStamp = now + UpdateResolution;
       for(cardinal i = 0;i < Timers;i++) {
          if(parameters[i].Running == true) {
-            nextTimeStamp = min(nextTimeStamp,next[i]);
+            nextTimeStamp = std::min(nextTimeStamp,next[i]);
          }
       }
 

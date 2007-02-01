@@ -1159,11 +1159,11 @@ bool SCTPSocketMaster::initNotification(SCTPNotification& notification,
    if(sctp_getAssocStatus(assocID,&status) == 0) {
       notification.RemotePort      = status.destPort;
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
-      notification.RemoteAddresses = min((unsigned short)SCTP_MAX_NUM_ADDRESSES,
-                                         status.numberOfAddresses);
+      notification.RemoteAddresses = std::min((unsigned short)SCTP_MAX_NUM_ADDRESSES,
+                                              status.numberOfAddresses);
 #elif (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE20) || (SCTPLIB_VERSION == SCTPLIB_1_3_0)
-      notification.RemoteAddresses = min((unsigned short)SCTP_MAX_NUM_ADDRESSES,
-                                         status.numberOfDestinationPaths);
+      notification.RemoteAddresses = std::min((unsigned short)SCTP_MAX_NUM_ADDRESSES,
+                                              status.numberOfDestinationPaths);
 #else
 #error Wrong sctplib version!
 #endif

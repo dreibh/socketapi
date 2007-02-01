@@ -158,7 +158,7 @@ String String::toUpper() const
 // ###### Get left part of string ###########################################
 String String::left(const cardinal maxChars) const
 {
-   const cardinal len = min(length(),maxChars);
+   const cardinal len = std::min(length(),maxChars);
    char buffer[len + 1];
 
    cardinal i;
@@ -178,7 +178,7 @@ String String::mid(const cardinal start, const cardinal maxChars) const
       return("");
    }
 
-   const cardinal len = min(strlen - start,maxChars);
+   const cardinal len = std::min(strlen - start,maxChars);
    char buffer[len + 1];
 
    cardinal i;
@@ -194,7 +194,7 @@ String String::mid(const cardinal start, const cardinal maxChars) const
 String String::right(const cardinal maxChars) const
 {
    const cardinal strlen = length();
-   const cardinal len    = min(strlen,maxChars);
+   const cardinal len    = std::min(strlen,maxChars);
    char buffer[len + 1];
 
    cardinal i,j;

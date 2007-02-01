@@ -936,7 +936,7 @@ int main(int argc, char** argv)
          exit(1);
       }
    }
-   unreliable = min(maxOutgoing,unreliable);
+   unreliable = std::min(maxOutgoing,unreliable);
 
 
    // ====== Print information ==============================================

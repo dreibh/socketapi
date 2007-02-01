@@ -63,7 +63,8 @@ class Condition : public Synchronizable
      * @param recursive true to make condition's mutex recursive; false otherwise (default for Condition!).
      */
    Condition(const char* name            = "Condition",
-             Condition*  parentCondition = NULL);
+             Condition*  parentCondition = NULL,
+             const bool  recursive       = true);
 
    /**
      * Destructor.

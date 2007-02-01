@@ -482,7 +482,7 @@ int main(int argc, char** argv)
    for(cardinal i = 1;i < remoteAddresses;i++) {
       remoteAddressArray[i]->setPort(remoteAddressArray[0]->getPort());
    }
-   unreliable = min(outstreams,unreliable);
+   unreliable = std::min(outstreams,unreliable);
 
 
    // ====== Print information ==============================================
