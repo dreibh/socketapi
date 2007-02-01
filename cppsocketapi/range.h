@@ -1,5 +1,5 @@
 /*
- *  $Id: range.h,v 1.2 2003/08/19 19:24:25 tuexen Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -63,7 +63,7 @@ template<class T> class Range
    /**
      * Default constructor.
      */
-   Range();   
+   Range();
 
    /**
      * Create new range with given parameters.
@@ -74,7 +74,7 @@ template<class T> class Range
      */
    Range(const T min, const T max, const T value);
 
-   
+
    // ====== Initialization =================================================
    /**
      * Initialize range with given parameters.
@@ -85,27 +85,27 @@ template<class T> class Range
      */
    void init(const T min, const T max, const T value);
 
-      
+
    // ====== Range functions ================================================
    /**
      * Get minimum.
      *
      * @return Minimum.
-     */     
+     */
    inline T getMin()   const;
 
    /**
      * Get maximum.
      *
      * @return Maximum.
-     */     
+     */
    inline T getMax()   const;
 
    /**
      * Get value.
      *
      * @return Value.
-     */     
+     */
    inline T getValue() const;
 
    /**
@@ -121,10 +121,10 @@ template<class T> class Range
      *
      * @param value Value.
      */
-   inline void setValue(const T value);   
+   inline void setValue(const T value);
 
 
-   // ====== "="-operator ===================================================   
+   // ====== "="-operator ===================================================
    /**
      * Implementation of = operator
      */
@@ -154,7 +154,7 @@ template<class T> class Range
 /**
   * << operator.
   */
-template<class T> ostream& operator<<(ostream& os, const Range<T>& range);
+template<class T> std::ostream& operator<<(std::ostream& os, const Range<T>& range);
 
 
 #include "range.icc"

@@ -1,5 +1,5 @@
 /*
- *  $Id: range.cc,v 1.2 2003/08/19 19:24:25 tuexen Exp $
+ *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Thomas Dreibholz
@@ -77,8 +77,8 @@ template<class T> void Range<T>::init(T min, T max, T value)
 
 
 // ###### Output operator ###################################################
-template<class T> ostream& operator<<(ostream& os, const Range<T>& range)
+template<class T> std::ostream& operator<<(std::ostream& os, const Range<T>& range)
 {
-   cout << range.Min << " <= " << range.Value << " <= " << range.Max;
+   std::cout << range.Min << " <= " << range.Value << " <= " << range.Max;
    return(os);
 }
