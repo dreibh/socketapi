@@ -82,7 +82,7 @@ String::String(const char* string, const cardinal length)
 String::String(const cardinal value)
 {
    char string[64];
-   snprintf((char*)&string,sizeof(string),"%Ld",(card64)value);
+   snprintf((char*)&string,sizeof(string),"%llu",(unsigned long long int)value);
    setData(stringDuplicate((char*)&string));
 }
 

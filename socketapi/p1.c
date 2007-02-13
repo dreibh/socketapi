@@ -260,7 +260,8 @@ int main(int argc, char **argv)
 	if (ext_bind(fd, (struct sockaddr *) &local_addr, sizeof(local_addr)) != 0)
 		perror("bind");
 		
-    if (ext_listen(fd, 1) != 0)	   perror("listen");
+    if (ext_listen(fd, 1) != 0)
+	   perror("listen");
 	   
     /* Initialize remote address using the command line options */
 	remote_addr.sin_family      = AF_INET;

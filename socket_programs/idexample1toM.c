@@ -193,7 +193,7 @@ echo(int fd, int socketModeone_to_many)
     msg->msg_iov = iov;
     msg->msg_iovlen = 1;
 
-    printf("got %u bytes on stream %hu:\n", nr, sri->sinfo_stream);
+    printf("got %u bytes on stream %hu:\n", (unsigned int)nr, sri->sinfo_stream);
     write(0, buf, nr);
 
     /* Echo it back */

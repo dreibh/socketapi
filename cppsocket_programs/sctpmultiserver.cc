@@ -362,7 +362,7 @@ void CharGenServer::run()
 
    for(;;) {
       // ====== Generate string =============================================
-      snprintf((char*)&dataBuffer,256,"#%08Ld: ",line++);
+      snprintf((char*)&dataBuffer,256,"#%08llu: ",(unsigned long long)line++);
       integer i,j;
       j = strlen(dataBuffer);
       for(i = 30;i < 128;i++) {

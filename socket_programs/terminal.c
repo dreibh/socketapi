@@ -204,7 +204,7 @@ int main(int argc, char** argv)
    unsigned int                inStreams  = 128;
    unsigned int                outStreams = 128;
    unsigned int                color;
-   size_t                      position;
+   int                         position;
    unsigned int                streamID;
    uint32_t                    ppid;
 

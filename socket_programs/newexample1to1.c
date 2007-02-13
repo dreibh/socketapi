@@ -141,7 +141,7 @@ static void echo(int fd, int socketModeUDP)
          handle_event(buf);
       }
       else {
-         printf("got %u bytes on stream %hu:\n", received, sri.sinfo_stream);
+         printf("got %u bytes on stream %hu:\n", (unsigned int)received, sri.sinfo_stream);
          fflush(stdout);
          write(0, buf, received);
 
