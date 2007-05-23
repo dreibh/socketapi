@@ -251,27 +251,6 @@ class InternetAddress : virtual public SocketAddress
    inline bool isLoopback() const;
 
    /**
-     * Check, if internet address is class A IPv4-compatible or IPv4-mapped.
-     *
-     * @return true or false.
-     */
-   inline bool isClassA() const;
-
-   /**
-     * Check, if internet address is class B IPv4-compatible or IPv4-mapped.
-     *
-     * @return true or false.
-     */
-   inline bool isClassB() const;
-
-   /**
-     * Check, if internet address is class C IPv4-compatible or IPv4-mapped.
-     *
-     * @return true or false.
-     */
-   inline bool isClassC() const;
-
-   /**
      * Check, if internet address is link local (IPv6) or 127.x.y.z (IPv4).
      *
      * @return true or false.
@@ -543,7 +522,11 @@ class InternetAddress : virtual public SocketAddress
      * Host address in network byte order. IPv4 addresses are converted to
      * IPv4-mapped IPv6 addresses.
      */
-   card16 Host[8];
+   union {
+      card16   Host16[8];
+      card32   Host32[4];
+      in6_addr Address;
+   } AddrSpec;
 
    /**
      * Port number.

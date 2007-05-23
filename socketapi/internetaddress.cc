@@ -152,7 +152,7 @@ InternetAddress::InternetAddress(const String& hostName,
 InternetAddress::InternetAddress(const PortableAddress& address)
 {
    for(cardinal i = 0;i < 8;i++) {
-      Host[i] = address.Host[i];
+      AddrSpec.Host16[i] = address.Host[i];
    }
    Port  = address.Port;
    Valid = true;
@@ -199,7 +199,7 @@ void InternetAddress::setPort(const card16 port)
 void InternetAddress::reset()
 {
    for(cardinal i = 0;i < 8;i++) {
-      Host[i] = 0x0000;
+      AddrSpec.Host16[i] = 0x0000;
    }
    Valid = true;
    setPort(0);
@@ -236,7 +236,7 @@ void InternetAddress::init(const InternetAddress& address)
 {
    Port = address.Port;
    for(cardinal i = 0;i < 8;i++) {
-      Host[i] = address.Host[i];
+      AddrSpec.Host16[i] = address.AddrSpec.Host16[i];
    }
    Valid = address.Valid;
    setPrintFormat(address.getPrintFormat());
@@ -247,7 +247,7 @@ void InternetAddress::init(const InternetAddress& address)
 void InternetAddress::init(const card16 port)
 {
    for(cardinal i = 0;i < 8;i++) {
-      Host[i] = 0x0000;
+      AddrSpec.Host16[i] = 0x0000;
    }
    Valid = true;
    setPort(port);
@@ -267,13 +267,13 @@ void InternetAddress::init(const String& hostName, const card16 port)
    switch(length) {
       case 4:
           for(cardinal i = 0;i < 5;i++) {
-             Host[i] = 0x0000;
+             AddrSpec.Host16[i] = 0x0000;
           }
-          Host[5] = 0xffff;
-          memcpy((char*)&Host[6],&address,4);
+          AddrSpec.Host16[5] = 0xffff;
+          memcpy((char*)&AddrSpec.Host16[6],&address,4);
         break;
       case 16:
-         memcpy((char*)&Host,&address,16);
+         memcpy((char*)&AddrSpec.Host16,&address,16);
        break;
       default:
         reset();
@@ -287,7 +287,7 @@ void InternetAddress::init(const String& hostName, const card16 port)
 void InternetAddress::init(const PortableAddress& address)
 {
    for(cardinal i = 0;i < 8;i++) {
-      Host[i] = address.Host[i];
+      AddrSpec.Host16[i] = address.Host[i];
    }
    Port  = address.Port;
    Valid = true;
@@ -394,14 +394,14 @@ String InternetAddress::getAddressString(const cardinal format) const
          // ====== Print IPv6 hex notation ==================================
          const cardinal l0 = strlen(addressString);
          for(cardinal i = 0;i < (cardinal)length;i++) {
-            card16 value = ntohs(Host[i]);
+            card16 value = ntohs(AddrSpec.Host16[i]);
             if((value != 0) || (compressed == true) || (i == 7)) {
                snprintf((char*)&str,sizeof(str),"%x",value);
             }
             else {
                cardinal j;
                for(j = i + 1;j < 8;j++) {
-                  if(Host[j] != 0) {
+                  if(AddrSpec.Host16[j] != 0) {
                      break;
                   }
                }
@@ -430,7 +430,7 @@ String InternetAddress::getAddressString(const cardinal format) const
 
          // ====== Print embedded IPv4 address in IPv4 notation =============
          if(length == 6) {
-            card32 a = ntohl(*((card32*)&Host[6]));
+            card32 a = ntohl(AddrSpec.Host32[3]);
             snprintf((char*)&str,sizeof(str),
                      "%d.%d.%d.%d",(a & 0xff000000) >> 24,
                                    (a & 0x00ff0000) >> 16,
@@ -446,7 +446,7 @@ String InternetAddress::getAddressString(const cardinal format) const
          }
       }
       else {
-         card32 a = ntohl(*((card32*)&Host[6]));
+         card32 a = ntohl(AddrSpec.Host32[3]);
          if(!(format & PF_HidePort)) {
             snprintf((char*)&addressString,sizeof(addressString),
                      "%d.%d.%d.%d:%d",(a & 0xff000000) >> 24,
@@ -489,11 +489,11 @@ cardinal InternetAddress::getSystemAddress(sockaddr*       buffer,
             address->sin6_flowinfo = 0;
             address->sin6_port     = Port;
 #if (SYSTEM == OS_Linux)
-            memcpy((char*)&address->sin6_addr.s6_addr16[0],(char*)&Host,16);
+            memcpy((char*)&address->sin6_addr.s6_addr16[0],(char*)&AddrSpec.Host16,16);
 #elif (SYSTEM == OS_SOLARIS)
-            memcpy((char*)&address->sin6_addr._S6_un._S6_u8[0],(char*)&Host,16);
+            memcpy((char*)&address->sin6_addr._S6_un._S6_u8[0],(char*)&AddrSpec.Host16,16);
 #else
-            memcpy((char*)&address->sin6_addr.__u6_addr.__u6_addr16[0],(char*)&Host,16);
+            memcpy((char*)&address->sin6_addr.__u6_addr.__u6_addr16[0],(char*)&AddrSpec.Host16,16);
 #endif
             return(sizeof(sockaddr_in6));
          }
@@ -511,7 +511,7 @@ cardinal InternetAddress::getSystemAddress(sockaddr*       buffer,
             address->sin_family = AF_INET;
             if(isIPv4()) {
                address->sin_port = Port;
-               memcpy((char*)&address->sin_addr.s_addr,(char*)&Host[6],4);
+               memcpy((char*)&address->sin_addr.s_addr,(char*)&AddrSpec.Host16[6],4);
                return(sizeof(sockaddr_in));
             }
          }
@@ -543,21 +543,21 @@ bool InternetAddress::setSystemAddress(sockaddr* address, const socklen_t length
    switch(address4->sin_family) {
       case AF_INET:
          for(cardinal i = 0;i < 5;i++) {
-            Host[i] = 0x0000;
+            AddrSpec.Host16[i] = 0x0000;
          }
-         Host[5] = 0xffff;
-         memcpy((char*)&Host[6],(char*)&address4->sin_addr.s_addr,4);
+         AddrSpec.Host16[5] = 0xffff;
+         memcpy((char*)&AddrSpec.Host16[6],(char*)&address4->sin_addr.s_addr,4);
          Valid = true;
          return(true);
        break;
       case AF_INET6: {
          sockaddr_in6* address6 = (sockaddr_in6*)address;
 #if (SYSTEM == OS_Linux)
-         memcpy((char*)&Host,(char*)&address6->sin6_addr.s6_addr16[0],16);
+         memcpy((char*)&AddrSpec.Host16,(char*)&address6->sin6_addr.s6_addr16[0],16);
 #elif (SYSTEM == OS_SOLARIS)
-         memcpy((char*)&Host,(char*)&address6->sin6_addr._S6_un._S6_u8[0],16);
+         memcpy((char*)&AddrSpec.Host16,(char*)&address6->sin6_addr._S6_un._S6_u8[0],16);
 #else
-         memcpy((char*)&Host,(char*)&address6->sin6_addr.__u6_addr.__u6_addr8[0],16);
+         memcpy((char*)&AddrSpec.Host16,(char*)&address6->sin6_addr.__u6_addr.__u6_addr8[0],16);
 #endif
          Valid = true;
          return(true);

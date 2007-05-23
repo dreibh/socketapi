@@ -53,8 +53,8 @@ inline bool InternetAddress::hasIPv6()
 inline bool InternetAddress::isNull() const
 {
    for(cardinal i = 0;i < 8;i++) {
-      if(Host[i] != 0x0000) {
-         if(!((i == 5) && (Host[i] == 0xffff))) {
+      if(AddrSpec.Host16[i] != 0x0000) {
+         if(!((i == 5) && (AddrSpec.Host16[i] == 0xffff))) {
             return(false);
          }
       }
@@ -66,21 +66,21 @@ inline bool InternetAddress::isNull() const
 // ###### Check, if address is IPv6 (not IPv4-mapped) #######################
 inline bool InternetAddress::isIPv6() const
 {
-   return(!IN6_IS_ADDR_V4MAPPED((in6_addr*)&Host));
+   return(!IN6_IS_ADDR_V4MAPPED(&AddrSpec.Address));
 }
 
 
 // ###### Check, if address is IPv4 or IPv4-mapped ##########################
 inline bool InternetAddress::isIPv4() const
 {
-   return(IN6_IS_ADDR_V4MAPPED((in6_addr*)&Host) || IN6_IS_ADDR_UNSPECIFIED((in6_addr*)&Host));
+   return(IN6_IS_ADDR_V4MAPPED(&AddrSpec.Address) || IN6_IS_ADDR_UNSPECIFIED(&AddrSpec.Address));
 }
 
 
 // ###### Check, if address is IPv4-compatible IPv6 address #################
 inline bool InternetAddress::isIPv4compatible() const
 {
-   return(IN6_IS_ADDR_V4COMPAT((in6_addr*)&Host));
+   return(IN6_IS_ADDR_V4COMPAT(&AddrSpec.Address));
 }
 
 
@@ -88,9 +88,9 @@ inline bool InternetAddress::isIPv4compatible() const
 inline bool InternetAddress::isLoopback() const
 {
    if(isIPv6()) {
-      return(IN6_IS_ADDR_LOOPBACK((in6_addr*)&Host));
+      return(IN6_IS_ADDR_LOOPBACK(&AddrSpec.Address));
    }
-   const card8 a = (card8)(ntohs(Host[6]) >> 8);
+   const card8 a = (card8)(ntohs(AddrSpec.Host16[6]) >> 8);
    return(a == IN_LOOPBACKNET);
 }
 
@@ -99,8 +99,8 @@ inline bool InternetAddress::isLoopback() const
 inline bool InternetAddress::isUnspecified() const
 {
    for(cardinal i = 0;i < 8;i++) {
-      if((in6_addr*)&Host[i] != 0x0000) {
-         if(!((i == 5) && (Host[i] == 0xffff))) {
+      if(&AddrSpec.Host16[i] != 0x0000) {
+         if(!((i == 5) && (AddrSpec.Host16[i] == 0xffff))) {
             return(false);
          }
       }
@@ -109,43 +109,13 @@ inline bool InternetAddress::isUnspecified() const
 }
 
 
-// ###### Check, if address is IPv4 or IPv4-mapped class A ##################
-inline bool InternetAddress::isClassA() const
-{
-   if(IN6_IS_ADDR_V4MAPPED((in6_addr*)&Host) || IN6_IS_ADDR_V4COMPAT((in6_addr*)&Host)) {
-      return(IN_CLASSA(ntohl(*((card32*)&Host[6]))));
-   }
-   return(false);
-}
-
-
-// ###### Check, if address is IPv4 or IPv4-mapped class B ##################
-inline bool InternetAddress::isClassB() const
-{
-   if(IN6_IS_ADDR_V4MAPPED((in6_addr*)&Host) || IN6_IS_ADDR_V4COMPAT((in6_addr*)&Host)) {
-      return(IN_CLASSB(ntohl(*((card32*)&Host[6]))));
-   }
-   return(false);
-}
-
-
-// ###### Check, if address is IPv4 or IPv4-mapped class C ##################
-inline bool InternetAddress::isClassC() const
-{
-   if(IN6_IS_ADDR_V4MAPPED((in6_addr*)&Host) || IN6_IS_ADDR_V4COMPAT((in6_addr*)&Host)) {
-      return(IN_CLASSC(ntohl(*((card32*)&Host[6]))));
-   }
-   return(false);
-}
-
-
 // ###### Check, if address is multicast ####################################
 inline bool InternetAddress::isMulticast() const
 {
    if(isIPv6()) {
-      return(IN6_IS_ADDR_MULTICAST((in6_addr*)&Host));
+      return(IN6_IS_ADDR_MULTICAST(&AddrSpec.Address));
    }
-   return(IN_MULTICAST(ntohl(*((card32*)&Host[6]))));
+   return(IN_MULTICAST(ntohl(AddrSpec.Host32[3])));
 }
 
 
@@ -160,13 +130,12 @@ inline bool InternetAddress::isUnicast() const
 inline bool InternetAddress::isBroadcast() const
 {
    if(isIPv6()) {
-      const card32* address = (card32*)&Host[0];
-      return( ((address[0] == 0xffffffff) &&
-               (address[1] == 0xffffffff) &&
-               (address[2] == 0xffffffff) &&
-               (address[3] == 0xffffffff)) );
+      return( ((AddrSpec.Host32[0] == 0xffffffff) &&
+               (AddrSpec.Host32[1] == 0xffffffff) &&
+               (AddrSpec.Host32[2] == 0xffffffff) &&
+               (AddrSpec.Host32[3] == 0xffffffff)) );
    }
-   return(ntohl(*((card32*)&Host[6])) == INADDR_BROADCAST);
+   return(ntohl(AddrSpec.Host32[3]) == INADDR_BROADCAST);
 }
 
 
@@ -177,8 +146,8 @@ inline bool InternetAddress::isReserved() const
       // This sould be extended...
       return(false);
    }
-   return( IN_BADCLASS(ntohl(*((card32*)&Host[6]))) ||
-           IN_EXPERIMENTAL(ntohl(*((card32*)&Host[6]))) );
+   return( IN_BADCLASS(ntohl(AddrSpec.Host32[3])) ||
+           IN_EXPERIMENTAL(ntohl(AddrSpec.Host32[3])) );
 }
 
 
@@ -186,9 +155,9 @@ inline bool InternetAddress::isReserved() const
 inline bool InternetAddress::isLinkLocal() const
 {
    if(isIPv6()) {
-      return(IN6_IS_ADDR_LINKLOCAL((in6_addr*)&Host));
+      return(IN6_IS_ADDR_LINKLOCAL(&AddrSpec.Address));
    }
-   return((ntohs(Host[6]) >> 8) == IN_LOOPBACKNET);
+   return((ntohs(AddrSpec.Host16[6]) >> 8) == IN_LOOPBACKNET);
 }
 
 
@@ -196,14 +165,14 @@ inline bool InternetAddress::isLinkLocal() const
 inline bool InternetAddress::isSiteLocal() const
 {
    if(isIPv6()) {
-      return(IN6_IS_ADDR_SITELOCAL((in6_addr*)&Host));
+      return(IN6_IS_ADDR_SITELOCAL(&AddrSpec.Address));
    }
 
-   const card8 a = (card8)(ntohs(Host[6]) >> 8);
+   const card8 a = (card8)(ntohs(AddrSpec.Host16[6]) >> 8);
    if((a == IN_LOOPBACKNET) || (a == 10)) {
       return(true);
    }
-   const card8 b = (card8)(ntohs(Host[6]) & 0x00ff);
+   const card8 b = (card8)(ntohs(AddrSpec.Host16[6]) & 0x00ff);
    if((a == 192) && (b == 168)) {
       return(true);
    }
@@ -227,7 +196,7 @@ inline bool InternetAddress::isGlobal() const
 inline bool InternetAddress::isNodeLocalMulticast() const
 {
    if(isIPv6()) {
-      return(IN6_IS_ADDR_MC_NODELOCAL((in6_addr*)&Host));
+      return(IN6_IS_ADDR_MC_NODELOCAL(&AddrSpec.Address));
    }
    return(false);
 }
@@ -237,11 +206,11 @@ inline bool InternetAddress::isNodeLocalMulticast() const
 inline bool InternetAddress::isLinkLocalMulticast() const
 {
    if(isIPv6()) {
-      return(IN6_IS_ADDR_MC_LINKLOCAL((in6_addr*)&Host));
+      return(IN6_IS_ADDR_MC_LINKLOCAL(&AddrSpec.Address));
    }
-   if(IN_MULTICAST(ntohl(*((card32*)&Host[6])))) {
-      return( ((ntohl(*((card32*)&Host[6]))) & INADDR_MAX_LOCAL_GROUP) ==
-               (ntohl(*((card32*)&Host[6]))) );
+   if(IN_MULTICAST(ntohl(AddrSpec.Host32[3]))) {
+      return( ((ntohl(AddrSpec.Host32[3])) & INADDR_MAX_LOCAL_GROUP) ==
+               (ntohl(AddrSpec.Host32[3])) );
    }
    return(false);
 }
@@ -251,7 +220,7 @@ inline bool InternetAddress::isLinkLocalMulticast() const
 inline bool InternetAddress::isSiteLocalMulticast() const
 {
    if(isIPv6()) {
-      return(IN6_IS_ADDR_MC_SITELOCAL((in6_addr*)&Host));
+      return(IN6_IS_ADDR_MC_SITELOCAL(&AddrSpec.Address));
    }
    return(false);
 }
@@ -261,7 +230,7 @@ inline bool InternetAddress::isSiteLocalMulticast() const
 inline bool InternetAddress::isOrgLocalMulticast() const
 {
    if(isIPv6()) {
-      return(IN6_IS_ADDR_MC_ORGLOCAL((in6_addr*)&Host));
+      return(IN6_IS_ADDR_MC_ORGLOCAL(&AddrSpec.Address));
    }
    return(false);
 }
@@ -271,7 +240,7 @@ inline bool InternetAddress::isOrgLocalMulticast() const
 inline bool InternetAddress::isGlobalMulticast() const
 {
    if(isIPv6()) {
-      return(IN6_IS_ADDR_MC_GLOBAL((in6_addr*)&Host));
+      return(IN6_IS_ADDR_MC_GLOBAL(&AddrSpec.Address));
    }
    return(false);
 }
@@ -280,14 +249,14 @@ inline bool InternetAddress::isGlobalMulticast() const
 // ###### Operator == #######################################################
 inline int InternetAddress::operator==(const InternetAddress& address) const
 {
-   return(IN6_ARE_ADDR_EQUAL((in6_addr*)&Host,(in6_addr*)&address.Host));
+   return(IN6_ARE_ADDR_EQUAL(&AddrSpec.Address,&address.AddrSpec.Address));
 }
 
 
 // ###### Operator != #######################################################
 inline int InternetAddress::operator!=(const InternetAddress& address) const
 {
-   return(!IN6_ARE_ADDR_EQUAL((in6_addr*)&Host,(in6_addr*)&address.Host));
+   return(!IN6_ARE_ADDR_EQUAL(&AddrSpec.Address,&address.AddrSpec.Address));
 }
 
 
@@ -295,10 +264,10 @@ inline int InternetAddress::operator!=(const InternetAddress& address) const
 inline int InternetAddress::operator<(const InternetAddress& address) const
 {
    for(cardinal i = 0;i < 8;i++) {
-      if(ntohs(Host[i]) < ntohs(address.Host[i])) {
+      if(ntohs(AddrSpec.Host16[i]) < ntohs(address.AddrSpec.Host16[i])) {
          return(true);
       }
-      else if(ntohs(Host[i]) > ntohs(address.Host[i])) {
+      else if(ntohs(AddrSpec.Host16[i]) > ntohs(address.AddrSpec.Host16[i])) {
          return(false);
       }
    }
@@ -310,10 +279,10 @@ inline int InternetAddress::operator<(const InternetAddress& address) const
 inline int InternetAddress::operator>(const InternetAddress& address) const
 {
    for(cardinal i = 0;i < 8;i++) {
-      if(ntohs(Host[i]) > ntohs(address.Host[i])) {
+      if(ntohs(AddrSpec.Host16[i]) > ntohs(address.AddrSpec.Host16[i])) {
          return(true);
       }
-      else if(ntohs(Host[i]) < ntohs(address.Host[i])) {
+      else if(ntohs(AddrSpec.Host16[i]) < ntohs(address.AddrSpec.Host16[i])) {
          return(false);
       }
    }
@@ -348,7 +317,7 @@ inline PortableAddress InternetAddress::getPortableAddress() const
 {
    PortableAddress pa;
    for(cardinal i = 0;i < 8;i++) {
-      pa.Host[i] = Host[i];
+      pa.Host[i] = AddrSpec.Host16[i];
    }
    pa.Port = Port;
    return(pa);
