@@ -394,7 +394,7 @@ String InternetAddress::getAddressString(const cardinal format) const
          // ====== Print IPv6 hex notation ==================================
          const cardinal l0 = strlen(addressString);
          for(cardinal i = 0;i < (cardinal)length;i++) {
-            card16 value = ntohs(AddrSpec.Host16[i]);
+            const card16 value = ntohs(AddrSpec.Host16[i]);
             if((value != 0) || (compressed == true) || (i == 7)) {
                snprintf((char*)&str,sizeof(str),"%x",value);
             }

@@ -2,7 +2,6 @@ lib_LTLIBRARIES = libsctpsocket.la
 
 libsctpsocketincludedir      = $(prefix)/include
 libsctpsocketinclude_HEADERS = ext_socket.h
-libsctpsocket_la_CXXFLAGS = @sctplib_CXXFLAGS@
 libsctpsocket_la_SOURCES = thread.cc tdstrings.cc synchronizable.cc \
                            sctpsocketwrapper.cc sctpsocketmaster.cc sctpsocket.cc \
                            sctpnotificationqueue.cc sctpassociation.cc randomizer.cc \

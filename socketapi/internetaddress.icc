@@ -130,10 +130,7 @@ inline bool InternetAddress::isUnicast() const
 inline bool InternetAddress::isBroadcast() const
 {
    if(isIPv6()) {
-      return( ((AddrSpec.Host32[0] == 0xffffffff) &&
-               (AddrSpec.Host32[1] == 0xffffffff) &&
-               (AddrSpec.Host32[2] == 0xffffffff) &&
-               (AddrSpec.Host32[3] == 0xffffffff)) );
+      return(false);
    }
    return(ntohl(AddrSpec.Host32[3]) == INADDR_BROADCAST);
 }
