@@ -296,8 +296,8 @@ int main(int argc, char** argv)
 
                /* ====== Send data to server ============================= */
                sent = sctp_send(sd,
-                               (const char*)&buffer[position], strlen((const char*)&buffer[position]),
-                               &sinfo, 0);
+                                (const char*)&buffer[position], strlen((const char*)&buffer[position]),
+                                &sinfo, 0);
                if(sent < 0) {
                   perror("sctp_send() failed");
                }
