@@ -379,6 +379,13 @@ static int setPathStatus(ExtSocketDescriptor*    tdSocket,
 }
 
 
+// ###### Get version #######################################################
+unsigned int socketAPIGetVersion()
+{
+   return((SOCKETAPI_MAJOR_VERSION << 16) | SOCKETAPI_MINOR_VERSION);
+}
+
+
 // ###### socket() wrapper ##################################################
 int ext_socket(int domain, int type, int protocol)
 {
