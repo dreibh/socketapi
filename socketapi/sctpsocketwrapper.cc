@@ -1292,7 +1292,7 @@ int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* 
                          case SCTP_RTOINFO:
                             return(getRTOInfo(tdSocket,optval,optlen));
                           break;
-                         case SCTP_DELAYED_ACK_TIME:
+                         case SCTP_DELAYED_SACK:
                             return(getDelayedAckTime(tdSocket,optval,optlen));
                           break;
                          case SCTP_ASSOCINFO:
@@ -1737,7 +1737,7 @@ int ext_setsockopt(int sockfd, int level, int optname, const void* optval, sockl
                          case SCTP_RTOINFO:
                             return(setRTOInfo(tdSocket,optval,optlen));
                           break;
-                         case SCTP_DELAYED_ACK_TIME:
+                         case SCTP_DELAYED_SACK:
                             return(setDelayedAckTime(tdSocket,optval,optlen));
                           break;
                          case SCTP_ASSOCINFO:
@@ -1859,7 +1859,7 @@ int ext_connect(int sockfd, const struct sockaddr* serv_addr, socklen_t addrlen)
       if(tdSocket->Type == ExtSocketDescriptor::ESDT_SCTP) {
          struct sockaddr_storage addressArray[1];
          memcpy((char*)&addressArray[0], serv_addr, std::min(sizeof(sockaddr_storage), (size_t)addrlen));
-         return(ext_connectx(sockfd, (const sockaddr*)&addressArray, 1));
+         return(ext_connectx(sockfd, (const sockaddr*)&addressArray, 1, NULL));
       }
       else {
          return(connect(tdSocket->Socket.SystemSocketID, serv_addr, addrlen));
@@ -1872,8 +1872,10 @@ int ext_connect(int sockfd, const struct sockaddr* serv_addr, socklen_t addrlen)
 // ###### connectx() wrapper ################################################
 int ext_connectx(int                    sockfd,
                  const struct sockaddr* packedAddrs,
-                 int                    addrcnt)
+                 int                    addrcnt,
+                 sctp_assoc_t*          id)
 {
+   unsigned int     dummy;
    sockaddr_storage addrs[addrcnt];
    unpack_sockaddr(packedAddrs, addrcnt, addrs);
 
@@ -1890,6 +1892,11 @@ int ext_connectx(int                    sockfd,
                   errno_return(-EOPNOTSUPP);
                }
 #endif
+               if(id == NULL) {
+                  id = &dummy;
+               }
+               *id = 0;
+
                bindToAny(tdSocket);
                if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
                   const SocketAddress* addressArray[addrcnt + 1];
@@ -1923,12 +1930,16 @@ int ext_connectx(int                    sockfd,
                      else if(tdSocket->Socket.SCTPSocketDesc.Flags & O_NONBLOCK) {
                         errno_return(-EINPROGRESS);
                      }
+                     if(id) {
+                        *id = tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->getID();
+printf("ID=%u\n", *id);
+                     }
                   }
                   else {
                      int result = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->sendTo(
                                      NULL, 0,
                                      (tdSocket->Socket.SCTPSocketDesc.Flags & O_NONBLOCK) ? MSG_DONTWAIT : 0,
-                                     0, 0x0000, 0x00000000, SCTP_INFINITE_LIFETIME,
+                                     *id, 0x0000, 0x00000000, SCTP_INFINITE_LIFETIME,
                                      tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_attempts,
                                      tdSocket->Socket.SCTPSocketDesc.InitMsg.sinit_max_init_timeo,
                                      true,
@@ -2346,11 +2357,12 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                         }
                         destinationAddressList[i++] = NULL;
                      }
+                     unsigned int idZero = 0;
                      result = tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->sendTo(
                                  (char*)msg->msg_iov->iov_base,
                                  msg->msg_iov->iov_len,
                                  flags,
-                                 (info != NULL) ? info->sinfo_assoc_id : 0,
+                                 (info != NULL) ? info->sinfo_assoc_id : idZero,
                                  (info != NULL) ? info->sinfo_stream   : 0x0000,
                                  (info != NULL) ? info->sinfo_ppid     : 0x00000000,
                                  ((info != NULL) && (info->sinfo_flags & MSG_PR_SCTP_TTL)) ? info->sinfo_timetolive : SCTP_INFINITE_LIFETIME,
@@ -2383,11 +2395,12 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                                   useDefaults));
                   }
                   else if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr != NULL) {
+                     unsigned int idZero = 0;
                      errno_return(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->sendTo(
                                  (char*)msg->msg_iov->iov_base,
                                  msg->msg_iov->iov_len,
                                  flags,
-                                 (info != NULL) ? info->sinfo_assoc_id   : 0,
+                                 (info != NULL) ? info->sinfo_assoc_id   : idZero,
                                  (info != NULL) ? info->sinfo_stream     : 0x0000,
                                  (info != NULL) ? info->sinfo_ppid       : 0x00000000,
                                  ((info != NULL) && (info->sinfo_flags & MSG_PR_SCTP_TTL)) ? info->sinfo_timetolive : SCTP_INFINITE_LIFETIME,

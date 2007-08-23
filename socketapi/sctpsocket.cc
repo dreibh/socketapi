@@ -1226,7 +1226,7 @@ SCTPAssociation* SCTPSocket::findAssociationForDestinationAddress(
 int SCTPSocket::sendTo(const char*           buffer,
                        const size_t          length,
                        const int             flags,
-                       const unsigned int    assocID,
+                       unsigned int&         assocID,
                        const unsigned short  streamID,
                        const unsigned int    protoID,
                        const unsigned int    timeToLive,
@@ -1361,6 +1361,7 @@ int SCTPSocket::sendTo(const char*           buffer,
 
       // ====== Send data ===================================================
       if(association != NULL) {
+         assocID = association->getID();
          if((buffer != NULL) && (length > 0)) {
             result = association->sendTo(buffer, length, flags,
                                          streamID, protoID, timeToLive, useDefaults,

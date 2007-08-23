@@ -269,7 +269,7 @@ class SCTPSocket
    int sendTo(const char*           buffer,
               const size_t          length,
               const int             flags,
-              const unsigned int    assocID,
+              unsigned int&         assocID,
               const unsigned short  streamID,
               const unsigned int    protoID,
               const unsigned int    timeToLive,
