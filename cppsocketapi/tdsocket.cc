@@ -667,7 +667,7 @@ bool Socket::connectx(const SocketAddress** addressArray,
    packSocketAddressArray(socketAddressArray, addresses, (sockaddr*)&packedSocketAddressArray);
    int result = ext_connectx(SocketDescriptor,
                              (sockaddr*)&packedSocketAddressArray,
-                             addresses);
+                             addresses, NULL);
    if(result != 0) {
       LastError = errno;
       if(LastError != EINPROGRESS) {

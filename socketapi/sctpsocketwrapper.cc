@@ -1932,7 +1932,6 @@ int ext_connectx(int                    sockfd,
                      }
                      if(id) {
                         *id = tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->getID();
-printf("ID=%u\n", *id);
                      }
                   }
                   else {

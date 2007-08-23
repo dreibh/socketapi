@@ -1,0 +1,10 @@
+#!/bin/sh
+
+START=$1
+END=$2
+NUMBER=$3
+while [  $START -lt $END ]; do
+	./tsctp -l $START -n $NUMBER -L $4 $5 
+	START=`expr $START + 1`
+	sleep 5
+done
