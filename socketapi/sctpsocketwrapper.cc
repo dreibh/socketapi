@@ -207,7 +207,7 @@ ExtSocketDescriptorMaster::~ExtSocketDescriptorMaster()
 }
 
 
-// ###### Get ExtSocketDescriptor for given ID #########################################
+// ###### Get ExtSocketDescriptor for given ID ##############################
 inline ExtSocketDescriptor* ExtSocketDescriptorMaster::getSocket(const int id)
 {
    if((id < (int)MaxSockets) && (id >= 0)) {
@@ -217,16 +217,20 @@ inline ExtSocketDescriptor* ExtSocketDescriptorMaster::getSocket(const int id)
 }
 
 
-// ###### Set ExtSocketDescriptor of given ID ##########################################
+// ###### Set ExtSocketDescriptor of given ID ###############################
 int ExtSocketDescriptorMaster::setSocket(const ExtSocketDescriptor& newSocket)
 {
+   // This operation must be atomic!
+   SCTPSocketMaster::MasterInstance.lock();
    for(int i = (int)(std::min(FD_SETSIZE, getdtablesize())) - 1;i >= 0;i--) {
       if(Sockets[i].Type == ExtSocketDescriptor::ESDT_Invalid) {
          Sockets[i] = newSocket;
+         SCTPSocketMaster::MasterInstance.unlock();
          return(i);
       }
    }
-   return(-ENOMEM);
+   SCTPSocketMaster::MasterInstance.unlock();
+   return(-EMFILE);
 }
 
 
@@ -572,6 +576,10 @@ int ext_close(int sockfd)
                   delete tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr;
                   tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr = NULL;
                }
+               else {
+                  std::cerr << "ERROR: ext_close(" << sockfd << ") - still in use!" << std::endl;
+                  errno_return(-ENXIO);
+               }
             }
           break;
          case ExtSocketDescriptor::ESDT_System:
@@ -582,7 +590,10 @@ int ext_close(int sockfd)
             errno_return(-ENXIO);
           break;
       }
+
+      SCTPSocketMaster::MasterInstance.lock();
       tdSocket->Type = ExtSocketDescriptor::ESDT_Invalid;
+      SCTPSocketMaster::MasterInstance.unlock();
       errno_return(0);
    }
    errno_return(-EBADF);
