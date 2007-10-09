@@ -89,7 +89,7 @@ SCTPAssociation::SCTPAssociation(SCTPSocket*        socket,
 
    if(!udpLike) {
 #ifdef PRINT_SOCKTYPE
-      cout << "SCTPAssociation::SCTPAssociation() - Initializing TCP-like socket" << std::endl;
+      std::cout << "SCTPAssociation::SCTPAssociation() - Initializing TCP-like socket" << std::endl;
 #endif
       ShutdownCompleteCondition.addParent(&ExceptUpdateCondition);
       EstablishCondition.addParent(&WriteUpdateCondition);
@@ -97,7 +97,7 @@ SCTPAssociation::SCTPAssociation(SCTPSocket*        socket,
    }
 #ifdef PRINT_SOCKTYPE
    else {
-      cout << "SCTPAssociation::SCTPAssociation() - Initializing UDP-like socket" << std::endl;
+      std::cout << "SCTPAssociation::SCTPAssociation() - Initializing UDP-like socket" << std::endl;
    }
 #endif
 
@@ -123,17 +123,17 @@ SCTPAssociation::~SCTPAssociation()
    // ====== Do shutdown ====================================================
    if(!ShutdownCompleteNotification) {
 #ifdef PRINT_SHUTDOWN
-      cout << "Active shutdown of association #" << AssociationID << " started..." << std::endl;
+      std::cout << "Active shutdown of association #" << AssociationID << " started..." << std::endl;
 #endif
       SCTPSocketMaster::delayedDeleteAssociation(Socket->getID(),AssociationID);
       shutdown();
 #ifdef PRINT_SHUTDOWN
-      cout << "Active shutdown of association #" << AssociationID << " complete!" << std::endl;
+      std::cout << "Active shutdown of association #" << AssociationID << " complete!" << std::endl;
 #endif
    }
    else {
 #ifdef PRINT_SHUTDOWN
-      cout << "Passive shutdown of association #" << AssociationID << "!" << std::endl;
+      std::cout << "Passive shutdown of association #" << AssociationID << "!" << std::endl;
 #endif
 
       if(sctp_deleteAssociation(AssociationID) != SCTP_SUCCESS) {
@@ -399,8 +399,8 @@ bool SCTPAssociation::sendPreEstablishmentPackets()
 #ifdef PRINT_PREESTABLISHMENT_SEND
       char str[256];
       snprintf((char*)&str,sizeof(str),
-                  "A%04d: sendPreEstablishmentPackets() - Sending %u bytes, PPID $%08x, stream %u",
-                  AssociationID, packet->Length, packet->ProtoID, packet->StreamID);
+               "A%04d: sendPreEstablishmentPackets() - Sending %u bytes, PPID $%08x, stream %u",
+               AssociationID, packet->Length, packet->ProtoID, packet->StreamID);
       std::cerr << str << std::endl;
 #endif
       result = sendTo(packet->Data,

@@ -76,7 +76,7 @@ EchoSocketServer::EchoSocketServer(Socket* socket)
    unsynchronized();
 
    printTimeStamp(cout);
-   cout << "Thread #" << ID << " start!" << endl;
+   std::cout << "Thread #" << ID << " start!" << std::endl;
    char* hello = "The SCTP Echo Socket Server - Version 1.00";
    EchoSocket->send(hello,strlen(hello),0);
 
@@ -103,7 +103,7 @@ void EchoSocketServer::run()
                                                      sizeof(dataBuffer));
       if(dataLength < 0) {
          printTimeStamp(cout);
-         cout << "Thread #" << ID << " shutdown!" << endl;
+         std::cout << "Thread #" << ID << " shutdown!" << std::endl;
          delete this;
          return;
       }
@@ -118,7 +118,7 @@ void EchoSocketServer::run()
          // ====== Print information ========================================
          dataBuffer[dataLength] = 0x00;
          snprintf((char*)&str,sizeof(str),"T%d: [%s]",ID,dataBuffer);
-         cout << str << endl;
+         std::cout << str << std::endl;
       }
 
    }
@@ -163,7 +163,7 @@ void EchoSocketClient::run()
       snprintf((char*)&dataBuffer,sizeof(dataBuffer),"Test #%d",i);
       const ssize_t sent = EchoSocket->send(dataBuffer,strlen(dataBuffer),0);
       if(sent < 0) {
-         cerr << "ERROR: EchoSocketClient::run() - Send error #" << sent << "!" << endl;
+         std::cerr << "ERROR: EchoSocketClient::run() - Send error #" << sent << "!" << std::endl;
          ::exit(1);
       }
 
@@ -192,32 +192,32 @@ void connectionOrientedSocketServer(const Settings* settings)
    InternetAddress receiverAddress((char*)&settings->LocalAddress[0],settings->LocalPort);
    Socket socket(Socket::IP,Socket::Stream,Socket::SCTP);
    if(socket.bind(receiverAddress) == false) {
-      cerr << "ERROR: connectionLessSocketServer() - Unable to bind socket!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - Unable to bind socket!" << std::endl;
       exit(1);
    }
    int off = 0;
    if(socket.setSocketOption(IPPROTO_SCTP,SCTP_RECVDATAIOEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVDATAIOEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVDATAIOEVNT failed!" << std::endl;
       exit(1);
    }
    if(socket.setSocketOption(IPPROTO_SCTP,SCTP_RECVASSOCEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVASSOCEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVASSOCEVNT failed!" << std::endl;
       exit(1);
    }
    if(socket.setSocketOption(IPPROTO_SCTP,SCTP_RECVPADDREVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVPADDREVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVPADDREVNT failed!" << std::endl;
       exit(1);
    }
    if(socket.setSocketOption(IPPROTO_SCTP,SCTP_RECVSENDFAILEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVSENDFAILEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVSENDFAILEVNT failed!" << std::endl;
       exit(1);
    }
    if(socket.setSocketOption(IPPROTO_SCTP,SCTP_RECVPEERERR,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVPEERERR failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVPEERERR failed!" << std::endl;
       exit(1);
    }
    if(socket.setSocketOption(IPPROTO_SCTP,SCTP_RECVSHUTDOWNEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVSHUTDOWNEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVSHUTDOWNEVNT failed!" << std::endl;
       exit(1);
    }
 
@@ -230,11 +230,11 @@ void connectionOrientedSocketServer(const Settings* settings)
          printTimeStamp(cout);
          if(peer != NULL) {
             peer->setPrintFormat(InternetAddress::PF_Address);
-            cout << "Accepted association from " << peer << "." << endl;
+            std::cout << "Accepted association from " << peer << "." << std::endl;
             delete peer;
          }
          else {
-            cout << "Accepted association from (Unknown)." << endl;
+            std::cout << "Accepted association from (Unknown)." << std::endl;
          }
 
          new EchoSocketServer(newSocket);
@@ -250,42 +250,42 @@ void connectionOrientedSocketClient(const Settings* settings)
    const InternetAddress remoteAddress((char*)&settings->RemoteAddress[0],settings->RemotePort);
    Socket socket(Socket::IP,Socket::Stream,Socket::SCTP);
    if(socket.bind(localAddress) == false) {
-      cerr << "ERROR: connectionLessSocketServer() - Unable to bind socket!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - Unable to bind socket!" << std::endl;
       exit(1);
    }
    int off = 0;
    if(socket.setSocketOption(IPPROTO_SCTP,SCTP_RECVDATAIOEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVDATAIOEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVDATAIOEVNT failed!" << std::endl;
       exit(1);
    }
    if(socket.setSocketOption(IPPROTO_SCTP,SCTP_RECVASSOCEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVASSOCEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVASSOCEVNT failed!" << std::endl;
       exit(1);
    }
    if(socket.setSocketOption(IPPROTO_SCTP,SCTP_RECVPADDREVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVPADDREVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVPADDREVNT failed!" << std::endl;
       exit(1);
    }
    if(socket.setSocketOption(IPPROTO_SCTP,SCTP_RECVSENDFAILEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVSENDFAILEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVSENDFAILEVNT failed!" << std::endl;
       exit(1);
    }
    if(socket.setSocketOption(IPPROTO_SCTP,SCTP_RECVPEERERR,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVPEERERR failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVPEERERR failed!" << std::endl;
       exit(1);
    }
    if(socket.setSocketOption(IPPROTO_SCTP,SCTP_RECVSHUTDOWNEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVSHUTDOWNEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVSHUTDOWNEVNT failed!" << std::endl;
       exit(1);
    }
    if(socket.connect(remoteAddress) == false) {
-      cerr << "ERROR: connectionLessSocketServer() - Unable to connect socket!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - Unable to connect socket!" << std::endl;
       exit(1);
    }
 
    EchoSocketClient* echoClient = new EchoSocketClient(&socket);
    if(echoClient == NULL) {
-      cerr << "ERROR: connectionOrientedSocketClient() - Out of memory!" << endl;
+      std::cerr << "ERROR: connectionOrientedSocketClient() - Out of memory!" << std::endl;
       exit(1);
    }
 
@@ -294,13 +294,13 @@ void connectionOrientedSocketClient(const Settings* settings)
    for(;;) {
       const ssize_t dataLength = socket.receive((char*)&dataBuffer,sizeof(dataBuffer),0);
       if(dataLength < 0) {
-         cerr << "ERROR: connectionOrientedSocketClient() - Receive error #" << dataLength << "!" << endl;
+         std::cerr << "ERROR: connectionOrientedSocketClient() - Receive error #" << dataLength << "!" << std::endl;
          exit(1);
       }
 
       if(dataLength > 0) {
          dataBuffer[dataLength] = 0x00;
-         cout << dataBuffer << endl;
+         std::cout << dataBuffer << std::endl;
       }
    }
 
@@ -315,32 +315,32 @@ void connectionLessSocketServer(const Settings* settings)
    InternetAddress localReceiverAddress((char*)&settings->LocalAddress[0],settings->LocalPort);
    Socket receiverSocket(Socket::IP,Socket::Datagram,Socket::SCTP);
    if(receiverSocket.bind(localReceiverAddress) == false) {
-      cerr << "ERROR: connectionLessSocketServer() - Unable to bind local socket!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - Unable to bind local socket!" << std::endl;
       exit(1);
    }
    int off = 0;
    if(receiverSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVDATAIOEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVDATAIOEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVDATAIOEVNT failed!" << std::endl;
       exit(1);
    }
    if(receiverSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVASSOCEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVASSOCEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVASSOCEVNT failed!" << std::endl;
       exit(1);
    }
    if(receiverSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVPADDREVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVPADDREVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVPADDREVNT failed!" << std::endl;
       exit(1);
    }
    if(receiverSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVSENDFAILEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVSENDFAILEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVSENDFAILEVNT failed!" << std::endl;
       exit(1);
    }
    if(receiverSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVPEERERR,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVPEERERR failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVPEERERR failed!" << std::endl;
       exit(1);
    }
    if(receiverSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVSHUTDOWNEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVSHUTDOWNEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVSHUTDOWNEVNT failed!" << std::endl;
       exit(1);
    }
 
@@ -348,31 +348,31 @@ void connectionLessSocketServer(const Settings* settings)
    InternetAddress localSenderAddress((char*)&settings->LocalAddress[0],settings->LocalPort + 1);
    Socket senderSocket(Socket::IP,Socket::Datagram,Socket::SCTP);
    if(senderSocket.bind(localSenderAddress) == false) {
-      cerr << "ERROR: connectionLessSocketServer() - Unable to bind local socket!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - Unable to bind local socket!" << std::endl;
       exit(1);
    }
    if(senderSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVDATAIOEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVDATAIOEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVDATAIOEVNT failed!" << std::endl;
       exit(1);
    }
    if(senderSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVASSOCEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVASSOCEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVASSOCEVNT failed!" << std::endl;
       exit(1);
    }
    if(senderSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVPADDREVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVPADDREVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVPADDREVNT failed!" << std::endl;
       exit(1);
    }
    if(senderSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVSENDFAILEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVSENDFAILEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVSENDFAILEVNT failed!" << std::endl;
       exit(1);
    }
    if(senderSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVPEERERR,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVPEERERR failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVPEERERR failed!" << std::endl;
       exit(1);
    }
    if(senderSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVSHUTDOWNEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVSHUTDOWNEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketServer() - SCTP_RECVSHUTDOWNEVNT failed!" << std::endl;
       exit(1);
    }
 
@@ -380,13 +380,13 @@ void connectionLessSocketServer(const Settings* settings)
 
    char dataBuffer[16384 + 1];
    for(cardinal i = 0;i < 1000000;i++) {
-      cout << "------ Recv Iteration #" << (i + 1) << " -------------" << endl;
+      std::cout << "------ Recv Iteration #" << (i + 1) << " -------------" << std::endl;
       const int dataLength = receiverSocket.receiveFrom(
                                 (char*)&dataBuffer,sizeof(dataBuffer),
                                 peer,
                                 0);
       if(dataLength < 0) {
-         cerr << "ERROR: connectionLessSocketServer() - Receive error #" << dataLength << "!" << endl;
+         std::cerr << "ERROR: connectionLessSocketServer() - Receive error #" << dataLength << "!" << std::endl;
          exit(1);
       }
       else {
@@ -394,23 +394,23 @@ void connectionLessSocketServer(const Settings* settings)
 
          // ====== Print information ========================================
          peer.setPrintFormat(InternetAddress::PF_Address);
-         cout << peer << "> [" << dataBuffer << "]" << endl;
+         std::cout << peer << "> [" << dataBuffer << "]" << std::endl;
 
 
          // ====== Set destination port, send reply =========================
-         cout << dataBuffer << " from " << peer << endl;
+         std::cout << dataBuffer << " from " << peer << std::endl;
          peer.setPort(peer.getPort() - 1);
 
          // ====== Send reply ===============================================
          char str[16384 + 256];
          snprintf((char*)&str,sizeof(str),"Re> %s",dataBuffer);
-         cout << "------ Send Iteration #" << (i + 1) << " -------------" << endl;
+         std::cout << "------ Send Iteration #" << (i + 1) << " -------------" << std::endl;
          const int sent = senderSocket.sendTo(
                               (char*)&str, strlen(str),
                               MSG_ABORT,
                               peer);
          if(sent < 0) {
-            cerr << "WARNING: connectionLessSocketServer() - Send error #" << sent << "!" << endl;
+            std::cerr << "WARNING: connectionLessSocketServer() - Send error #" << sent << "!" << std::endl;
          }
       }
    }
@@ -424,62 +424,62 @@ void connectionLessSocketClient(const Settings* settings)
    InternetAddress localReceiverAddress((char*)&settings->LocalAddress[0],settings->LocalPort);
    Socket receiverSocket(Socket::IP,Socket::Datagram,Socket::SCTP);
    if(receiverSocket.bind(localReceiverAddress) == false) {
-      cerr << "ERROR: connectionLessSocketClient() - Unable to bind local socket!" << endl;
+      std::cerr << "ERROR: connectionLessSocketClient() - Unable to bind local socket!" << std::endl;
       exit(1);
    }
    int off = 0;
    if(receiverSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVDATAIOEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVDATAIOEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVDATAIOEVNT failed!" << std::endl;
       exit(1);
    }
    if(receiverSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVASSOCEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVASSOCEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVASSOCEVNT failed!" << std::endl;
       exit(1);
    }
    if(receiverSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVPADDREVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVPADDREVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVPADDREVNT failed!" << std::endl;
       exit(1);
    }
    if(receiverSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVSENDFAILEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVSENDFAILEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVSENDFAILEVNT failed!" << std::endl;
       exit(1);
    }
    if(receiverSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVPEERERR,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVPEERERR failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVPEERERR failed!" << std::endl;
       exit(1);
    }
    if(receiverSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVSHUTDOWNEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVSHUTDOWNEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVSHUTDOWNEVNT failed!" << std::endl;
       exit(1);
    }
    InternetAddress localSenderAddress((char*)&settings->LocalAddress[0],settings->LocalPort + 1);
    Socket senderSocket(Socket::IP,Socket::Datagram,Socket::SCTP);
    if(senderSocket.bind(localSenderAddress) == false) {
-      cerr << "ERROR: connectionLessSocketClient() - Unable to bind local socket!" << endl;
+      std::cerr << "ERROR: connectionLessSocketClient() - Unable to bind local socket!" << std::endl;
       exit(1);
    }
    if(senderSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVDATAIOEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVDATAIOEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVDATAIOEVNT failed!" << std::endl;
       exit(1);
    }
    if(senderSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVASSOCEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVASSOCEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVASSOCEVNT failed!" << std::endl;
       exit(1);
    }
    if(senderSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVPADDREVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVPADDREVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVPADDREVNT failed!" << std::endl;
       exit(1);
    }
    if(senderSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVSENDFAILEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVSENDFAILEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVSENDFAILEVNT failed!" << std::endl;
       exit(1);
    }
    if(senderSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVPEERERR,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVPEERERR failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVPEERERR failed!" << std::endl;
       exit(1);
    }
    if(senderSocket.setSocketOption(IPPROTO_SCTP,SCTP_RECVSHUTDOWNEVNT,&off,sizeof(off)) < 0) {
-      cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVSHUTDOWNEVNT failed!" << endl;
+      std::cerr << "ERROR: connectionLessSocketClient() - SCTP_RECVSHUTDOWNEVNT failed!" << std::endl;
       exit(1);
    }
 
@@ -488,7 +488,7 @@ void connectionLessSocketClient(const Settings* settings)
 
    char dataBuffer[16384];
    for(unsigned int i = 0;i < 1000000;i++) {
-      cout << "------ Send Iteration #" << (i + 1) << " -------------" << endl;
+      std::cout << "------ Send Iteration #" << (i + 1) << " -------------" << std::endl;
       snprintf((char*)&dataBuffer,sizeof(dataBuffer),"Test #%d",i);
       const ssize_t sent =
          senderSocket.sendTo(
@@ -497,11 +497,11 @@ void connectionLessSocketClient(const Settings* settings)
             MSG_ABORT,
             to);
       if(sent < 0) {
-         cerr << "ERROR: connectionLessSocketClient() - Send error #" << sent << "!" << endl;
+         std::cerr << "ERROR: connectionLessSocketClient() - Send error #" << sent << "!" << std::endl;
          exit(1);
       }
 
-      cout << "------ Recv Iteration #" << (i + 1) << " -------------" << endl;
+      std::cout << "------ Recv Iteration #" << (i + 1) << " -------------" << std::endl;
       for(;;) {
          char dataBuffer[16384 + 1];
          const ssize_t received =
@@ -510,7 +510,7 @@ void connectionLessSocketClient(const Settings* settings)
                from, 0);
          if(received >= 0) {
             dataBuffer[received] = 0x00;
-            cout << "--> " << dataBuffer << endl;
+            std::cout << "--> " << dataBuffer << std::endl;
             break;
          }
          else if(received < 0) {
@@ -532,13 +532,13 @@ int main(int argc, char** argv)
    bool     optForceIPv4   = true;
    if(!sctp_isavailable()) {
 #ifdef HAVE_KERNEL_SCTP
-      cerr << "ERROR: Kernel-based SCTP is not available!" << endl;
+      std::cerr << "ERROR: Kernel-based SCTP is not available!" << std::endl;
 #else
      if(getuid() != 0) {
-        cerr << "ERROR: You need root permissions to use the SCTP Library!" << endl;
+        std::cerr << "ERROR: You need root permissions to use the SCTP Library!" << std::endl;
      }
      else {
-        cerr << "ERROR: SCTP is not available!" << endl;
+        std::cerr << "ERROR: SCTP is not available!" << std::endl;
      }
 #endif
       exit(1);
@@ -565,7 +565,7 @@ int main(int argc, char** argv)
             settings.LocalAddresses++;
          }
          else {
-            cerr << "ERROR: Too many local addresses!" << endl;
+            std::cerr << "ERROR: Too many local addresses!" << std::endl;
             exit(1);
          }
       }
@@ -575,18 +575,18 @@ int main(int argc, char** argv)
             settings.RemoteAddresses++;
          }
          else {
-            cerr << "ERROR: Too many remote addresses!" << endl;
+            std::cerr << "ERROR: Too many remote addresses!" << std::endl;
             exit(1);
          }
       }
       else if(!(strncasecmp(argv[i],"-localport=",11)))  settings.LocalPort  = atol(&argv[i][11]);
       else if(!(strncasecmp(argv[i],"-remoteport=",12))) settings.RemotePort = atol(&argv[i][12]);
       else {
-         cerr << "Usage: " << argv[0] << " "
+         std::cerr << "Usage: " << argv[0] << " "
                  "[-client|-server] [-connectionless|-cl|-connectionoriented|-co] "
                  "[-force-ipv4|-use-ipv6] [-local=address1] ... [-local=addressN] "
                  "[-remote=address1] ... [-remote=addressN] [-localport=port] [-remoteport=port]"
-              << endl;
+              << std::endl;
          exit(1);
       }
    }
@@ -594,7 +594,7 @@ int main(int argc, char** argv)
       InternetAddress::UseIPv6 = false;
    }
    if((!server) && (settings.RemoteAddresses < 1)) {
-      cerr << "ERROR: No remote address given!" << endl;
+      std::cerr << "ERROR: No remote address given!" << std::endl;
       exit(1);
    }
    if(settings.LocalAddresses < 1) {
@@ -602,7 +602,7 @@ int main(int argc, char** argv)
       if((!Socket::getLocalAddressList(
             localAddressArray,
             settings.LocalAddresses)) || (settings.LocalAddresses < 1)) {
-         cerr << "ERROR: Cannot obtain local addresses!" << endl;
+         std::cerr << "ERROR: Cannot obtain local addresses!" << std::endl;
          exit(1);
       }
       for(cardinal i = 0;i < settings.LocalAddresses;i++) {
@@ -623,44 +623,44 @@ int main(int argc, char** argv)
 
 
    // ====== Print information ==============================================
-   cout << "SCTP Socket Test - Copyright (C) 2001 Thomas Dreibholz" << endl;
-   cout << "------------------------------------------------------" << endl;
-   cout << "Version:           " << __DATE__ << ", " << __TIME__ << endl;
-   cout << "Server Mode:       " << ((server == true) ? "on" : "off") << endl;
-   cout << "Connection Mode:   " << ((connectionLess == false) ? "connection-oriented" : "connection-less") << endl;
-   cout << "Local Addresses:   " << settings.LocalAddress[0] << endl;
+   std::cout << "SCTP Socket Test - Copyright (C) 2001 Thomas Dreibholz" << std::endl;
+   std::cout << "------------------------------------------------------" << std::endl;
+   std::cout << "Version:           " << __DATE__ << ", " << __TIME__ << std::endl;
+   std::cout << "Server Mode:       " << ((server == true) ? "on" : "off") << std::endl;
+   std::cout << "Connection Mode:   " << ((connectionLess == false) ? "connection-oriented" : "connection-less") << std::endl;
+   std::cout << "Local Addresses:   " << settings.LocalAddress[0] << std::endl;
    for(unsigned int i = 1;i < settings.LocalAddresses;i++) {
-      cout << "                   " << settings.LocalAddress[i] << endl;
+      std::cout << "                   " << settings.LocalAddress[i] << std::endl;
    }
-   cout << "Local Port:        " << settings.LocalPort << endl;
+   std::cout << "Local Port:        " << settings.LocalPort << std::endl;
    if(!server) {
-      cout << "Remote Addresses:  " << settings.RemoteAddress[0] << endl;
+      std::cout << "Remote Addresses:  " << settings.RemoteAddress[0] << std::endl;
       for(unsigned int i = 1;i < settings.RemoteAddresses;i++) {
-         cout << "                   " << settings.RemoteAddress[i] << endl;
+         std::cout << "                   " << settings.RemoteAddress[i] << std::endl;
       }
-      cout << "Remote Port:       " << settings.RemotePort << endl;
+      std::cout << "Remote Port:       " << settings.RemotePort << std::endl;
    }
-   cout << endl << endl;
+   std::cout << std::endl << std::endl;
 
 
    // ====== Execute main program ===========================================
    if(server) {
       if(connectionLess) {
-         cout << "Start connection-less socket server..." << endl;
+         std::cout << "Start connection-less socket server..." << std::endl;
          connectionLessSocketServer(&settings);
       }
       else {
-         cout << "Start connection-oriented socket server..." << endl;
+         std::cout << "Start connection-oriented socket server..." << std::endl;
          connectionOrientedSocketServer(&settings);
       }
    }
    else {
       if(connectionLess) {
-         cout << "Start connection-less socket client..." << endl;
+         std::cout << "Start connection-less socket client..." << std::endl;
          connectionLessSocketClient(&settings);
       }
       else {
-         cout << "Start connection-oriented socket client..." << endl;
+         std::cout << "Start connection-oriented socket client..." << std::endl;
          connectionOrientedSocketClient(&settings);
       }
    }

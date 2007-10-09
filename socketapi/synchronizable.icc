@@ -52,7 +52,7 @@
 inline void Synchronizable::synchronized()
 {
 #ifdef SYNCDEBUGGER_PRINTING
-   cerr << "u";
+   std::cerr << "u";
 #endif
 
 #ifndef NO_RECURSIVE_MUTEX
@@ -71,7 +71,7 @@ inline void Synchronizable::synchronized()
 #endif
 
 #ifdef SYNCDEBUGGER_PRINTING
-   cerr << "U";
+   std::cerr << "U";
 #endif
 }
 
@@ -80,7 +80,7 @@ inline void Synchronizable::synchronized()
 inline bool Synchronizable::synchronizedTry()
 {
 #ifdef SYNCDEBUGGER_PRINTING
-   cerr << "t";
+   std::cerr << "t";
 #endif
 
 #ifndef NO_RECURSIVE_MUTEX
@@ -111,13 +111,13 @@ inline bool Synchronizable::synchronizedTry()
 
    if(result == 0) {
 #ifdef SYNCDEBUGGER_PRINTING
-      cerr << "T";
+      std::cerr << "T";
 #endif
       return(true);
    }
 #ifdef SYNCDEBUGGER_PRINTING
    else {
-      cerr << ".";
+      std::cerr << ".";
    }
 #endif
    return(false);
@@ -128,7 +128,7 @@ inline bool Synchronizable::synchronizedTry()
 inline void Synchronizable::unsynchronized()
 {
 #ifdef SYNCDEBUGGER_PRINTING
-   cerr << "s";
+   std::cerr << "s";
 #endif
 
 #ifndef NO_RECURSIVE_MUTEX
@@ -136,7 +136,7 @@ inline void Synchronizable::unsynchronized()
 #else
    if(RecursionLevel == 0) {
 #ifndef DISABLE_WARNINGS
-      cerr << "ERROR: Synchronizable::unsynchronized() - Mutex is already unlocked!" << endl;
+      std::cerr << "ERROR: Synchronizable::unsynchronized() - Mutex is already unlocked!" << std::endl;
       exit(1);
 #endif
    }
@@ -154,7 +154,7 @@ inline void Synchronizable::unsynchronized()
       }
       else {
 #ifndef DISABLE_WARNINGS
-         cerr << "ERROR: Synchronizable::unsynchronized() - Mutex is not owned!" << endl;
+         std::cerr << "ERROR: Synchronizable::unsynchronized() - Mutex is not owned!" << std::endl;
          exit(1);
 #endif
       }
@@ -162,7 +162,7 @@ inline void Synchronizable::unsynchronized()
 #endif
 
 #ifdef SYNCDEBUGGER_PRINTING
-   cerr << "S";
+   std::cerr << "S";
 #endif
 }
 

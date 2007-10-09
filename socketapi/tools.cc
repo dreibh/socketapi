@@ -192,7 +192,7 @@ void* operator new(size_t size) throw (std::bad_alloc)
    if(size <= 0) {
       size = 1;
 #ifndef DISABLE_WARNINGS
-      cerr << "WARNING: operator new() - Size is 0!" << endl;
+      std::cerr << "WARNING: operator new() - Size is 0!" << std::endl;
 #endif
    }
    void* ptr = malloc(size + 4);
@@ -203,8 +203,8 @@ void* operator new(size_t size) throw (std::bad_alloc)
       AllocationBalance += (int64)size;
 
 #ifdef PRINT_ALLOCATIONS
-   cout << "Allocated " << size << " bytes -> Balance is "
-        << AllocationBalance << "." << endl;
+   std::cout << "Allocated " << size << " bytes -> Balance is "
+             << AllocationBalance << "." << std::endl;
 #endif
    }
 
@@ -226,8 +226,8 @@ void operator delete(void* ptr) throw ()
    free(ptr32);
 
 #ifdef PRINT_ALLOCATIONS
-   cout << "Freed " << size << " bytes -> Balance is "
-        << AllocationBalance << "." << endl;
+   std::cout << "Freed " << size << " bytes -> Balance is "
+             << AllocationBalance << "." << std::endl;
 #endif
 
    Thread::MemoryManagementLock.unsynchronized();

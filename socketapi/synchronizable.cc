@@ -77,7 +77,7 @@ Synchronizable::Synchronizable(const char* name, const bool recursive)
 
 #ifdef SYNCDEBUGGER
 #ifdef SYNCDEBUGGER_PRINTING
-   cout << "Created mutex \"" << MutexName << "\"." << endl;
+   std::cout << "Created mutex \"" << MutexName << "\"." << std::endl;
 #endif
    const cardinal oldstate = Thread::setCancelState(Thread::TCS_CancelDisabled);
    Thread::SyncSetLock.synchronized();
@@ -93,7 +93,7 @@ Synchronizable::~Synchronizable()
 {
 #ifdef SYNCDEBUGGER
 #ifdef SYNCDEBUGGER_PRINTING
-   cout << "Deleted mutex \"" << MutexName << "\"." << endl;
+   std::cout << "Deleted mutex \"" << MutexName << "\"." << std::endl;
 #endif
    const cardinal oldstate = Thread::setCancelState(Thread::TCS_CancelDisabled);
    Thread::setCancelState(oldstate);
@@ -111,7 +111,7 @@ Synchronizable::~Synchronizable()
 void Synchronizable::resynchronize()
 {
 #ifdef SYNCDEBUGGER_PRINTING
-   cerr << "<R>";
+   std::cerr << "<R>";
 #endif
    pthread_mutex_destroy(&Mutex);
    pthread_mutexattr_t mutexattr;
@@ -133,8 +133,8 @@ void Synchronizable::resynchronize()
 void Synchronizable::synchronized_debug(const char* file, const cardinal line)
 {
 #ifdef SYNCDEBUGGER_VERBOSE_PRINTING
-   cerr << "#" << getpid() << ": "
-        << file << ", line " << line << ": " << "\"" << MutexName << "\" synchronize..." << endl;
+   std::cerr << "#" << getpid() << ": "
+             << file << ", line " << line << ": " << "\"" << MutexName << "\" synchronize..." << std::endl;
 #endif
 
 
@@ -150,53 +150,53 @@ void Synchronizable::synchronized_debug(const char* file, const cardinal line)
 
             // ====== Print debug information ===============================
             const Thread::pthread_descr pthread = (Thread::pthread_descr)Mutex.__m_owner;
-            cerr << "ERROR: Synchronizable::synchronized_debug() - Mutex problems detected!" << endl;
+            std::cerr << "ERROR: Synchronizable::synchronized_debug() - Mutex problems detected!" << std::endl;
             printTimeStamp(cerr);
-            cerr << "Process #" << getpid();
+            std::cerr << "Process #" << getpid();
             set<Thread*>::iterator iterator = Thread::ThreadSet.begin();
             while(iterator != Thread::ThreadSet.end()) {
                if((*iterator)->PID == getpid()) {
-                  cerr << " \"" << (*iterator)->getName() << "\"";
+                  std::cerr << " \"" << (*iterator)->getName() << "\"";
                   break;
                }
                iterator++;
             }
-            cerr << ": " << file << ", line " << line << ": " << " synchronize failed -> TIMEOUT!" << endl;
-            cerr << "Name of wanted mutex is \"" << MutexName << "\"." << endl;
-            cerr << "Mutex is locked by process #";
-            cerr << pthread->p_pid;
+            std::cerr << ": " << file << ", line " << line << ": " << " synchronize failed -> TIMEOUT!" << std::endl;
+            std::cerr << "Name of wanted mutex is \"" << MutexName << "\"." << std::endl;
+            std::cerr << "Mutex is locked by process #";
+            std::cerr << pthread->p_pid;
             iterator = Thread::ThreadSet.begin();
             while(iterator != Thread::ThreadSet.end()) {
                if((*iterator)->PID == pthread->p_pid) {
-                  cerr << " \"" << (*iterator)->getName() << "\"";
+                  std::cerr << " \"" << (*iterator)->getName() << "\"";
                   break;
                }
                iterator++;
             }
-            cerr << "." << endl;
+            std::cerr << "." << std::endl;
 
             if(strcmp(MutexName,"SyncSetLock")) {
                Thread::SyncSetLock.synchronized();
             }
-            cerr << endl;
+            std::cerr << std::endl;
             set<Synchronizable*>::iterator mutexIterator = MutexSet.begin();
             while(mutexIterator != MutexSet.end()) {
                Thread::pthread_descr pthread = (Thread::pthread_descr)((*mutexIterator)->Mutex.__m_owner);
                if(pthread != NULL) {
-                  cerr << "Mutex \"" << (*mutexIterator)->getName()
-                       << "\" is owned by process #" << pthread->p_pid;
+                  std::cerr << "Mutex \"" << (*mutexIterator)->getName()
+                            << "\" is owned by process #" << pthread->p_pid;
                   set<Thread*>::iterator threadIterator = Thread::ThreadSet.begin();
                   while(threadIterator != Thread::ThreadSet.end()) {
                      if((*threadIterator)->PID == pthread->p_pid) {
-                        cerr << " \"" << (*threadIterator)->MutexName << "\"";
+                        std::cerr << " \"" << (*threadIterator)->MutexName << "\"";
                         break;
                      }
                      threadIterator++;
                   }
-                  cerr << "." << endl;
+                  std::cerr << "." << std::endl;
                }
                else {
-                  cerr << "Mutex \"" << (*mutexIterator)->getName() << "\" is free." << endl;
+                  std::cerr << "Mutex \"" << (*mutexIterator)->getName() << "\" is free." << std::endl;
                }
                mutexIterator++;
             }
@@ -205,7 +205,7 @@ void Synchronizable::synchronized_debug(const char* file, const cardinal line)
             }
 
             // ====== Kill program ==========================================
-            cerr << endl << "Program HALT!" << endl;
+            std::cerr << std::endl << "Program HALT!" << std::endl;
             kill(getpid(),SYNCDEBUGGER_FAILURESIGNAL);
          }
          else {
@@ -226,8 +226,8 @@ void Synchronizable::synchronized_debug(const char* file, const cardinal line)
 #endif
 
 #ifdef SYNCDEBUGGER_VERBOSE_PRINTING
-   cerr << "#" << getpid() << ": "
-        << file << ", line " << line << ": " << "\"" << MutexName << "\" synchronized!" << endl;
+   std::cerr << "#" << getpid() << ": "
+        << file << ", line " << line << ": " << "\"" << MutexName << "\" synchronized!" << std::endl;
 #endif
 }
 
@@ -236,15 +236,15 @@ void Synchronizable::synchronized_debug(const char* file, const cardinal line)
 void Synchronizable::unsynchronized_debug(const char* file, const cardinal line)
 {
 #ifdef SYNCDEBUGGER_VERBOSE_PRINTING
-   cerr << "#" << getpid() << ": "
-        << file << ", line " << line << ": " << "\"" << MutexName << "\" unsynchronize..." << endl;
+   std::cerr << "#" << getpid() << ": "
+             << file << ", line " << line << ": " << "\"" << MutexName << "\" unsynchronize..." << std::endl;
 #endif
 
    Synchronizable::unsynchronized();
 
 #ifdef SYNCDEBUGGER_VERBOSE_PRINTING
-   cerr << "#" << getpid() << ": "
-        << file << ", line " << line << ": " << "\"" << MutexName << "\" unsynchronized" << endl;
+   std::cerr << "#" << getpid() << ": "
+             << file << ", line " << line << ": " << "\"" << MutexName << "\" unsynchronized" << std::endl;
 #endif
 }
 
@@ -253,19 +253,19 @@ void Synchronizable::unsynchronized_debug(const char* file, const cardinal line)
 bool Synchronizable::synchronizedTry_debug(const char* file, const cardinal line)
 {
 #ifdef SYNCDEBUGGER_VERBOSE_PRINTING
-   cerr << "#" << getpid() << ": "
-        << file << ", line " << line << ": " << "\"" << MutexName << "\" try synchronize..." << endl;
+   std::cerr << "#" << getpid() << ": "
+             << file << ", line " << line << ": " << "\"" << MutexName << "\" try synchronize..." << std::endl;
 #endif
 
    bool ok = Synchronizable::synchronizedTry();
 
 #ifdef SYNCDEBUGGER_VERBOSE_PRINTING
-   cerr << "#" << getpid() << ": " << file << ", line " << line << ": ";
+   std::cerr << "#" << getpid() << ": " << file << ", line " << line << ": ";
    if(ok) {
-      cerr << "\"" << MutexName << "\" synchronized!" << endl;
+      std::cerr << "\"" << MutexName << "\" synchronized!" << std::endl;
    }
    else {
-      cerr << "\"" << MutexName << "\" locked -> not synchronized." << endl;
+      std::cerr << "\"" << MutexName << "\" locked -> not synchronized." << std::endl;
    }
 #endif
    return(ok);
@@ -276,14 +276,14 @@ bool Synchronizable::synchronizedTry_debug(const char* file, const cardinal line
 void Synchronizable::resynchronize_debug(const char* file, const cardinal line)
 {
 #ifdef SYNCDEBUGGER_VERBOSE_PRINTING
-   cerr << "#" << getpid() << ": "
-        << file << ", line " << line << ": " << "\"" << MutexName << "\" re-synchronize..." << endl;
+   std::cerr << "#" << getpid() << ": "
+             << file << ", line " << line << ": " << "\"" << MutexName << "\" re-synchronize..." << std::endl;
 #endif
 
    Synchronizable::resynchronize();
 
 #ifdef SYNCDEBUGGER_VERBOSE_PRINTING
-   cerr << "#" << getpid() << ": "
-        << file << ", line " << line << ": " << "\"" << MutexName << "\" re-synchronized!" << endl;
+   std::cerr << "#" << getpid() << ": "
+             << file << ", line " << line << ": " << "\"" << MutexName << "\" re-synchronized!" << std::endl;
 #endif
 }

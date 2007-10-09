@@ -130,7 +130,7 @@ SCTPSocketMaster::SCTPSocketMaster()
 
          if(pipe((int*)&BreakPipe) == 0) {
 #ifdef PRINT_PIPE
-            cout << "Break Pipe: in=" << BreakPipe[0] << " out=" << BreakPipe[1] << endl;
+            std::cout << "Break Pipe: in=" << BreakPipe[0] << " out=" << BreakPipe[1] << std::endl;
 #endif
             int flags = fcntl(BreakPipe[0],F_GETFL,0);
             if(flags != -1) {
@@ -196,7 +196,7 @@ SCTPSocketMaster::SCTPSocketMaster()
 SCTPSocketMaster::~SCTPSocketMaster()
 {
 #ifdef PRINT_GC
-   cout << "garbageCollection: SocketMaster destructor..." << endl;
+   std::cout << "garbageCollection: SocketMaster destructor..." << std::endl;
 #endif
 
    // ====== Stop master thread =============================================
@@ -243,7 +243,7 @@ SCTPSocketMaster::~SCTPSocketMaster()
    }
 
 #ifdef PRINT_GC
-   cout << "garbageCollection: SocketMaster destructor completed!" << endl;
+   std::cout << "garbageCollection: SocketMaster destructor completed!" << std::endl;
 #endif
 }
 
@@ -344,7 +344,7 @@ void SCTPSocketMaster::delayedDeleteAssociation(const unsigned short instanceID,
                                                 const unsigned int   assocID)
 {
 #ifdef PRINT_GC
-   cout << "delayedDeleteAssociation: A=" << assocID << " I=" << instanceID << endl;
+   std::cout << "delayedDeleteAssociation: A=" << assocID << " I=" << instanceID << std::endl;
 #endif
    ClosingAssociations.insert(std::pair<unsigned int, unsigned short>(assocID,instanceID));
 }
@@ -354,7 +354,7 @@ void SCTPSocketMaster::delayedDeleteAssociation(const unsigned short instanceID,
 void SCTPSocketMaster::delayedDeleteSocket(const unsigned short instanceID)
 {
 #ifdef PRINT_GC
-   cout << "delayedDeleteSocket: I=" << instanceID << endl;
+   std::cout << "delayedDeleteSocket: I=" << instanceID << std::endl;
 #endif
    ClosingSockets.insert(instanceID);
 }
@@ -364,7 +364,7 @@ void SCTPSocketMaster::delayedDeleteSocket(const unsigned short instanceID)
 void SCTPSocketMaster::socketGarbageCollection()
 {
 #ifdef PRINT_GC
-   cout << "Socket garbage collection..." << endl;
+   std::cout << "Socket garbage collection..." << std::endl;
 #endif
    MasterInstance.lock();
    LastGarbageCollection = getMicroTime();
@@ -394,7 +394,7 @@ void SCTPSocketMaster::socketGarbageCollection()
 
       if(!used) {
 #ifdef PRINT_GC
-         cout << "socketGarbageCollection: Removing instance #" << instanceID << "." << endl;
+         std::cout << "socketGarbageCollection: Removing instance #" << instanceID << "." << std::endl;
 #endif
          iterator++;
          ClosingSockets.erase(instanceID);
@@ -412,8 +412,8 @@ void SCTPSocketMaster::socketGarbageCollection()
 
    MasterInstance.unlock();
 #ifdef PRINT_GC
-   cout << "Socket garbage collection completed in "
-        << getMicroTime() - LastGarbageCollection << " s" << endl;
+   std::cout << "Socket garbage collection completed in "
+             << getMicroTime() - LastGarbageCollection << " s" << std::endl;
 #endif
 }
 
@@ -426,7 +426,7 @@ bool SCTPSocketMaster::associationGarbageCollection(const unsigned int assocID,
    std::multimap<unsigned int, int>::iterator iterator = ClosingAssociations.find(assocID);
    if(iterator != ClosingAssociations.end()) {
 #ifdef PRINT_GC
-      cout << "associationGarbageCollection: Removing association #" << assocID << "." << endl;
+      std::cout << "associationGarbageCollection: Removing association #" << assocID << "." << std::endl;
 #endif
 
       // ====== Delete association ==========================================
@@ -1084,12 +1084,12 @@ void SCTPSocketMaster::userCallback(int        fileDescriptor,
       }
       else {
 #ifdef PRINT_PIPE
-         cout << getpid() << ": Break via break pipe received" << endl;
+         std::cout << getpid() << ": Break via break pipe received" << std::endl;
 #endif
          ssize_t received = read(BreakPipe[0],(char*)&str,sizeof(str));
          while(received > 0) {
 #ifdef PRINT_PIPE
-           cout << "Break Pipe: " << received << " calls" << endl;
+           std::cout << "Break Pipe: " << received << " calls" << std::endl;
 #endif
            received = read(BreakPipe[0],(char*)&str,sizeof(str));
          }
@@ -1222,13 +1222,13 @@ void SCTPSocketMaster::addNotification(SCTPSocket*             socket,
 
       association->UseCount++;
 #ifdef PRINT_ASSOC_USECOUNT
-      cout << association->UseCount << ". Notification Type = " << notification.Content.sn_header.sn_type << endl;
+      std::cout << association->UseCount << ". Notification Type = " << notification.Content.sn_header.sn_type << std::endl;
 #endif
 
       // ====== Add notification to global or association's queue ===========
 #ifdef PRINT_ASSOC_USECOUNT
-      cout << "AddNotification: UseCount increment for A" << association->getID() << ": "
-           << association->UseCount << " -> ";
+      std::cout << "AddNotification: UseCount increment for A" << association->getID() << ": "
+                << association->UseCount << " -> ";
 #endif
       if( (socket->Flags & SCTPSocket::SSF_GlobalQueue) &&
           (association->PeeledOff == false) ) {
@@ -1269,7 +1269,7 @@ void SCTPSocketMaster::addUserSocketNotification(UserSocketNotification* usn)
    if((usn->FileDescriptor != BreakPipe[0]) && (BreakPipe[0] != -1)) {
       char dummy = 'T';
 #ifdef PRINT_PIPE
-      cout << "Sending Break via break pipe..." << endl;
+      std::cout << "Sending Break via break pipe..." << std::endl;
 #endif
       write(BreakPipe[1],&dummy,sizeof(dummy));
    }

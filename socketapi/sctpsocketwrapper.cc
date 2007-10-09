@@ -622,7 +622,7 @@ static int bindToAny(struct ExtSocketDescriptor* tdSocket)
          SCTPSocketMaster::MasterInstance.unlock();
          addressArray[0]->setPort(port),
 #ifdef PRINT_RANDOM_PORTSELECTION
-         cout << "trying " << *(addressArray[0]) << "..." << endl;
+         std::cout << "trying " << *(addressArray[0]) << "..." << std::endl;
 #endif
 #endif
 
@@ -2352,7 +2352,7 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                            if(destinationAddressList[i] == NULL) {
                               errno_return(-EINVAL);
                            }
-                           // cout << "#" << i << ": " << *(destinationAddressList[i]) << endl;
+                           // std::cout << "#" << i << ": " << *(destinationAddressList[i]) << std::endl;
                            switch(sa->sa_family) {
                               case AF_INET:
                                  sa = (sockaddr*)((long)sa + sizeof(sockaddr_in));
@@ -2548,7 +2548,7 @@ static int collectSCTP_FDs(SelectData&                 selectData,
 
 #ifdef PRINT_SELECT
       if(selectData.ConditionArray[selectData.Conditions]->peekFired()) {
-         cout << "collectSCTP_FDs: condition already fired" << endl;
+         std::cout << "collectSCTP_FDs: condition already fired" << std::endl;
       }
 #endif
 
@@ -2566,13 +2566,13 @@ static int collectSCTP_FDs(SelectData&                 selectData,
          (tdSocket->Socket.SCTPSocketDesc.ConnectionOriented == false)) {
          selectData.ConditionArray[selectData.Conditions]->signal();
 #ifdef PRINT_SELECT
-         cout << "collectSCTP_FDs: UDP-like sockets are always writable" << endl;
+         std::cout << "collectSCTP_FDs: UDP-like sockets are always writable" << std::endl;
 #endif
       }
 
 #ifdef PRINT_SELECT
       if(selectData.ConditionArray[selectData.Conditions]->peekFired()) {
-         cout << "collectSCTP_FDs: condition already fired" << endl;
+         std::cout << "collectSCTP_FDs: condition already fired" << std::endl;
       }
 #endif
 
@@ -2605,8 +2605,8 @@ static int collectFDs(SelectData&     selectData,
 #ifdef PRINT_SELECT
          char str[32];
          snprintf((char*)&str,sizeof(str),"$%04x",eventMask);
-         cout << "select(" << getpid() << "): adding FD " << tdSocket->Socket.SystemSocketID
-              << " (" << fd << ") with mask " << str << endl;
+         std::cout << "select(" << getpid() << "): adding FD " << tdSocket->Socket.SystemSocketID
+                   << " (" << fd << ") with mask " << str << std::endl;
 #endif
          selectData.UserCallbackFD[selectData.UserCallbacks] = fd;
          selectData.UserNotification[selectData.UserCallbacks] = new SCTPSocketMaster::UserSocketNotification;
@@ -2614,8 +2614,8 @@ static int collectFDs(SelectData&     selectData,
             selectData.UserNotification[selectData.UserCallbacks]->FileDescriptor = tdSocket->Socket.SystemSocketID;
             selectData.UserNotification[selectData.UserCallbacks]->EventMask      = eventMask;
 #ifdef PRINT_SELECT
-            cout << "select(" << getpid() << "): registering user callback for socket "
-                 << tdSocket->Socket.SystemSocketID << "..." << endl;
+            std::cout << "select(" << getpid() << "): registering user callback for socket "
+                      << tdSocket->Socket.SystemSocketID << "..." << std::endl;
 #endif
             if(eventMask & POLLIN) {
                selectData.UserNotification[selectData.UserCallbacks]->UpdateCondition.addParent(&selectData.ReadCondition);
@@ -2636,19 +2636,19 @@ static int collectFDs(SelectData&     selectData,
          int result = 0;
          if(eventMask & POLLIN) {
 #ifdef PRINT_SELECT
-            cout << "select(" << getpid() << "): adding FD " << fd << " for read" << endl;
+            std::cout << "select(" << getpid() << "): adding FD " << fd << " for read" << std::endl;
 #endif
             result = collectSCTP_FDs(selectData,fd,tdSocket,UCT_Read,selectData.ReadCondition);
          }
          if(eventMask & POLLOUT) {
 #ifdef PRINT_SELECT
-            cout << "select(" << getpid() << "): adding FD " << fd << " for write" << endl;
+            std::cout << "select(" << getpid() << "): adding FD " << fd << " for write" << std::endl;
 #endif
             result = collectSCTP_FDs(selectData,fd,tdSocket,UCT_Write,selectData.WriteCondition);
          }
          if(eventMask & POLLERR) {
 #ifdef PRINT_SELECT
-            cout << "select(" << getpid() << "): adding FD " << fd << " for except" << endl;
+            std::cout << "select(" << getpid() << "): adding FD " << fd << " for except" << std::endl;
 #endif
             result = collectSCTP_FDs(selectData,fd,tdSocket,UCT_Except,selectData.ExceptCondition);
          }
@@ -2693,14 +2693,14 @@ static int select_wrapper(int             n,
                   FD_SET(fd,&e);
                }
 #ifdef PRINT_SELECT
-               cout << "select(" << getpid() << "): added FD " << fd << " (" << i << ")" << endl;
+               std::cout << "select(" << getpid() << "): added FD " << fd << " (" << i << ")" << std::endl;
 #endif
                reverseMapping[fd] = i;
             }
             else if((socket->Type == ExtSocketDescriptor::ESDT_SCTP) &&
                     (socket->Socket.SCTPSocketDesc.ConnectionOriented == false)) {
 #ifdef PRINT_SELECT
-               cout << "select(" << getpid() << "): added FD " << i << " - Unbound UDP-like SCTP socket" << endl;
+               std::cout << "select(" << getpid() << "): added FD " << i << " - Unbound UDP-like SCTP socket" << std::endl;
 #endif
                fakeUDPWrite = true;
             }
@@ -2714,7 +2714,7 @@ static int select_wrapper(int             n,
    }
 
 #ifdef PRINT_SELECT
-   cout << "select..." << endl;
+   std::cout << "select..." << std::endl;
 #endif
    int result;
    if(!fakeUDPWrite) {
@@ -2727,7 +2727,7 @@ static int select_wrapper(int             n,
       result = select(maxFD + 1,&r,&w,&e,&mytimeout);
    }
 #ifdef PRINT_SELECT
-   cout << "select result " << result << endl;
+   std::cout << "select result " << result << std::endl;
 #endif
 
    if(result >= 0) {
@@ -2744,8 +2744,8 @@ static int select_wrapper(int             n,
                   (socket->Type == ExtSocketDescriptor::ESDT_SCTP) &&
                   (socket->Socket.SCTPSocketDesc.ConnectionOriented == false)) {
 #ifdef PRINT_SELECT
-                  cout << "select(" << getpid() << "): write for FD " << i
-                       << " (Unbound UDP-like SCTP socket)" << endl;
+                  std::cout << "select(" << getpid() << "): write for FD " << i
+                            << " (Unbound UDP-like SCTP socket)" << std::endl;
 #endif
                   FD_SET(i,writefds);
                   result++;
@@ -2759,19 +2759,19 @@ static int select_wrapper(int             n,
       for(int i = 0;i <= maxFD;i++) {
          if(SAFE_FD_ISSET(i,&r)) {
 #ifdef PRINT_SELECT
-            cout << "select(" << getpid() << "): read for FD " << reverseMapping[i] << endl;
+            std::cout << "select(" << getpid() << "): read for FD " << reverseMapping[i] << std::endl;
 #endif
             FD_SET(reverseMapping[i],readfds);
          }
          if(SAFE_FD_ISSET(i,&w)) {
 #ifdef PRINT_SELECT
-            cout << "select(" << getpid() << "): write for FD " << reverseMapping[i] << endl;
+            std::cout << "select(" << getpid() << "): write for FD " << reverseMapping[i] << std::endl;
 #endif
             FD_SET(reverseMapping[i],writefds);
          }
          if(SAFE_FD_ISSET(i,&e)) {
 #ifdef PRINT_SELECT
-            cout << "select(" << getpid() << "): except for FD " << reverseMapping[i] << endl;
+            std::cout << "select(" << getpid() << "): except for FD " << reverseMapping[i] << std::endl;
 #endif
             FD_SET(reverseMapping[i],exceptfds);
          }
@@ -2832,7 +2832,7 @@ int ext_select(int             n,
       SCTPSocketMaster::MasterInstance.unlock();
       if((selectData.Conditions > 0) || (selectData.UserCallbacks > 0)) {
 #ifdef PRINT_SELECT
-         cout << "select(" << getpid() << "): waiting..." << endl;
+         std::cout << "select(" << getpid() << "): waiting..." << std::endl;
 #endif
 
          if(timeout != NULL) {
@@ -2845,7 +2845,7 @@ int ext_select(int             n,
          }
 
 #ifdef PRINT_SELECT
-         cout << "select(" << getpid() << "): wake-up" << endl;
+         std::cout << "select(" << getpid() << "): wake-up" << std::endl;
 #endif
       }
       else {
@@ -2879,7 +2879,7 @@ int ext_select(int             n,
             case UCT_Read:
                if(readfds != NULL) {
 #ifdef PRINT_SELECT
-                  cout << "select(" << getpid() << "): got read for FD " << selectData.ConditionFD[i] << "." << endl;
+                  std::cout << "select(" << getpid() << "): got read for FD " << selectData.ConditionFD[i] << "." << std::endl;
 #endif
                   FD_SET(selectData.ConditionFD[i],readfds);
                }
@@ -2887,7 +2887,7 @@ int ext_select(int             n,
             case UCT_Write:
                if(writefds != NULL) {
 #ifdef PRINT_SELECT
-                  cout << "select(" << getpid() << "): got write for FD " << selectData.ConditionFD[i] << "." << endl;
+                  std::cout << "select(" << getpid() << "): got write for FD " << selectData.ConditionFD[i] << "." << std::endl;
 #endif
                   FD_SET(selectData.ConditionFD[i],writefds);
                }
@@ -2895,7 +2895,7 @@ int ext_select(int             n,
             case UCT_Except:
                if(exceptfds != NULL) {
 #ifdef PRINT_SELECT
-                  cout << "select(" << getpid() << "): got except for FD " << selectData.ConditionFD[i] << "." << endl;
+                  std::cout << "select(" << getpid() << "): got except for FD " << selectData.ConditionFD[i] << "." << std::endl;
 #endif
                   FD_SET(selectData.ConditionFD[i],exceptfds);
                }
@@ -2927,32 +2927,32 @@ int ext_select(int             n,
 #ifdef PRINT_SELECT
          char str[32];
          snprintf((char*)&str,sizeof(str),"$%04x",selectData.UserNotification[i]->Events);
-         cout << "select(" << getpid() << "): events " << str << " for FD " << selectData.UserNotification[i]->FileDescriptor << " ("
-                 << selectData.UserCallbackFD[i] << ")" << endl;
+         std::cout << "select(" << getpid() << "): events " << str << " for FD " << selectData.UserNotification[i]->FileDescriptor << " ("
+                 << selectData.UserCallbackFD[i] << ")" << std::endl;
 #endif
       }
 
       bool changed = false;
       if((readfds != NULL) && (selectData.UserNotification[i]->Events & (POLLIN|POLLPRI))) {
 #ifdef PRINT_SELECT
-         cout << "select(" << getpid() << "): got read for FD " << selectData.UserNotification[i]->FileDescriptor << " ("
-              << selectData.UserCallbackFD[i] << ")" << endl;
+         std::cout << "select(" << getpid() << "): got read for FD " << selectData.UserNotification[i]->FileDescriptor << " ("
+                   << selectData.UserCallbackFD[i] << ")" << std::endl;
 #endif
          FD_SET(selectData.UserCallbackFD[i],readfds);
          changed = true;
       }
       if((writefds != NULL) && (selectData.UserNotification[i]->Events & POLLOUT)) {
 #ifdef PRINT_SELECT
-         cout << "select(" << getpid() << "): got write for FD " << selectData.UserNotification[i]->FileDescriptor << " ("
-              << selectData.UserCallbackFD[i] << ")" << endl;
+         std::cout << "select(" << getpid() << "): got write for FD " << selectData.UserNotification[i]->FileDescriptor << " ("
+                   << selectData.UserCallbackFD[i] << ")" << std::endl;
 #endif
          FD_SET(selectData.UserCallbackFD[i],writefds);
          changed = true;
       }
       if((exceptfds != NULL) && (selectData.UserNotification[i]->Events & (~(POLLIN|POLLPRI|POLLOUT)))) {
 #ifdef PRINT_SELECT
-         cout << "select(" << getpid() << "): got except for FD " << selectData.UserNotification[i]->FileDescriptor << " ("
-              << selectData.UserCallbackFD[i] << ")" << endl;
+         std::cout << "select(" << getpid() << "): got except for FD " << selectData.UserNotification[i]->FileDescriptor << " ("
+                   << selectData.UserCallbackFD[i] << ")" << std::endl;
 #endif
          FD_SET(selectData.UserCallbackFD[i],exceptfds);
          changed = true;

@@ -77,7 +77,7 @@ EchoServer::EchoServer(SCTPAssociation* association)
    unsynchronized();
 
    printTimeStamp(cout);
-   cout << "Thread #" << ID << " start!" << endl;
+   std::cout << "Thread #" << ID << " start!" << std::endl;
    char* hello = "The SCTP Echo Server - Version 1.00";
    Association->send(hello,strlen(hello),0,0,0,0);
 
@@ -114,7 +114,7 @@ void EchoServer::run()
                            ssn, tsn);
       if(error != 0) {
          printTimeStamp(cout);
-         cout << "Thread #" << ID << " shutdown!" << endl;
+         std::cout << "Thread #" << ID << " shutdown!" << std::endl;
          delete this;
          return;
       }
@@ -129,7 +129,7 @@ void EchoServer::run()
          // ====== Print information ========================================
          dataBuffer[dataLength] = 0x00;
          snprintf((char*)&str,sizeof(str),"A%d: [%s]",Association->getID(),dataBuffer);
-         cout << str << endl;
+         std::cout << str << std::endl;
       }
 
    }
@@ -173,7 +173,7 @@ void EchoClient::run()
       snprintf((char*)&dataBuffer,sizeof(dataBuffer),"Test #%d",i);
       const int error = Association->send(dataBuffer,strlen(dataBuffer),0,0,0,0);
       if(error < 0) {
-         cerr << "ERROR: EchoClient::run() - Send error #" << error << "!" << endl;
+         std::cerr << "ERROR: EchoClient::run() - Send error #" << error << "!" << std::endl;
          ::exit(1);
       }
 
@@ -209,13 +209,13 @@ void connectionLessServer(const Settings* settings)
 
    SCTPSocket receiverSocket(SCTPSocket::SSF_AutoConnect|SCTPSocket::SSF_GlobalQueue);
    if(receiverSocket.bind(settings->LocalPort,1,1,(const SocketAddress**)&addressArray) != 0) {
-      cerr << "ERROR: connectionLessServer() - Unable to bind local socket!" << endl;
+      std::cerr << "ERROR: connectionLessServer() - Unable to bind local socket!" << std::endl;
       exit(1);
    }
 
    SCTPSocket senderSocket(SCTPSocket::SSF_AutoConnect|SCTPSocket::SSF_GlobalQueue);
    if(senderSocket.bind(settings->LocalPort + 1,1,1,(const SocketAddress**)&addressArray) != 0) {
-      cerr << "ERROR: connectionLessServer() - Unable to bind local socket #2!" << endl;
+      std::cerr << "ERROR: connectionLessServer() - Unable to bind local socket #2!" << std::endl;
       exit(1);
    }
 
@@ -239,7 +239,7 @@ void connectionLessServer(const Settings* settings)
                            &addressList,
                            notification);
       if(error < 0) {
-         cerr << "ERROR: connectionLessServer() - Receive error #" << error << "!" << endl;
+         std::cerr << "ERROR: connectionLessServer() - Receive error #" << error << "!" << std::endl;
          exit(1);
       }
 
@@ -261,13 +261,13 @@ void connectionLessServer(const Settings* settings)
                                  0,
                                  addressList[0]);
             if(error < 0) {
-               cerr << "WARNING: connectionLessServer() - Send error #" << error << "!" << endl;
+               std::cerr << "WARNING: connectionLessServer() - Send error #" << error << "!" << std::endl;
             }
 
 
             // ====== Print information =====================================
             addressList[0]->setPrintFormat(InternetAddress::PF_Address);
-            cout << *(addressList[0]) << "> [" << dataBuffer << "]" << endl;
+            std::cout << *(addressList[0]) << "> [" << dataBuffer << "]" << std::endl;
          }
       }
    }
@@ -289,13 +289,13 @@ void connectionLessClient(const Settings* settings)
 
    SCTPSocket receiverSocket(SCTPSocket::SSF_AutoConnect|SCTPSocket::SSF_GlobalQueue);
    if(receiverSocket.bind(settings->LocalPort,1,1,(const SocketAddress**)&addressArray) != 0) {
-      cerr << "ERROR: connectionLessClient() - Unable to bind local socket!" << endl;
+      std::cerr << "ERROR: connectionLessClient() - Unable to bind local socket!" << std::endl;
       exit(1);
    }
 
    SCTPSocket senderSocket(SCTPSocket::SSF_AutoConnect|SCTPSocket::SSF_GlobalQueue);
    if(senderSocket.bind(settings->LocalPort + 1,1,1,(const SocketAddress**)&addressArray) != 0) {
-      cerr << "ERROR: connectionLessClient() - Unable to bind local socket!" << endl;
+      std::cerr << "ERROR: connectionLessClient() - Unable to bind local socket!" << std::endl;
       exit(1);
    }
 
@@ -303,7 +303,7 @@ void connectionLessClient(const Settings* settings)
                                      0,
                                      settings->RemoteAddress[0],settings->RemotePort);
    if(remoteAddress == NULL) {
-      cerr << "ERROR: connectionLessClient() - Bad remote address!" << endl;
+      std::cerr << "ERROR: connectionLessClient() - Bad remote address!" << std::endl;
       exit(1);
    }
 
@@ -319,7 +319,7 @@ void connectionLessClient(const Settings* settings)
                            0,
                            remoteAddress);
       if(error < 0) {
-         cerr << "ERROR: connectionLessClient() - Send error #" << error << "!" << endl;
+         std::cerr << "ERROR: connectionLessClient() - Send error #" << error << "!" << std::endl;
          exit(1);
       }
 
@@ -343,13 +343,13 @@ void connectionLessClient(const Settings* settings)
                               NULL,
                               notification);
          if(error < 0) {
-            cerr << "ERROR: connectionLessClient() - Receive error #" << error << "!" << endl;
+            std::cerr << "ERROR: connectionLessClient() - Receive error #" << error << "!" << std::endl;
             exit(1);
          }
 
          if(dataLength > 0) {
             dataBuffer[dataLength] = 0x00;
-            cout << "--> " << dataBuffer << endl;
+            std::cout << "--> " << dataBuffer << std::endl;
          }
 
          complete = (dataLength == 0);
@@ -375,7 +375,7 @@ void connectionOrientedServer(const Settings* settings)
 
    SCTPSocket socket;
    if(socket.bind(settings->LocalPort,1,1,(const SocketAddress**)&addressArray) != 0) {
-      cerr << "ERROR: connectionOrientedServer() - Unable to bind local socket!" << endl;
+      std::cerr << "ERROR: connectionOrientedServer() - Unable to bind local socket!" << std::endl;
       exit(1);
    }
 
@@ -384,19 +384,19 @@ void connectionOrientedServer(const Settings* settings)
       SocketAddress** addressList = NULL;
       SCTPAssociation* association = socket.accept(&addressList);
       if(association == NULL) {
-         cerr << "ERROR: connectionOrientedServer() - accept() failed!" << endl;
+         std::cerr << "ERROR: connectionOrientedServer() - accept() failed!" << std::endl;
          exit(1);
       }
 
       printTimeStamp(cout);
-      cout << "Accepted association from {";
+      std::cout << "Accepted association from {";
       unsigned int i = 0;
       while(addressList[i] != NULL) {
          addressList[i]->setPrintFormat(InternetAddress::PF_Address);
-         cout << " " << *(addressList[i]) << " ";
+         std::cout << " " << *(addressList[i]) << " ";
          i++;
       }
-      cout << "}." << endl;
+      std::cout << "}." << std::endl;
 
       SocketAddress::deleteAddressList(addressList);
       new EchoServer(association);
@@ -417,7 +417,7 @@ void connectionOrientedClient(const Settings* settings)
 
    SCTPSocket socket;
    if(socket.bind(settings->LocalPort,1,1,(const SocketAddress**)&addressArray) != 0) {
-      cerr << "ERROR: connectionOrientedClient() - Unable to bind local socket!" << endl;
+      std::cerr << "ERROR: connectionOrientedClient() - Unable to bind local socket!" << std::endl;
       exit(1);
    }
 
@@ -426,19 +426,19 @@ void connectionOrientedClient(const Settings* settings)
                                      0,
                                      settings->RemoteAddress[0],settings->RemotePort);
    if(remoteAddress == NULL) {
-      cerr << "ERROR: connectionOrientedClient() - Bad remote address!" << endl;
+      std::cerr << "ERROR: connectionOrientedClient() - Bad remote address!" << std::endl;
       exit(1);
    }
    SCTPAssociation* association = socket.associate(1,*remoteAddress);
    if(association == NULL) {
-      cerr << "ERROR: connectionOrientedClient() - associate() failed!" << endl;
+      std::cerr << "ERROR: connectionOrientedClient() - associate() failed!" << std::endl;
       exit(1);
    }
    delete remoteAddress;
 
    EchoClient*echoClient = new EchoClient(association);
    if(echoClient == NULL) {
-      cerr << "ERROR: connectionOrientedClient() - Out of memory!" << endl;
+      std::cerr << "ERROR: connectionOrientedClient() - Out of memory!" << std::endl;
       exit(1);
    }
 
@@ -458,18 +458,18 @@ void connectionOrientedClient(const Settings* settings)
                            streamID, protoID,
                            ssn, tsn);
       if(error < 0) {
-         cerr << "ERROR: connectionOrientedClient() - Receive error #" << error << "!" << endl;
+         std::cerr << "ERROR: connectionOrientedClient() - Receive error #" << error << "!" << std::endl;
          exit(1);
       }
 
       if(dataLength > 0) {
          dataBuffer[dataLength] = 0x00;
-         cout << dataBuffer;
-         cout.flush();
+         std::cout << dataBuffer;
+         std::cout.flush();
          if(flags & MSG_EOR) {
-            cout << endl;
+            std::cout << std::endl;
          }
-         else cout << "|";
+         else std::cout << "|";
       }
    }
 
@@ -491,13 +491,13 @@ int main(int argc, char** argv)
    bool     optForceIPv4   = true;
    if(!sctp_isavailable()) {
 #ifdef HAVE_KERNEL_SCTP
-      cerr << "ERROR: Kernel-based SCTP is not available!" << endl;
+      std::cerr << "ERROR: Kernel-based SCTP is not available!" << std::endl;
 #else
      if(getuid() != 0) {
-        cerr << "ERROR: You need root permissions to use the SCTP Library!" << endl;
+        std::cerr << "ERROR: You need root permissions to use the SCTP Library!" << std::endl;
      }
      else {
-        cerr << "ERROR: SCTP is not available!" << endl;
+        std::cerr << "ERROR: SCTP is not available!" << std::endl;
      }
 #endif
       exit(1);
@@ -524,7 +524,7 @@ int main(int argc, char** argv)
             settings.LocalAddresses++;
          }
          else {
-            cerr << "ERROR: Too many local addresses!" << endl;
+            std::cerr << "ERROR: Too many local addresses!" << std::endl;
             exit(1);
          }
       }
@@ -534,18 +534,18 @@ int main(int argc, char** argv)
             settings.RemoteAddresses++;
          }
          else {
-            cerr << "ERROR: Too many remote addresses!" << endl;
+            std::cerr << "ERROR: Too many remote addresses!" << std::endl;
             exit(1);
          }
       }
       else if(!(strncasecmp(argv[i],"-localport=",11)))  settings.LocalPort  = atol(&argv[i][11]);
       else if(!(strncasecmp(argv[i],"-remoteport=",12))) settings.RemotePort = atol(&argv[i][12]);
       else {
-         cerr << "Usage: " << argv[0] << " "
+         std::cerr << "Usage: " << argv[0] << " "
                  "[-client|-server] [-connectionless|-cl|-connectionoriented|-co] "
                  "[-force-ipv4|-use-ipv6] [-local=address1] ... [-local=addressN] "
                  "[-remote=address1] ... [-remote=addressN] [-localport=port] [-remoteport=port]"
-              << endl;
+              << std::endl;
          exit(1);
       }
    }
@@ -563,7 +563,7 @@ int main(int argc, char** argv)
          settings.LocalPort = 10000 + (randomizer.random16() % 50000);
       }
       else {
-         cerr << "ERROR: A server requires given local port!" << endl;
+         std::cerr << "ERROR: A server requires given local port!" << std::endl;
          exit(1);
       }
    }
@@ -573,44 +573,44 @@ int main(int argc, char** argv)
 
 
    // ====== Print information ==============================================
-   cout << "SCTP Test - Copyright (C) 2001 Thomas Dreibholz" << endl;
-   cout << "-----------------------------------------------" << endl;
-   cout << "Version:           " << __DATE__ << ", " << __TIME__ << endl;
-   cout << "Server Mode:       " << ((server == true) ? "on" : "off") << endl;
-   cout << "Connection Mode:   " << ((connectionLess == false) ? "connection-oriented" : "connection-less") << endl;
-   cout << "Local Addresses:   " << settings.LocalAddress[0] << endl;
+   std::cout << "SCTP Test - Copyright (C) 2001 Thomas Dreibholz" << std::endl;
+   std::cout << "-----------------------------------------------" << std::endl;
+   std::cout << "Version:           " << __DATE__ << ", " << __TIME__ << std::endl;
+   std::cout << "Server Mode:       " << ((server == true) ? "on" : "off") << std::endl;
+   std::cout << "Connection Mode:   " << ((connectionLess == false) ? "connection-oriented" : "connection-less") << std::endl;
+   std::cout << "Local Addresses:   " << settings.LocalAddress[0] << std::endl;
    for(unsigned int i = 1;i < settings.LocalAddresses;i++) {
-      cout << "                   " << settings.LocalAddress[i] << endl;
+      std::cout << "                   " << settings.LocalAddress[i] << std::endl;
    }
-   cout << "Local Port:        " << settings.LocalPort << endl;
+   std::cout << "Local Port:        " << settings.LocalPort << std::endl;
    if(!server) {
-      cout << "Remote Addresses:  " << settings.RemoteAddress[0] << endl;
+      std::cout << "Remote Addresses:  " << settings.RemoteAddress[0] << std::endl;
       for(unsigned int i = 1;i < settings.RemoteAddresses;i++) {
-         cout << "                   " << settings.RemoteAddress[i] << endl;
+         std::cout << "                   " << settings.RemoteAddress[i] << std::endl;
       }
-      cout << "Remote Port:       " << settings.RemotePort << endl;
+      std::cout << "Remote Port:       " << settings.RemotePort << std::endl;
    }
-   cout << endl << endl;
+   std::cout << std::endl << std::endl;
 
 
    // ====== Execute main program ===========================================
    if(server) {
       if(connectionLess) {
-         cout << "Start connection-less server..." << endl;
+         std::cout << "Start connection-less server..." << std::endl;
          connectionLessServer(&settings);
       }
       else {
-         cout << "Start connection-oriented server..." << endl;
+         std::cout << "Start connection-oriented server..." << std::endl;
          connectionOrientedServer(&settings);
       }
    }
    else {
       if(connectionLess) {
-         cout << "Start connection-less client..." << endl;
+         std::cout << "Start connection-less client..." << std::endl;
          connectionLessClient(&settings);
       }
       else {
-         cout << "Start connection-oriented client..." << endl;
+         std::cout << "Start connection-oriented client..." << std::endl;
          connectionOrientedClient(&settings);
       }
    }

@@ -116,7 +116,7 @@ void Condition::signal()
    pthread_cond_signal(&ConditionVariable);
 
 #ifdef PRINT_SIGNAL
-   cout << "signal: " << getName() << std::endl;
+   std::cout << "signal: " << getName() << std::endl;
 #endif
 
    std::set<Condition*>::iterator iterator = ParentSet.begin();
@@ -138,7 +138,7 @@ void Condition::broadcast()
    pthread_cond_broadcast(&ConditionVariable);
 
 #ifdef PRINT_SIGNAL
-   cout << "broadcast: " << getName() << std::endl;
+   std::cout << "broadcast: " << getName() << std::endl;
 #endif
 
    std::set<Condition*>::iterator iterator = ParentSet.begin();
