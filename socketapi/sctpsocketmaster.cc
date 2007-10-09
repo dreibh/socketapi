@@ -41,6 +41,7 @@
 
 
 #include <signal.h>
+#include <poll.h>
 #if (SYSTEM == OS_SOLARIS)
 #include <sys/types.h>
 #include <unistd.h>

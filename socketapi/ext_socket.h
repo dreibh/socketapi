@@ -57,7 +57,7 @@
 
 
 #define SOCKETAPI_MAJOR_VERSION  0x2
-#define SOCKETAPI_MINOR_VERSION  0x1000
+#define SOCKETAPI_MINOR_VERSION  0x1100
 
 
 /*
@@ -413,23 +413,6 @@ ssize_t ext_sendmsg(int s, const struct msghdr* msg, int flags);
 ssize_t ext_read(int fd, void* buf, size_t count);
 ssize_t ext_write(int fd, const void* buf, size_t count);
 int ext_select(int n, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, struct timeval* timeout);
-
-#if defined(__APPLE__)
-#define POLLIN  0x001
-#define POLLPRI 0x002
-#define POLLOUT 0x004
-#define POLLERR 0x008
-#define POLLHUP 0x010
-
-struct pollfd {
-   int       fd;
-   short int events;
-   short int revents;
-};
-#else
-#include <sys/poll.h>
-#endif
-
 int ext_poll(struct pollfd* fdlist, long unsigned int count, int time);
 
 
