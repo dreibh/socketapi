@@ -41,6 +41,7 @@
 
 #include <stdarg.h>
 #include <sys/ioctl.h>
+#include <poll.h>
 
 
 // Random port selection for INADDR_ANY. Necessary for localhost testing!
