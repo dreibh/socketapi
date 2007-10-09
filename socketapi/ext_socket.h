@@ -66,20 +66,20 @@
    flags and sinfo_flags fields! Here, it is
    ensured to define unique value.
 */
-#define MSG_UNORDERED     (1UL << 31)
-#define MSG_UNBUNDLED     (1UL << 30)
+#define MSG_UNORDERED     MSG_DONTROUTE
+#define MSG_UNBUNDLED     MSG_CTRUNC
 #ifndef MSG_NOTIFICATION
-#define MSG_NOTIFICATION  (1UL << 29)
+#define MSG_NOTIFICATION  MSG_OOB
 #endif
-#define MSG_ABORT         (1UL << 28)
+#define MSG_ABORT         MSG_RST
 #ifndef MSG_EOF
-#define MSG_EOF           (1UL << 27)
+#define MSG_EOF           MSG_FIN
 #endif
 #define MSG_SHUTDOWN      MSG_EOF
-#define MSG_PR_SCTP_TTL   (1UL << 26)
-#define MSG_ADDR_OVER     (1UL << 25)
-#define MSG_SEND_TO_ALL   (1UL << 24)
-#define MSG_MULTIADDRS    (1UL << 23)
+#define MSG_PR_SCTP_TTL   MSG_ERRQUEUE
+#define MSG_ADDR_OVER     MSG_MORE
+#define MSG_SEND_TO_ALL   MSG_PROXY
+#define MSG_MULTIADDRS    MSG_TRUNC
 
 #define SCTP_UNORDERED    MSG_UNORDERED
 #define SCTP_UNBUNDLED    MSG_UNBUNDLED
