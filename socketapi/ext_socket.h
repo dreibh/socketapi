@@ -71,15 +71,23 @@
 #ifndef MSG_NOTIFICATION
 #define MSG_NOTIFICATION  MSG_OOB
 #endif
-#define MSG_ABORT         MSG_RST
 #ifndef MSG_EOF
 #define MSG_EOF           MSG_FIN
 #endif
 #define MSG_SHUTDOWN      MSG_EOF
+#define MSG_MULTIADDRS    MSG_TRUNC
+
+#ifdef __APPLE
+#define MSG_ABORT         MSG_RST
 #define MSG_PR_SCTP_TTL   MSG_ERRQUEUE
 #define MSG_ADDR_OVER     MSG_MORE
 #define MSG_SEND_TO_ALL   MSG_PROXY
-#define MSG_MULTIADDRS    MSG_TRUNC
+#else
+#define MSG_ABORT         MSG_HOLD
+#define MSG_PR_SCTP_TTL   MSG_FLUSH
+#define MSG_ADDR_OVER     MSG_SEND
+#define MSG_SEND_TO_ALL   MSG_HAVEMORE
+#endif
 
 #define SCTP_UNORDERED    MSG_UNORDERED
 #define SCTP_UNBUNDLED    MSG_UNBUNDLED
