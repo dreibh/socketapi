@@ -77,7 +77,7 @@
 #define MSG_SHUTDOWN      MSG_EOF
 #define MSG_MULTIADDRS    MSG_TRUNC
 
-#ifdef __APPLE
+#ifdef MSG_RST
 #define MSG_ABORT         MSG_RST
 #define MSG_PR_SCTP_TTL   MSG_ERRQUEUE
 #define MSG_ADDR_OVER     MSG_MORE
