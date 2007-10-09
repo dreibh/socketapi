@@ -49,7 +49,6 @@
 #include <sys/time.h>
 #include <inttypes.h>
 #include <netinet/in.h>
-#include <poll.h>
 
 
 #ifndef IPPROTO_SCTP
