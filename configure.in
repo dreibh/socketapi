@@ -118,7 +118,7 @@ darwin7*)
     thread_LIBS="-lpthread"
     ;;
 darwin8*)
-    CFLAGS="$CFLAGS -DDARWIN -DUSE_SELECT"
+    CFLAGS="$CFLAGS -DDARWIN"
     CXXFLAGS="$CXXFLAGS -DDARWIN"
     thread_LIBS="-lpthread"
     ;;

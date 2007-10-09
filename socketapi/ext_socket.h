@@ -49,6 +49,7 @@
 #include <sys/time.h>
 #include <inttypes.h>
 #include <netinet/in.h>
+#include <poll.h>
 
 
 #ifndef IPPROTO_SCTP
@@ -413,7 +414,6 @@ ssize_t ext_sendmsg(int s, const struct msghdr* msg, int flags);
 ssize_t ext_read(int fd, void* buf, size_t count);
 ssize_t ext_write(int fd, const void* buf, size_t count);
 int ext_select(int n, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, struct timeval* timeout);
-struct pollfd;
 int ext_poll(struct pollfd* fdlist, long unsigned int count, int time);
 
 
@@ -533,14 +533,7 @@ int sctp_enableCRC32(const unsigned int enable);
 #define ext_read(a,b,c) ::read(a,b,c)
 #define ext_write(a,b,c) ::write(a,b,c)
 #define ext_select(a,b,c,d,e) ::select(a,b,c,d,e)
-#ifdef USE_SELECT
-extern "C" {
-#include <poll.h>
-int ext_poll(struct pollfd* fdlist, long unsigned int count, int time);
-}
-#else
 #define ext_poll(a,b,c) ::poll(a,b,c)
-#endif
 #define ext_pipe(a) ::pipe(a)
 #else
 #define ext_socket(a,b,c) socket(a,b,c)
@@ -565,12 +558,7 @@ int ext_poll(struct pollfd* fdlist, long unsigned int count, int time);
 #define ext_read(a,b,c) read(a,b,c)
 #define ext_write(a,b,c) write(a,b,c)
 #define ext_select(a,b,c,d,e) select(a,b,c,d,e)
-#ifdef USE_SELECT
-#include <poll.h>
-int ext_poll(struct pollfd* fdlist, long unsigned int count, int time);
-#else
 #define ext_poll(a,b,c) poll(a,b,c)
-#endif
 #define ext_pipe(a) pipe(a)
 #endif
 
