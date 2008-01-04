@@ -546,6 +546,8 @@ int ext_close(int sockfd)
 {
    ExtSocketDescriptor* tdSocket = ExtSocketDescriptorMaster::getSocket(sockfd);
    if(tdSocket != NULL) {
+      SCTPSocketMaster::MasterInstance.lock();
+
       switch(tdSocket->Type) {
          case ExtSocketDescriptor::ESDT_SCTP:
             if(tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr != NULL) {
@@ -571,12 +573,13 @@ int ext_close(int sockfd)
                      }
                   }
                   delete tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr;
-                  tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr = NULL;
                }
                else {
-                  std::cerr << "ERROR: ext_close(" << sockfd << ") - still in use!" << std::endl;
-                  errno_return(-ENXIO);
+                  /* ext_close() has been invoked on a peeled-off socket.
+                     The SCTPSocket object will be deleted when closing the last socket. */
+                  // std::cerr << "INFO: ext_close(" << sockfd << ") - still in use. OK!" << std::endl;
                }
+               tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr = NULL;
             }
           break;
          case ExtSocketDescriptor::ESDT_System:
@@ -584,12 +587,14 @@ int ext_close(int sockfd)
             tdSocket->Socket.SystemSocketID = 0;
           break;
          default:
+            SCTPSocketMaster::MasterInstance.unlock();
             errno_return(-ENXIO);
           break;
       }
 
-      SCTPSocketMaster::MasterInstance.lock();
+      // Finally, invalidate socket descriptor
       tdSocket->Type = ExtSocketDescriptor::ESDT_Invalid;
+
       SCTPSocketMaster::MasterInstance.unlock();
       errno_return(0);
    }
