@@ -451,10 +451,6 @@ int ext_socket(int domain, int type, int protocol)
       tdSocket.Socket.SystemSocketID = socket(domain,type,protocol);
       if(tdSocket.Socket.SystemSocketID >= 0) {
          int result = ExtSocketDescriptorMaster::setSocket(tdSocket);
-         if(result < 0) {
-            delete tdSocket.Socket.SCTPSocketDesc.SCTPSocketPtr;
-            tdSocket.Socket.SCTPSocketDesc.SCTPSocketPtr = NULL;
-         }
          errno_return(result);
       }
       errno_return(tdSocket.Socket.SystemSocketID);
