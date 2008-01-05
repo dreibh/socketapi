@@ -144,7 +144,7 @@ SCTPAssociation::~SCTPAssociation()
       }
    }
 
-   // ====== Remove association from list ================================
+   // ====== Remove association from list ===================================
    std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
       Socket->AssociationList.find(AssociationID);
    if(iterator != Socket->AssociationList.end()) {
@@ -153,7 +153,7 @@ SCTPAssociation::~SCTPAssociation()
    else {
 #ifndef DISABLE_WARNINGS
       std::cerr << "INTERNAL ERROR: SCTPAssociation::~SCTPAssociation() - "
-                   "Erase of association #" << AssociationID << " failed!" << std::endl;
+                   "Erase of association #" << AssociationID << " from association list failed!" << std::endl;
 #endif
       ::abort();
    }
