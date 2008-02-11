@@ -1,0 +1,41 @@
+#!/bin/bash
+# $Id: make-deb 1704 2008-02-11 14:22:26Z dreibh $
+
+
+# ---------------------------------------------------------
+INPUT="$HOME/src/sctplib1"
+PACKAGE="sctplib"
+CONFOPT=""
+# ---------------------------------------------------------
+
+
+# Nur einmalig erforderlich!
+# dh_make -c gpl -n -e dreibh@iem.uni-due.de -m
+
+rm -f sctplib-*.gz
+
+./bootstrap && \
+./configure $CONFOPT && \
+make dist && \
+VERSION=`ls $PACKAGE-*.gz|sed -e "s/$PACKAGE-//g" -e "s/.tar.gz//g"` && \
+rm -rf $PACKAGE-$VERSION && \
+tar xzf $INPUT/$PACKAGE-$VERSION.tar.gz && \
+cd $PACKAGE-$VERSION && \
+cp -r $INPUT/debian . && \
+rm -rf debian/.svn || exit
+
+
+# Ohne Signatur!
+# debuild -us -uc
+# Für Sources:
+# debuild -S
+# Für Binaries:
+# debuild -b
+
+# Mit Signatur!
+debuild -S -k'Thomas Dreibholz <dreibh@iem.uni-due.de>'
+
+
+# Wichtig: In /etc/pbuilderrc COMPONENTS="main universe" setzen!
+# Wichtig: Jetzt Update mit Option "--override-config"!
+# sudo pbuilder update --override-config

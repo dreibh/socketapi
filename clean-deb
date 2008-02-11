@@ -1,0 +1,3 @@
+#!/bin/bash
+
+rm -f *.deb *.dsc *.asc *.changes *.build *.upload *.tar.gz stamp-h* svn-commit* *~
