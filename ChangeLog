@@ -1,0 +1,2431 @@
+------------------------------------------------------------------------
+r1654 | dreibh | 2008-01-30 09:45:40 +0100 (Wed, 30 Jan 2008) | 1 line
+Changed paths:
+   M /trunk/socketapi/configure.in
+
+
+------------------------------------------------------------------------
+r1634 | dreibh | 2008-01-05 14:31:42 +0100 (Sat, 05 Jan 2008) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+
+
+------------------------------------------------------------------------
+r1626 | dreibh | 2008-01-04 22:30:02 +0100 (Fri, 04 Jan 2008) | 3 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+Fixed problem with peeled-off socket and ext_close().
+ext_close() will not delete SCTPSocket if there are still references to it.
+
+------------------------------------------------------------------------
+r1625 | dreibh | 2008-01-04 15:07:13 +0100 (Fri, 04 Jan 2008) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+Removed "delete" of SCTP socket object for system sockets.
+
+------------------------------------------------------------------------
+r1600 | dreibh | 2007-10-21 10:24:50 +0200 (Sun, 21 Oct 2007) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+ext_socket.h update with MacOS/FreeBSD change.
+
+------------------------------------------------------------------------
+r1588 | dreibh | 2007-10-09 13:14:36 +0200 (Tue, 09 Oct 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+
+------------------------------------------------------------------------
+r1587 | dreibh | 2007-10-09 13:12:53 +0200 (Tue, 09 Oct 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+
+------------------------------------------------------------------------
+r1586 | dreibh | 2007-10-09 13:07:12 +0200 (Tue, 09 Oct 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+
+------------------------------------------------------------------------
+r1585 | dreibh | 2007-10-09 12:44:27 +0200 (Tue, 09 Oct 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+
+------------------------------------------------------------------------
+r1584 | dreibh | 2007-10-09 12:25:21 +0200 (Tue, 09 Oct 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+
+------------------------------------------------------------------------
+r1583 | dreibh | 2007-10-09 12:23:00 +0200 (Tue, 09 Oct 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+
+------------------------------------------------------------------------
+r1582 | dreibh | 2007-10-09 12:21:27 +0200 (Tue, 09 Oct 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+
+------------------------------------------------------------------------
+r1581 | dreibh | 2007-10-09 12:16:32 +0200 (Tue, 09 Oct 2007) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+MacOS fixes.
+
+------------------------------------------------------------------------
+r1580 | dreibh | 2007-10-09 12:10:20 +0200 (Tue, 09 Oct 2007) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+MacOS fixes. NOTE: MSG_xxx definitions updated!
+
+------------------------------------------------------------------------
+r1579 | dreibh | 2007-10-09 10:49:54 +0200 (Tue, 09 Oct 2007) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocket_programs/sctpsockettest.cc
+   M /trunk/socketapi/cppsocket_programs/sctptest.cc
+   M /trunk/socketapi/socketapi/condition.cc
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+   M /trunk/socketapi/socketapi/synchronizable.cc
+   M /trunk/socketapi/socketapi/synchronizable.icc
+   M /trunk/socketapi/socketapi/thread.cc
+   M /trunk/socketapi/socketapi/tools.cc
+
+Fixed namespace problem: cout/cerr/endl -> std::*.
+
+------------------------------------------------------------------------
+r1563 | dreibh | 2007-09-10 09:43:21 +0200 (Mon, 10 Sep 2007) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+Fixed a race condition in ext_socket/ext_close.
+
+------------------------------------------------------------------------
+r1528 | dreibh | 2007-08-23 05:51:10 +0200 (Thu, 23 Aug 2007) | 3 lines
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+   M /trunk/socketapi/socket_programs/Makefile.am
+   A /trunk/socketapi/socket_programs/batch
+   A /trunk/socketapi/socket_programs/tsctp.c
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+Implemented connectx with associd.
+Version update.
+
+------------------------------------------------------------------------
+r1526 | dreibh | 2007-08-23 05:34:37 +0200 (Thu, 23 Aug 2007) | 3 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocket.h
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+connectx() updated to latest draft (associd parameter).
+Version update.
+
+------------------------------------------------------------------------
+r1447 | dreibh | 2007-06-14 16:02:54 +0200 (Thu, 14 Jun 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+
+------------------------------------------------------------------------
+r1423 | dreibh | 2007-05-28 18:36:17 +0200 (Mon, 28 May 2007) | 1 line
+Changed paths:
+   D /trunk/socketapi/.cvsignore
+   D /trunk/socketapi/cppsocket_programs/.cvsignore
+   D /trunk/socketapi/cppsocketapi/.cvsignore
+   D /trunk/socketapi/scripts/.cvsignore
+   D /trunk/socketapi/socket_programs/.cvsignore
+   D /trunk/socketapi/socketapi/.cvsignore
+
+
+------------------------------------------------------------------------
+r1407 | dreibh | 2007-05-24 12:11:23 +0200 (Thu, 24 May 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/configure.in
+
+
+------------------------------------------------------------------------
+r1404 | dreibh | 2007-05-24 10:51:26 +0200 (Thu, 24 May 2007) | 1 line
+Changed paths:
+   D /trunk/socketapi/admin/.cvsignore
+   D /trunk/socketapi/admin/ChangeLog
+   D /trunk/socketapi/admin/Makefile.common
+   D /trunk/socketapi/admin/acinclude.m4.in
+   D /trunk/socketapi/admin/am_edit
+   D /trunk/socketapi/admin/am_edit.py
+   D /trunk/socketapi/admin/conf.change.pl
+   D /trunk/socketapi/admin/config.pl
+   D /trunk/socketapi/admin/configure.in.min
+   D /trunk/socketapi/admin/debianrules
+   D /trunk/socketapi/admin/depcomp
+   D /trunk/socketapi/admin/install-sh
+   D /trunk/socketapi/admin/libtool.m4.in
+   D /trunk/socketapi/admin/ltcf-c.sh
+   D /trunk/socketapi/admin/ltcf-cxx.sh
+   D /trunk/socketapi/admin/ltcf-gcj.sh
+   D /trunk/socketapi/admin/ltconfig
+   D /trunk/socketapi/admin/missing
+   D /trunk/socketapi/admin/mkinstalldirs
+   D /trunk/socketapi/admin/ylwrap
+
+
+------------------------------------------------------------------------
+r1403 | dreibh | 2007-05-24 10:50:12 +0200 (Thu, 24 May 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/socket_programs/Makefile.am
+   M /trunk/socketapi/socket_programs/terminal.c
+
+
+------------------------------------------------------------------------
+r1402 | dreibh | 2007-05-24 10:49:51 +0200 (Thu, 24 May 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/cppsocket_programs/Makefile.am
+
+
+------------------------------------------------------------------------
+r1401 | dreibh | 2007-05-24 10:49:33 +0200 (Thu, 24 May 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/Makefile.am
+   M /trunk/socketapi/socketapi/internetaddress.cc
+   M /trunk/socketapi/socketapi/internetaddress.icc
+
+
+------------------------------------------------------------------------
+r1400 | dreibh | 2007-05-24 10:48:50 +0200 (Thu, 24 May 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/configure.in
+
+
+------------------------------------------------------------------------
+r1397 | dreibh | 2007-05-23 23:20:22 +0200 (Wed, 23 May 2007) | 5 lines
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/socketapi/internetaddress.cc
+   M /trunk/socketapi/socketapi/internetaddress.h
+   M /trunk/socketapi/socketapi/internetaddress.icc
+
+configure.in improvements.
+
+Compiles with optimization now.
+
+
+------------------------------------------------------------------------
+r1343 | dreibh | 2007-02-23 10:57:35 +0100 (Fri, 23 Feb 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/socket_programs/idexample1to1.c
+
+
+------------------------------------------------------------------------
+r1334 | dreibh | 2007-02-13 13:26:59 +0100 (Tue, 13 Feb 2007) | 2 lines
+Changed paths:
+   M /trunk/socketapi/admin/mkinstalldirs
+   M /trunk/socketapi/cppsocket_programs/ansicolor.h
+   M /trunk/socketapi/cppsocket_programs/sctpmultiserver.cc
+   M /trunk/socketapi/cppsocket_programs/sctpsockettest.cc
+   M /trunk/socketapi/cppsocket_programs/sctptest.cc
+   M /trunk/socketapi/cppsocket_programs/sctptftp.h
+   M /trunk/socketapi/cppsocketapi/breakdetector.h
+   M /trunk/socketapi/cppsocketapi/packetaddress.h
+   M /trunk/socketapi/cppsocketapi/packetaddress.icc
+   M /trunk/socketapi/cppsocketapi/tdsocket.h
+   M /trunk/socketapi/cppsocketapi/tdsocket.icc
+   M /trunk/socketapi/cppsocketapi/timedthread.cc
+   M /trunk/socketapi/cppsocketapi/timedthread.h
+   M /trunk/socketapi/cppsocketapi/timedthread.icc
+   M /trunk/socketapi/cppsocketapi/trafficclassvalues.cc
+   M /trunk/socketapi/cppsocketapi/trafficclassvalues.h
+   M /trunk/socketapi/cppsocketapi/trafficclassvalues.icc
+   M /trunk/socketapi/socket_programs/idexample1toM.c
+   M /trunk/socketapi/socket_programs/newexample1to1.c
+   M /trunk/socketapi/socket_programs/terminal.c
+   M /trunk/socketapi/socketapi/p1.c
+   M /trunk/socketapi/socketapi/tdstrings.cc
+
+Format string fixes to correctly compile on 64-bit systems.
+
+------------------------------------------------------------------------
+r1311 | dreibh | 2007-02-01 19:22:34 +0100 (Thu, 01 Feb 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/cppsocket_programs/sctpmultiserver.cc
+   M /trunk/socketapi/cppsocket_programs/sctpportscanner.cc
+   M /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+   M /trunk/socketapi/cppsocketapi/multitimerthread.icc
+   M /trunk/socketapi/cppsocketapi/ringbuffer.cc
+   M /trunk/socketapi/cppsocketapi/ringbuffer.h
+   M /trunk/socketapi/cppsocketapi/ringbuffer.icc
+   M /trunk/socketapi/socketapi/condition.cc
+   M /trunk/socketapi/socketapi/condition.h
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+   M /trunk/socketapi/socketapi/tdstrings.cc
+   M /trunk/socketapi/socketapi/tdsystem.h
+
+
+------------------------------------------------------------------------
+r1310 | dreibh | 2007-02-01 14:18:23 +0100 (Thu, 01 Feb 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/range.cc
+   M /trunk/socketapi/cppsocketapi/range.h
+   M /trunk/socketapi/cppsocketapi/range.icc
+
+
+------------------------------------------------------------------------
+r1309 | dreibh | 2007-02-01 14:08:01 +0100 (Thu, 01 Feb 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/cppsocket_programs/sctpinfoprinter.cc
+   M /trunk/socketapi/cppsocket_programs/sctpmultiserver.cc
+   M /trunk/socketapi/cppsocket_programs/sctpportscanner.cc
+   M /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+   M /trunk/socketapi/cppsocket_programs/sctptftp.cc
+   M /trunk/socketapi/cppsocketapi/breakdetector.cc
+   M /trunk/socketapi/cppsocketapi/packetaddress.cc
+   M /trunk/socketapi/cppsocketapi/ringbuffer.cc
+   M /trunk/socketapi/cppsocketapi/streamsrcdest.cc
+   M /trunk/socketapi/cppsocketapi/streamsrcdest.h
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+   M /trunk/socketapi/socketapi/condition.cc
+   M /trunk/socketapi/socketapi/condition.h
+   M /trunk/socketapi/socketapi/internetaddress.cc
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.cc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocket.h
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.h
+   M /trunk/socketapi/socketapi/sctpsocketmaster.icc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+   M /trunk/socketapi/socketapi/socketaddress.cc
+   M /trunk/socketapi/socketapi/socketaddress.h
+   M /trunk/socketapi/socketapi/socketaddress.icc
+   M /trunk/socketapi/socketapi/staticglobals.cc
+   M /trunk/socketapi/socketapi/tdin6.h
+   M /trunk/socketapi/socketapi/tdmessage.icc
+   M /trunk/socketapi/socketapi/tdstrings.cc
+   M /trunk/socketapi/socketapi/tdstrings.h
+   M /trunk/socketapi/socketapi/tdsystem.h
+   M /trunk/socketapi/socketapi/thread.cc
+   M /trunk/socketapi/socketapi/thread.h
+   M /trunk/socketapi/socketapi/tools.cc
+   M /trunk/socketapi/socketapi/tools.h
+   M /trunk/socketapi/socketapi/tools.icc
+   M /trunk/socketapi/socketapi/unixaddress.cc
+
+
+------------------------------------------------------------------------
+r1250 | dreibh | 2007-01-05 13:50:40 +0100 (Fri, 05 Jan 2007) | 1 line
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+
+------------------------------------------------------------------------
+r1220 | tuexen | 2006-11-03 11:36:35 +0100 (Fri, 03 Nov 2006) | 2 lines
+Changed paths:
+   M /trunk/socketapi/configure.in
+
+Bump version.
+
+------------------------------------------------------------------------
+r1217 | dreibh | 2006-10-02 11:37:34 +0200 (Mon, 02 Oct 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.h
+
+
+------------------------------------------------------------------------
+r1193 | dreibh | 2006-08-29 11:55:41 +0200 (Tue, 29 Aug 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/Makefile.am
+
+
+------------------------------------------------------------------------
+r1191 | dreibh | 2006-08-29 11:02:09 +0200 (Tue, 29 Aug 2006) | 5 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/Makefile.am
+   M /trunk/socketapi/socketapi/extsocketdescriptor.h
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+Bugfixes: closed listening socket
+          bindToAny() for ext_listen()
+          errno code corrections
+
+
+------------------------------------------------------------------------
+r1180 | dreibh | 2006-08-04 04:17:38 +0200 (Fri, 04 Aug 2006) | 3 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+Added test code for partial delivery (ifdef'ed out)
+
+
+------------------------------------------------------------------------
+r1179 | dreibh | 2006-08-03 21:03:40 +0200 (Thu, 03 Aug 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+
+------------------------------------------------------------------------
+r1178 | dreibh | 2006-08-03 05:50:22 +0200 (Thu, 03 Aug 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socket_programs/terminal.c
+
+
+------------------------------------------------------------------------
+r1177 | dreibh | 2006-08-03 05:22:41 +0200 (Thu, 03 Aug 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/cppsocket_programs/sctpinfoprinter.cc
+   M /trunk/socketapi/cppsocket_programs/sctpinfoprinter.h
+   M /trunk/socketapi/cppsocket_programs/sctpmultiserver.cc
+   M /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+   M /trunk/socketapi/socket_programs/terminal.c
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+
+------------------------------------------------------------------------
+r1161 | dreibh | 2006-06-21 12:53:27 +0200 (Wed, 21 Jun 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+
+------------------------------------------------------------------------
+r1157 | dreibh | 2006-06-19 17:34:59 +0200 (Mon, 19 Jun 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/autogen.sh
+
+
+------------------------------------------------------------------------
+r1150 | dreibh | 2006-05-30 11:38:07 +0200 (Tue, 30 May 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+
+------------------------------------------------------------------------
+r1149 | dreibh | 2006-05-29 12:02:54 +0200 (Mon, 29 May 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+
+------------------------------------------------------------------------
+r1148 | dreibh | 2006-05-24 15:46:21 +0200 (Wed, 24 May 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+
+------------------------------------------------------------------------
+r1141 | dreibh | 2006-05-23 18:11:23 +0200 (Tue, 23 May 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/socket_programs/terminal.c
+
+
+------------------------------------------------------------------------
+r1140 | dreibh | 2006-05-23 17:47:48 +0200 (Tue, 23 May 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/internetaddress.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+
+------------------------------------------------------------------------
+r1089 | dreibh | 2006-05-05 10:17:07 +0200 (Fri, 05 May 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socket_programs/Makefile.am
+   M /trunk/socketapi/socket_programs/t5.cc
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+
+------------------------------------------------------------------------
+r1086 | dreibh | 2006-04-27 20:53:48 +0200 (Thu, 27 Apr 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socket_programs/Makefile.am
+   A /trunk/socketapi/socket_programs/t5.cc
+   M /trunk/socketapi/socket_programs/terminal.c
+   M /trunk/socketapi/socketapi/internetaddress.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+
+------------------------------------------------------------------------
+r1081 | dreibh | 2006-04-18 11:12:16 +0200 (Tue, 18 Apr 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+
+
+------------------------------------------------------------------------
+r1072 | dreibh | 2006-04-06 10:34:39 +0200 (Thu, 06 Apr 2006) | 6 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+Bugfixes:
+- Always check results of sctp_deleteAssociation() and sctp_unregisterInstance().
+- CommUpNotification with listening flag not set:
+Added mussing call to sctp_deleteAssociation() after sctp_abort().
+
+
+------------------------------------------------------------------------
+r1069 | dreibh | 2006-04-05 10:38:00 +0200 (Wed, 05 Apr 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+
+------------------------------------------------------------------------
+r1067 | dreibh | 2006-04-04 11:54:57 +0200 (Tue, 04 Apr 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+
+
+------------------------------------------------------------------------
+r1066 | dreibh | 2006-04-04 11:54:16 +0200 (Tue, 04 Apr 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+
+------------------------------------------------------------------------
+r1062 | dreibh | 2006-04-03 17:38:54 +0200 (Mon, 03 Apr 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+
+------------------------------------------------------------------------
+r1060 | dreibh | 2006-04-03 14:18:53 +0200 (Mon, 03 Apr 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+
+------------------------------------------------------------------------
+r1058 | dreibh | 2006-04-03 12:48:58 +0200 (Mon, 03 Apr 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+
+------------------------------------------------------------------------
+r1057 | dreibh | 2006-04-03 12:47:31 +0200 (Mon, 03 Apr 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+
+------------------------------------------------------------------------
+r1051 | dreibh | 2006-03-31 10:46:25 +0200 (Fri, 31 Mar 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+
+------------------------------------------------------------------------
+r1048 | dreibh | 2006-03-30 15:30:05 +0200 (Thu, 30 Mar 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+
+------------------------------------------------------------------------
+r1045 | dreibh | 2006-03-27 15:47:32 +0200 (Mon, 27 Mar 2006) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socket_programs/idexample1to1.c
+   M /trunk/socketapi/socket_programs/idexample1toM.c
+   M /trunk/socketapi/socket_programs/terminal.c
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.h
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+Replaced adaption by adaptation.
+
+------------------------------------------------------------------------
+r1033 | dreibh | 2006-03-17 12:13:08 +0100 (Fri, 17 Mar 2006) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+Bugfix in shutdownCompleteNotif() - Call to checkAutoClose() with socket==NULL.
+
+------------------------------------------------------------------------
+r1027 | dreibh | 2006-03-16 15:26:49 +0100 (Thu, 16 Mar 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+
+------------------------------------------------------------------------
+r1020 | dreibh | 2006-03-14 13:59:18 +0100 (Tue, 14 Mar 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+
+------------------------------------------------------------------------
+r1008 | dreibh | 2006-03-10 10:56:56 +0100 (Fri, 10 Mar 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/condition.cc
+   M /trunk/socketapi/socketapi/condition.h
+   M /trunk/socketapi/socketapi/condition.icc
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/extsocketdescriptor.h
+   M /trunk/socketapi/socketapi/internetaddress.cc
+   M /trunk/socketapi/socketapi/internetaddress.h
+   M /trunk/socketapi/socketapi/internetaddress.icc
+   M /trunk/socketapi/socketapi/internetflow.cc
+   M /trunk/socketapi/socketapi/internetflow.h
+   M /trunk/socketapi/socketapi/internetflow.icc
+   M /trunk/socketapi/socketapi/portableaddress.h
+   M /trunk/socketapi/socketapi/portableaddress.icc
+   M /trunk/socketapi/socketapi/randomizer.cc
+   M /trunk/socketapi/socketapi/randomizer.h
+   M /trunk/socketapi/socketapi/randomizer.icc
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpassociation.h
+   M /trunk/socketapi/socketapi/sctpassociation.icc
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.cc
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.h
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.icc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocket.h
+   M /trunk/socketapi/socketapi/sctpsocket.icc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.h
+   M /trunk/socketapi/socketapi/sctpsocketmaster.icc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.h
+   M /trunk/socketapi/socketapi/socketaddress.cc
+   M /trunk/socketapi/socketapi/socketaddress.h
+   M /trunk/socketapi/socketapi/socketaddress.icc
+   M /trunk/socketapi/socketapi/staticglobals.cc
+   M /trunk/socketapi/socketapi/synchronizable.cc
+   M /trunk/socketapi/socketapi/synchronizable.h
+   M /trunk/socketapi/socketapi/synchronizable.icc
+   M /trunk/socketapi/socketapi/tdin6.h
+   M /trunk/socketapi/socketapi/tdmessage.h
+   M /trunk/socketapi/socketapi/tdmessage.icc
+   M /trunk/socketapi/socketapi/tdstrings.cc
+   M /trunk/socketapi/socketapi/tdstrings.h
+   M /trunk/socketapi/socketapi/tdstrings.icc
+   M /trunk/socketapi/socketapi/tdsystem.h
+   M /trunk/socketapi/socketapi/thread.cc
+   M /trunk/socketapi/socketapi/thread.h
+   M /trunk/socketapi/socketapi/thread.icc
+   M /trunk/socketapi/socketapi/tools.cc
+   M /trunk/socketapi/socketapi/tools.h
+   M /trunk/socketapi/socketapi/tools.icc
+   M /trunk/socketapi/socketapi/unixaddress.cc
+   M /trunk/socketapi/socketapi/unixaddress.h
+   M /trunk/socketapi/socketapi/unixaddress.icc
+
+
+------------------------------------------------------------------------
+r1007 | dreibh | 2006-03-10 10:07:47 +0100 (Fri, 10 Mar 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+
+------------------------------------------------------------------------
+r1005 | dreibh | 2006-03-09 15:11:36 +0100 (Thu, 09 Mar 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+
+------------------------------------------------------------------------
+r1003 | dreibh | 2006-03-09 10:07:30 +0100 (Thu, 09 Mar 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+
+------------------------------------------------------------------------
+r1002 | dreibh | 2006-03-08 16:32:59 +0100 (Wed, 08 Mar 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+
+------------------------------------------------------------------------
+r999 | dreibh | 2006-03-08 14:40:44 +0100 (Wed, 08 Mar 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+
+------------------------------------------------------------------------
+r998 | dreibh | 2006-03-08 14:17:40 +0100 (Wed, 08 Mar 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+
+------------------------------------------------------------------------
+r997 | dreibh | 2006-03-08 12:34:26 +0100 (Wed, 08 Mar 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+
+------------------------------------------------------------------------
+r996 | dreibh | 2006-03-08 10:18:55 +0100 (Wed, 08 Mar 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+
+------------------------------------------------------------------------
+r995 | dreibh | 2006-03-08 10:11:40 +0100 (Wed, 08 Mar 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+
+------------------------------------------------------------------------
+r992 | dreibh | 2006-03-07 15:17:20 +0100 (Tue, 07 Mar 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+
+------------------------------------------------------------------------
+r984 | dreibh | 2006-03-03 11:51:52 +0100 (Fri, 03 Mar 2006) | 1 line
+Changed paths:
+   M /trunk/socketapi/socket_programs/Makefile.am
+   M /trunk/socketapi/socket_programs/combined_server_1to1.c
+   M /trunk/socketapi/socket_programs/combined_server_1toM.c
+   M /trunk/socketapi/socket_programs/idexample1to1.c
+   M /trunk/socketapi/socket_programs/idexample1toM.c
+   M /trunk/socketapi/socket_programs/newexample1to1.c
+   M /trunk/socketapi/socket_programs/t1.c
+   M /trunk/socketapi/socket_programs/t2.c
+   A /trunk/socketapi/socket_programs/terminal.c
+
+
+------------------------------------------------------------------------
+r947 | dreibh | 2006-02-20 15:56:46 +0100 (Mon, 20 Feb 2006) | 3 lines
+Changed paths:
+   D /trunk/socketapi/admin/config.guess
+   D /trunk/socketapi/admin/config.sub
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+Fixed a bug with non-returning ext_select() on association shutdown by peer.
+Waking up corresponding condition was missing.
+
+------------------------------------------------------------------------
+r886 | dreibh | 2005-11-08 11:18:34 +0100 (Tue, 08 Nov 2005) | 1 line
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/cppsocket_programs/Makefile.am
+   M /trunk/socketapi/cppsocketapi/Makefile.am
+   D /trunk/socketapi/cppsocketapi/multitimerthread.cc
+   M /trunk/socketapi/cppsocketapi/multitimerthread.h
+   M /trunk/socketapi/cppsocketapi/multitimerthread.icc
+   M /trunk/socketapi/socketapi/tdsystem.h
+   M /trunk/socketapi/socketapi/tools.h
+   M /trunk/socketapi/socketapi/tools.icc
+
+
+------------------------------------------------------------------------
+r868 | dreibh | 2005-10-24 17:37:34 +0200 (Mon, 24 Oct 2005) | 1 line
+Changed paths:
+   M /trunk/socketapi/socket_programs/combined_server_1to1.c
+   M /trunk/socketapi/socket_programs/combined_server_1toM.c
+
+
+------------------------------------------------------------------------
+r867 | dreibh | 2005-10-24 17:27:33 +0200 (Mon, 24 Oct 2005) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpassociation.h
+   M /trunk/socketapi/socketapi/sctpsocket.h
+
+Small fix to make Socket API compile with GCC 4.0
+
+------------------------------------------------------------------------
+r834 | dreibh | 2005-09-30 17:14:24 +0200 (Fri, 30 Sep 2005) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocket_programs/sctpinfoprinter.cc
+   M /trunk/socketapi/cppsocket_programs/sctpmultiserver.cc
+   M /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+
+Fixed byte order problem with PPID.
+
+------------------------------------------------------------------------
+r816 | dreibh | 2005-09-28 10:14:50 +0200 (Wed, 28 Sep 2005) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+
+------------------------------------------------------------------------
+r813 | dreibh | 2005-09-27 17:11:38 +0200 (Tue, 27 Sep 2005) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+
+------------------------------------------------------------------------
+r804 | dreibh | 2005-09-26 12:08:42 +0200 (Mon, 26 Sep 2005) | 1 line
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/ringbuffer.cc
+
+
+------------------------------------------------------------------------
+r801 | dreibh | 2005-09-26 11:44:38 +0200 (Mon, 26 Sep 2005) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/condition.cc
+   M /trunk/socketapi/socketapi/condition.h
+   M /trunk/socketapi/socketapi/condition.icc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+   M /trunk/socketapi/socketapi/synchronizable.h
+
+
+------------------------------------------------------------------------
+r794 | dreibh | 2005-09-23 13:13:18 +0200 (Fri, 23 Sep 2005) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/condition.cc
+   M /trunk/socketapi/socketapi/condition.h
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/extsocketdescriptor.h
+   M /trunk/socketapi/socketapi/internetaddress.cc
+   M /trunk/socketapi/socketapi/internetaddress.h
+   M /trunk/socketapi/socketapi/internetflow.cc
+   M /trunk/socketapi/socketapi/internetflow.h
+   M /trunk/socketapi/socketapi/portableaddress.h
+   M /trunk/socketapi/socketapi/randomizer.cc
+   M /trunk/socketapi/socketapi/randomizer.h
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpassociation.h
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.cc
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.h
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocket.h
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.h
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.h
+   M /trunk/socketapi/socketapi/socketaddress.cc
+   M /trunk/socketapi/socketapi/socketaddress.h
+   M /trunk/socketapi/socketapi/staticglobals.cc
+   M /trunk/socketapi/socketapi/synchronizable.cc
+   M /trunk/socketapi/socketapi/synchronizable.h
+   M /trunk/socketapi/socketapi/tdin6.h
+   M /trunk/socketapi/socketapi/tdmessage.h
+   M /trunk/socketapi/socketapi/tdstrings.cc
+   M /trunk/socketapi/socketapi/tdstrings.h
+   M /trunk/socketapi/socketapi/tdsystem.h
+   M /trunk/socketapi/socketapi/thread.cc
+   M /trunk/socketapi/socketapi/thread.h
+   M /trunk/socketapi/socketapi/tools.cc
+   M /trunk/socketapi/socketapi/tools.h
+   M /trunk/socketapi/socketapi/unixaddress.cc
+   M /trunk/socketapi/socketapi/unixaddress.h
+
+
+------------------------------------------------------------------------
+r782 | dreibh | 2005-09-22 16:17:51 +0200 (Thu, 22 Sep 2005) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+
+------------------------------------------------------------------------
+r780 | dreibh | 2005-09-22 10:08:41 +0200 (Thu, 22 Sep 2005) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/condition.cc
+   M /trunk/socketapi/socketapi/condition.h
+   M /trunk/socketapi/socketapi/condition.icc
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.icc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+
+------------------------------------------------------------------------
+r767 | dreibh | 2005-09-19 16:53:00 +0200 (Mon, 19 Sep 2005) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+Fixed a bug with partial read of notification with MSG_PEEK flag set.
+
+------------------------------------------------------------------------
+r766 | dreibh | 2005-09-19 14:48:11 +0200 (Mon, 19 Sep 2005) | 1 line
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+
+------------------------------------------------------------------------
+r765 | dreibh | 2005-09-19 14:00:29 +0200 (Mon, 19 Sep 2005) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+Fixed a bug in calling sctp_abort() at the appropriate location.
+
+------------------------------------------------------------------------
+r700 | dreibh | 2005-08-08 13:26:12 +0200 (Mon, 08 Aug 2005) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r699 | dreibh | 2005-08-08 13:11:35 +0200 (Mon, 08 Aug 2005) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r694 | dreibh | 2005-08-04 19:03:17 +0200 (Thu, 04 Aug 2005) | 2 lines
+Changed paths:
+   M /trunk/rsplib2/rsplib/ext_socket.h
+   M /trunk/rsplib2/rsplib/netutilities.c
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r693 | dreibh | 2005-08-04 18:45:42 +0200 (Thu, 04 Aug 2005) | 2 lines
+Changed paths:
+   M /trunk/rsplib2/rsplib/asapinstance.c
+   M /trunk/rsplib2/rsplib/ext_socket.h
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r689 | dreibh | 2005-08-04 17:49:54 +0200 (Thu, 04 Aug 2005) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+Fixed MSG_PEEK bug for SCTP notifications.
+
+------------------------------------------------------------------------
+r681 | dreibh | 2005-08-03 13:23:45 +0200 (Wed, 03 Aug 2005) | 2 lines
+Changed paths:
+   M /trunk/sctplib1/configure.in
+   M /trunk/sctplib1/sctplib/programs/chargen_server.c
+   M /trunk/sctplib1/sctplib/sctp/chunkHandler.c
+   M /trunk/sctplib1/sctplib/sctp/distribution.c
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r678 | dreibh | 2005-08-03 10:44:01 +0200 (Wed, 03 Aug 2005) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r676 | dreibh | 2005-08-01 12:01:31 +0200 (Mon, 01 Aug 2005) | 2 lines
+Changed paths:
+   M /trunk/rsplib2/rsplib/TODO
+   M /trunk/rsplib2/rsplib/asapinstance.c
+   M /trunk/rsplib2/rsplib/ext_socket.h
+   M /trunk/rsplib2/rsplib/netdouble.c
+   M /trunk/rsplib2/rsplib/netutilities.c
+   M /trunk/rsplib2/rsplib/rserpoolmessagecreator.c
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r664 | dreibh | 2005-07-28 14:18:32 +0200 (Thu, 28 Jul 2005) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocket.h
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r660 | dreibh | 2005-07-22 16:30:13 +0200 (Fri, 22 Jul 2005) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpassociation.h
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r614 | dreibh | 2005-03-11 11:23:05 +0100 (Fri, 11 Mar 2005) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r613 | dreibh | 2005-03-11 10:51:20 +0100 (Fri, 11 Mar 2005) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r605 | dreibh | 2005-03-08 13:51:03 +0100 (Tue, 08 Mar 2005) | 2 lines
+Changed paths:
+   M /trunk/rsplib2/configure.in
+   M /trunk/rsplib2/rsplib/asapinstance.c
+   M /trunk/rsplib2/rsplib/asapinstance.h
+   M /trunk/rsplib2/rsplib/ext_socket.h
+   M /trunk/rsplib2/rsplib/netutilities.c
+   M /trunk/rsplib2/rsplib/poolelementnode-template_impl.h
+   M /trunk/rsplib2/rsplib/poolhandlespacemanagement-basics.h
+   M /trunk/rsplib2/rsplib/poolhandlespacemanagement-template.h
+   M /trunk/rsplib2/rsplib/poolhandlespacemanagement-template_impl.h
+   M /trunk/rsplib2/rsplib/poolhandlespacenode-template_impl.h
+   M /trunk/rsplib2/rsplib/poolnode-template_impl.h
+   M /trunk/rsplib2/rsplib/registrar.c
+   M /trunk/rsplib2/rsplib/rserpoolmessage.c
+   M /trunk/rsplib2/rsplib/rserpoolmessage.h
+   M /trunk/rsplib2/rsplib/rserpoolmessagecreator.c
+   M /trunk/rsplib2/rsplib/rserpoolmessageparser.c
+   M /trunk/rsplib2/rsplib/rsplib-tags.h
+   M /trunk/rsplib2/rsplib/rsplib.c
+   M /trunk/rsplib2/rsplib/rsplib.h
+   M /trunk/rsplib2/rsplib/rspsession.c
+   M /trunk/rsplib2/rsplib/servertable.c
+   M /trunk/rsplib2/rsplib/simpleexamplepu.c
+   M /trunk/sctplib1/configure.in
+   M /trunk/sctplib1/sctplib/sctp/sctp.h
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r602 | dreibh | 2005-03-07 15:00:20 +0100 (Mon, 07 Mar 2005) | 2 lines
+Changed paths:
+   M /trunk/sctplib1/sctplib/sctp/distribution.c
+   M /trunk/sctplib1/sctplib/sctp/globals.h
+   M /trunk/sctplib1/sctplib/sctp/sctp.h
+   A /trunk/socketapi/socket_programs/t4.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r600 | tuexen | 2005-03-05 01:06:12 +0100 (Sat, 05 Mar 2005) | 2 lines
+Changed paths:
+   M /trunk/rsplib2/rsplib/ext_socket.h
+   M /trunk/rsplib2/rsplib/netutilities.c
+   M /trunk/sctplib1/configure.in
+   M /trunk/sctplib1/sctplib/sctp/Makefile.am
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+Update for release.
+
+------------------------------------------------------------------------
+r599 | dreibh | 2005-03-04 14:25:26 +0100 (Fri, 04 Mar 2005) | 2 lines
+Changed paths:
+   M /trunk/rsplib2/rsplib/Makefile.am
+   M /trunk/rsplib2/rsplib/debug
+   M /trunk/rsplib2/rsplib/netutilities.c
+   M /trunk/socketapi/admin/config.guess
+   M /trunk/socketapi/admin/config.sub
+   M /trunk/socketapi/socket_programs/Makefile.am
+   A /trunk/socketapi/socket_programs/t3.cc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r556 | dreibh | 2004-11-23 11:19:35 +0100 (Tue, 23 Nov 2004) | 2 lines
+Changed paths:
+   A /trunk/socketapi/admin/config.guess
+   A /trunk/socketapi/admin/config.sub
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r555 | dreibh | 2004-11-23 11:17:50 +0100 (Tue, 23 Nov 2004) | 2 lines
+Changed paths:
+   D /trunk/socketapi/admin/config.guess
+   D /trunk/socketapi/admin/config.sub
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r554 | dreibh | 2004-11-23 11:16:14 +0100 (Tue, 23 Nov 2004) | 2 lines
+Changed paths:
+   M /trunk/sctplib1/autogen.sh
+   M /trunk/sctplib1/sctplib/sctp/globals.h
+   M /trunk/socketapi/admin/config.guess
+   M /trunk/socketapi/admin/config.sub
+   M /trunk/socketapi/autogen.sh
+   M /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+   M /trunk/socketapi/socket_programs/Makefile.am
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocket.h
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r551 | dreibh | 2004-11-22 16:49:30 +0100 (Mon, 22 Nov 2004) | 2 lines
+Changed paths:
+   A /trunk/sctplib1/autogen.sh
+   M /trunk/socketapi/autogen.sh
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r547 | tuexen | 2004-11-20 22:07:21 +0100 (Sat, 20 Nov 2004) | 2 lines
+Changed paths:
+   M /trunk/socketapi
+   M /trunk/socketapi/.cvsignore
+   M /trunk/socketapi/bootstrap
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/cppsocket_programs/Makefile.am
+   M /trunk/socketapi/cppsocket_programs/sctpinfoprinter.cc
+   M /trunk/socketapi/socketapi/Makefile.am
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r546 | tuexen | 2004-11-20 21:43:09 +0100 (Sat, 20 Nov 2004) | 2 lines
+Changed paths:
+   D /trunk/socketapi/acconfig.h
+   D /trunk/socketapi/acinclude.m4
+   D /trunk/socketapi/acinclude.m4.in
+   D /trunk/socketapi/install-sh
+   D /trunk/socketapi/missing
+   D /trunk/socketapi/mkinstalldirs
+   D /trunk/socketapi/stamp-h.in
+   D /trunk/socketapi/start
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r540 | dreibh | 2004-11-19 18:12:35 +0100 (Fri, 19 Nov 2004) | 2 lines
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.h
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r529 | dreibh | 2004-11-13 04:34:51 +0100 (Sat, 13 Nov 2004) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r509 | dreibh | 2004-11-11 22:35:41 +0100 (Thu, 11 Nov 2004) | 2 lines
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+   M /trunk/socketapi/socket_programs/Makefile.am
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r493 | dreibh | 2004-11-10 20:25:12 +0100 (Wed, 10 Nov 2004) | 2 lines
+Changed paths:
+   M /trunk/rsplib2/rsplib/netutilities.c
+   M /trunk/sctplib1/sctplib/sctp/distribution.c
+   M /trunk/sctplib1/sctplib/sctp/sctp.h
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r419 | dreibh | 2004-07-30 13:03:43 +0200 (Fri, 30 Jul 2004) | 2 lines
+Changed paths:
+   M /trunk/rsplib2/rsplib/poolnamespacemanagement.h
+   M /trunk/rsplib2/rsplib/rserpoolmessageparser.c
+   M /trunk/rsplib2/rsplib/transportaddressblock.c
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r413 | dreibh | 2004-07-29 17:15:41 +0200 (Thu, 29 Jul 2004) | 2 lines
+Changed paths:
+   M /trunk/rsplib2/rsplib/asapinstance.c
+   M /trunk/rsplib2/rsplib/localaddresses.c
+   M /trunk/rsplib2/rsplib/localaddresses.h
+   M /trunk/rsplib2/rsplib/nameserver-example
+   M /trunk/rsplib2/rsplib/nameserver.c
+   M /trunk/rsplib2/rsplib/netutilities.c
+   M /trunk/rsplib2/rsplib/netutilities.h
+   M /trunk/rsplib2/rsplib/peerlist-template.c
+   M /trunk/rsplib2/rsplib/peerlist-template.h
+   M /trunk/rsplib2/rsplib/peerlistmanagement-template.h
+   M /trunk/rsplib2/rsplib/poolelement-example
+   M /trunk/rsplib2/rsplib/pooluser-example
+   M /trunk/rsplib2/rsplib/rserpoolmessage.c
+   M /trunk/rsplib2/rsplib/rserpoolmessage.h
+   M /trunk/rsplib2/rsplib/rserpoolmessagecreator.c
+   M /trunk/rsplib2/rsplib/rserpoolmessageparser.c
+   M /trunk/rsplib2/rsplib/rsplib.c
+   M /trunk/rsplib2/rsplib/rsplib.h
+   M /trunk/rsplib2/rsplib/rspsession.c
+   M /trunk/rsplib2/rsplib/servertable.c
+   M /trunk/rsplib2/rsplib/simpleexamplepe.c
+   A /trunk/rsplib2/rsplib/tracelevels.in
+   M /trunk/rsplib2/rsplib/transportaddressblock.c
+   M /trunk/rsplib2/rsplib/transportaddressblock.h
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+   M /trunk/treaptest/peerlist-template.c
+   M /trunk/treaptest/peerlist-template.h
+   M /trunk/treaptest/peerlistmanagement-template.h
+   D /trunk/treaptest/poolhandle.o
+   D /trunk/treaptest/stringutilities.o
+   D /trunk/treaptest/timeutilities.o
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r412 | dreibh | 2004-07-28 14:55:16 +0200 (Wed, 28 Jul 2004) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.h
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r410 | dreibh | 2004-07-27 13:54:18 +0200 (Tue, 27 Jul 2004) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocket_programs/Makefile.am
+   M /trunk/socketapi/socket_programs/Makefile.am
+   A /trunk/socketapi/socket_programs/t2.c
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpassociation.h
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocket.h
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+   M /trunk/socketapi/socketapi/tdsystem.h
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r403 | dreibh | 2004-07-25 18:55:19 +0200 (Sun, 25 Jul 2004) | 2 lines
+Changed paths:
+   M /trunk/rsplib2/rsplib/asapinstance.c
+   M /trunk/rsplib2/rsplib/examplepe.c
+   M /trunk/rsplib2/rsplib/examplepu.c
+   M /trunk/rsplib2/rsplib/nameserver.c
+   M /trunk/rsplib2/rsplib/rserpoolmessageparser.c
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r394 | dreibh | 2004-07-22 17:13:39 +0200 (Thu, 22 Jul 2004) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r190 | tuexen | 2003-09-05 10:10:14 +0200 (Fri, 05 Sep 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/Makefile.am
+
+Get rid of -lstdc++ because it break building shared libs on Mac OS X.
+
+------------------------------------------------------------------------
+r189 | tuexen | 2003-09-05 10:08:53 +0200 (Fri, 05 Sep 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/configure.in
+
+Bump version to 1.3.1
+
+------------------------------------------------------------------------
+r185 | tuexen | 2003-08-19 23:49:10 +0200 (Tue, 19 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socket_programs/idexample1toM.c
+
+Update to be in tune with next rev. of ID.
+
+------------------------------------------------------------------------
+r184 | tuexen | 2003-08-19 23:48:16 +0200 (Tue, 19 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socket_programs/idexample1to1.c
+
+Updated to be in tune with next rev of ID.
+
+------------------------------------------------------------------------
+r183 | tuexen | 2003-08-19 21:28:34 +0200 (Tue, 19 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocket_programs/ansicolor.h
+   M /trunk/socketapi/cppsocket_programs/sctpinfoprinter.cc
+   M /trunk/socketapi/cppsocket_programs/sctpinfoprinter.h
+   M /trunk/socketapi/cppsocket_programs/sctpmultiserver.cc
+   M /trunk/socketapi/cppsocket_programs/sctpportscanner.cc
+   M /trunk/socketapi/cppsocket_programs/sctpsockettest.cc
+   M /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+   M /trunk/socketapi/cppsocket_programs/sctptest.cc
+   M /trunk/socketapi/cppsocket_programs/sctptftp.cc
+   M /trunk/socketapi/cppsocket_programs/sctptftp.h
+   M /trunk/socketapi/cppsocketapi/breakdetector.cc
+   M /trunk/socketapi/cppsocketapi/breakdetector.h
+   M /trunk/socketapi/cppsocketapi/multitimerthread.cc
+   M /trunk/socketapi/cppsocketapi/multitimerthread.h
+   M /trunk/socketapi/cppsocketapi/multitimerthread.icc
+   M /trunk/socketapi/cppsocketapi/packetaddress.cc
+   M /trunk/socketapi/cppsocketapi/packetaddress.h
+   M /trunk/socketapi/cppsocketapi/packetaddress.icc
+   M /trunk/socketapi/cppsocketapi/range.cc
+   M /trunk/socketapi/cppsocketapi/range.h
+   M /trunk/socketapi/cppsocketapi/range.icc
+   M /trunk/socketapi/cppsocketapi/ringbuffer.cc
+   M /trunk/socketapi/cppsocketapi/ringbuffer.h
+   M /trunk/socketapi/cppsocketapi/ringbuffer.icc
+   M /trunk/socketapi/cppsocketapi/streamsrcdest.cc
+   M /trunk/socketapi/cppsocketapi/streamsrcdest.h
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+   M /trunk/socketapi/cppsocketapi/tdsocket.h
+   M /trunk/socketapi/cppsocketapi/tdsocket.icc
+   M /trunk/socketapi/cppsocketapi/timedthread.cc
+   M /trunk/socketapi/cppsocketapi/timedthread.h
+   M /trunk/socketapi/cppsocketapi/timedthread.icc
+   M /trunk/socketapi/cppsocketapi/trafficclassvalues.cc
+   M /trunk/socketapi/cppsocketapi/trafficclassvalues.h
+   M /trunk/socketapi/cppsocketapi/trafficclassvalues.icc
+   M /trunk/socketapi/socket_programs/combined_server_1to1.c
+   M /trunk/socketapi/socket_programs/combined_server_1toM.c
+   M /trunk/socketapi/socket_programs/idexample1to1.c
+   M /trunk/socketapi/socket_programs/idexample1toM.c
+   M /trunk/socketapi/socket_programs/newexample1to1.c
+   M /trunk/socketapi/socket_programs/t1.c
+   M /trunk/socketapi/socketapi/condition.cc
+   M /trunk/socketapi/socketapi/condition.h
+   M /trunk/socketapi/socketapi/condition.icc
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/extsocketdescriptor.h
+   M /trunk/socketapi/socketapi/internetaddress.cc
+   M /trunk/socketapi/socketapi/internetaddress.h
+   M /trunk/socketapi/socketapi/internetaddress.icc
+   M /trunk/socketapi/socketapi/internetflow.cc
+   M /trunk/socketapi/socketapi/internetflow.h
+   M /trunk/socketapi/socketapi/internetflow.icc
+   M /trunk/socketapi/socketapi/portableaddress.h
+   M /trunk/socketapi/socketapi/portableaddress.icc
+   M /trunk/socketapi/socketapi/randomizer.cc
+   M /trunk/socketapi/socketapi/randomizer.h
+   M /trunk/socketapi/socketapi/randomizer.icc
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpassociation.h
+   M /trunk/socketapi/socketapi/sctpassociation.icc
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.cc
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.h
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.icc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocket.h
+   M /trunk/socketapi/socketapi/sctpsocket.icc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.h
+   M /trunk/socketapi/socketapi/sctpsocketmaster.icc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.h
+   M /trunk/socketapi/socketapi/socketaddress.cc
+   M /trunk/socketapi/socketapi/socketaddress.h
+   M /trunk/socketapi/socketapi/socketaddress.icc
+   M /trunk/socketapi/socketapi/staticglobals.cc
+   M /trunk/socketapi/socketapi/synchronizable.cc
+   M /trunk/socketapi/socketapi/synchronizable.h
+   M /trunk/socketapi/socketapi/synchronizable.icc
+   M /trunk/socketapi/socketapi/tdin6.h
+   M /trunk/socketapi/socketapi/tdmessage.h
+   M /trunk/socketapi/socketapi/tdmessage.icc
+   M /trunk/socketapi/socketapi/tdstrings.cc
+   M /trunk/socketapi/socketapi/tdstrings.h
+   M /trunk/socketapi/socketapi/tdstrings.icc
+   M /trunk/socketapi/socketapi/tdsystem.h
+   M /trunk/socketapi/socketapi/thread.cc
+   M /trunk/socketapi/socketapi/thread.h
+   M /trunk/socketapi/socketapi/thread.icc
+   M /trunk/socketapi/socketapi/tools.cc
+   M /trunk/socketapi/socketapi/tools.h
+   M /trunk/socketapi/socketapi/tools.icc
+   M /trunk/socketapi/socketapi/unixaddress.cc
+   M /trunk/socketapi/socketapi/unixaddress.h
+   M /trunk/socketapi/socketapi/unixaddress.icc
+
+Updated license.
+
+------------------------------------------------------------------------
+r182 | tuexen | 2003-08-19 21:26:25 +0200 (Tue, 19 Aug 2003) | 2 lines
+Changed paths:
+   D /trunk/socketapi/socket_programs/inet_ntop.c
+
+Not needed anymore.
+
+------------------------------------------------------------------------
+r177 | tuexen | 2003-08-18 13:52:19 +0200 (Mon, 18 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi
+   M /trunk/socketapi/socketapi/.cvsignore
+
+Insert c5 and p1.
+
+------------------------------------------------------------------------
+r176 | tuexen | 2003-08-18 13:51:19 +0200 (Mon, 18 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socket_programs/idexample1toM.c
+
+Change second arg of ext_listen to 1.
+
+------------------------------------------------------------------------
+r175 | tuexen | 2003-08-18 13:50:15 +0200 (Mon, 18 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/c1.c
+   M /trunk/socketapi/socketapi/c2.c
+   M /trunk/socketapi/socketapi/c3.c
+   M /trunk/socketapi/socketapi/c4.c
+   M /trunk/socketapi/socketapi/c5.c
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/p1.c
+   M /trunk/socketapi/socketapi/t2.c
+
+Renamed constantRenamed constant..
+
+------------------------------------------------------------------------
+r174 | tuexen | 2003-08-18 13:48:52 +0200 (Mon, 18 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+Renamed constant.
+
+------------------------------------------------------------------------
+r173 | tuexen | 2003-08-18 13:47:41 +0200 (Mon, 18 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+
+Get rid of special handling on MacOS X.
+
+------------------------------------------------------------------------
+r172 | tuexen | 2003-08-18 13:46:34 +0200 (Mon, 18 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/README
+
+Get rid of auto* stuff.
+
+------------------------------------------------------------------------
+r171 | tuexen | 2003-08-15 17:57:27 +0200 (Fri, 15 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/README
+
+Get rid of aclocal and so on.
+
+------------------------------------------------------------------------
+r170 | tuexen | 2003-08-15 17:45:04 +0200 (Fri, 15 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/Makefile.am
+
+Update examples and comment them outUpdate examples and comment them out..
+
+------------------------------------------------------------------------
+r169 | tuexen | 2003-08-15 17:44:22 +0200 (Fri, 15 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+sctp_*msg returns a ssize_t.
+
+------------------------------------------------------------------------
+r168 | tuexen | 2003-08-15 17:42:36 +0200 (Fri, 15 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/c1.c
+   M /trunk/socketapi/socketapi/c2.c
+   M /trunk/socketapi/socketapi/c3.c
+   M /trunk/socketapi/socketapi/c4.c
+   M /trunk/socketapi/socketapi/c5.c
+   M /trunk/socketapi/socketapi/p1.c
+   M /trunk/socketapi/socketapi/t2.c
+
+Get the examples compiling without warnings.
+
+------------------------------------------------------------------------
+r167 | tuexen | 2003-08-15 17:14:18 +0200 (Fri, 15 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+sctp_*msg returns ssize_t.
+
+------------------------------------------------------------------------
+r166 | dreibh | 2003-08-12 11:15:47 +0200 (Tue, 12 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/Makefile.am
+   A /trunk/socketapi/socketapi/c5.c
+   A /trunk/socketapi/socketapi/p1.c
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r164 | tuexen | 2003-08-11 20:12:41 +0200 (Mon, 11 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+Get intune with next version of ID.
+
+------------------------------------------------------------------------
+r163 | tuexen | 2003-08-11 20:09:49 +0200 (Mon, 11 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socket_programs/idexample1to1.c
+   M /trunk/socketapi/socket_programs/idexample1toM.c
+   M /trunk/socketapi/socketapi/internetaddress.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+   M /trunk/socketapi/socketapi/unixaddress.cc
+
+Get rid of warnings.
+
+------------------------------------------------------------------------
+r162 | tuexen | 2003-08-11 20:04:24 +0200 (Mon, 11 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/bootstrap
+
+Get it running on OS X.
+
+------------------------------------------------------------------------
+r161 | dreibh | 2003-08-10 18:33:04 +0200 (Sun, 10 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r159 | dreibh | 2003-08-06 17:02:27 +0200 (Wed, 06 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/bootstrap
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r158 | tuexen | 2003-08-05 21:02:37 +0200 (Tue, 05 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/admin
+   M /trunk/socketapi/admin/.cvsignore
+
+Add compile.
+
+------------------------------------------------------------------------
+r157 | tuexen | 2003-08-05 20:59:19 +0200 (Tue, 05 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/admin
+   A /trunk/socketapi/admin/.cvsignore
+
+Add ltmain.sh as a derived file.
+
+------------------------------------------------------------------------
+r156 | tuexen | 2003-08-05 20:58:15 +0200 (Tue, 05 Aug 2003) | 2 lines
+Changed paths:
+   D /trunk/socketapi/admin/ltmain.sh
+
+Remove derived File.
+
+------------------------------------------------------------------------
+r155 | tuexen | 2003-08-05 20:48:23 +0200 (Tue, 05 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi
+   M /trunk/socketapi/.cvsignore
+
+config.h.in is a derived file.
+
+------------------------------------------------------------------------
+r154 | tuexen | 2003-08-05 20:46:19 +0200 (Tue, 05 Aug 2003) | 2 lines
+Changed paths:
+   D /trunk/socketapi/cppsocket_programs/tracelevels.in
+
+Do not use this file in CVS.
+
+------------------------------------------------------------------------
+r153 | tuexen | 2003-08-05 20:45:21 +0200 (Tue, 05 Aug 2003) | 2 lines
+Changed paths:
+   D /trunk/socketapi/socket_programs/tracelevels.in
+
+Do not have it in CVS.
+
+------------------------------------------------------------------------
+r152 | tuexen | 2003-08-05 20:43:26 +0200 (Tue, 05 Aug 2003) | 2 lines
+Changed paths:
+   D /trunk/socketapi/aclocal.m4
+   D /trunk/socketapi/config.h.in
+
+This is a derived file.
+
+------------------------------------------------------------------------
+r151 | tuexen | 2003-08-05 20:34:34 +0200 (Tue, 05 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/acinclude.m4
+
+Contains libtool.m4.
+
+------------------------------------------------------------------------
+r150 | tuexen | 2003-08-05 20:33:00 +0200 (Tue, 05 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi
+   M /trunk/socketapi/.cvsignore
+
+aclocal.m4 is derived and therefore ignored.
+
+------------------------------------------------------------------------
+r149 | tuexen | 2003-08-05 20:32:28 +0200 (Tue, 05 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/bootstrap
+
+Do not change config.guess and config.sub.
+
+------------------------------------------------------------------------
+r148 | tuexen | 2003-08-05 03:38:03 +0200 (Tue, 05 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socket_programs/Makefile.am
+   M /trunk/socketapi/socket_programs/idexample1to1.c
+   M /trunk/socketapi/socket_programs/idexample1toM.c
+   M /trunk/socketapi/socket_programs/newexample1to1.c
+
+Get rid of inet_pton stuff
+
+------------------------------------------------------------------------
+r147 | tuexen | 2003-08-05 03:27:54 +0200 (Tue, 05 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi
+   M /trunk/socketapi/socketapi/.cvsignore
+
+Ignore test bnaries.
+
+------------------------------------------------------------------------
+r146 | tuexen | 2003-08-05 03:26:54 +0200 (Tue, 05 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/t1.c
+
+Make ANSI C compliant.
+
+------------------------------------------------------------------------
+r145 | tuexen | 2003-08-05 03:22:34 +0200 (Tue, 05 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/cppsocket_programs/Makefile.am
+   M /trunk/socketapi/cppsocketapi/Makefile.am
+   M /trunk/socketapi/socket_programs/Makefile.am
+   M /trunk/socketapi/socketapi/Makefile.am
+
+Get it compiling on Linux, Solaris and MacOS X.
+
+------------------------------------------------------------------------
+r144 | tuexen | 2003-08-05 03:20:58 +0200 (Tue, 05 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socket_programs/newexample1to1.c
+
+Update usage of sctp_recvmsg
+
+------------------------------------------------------------------------
+r143 | dreibh | 2003-08-04 13:04:54 +0200 (Mon, 04 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/MakeLinks.sh
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+   M /trunk/socketapi/cppsocketapi/tdsocket.h
+   M /trunk/socketapi/socketapi/Makefile.am
+   M /trunk/socketapi/socketapi/c1.c
+   M /trunk/socketapi/socketapi/c2.c
+   M /trunk/socketapi/socketapi/c3.c
+   M /trunk/socketapi/socketapi/c4.c
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r142 | tuexen | 2003-08-03 15:22:36 +0200 (Sun, 03 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi
+   A /trunk/socketapi/.cvsignore
+   M /trunk/socketapi/cppsocket_programs
+   A /trunk/socketapi/cppsocket_programs/.cvsignore
+   M /trunk/socketapi/cppsocketapi
+   A /trunk/socketapi/cppsocketapi/.cvsignore
+   M /trunk/socketapi/scripts
+   A /trunk/socketapi/scripts/.cvsignore
+   M /trunk/socketapi/socket_programs
+   A /trunk/socketapi/socket_programs/.cvsignore
+   M /trunk/socketapi/socketapi
+   A /trunk/socketapi/socketapi/.cvsignore
+
+Added .cvsignore files to remove derived files from being reported.
+
+------------------------------------------------------------------------
+r141 | tuexen | 2003-08-03 14:39:02 +0200 (Sun, 03 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/cppsocket_programs/Makefile.am
+   M /trunk/socketapi/cppsocketapi/Makefile.am
+   M /trunk/socketapi/socket_programs/Makefile.am
+   M /trunk/socketapi/socketapi/Makefile.am
+
+Get dynamic Libs running on Mac OS X by using only libtool stuff.
+
+------------------------------------------------------------------------
+r140 | tuexen | 2003-08-02 22:36:42 +0200 (Sat, 02 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/Makefile.am
+
+Use @sctplib_*@ variables.
+
+------------------------------------------------------------------------
+r139 | tuexen | 2003-08-02 22:35:10 +0200 (Sat, 02 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.h
+
+Use include <sctp.h.
+
+------------------------------------------------------------------------
+r138 | tuexen | 2003-08-02 22:33:03 +0200 (Sat, 02 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketmaster.h
+
+Moved sctp.h stuff from tdsystem.h intto sctpsocketmaster.h.
+
+------------------------------------------------------------------------
+r137 | tuexen | 2003-08-02 22:31:57 +0200 (Sat, 02 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/tdsystem.h
+
+Meved sctp.h stuff into sctpsocketmaster.h.
+
+------------------------------------------------------------------------
+r136 | tuexen | 2003-08-02 22:30:31 +0200 (Sat, 02 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/Makefile.am
+
+There is not ../sctp directory.
+
+------------------------------------------------------------------------
+r135 | tuexen | 2003-08-02 22:28:35 +0200 (Sat, 02 Aug 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/configure.in
+
+Make sure that -withsctplib works. Check for sctplib version disabled.
+
+------------------------------------------------------------------------
+r134 | tuexen | 2003-07-31 14:24:03 +0200 (Thu, 31 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/Makefile.am
+
+Modified to get it running.
+
+------------------------------------------------------------------------
+r133 | tuexen | 2003-07-31 14:21:49 +0200 (Thu, 31 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/bootstrap
+
+Added location for aclocal
+
+------------------------------------------------------------------------
+r132 | tuexen | 2003-07-31 11:54:52 +0200 (Thu, 31 Jul 2003) | 2 lines
+Changed paths:
+   A /trunk/socketapi/bootstrap
+
+Added.
+
+------------------------------------------------------------------------
+r131 | tuexen | 2003-07-31 11:53:32 +0200 (Thu, 31 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/configure.in
+
+Updated for SolariUpdated for Solari
+
+------------------------------------------------------------------------
+r130 | tuexen | 2003-07-31 11:34:57 +0200 (Thu, 31 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/tools.icc
+
+Get rid of translate stuff.
+
+------------------------------------------------------------------------
+r129 | tuexen | 2003-07-31 11:33:49 +0200 (Thu, 31 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/tools.h
+
+Get rid of translate functions.
+
+------------------------------------------------------------------------
+r128 | tuexen | 2003-07-31 11:32:53 +0200 (Thu, 31 Jul 2003) | 3 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/tdmessage.icc
+
+Fixed a bug.
+Fixed handling of CMSG stuff
+
+------------------------------------------------------------------------
+r127 | tuexen | 2003-07-31 11:31:43 +0200 (Thu, 31 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/tdmessage.h
+
+Fixed handing of CMSG macros
+
+------------------------------------------------------------------------
+r126 | tuexen | 2003-07-31 11:29:36 +0200 (Thu, 31 Jul 2003) | 4 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+- Fixed a bug.
+- Use CMSG Macros
+- Added Solaris support
+
+------------------------------------------------------------------------
+r125 | tuexen | 2003-07-31 11:25:21 +0200 (Thu, 31 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/internetaddress.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+Added Solaris support.
+
+------------------------------------------------------------------------
+r124 | tuexen | 2003-07-31 11:21:59 +0200 (Thu, 31 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/Makefile.am
+
+Clean up.
+
+------------------------------------------------------------------------
+r123 | tuexen | 2003-07-31 11:14:16 +0200 (Thu, 31 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+   M /trunk/socketapi/socket_programs/combined_server_1to1.c
+   M /trunk/socketapi/socket_programs/combined_server_1toM.c
+
+Added Solaris support.
+
+------------------------------------------------------------------------
+r122 | tuexen | 2003-07-31 11:10:52 +0200 (Thu, 31 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/streamsrcdest.cc
+
+Get rid of translate32.
+
+------------------------------------------------------------------------
+r121 | tuexen | 2003-07-31 11:07:42 +0200 (Thu, 31 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocket_programs/Makefile.am
+
+Clearify dependcies.
+
+------------------------------------------------------------------------
+r120 | tuexen | 2003-07-16 16:29:33 +0200 (Wed, 16 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+Get rid of u_ types.
+
+------------------------------------------------------------------------
+r119 | tuexen | 2003-07-16 16:27:07 +0200 (Wed, 16 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socket_programs/combined_server_1to1.c
+   M /trunk/socketapi/socket_programs/combined_server_1toM.c
+
+Added support for Solaris.
+
+------------------------------------------------------------------------
+r118 | tuexen | 2003-07-16 16:20:08 +0200 (Wed, 16 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/tdsystem.h
+
+Update for Solaris supportUpdate for Solaris support..
+
+------------------------------------------------------------------------
+r117 | dreibh | 2003-07-14 14:42:17 +0200 (Mon, 14 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/rsplib/README
+   M /trunk/rsplib/admin/ChangeLog
+   M /trunk/rsplib/admin/config.guess
+   M /trunk/rsplib/admin/config.sub
+   M /trunk/socketapi/admin/ChangeLog
+   M /trunk/socketapi/admin/config.guess
+   M /trunk/socketapi/admin/config.sub
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpassociation.h
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocket.h
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+   M /trunk/socketapi/socketapi/tdsystem.h
+   M /trunk/socketapi/socketapi/tools.icc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r115 | dreibh | 2003-07-11 17:25:50 +0200 (Fri, 11 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r114 | dreibh | 2003-07-11 11:45:02 +0200 (Fri, 11 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/c1.c
+   M /trunk/socketapi/socketapi/c2.c
+   M /trunk/socketapi/socketapi/c3.c
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpassociation.h
+   M /trunk/socketapi/socketapi/sctpassociation.icc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocket.h
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.h
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r113 | dreibh | 2003-07-09 19:23:38 +0200 (Wed, 09 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/c1.c
+   M /trunk/socketapi/socketapi/c2.c
+   M /trunk/socketapi/socketapi/c3.c
+   M /trunk/socketapi/socketapi/c4.c
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r110 | dreibh | 2003-07-09 17:49:47 +0200 (Wed, 09 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/Makefile.am
+   A /trunk/socketapi/socketapi/c1.c
+   A /trunk/socketapi/socketapi/c2.c
+   A /trunk/socketapi/socketapi/c3.c
+   A /trunk/socketapi/socketapi/c4.c
+   M /trunk/socketapi/socketapi/ext_socket.h
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r106 | dreibh | 2003-07-08 14:33:19 +0200 (Tue, 08 Jul 2003) | 2 lines
+Changed paths:
+   A /trunk/socketapi/socket_programs/idexample1to1.c
+   A /trunk/socketapi/socket_programs/idexample1toM.c
+   A /trunk/socketapi/socket_programs/newexample1to1.c
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r105 | dreibh | 2003-07-07 18:13:28 +0200 (Mon, 07 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socket_programs/Makefile.am
+   A /trunk/socketapi/socket_programs/combined_server_1toM.c
+   D /trunk/socketapi/socket_programs/combined_server_1toN.c
+   D /trunk/socketapi/socket_programs/idexampletcp.c
+   D /trunk/socketapi/socket_programs/idexampleudp.c
+   D /trunk/socketapi/socket_programs/newexampletcp.c
+   M /trunk/socketapi/socketapi/Makefile.am
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   A /trunk/socketapi/socketapi/t2.c
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r104 | dreibh | 2003-07-01 16:40:21 +0200 (Tue, 01 Jul 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r98 | dreibh | 2003-06-30 15:59:28 +0200 (Mon, 30 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpassociation.h
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   A /trunk/socketapi/socketapi/t1.c
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r97 | dreibh | 2003-06-29 17:46:19 +0200 (Sun, 29 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socket_programs/Makefile.am
+   D /trunk/socketapi/socket_programs/TCP_combined_server.c
+   D /trunk/socketapi/socket_programs/UDP_combined_server.c
+   A /trunk/socketapi/socket_programs/combined_server_1to1.c
+   A /trunk/socketapi/socket_programs/combined_server_1toN.c
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r96 | dreibh | 2003-06-29 17:41:13 +0200 (Sun, 29 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/Makefile.am
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r94 | dreibh | 2003-06-26 12:10:10 +0200 (Thu, 26 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socket_programs/t1.c
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+   M /trunk/socketapi/socketapi/tdsystem.h
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r88 | dreibh | 2003-06-24 10:51:00 +0200 (Tue, 24 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/Makefile.am
+   M /trunk/socketapi/cppsocketapi/multitimerthread.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r87 | dreibh | 2003-06-18 17:21:25 +0200 (Wed, 18 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socket_programs/Makefile.am
+   A /trunk/socketapi/socket_programs/t1.c
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r85 | dreibh | 2003-06-13 15:14:34 +0200 (Fri, 13 Jun 2003) | 2 lines
+Changed paths:
+   A /trunk/socketapi/scripts/Makefile.am
+   M /trunk/socketapi/socket_programs/TCP_combined_server.c
+   M /trunk/socketapi/socket_programs/UDP_combined_server.c
+   M /trunk/socketapi/socket_programs/newexampletcp.c
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r84 | dreibh | 2003-06-08 17:15:12 +0200 (Sun, 08 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/rsplib/README
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r83 | dreibh | 2003-06-07 01:30:28 +0200 (Sat, 07 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.cc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r80 | dreibh | 2003-06-06 19:28:59 +0200 (Fri, 06 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/Makefile.am
+   M /trunk/socketapi/configure.in
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r79 | dreibh | 2003-06-06 18:53:25 +0200 (Fri, 06 Jun 2003) | 2 lines
+Changed paths:
+   A /trunk/socketapi/scripts
+   A /trunk/socketapi/scripts/ext.sed
+   A /trunk/socketapi/scripts/ext.sh
+   A /trunk/socketapi/scripts/unext.sed
+   A /trunk/socketapi/scripts/unext.sh
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r78 | dreibh | 2003-06-06 16:12:18 +0200 (Fri, 06 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/autogen.sh
+   M /trunk/socketapi/configure.in
+   D /trunk/socketapi/cppsocketapi/DEADJOE
+   A /trunk/socketapi/socket_programs/newexampletcp.c
+   M /trunk/socketapicompat/ext_socket.h
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r72 | dreibh | 2003-06-06 01:00:26 +0200 (Fri, 06 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocket_programs/sctpmultiserver.cc
+   M /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+   M /trunk/socketapi/socket_programs/Makefile.am
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r69 | dreibh | 2003-06-04 19:21:00 +0200 (Wed, 04 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocket_programs/sctpinfoprinter.cc
+   M /trunk/socketapi/cppsocket_programs/sctpmultiserver.cc
+   M /trunk/socketapi/cppsocket_programs/sctpportscanner.cc
+   M /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+   M /trunk/socketapi/cppsocket_programs/sctptftp.cc
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+   M /trunk/socketapi/cppsocketapi/tdsocket.h
+   M /trunk/socketapi/socket_programs/idexampletcp.c
+   M /trunk/socketapi/socket_programs/idexampleudp.c
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.cc
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.h
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocket.h
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r68 | dreibh | 2003-06-04 00:01:47 +0200 (Wed, 04 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/rsplib/rsplib/asapcache.c
+   M /trunk/rsplib/rsplib/asapcreator.c
+   M /trunk/rsplib/rsplib/asapinstance.c
+   M /trunk/rsplib/rsplib/asapmessage.c
+   M /trunk/rsplib/rsplib/examplepe.c
+   M /trunk/rsplib/rsplib/nameserver.c
+   M /trunk/rsplib/rsplib/netutilities.c
+   M /trunk/rsplib/rsplib/rsplib.c
+   M /trunk/rsplib/rsplib/servertable.c
+   M /trunk/rsplib/rsplib/simpleexamplepe.c
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r66 | dreibh | 2003-06-03 16:16:48 +0200 (Tue, 03 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/rsplib/configure.in
+   M /trunk/rsplib/rsplib/asap-serverannounce.conf
+   M /trunk/rsplib/rsplib/asap-servers.conf
+   M /trunk/rsplib/rsplib/asapinstance.h
+   M /trunk/rsplib/rsplib/examplepe.c
+   M /trunk/rsplib/rsplib/examplepu.c
+   M /trunk/rsplib/rsplib/messagebuffer.h
+   M /trunk/rsplib/rsplib/nameserver-example
+   M /trunk/rsplib/rsplib/nameserver.c
+   M /trunk/rsplib/rsplib/rsplib.h
+   M /trunk/rsplib/rsplib/rspsession.c
+   M /trunk/rsplib/rsplib/servertable.c
+   M /trunk/socketapi/socketapi/internetaddress.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r64 | tuexen | 2003-06-02 19:36:30 +0200 (Mon, 02 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socket_programs/TCP_combined_server.c
+   M /trunk/socketapi/socket_programs/UDP_combined_server.c
+
+Make it work with the KAME implementation.
+
+------------------------------------------------------------------------
+r63 | dreibh | 2003-06-02 19:29:42 +0200 (Mon, 02 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r61 | dreibh | 2003-06-02 00:46:01 +0200 (Mon, 02 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/rsplib/rsplib/asap-serverannounce.conf
+   M /trunk/rsplib/rsplib/examplepu.c
+   M /trunk/rsplib/rsplib/nameserver-example
+   M /trunk/rsplib/rsplib/nameserver.c
+   M /trunk/rsplib/rsplib/netutilities.c
+   M /trunk/rsplib/rsplib/rsplib-tags.h
+   M /trunk/rsplib/rsplib/rspsession.c
+   M /trunk/rsplib/rsplib/serverannounce.c
+   M /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+   M /trunk/socketapi/cppsocketapi/tdsocket.h
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r59 | dreibh | 2003-06-01 19:41:41 +0200 (Sun, 01 Jun 2003) | 2 lines
+Changed paths:
+   M /trunk/rsplib/acconfig.h
+   M /trunk/rsplib/config.h.in
+   M /trunk/rsplib/configure.in
+   M /trunk/rsplib/rsplib/asap-serverannounce.conf
+   M /trunk/rsplib/rsplib/asap-servers.conf
+   M /trunk/rsplib/rsplib/asapmessage.h
+   M /trunk/rsplib/rsplib/asapparser.c
+   M /trunk/rsplib/rsplib/dispatcher.c
+   M /trunk/rsplib/rsplib/examplepe.c
+   M /trunk/rsplib/rsplib/examplepu.c
+   M /trunk/rsplib/rsplib/loglevel.c
+   M /trunk/rsplib/rsplib/messagebuffer.c
+   M /trunk/rsplib/rsplib/nameserver-example
+   M /trunk/rsplib/rsplib/nameserver.c
+   M /trunk/rsplib/rsplib/netutilities.c
+   M /trunk/rsplib/rsplib/rsplib-tags.h
+   M /trunk/rsplib/rsplib/rsplib.c
+   M /trunk/rsplib/rsplib/rspsession.c
+   M /trunk/rsplib/rsplib/servertable.c
+   M /trunk/rsplib/rsplib/simpleexamplepu.c
+   M /trunk/rsplib/rsplib/tagitem.c
+   M /trunk/rsplib/rsplib/tagitem.h
+   A /trunk/socketapi/socketapi/ChangeLog
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpassociation.h
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocket.h
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r50 | dreibh | 2003-05-23 17:42:58 +0200 (Fri, 23 May 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r24 | dreibh | 2003-05-15 14:13:21 +0200 (Thu, 15 May 2003) | 2 lines
+Changed paths:
+   A /trunk/socketapi/cppsocketapi/MakeLinks.sh
+   M /trunk/socketapi/cppsocketapi/Makefile.am
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r23 | dreibh | 2003-05-15 14:05:09 +0200 (Thu, 15 May 2003) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/Makefile.am
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+   M /trunk/socketapi/cppsocketapi/tdsocket.icc
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r22 | dreibh | 2003-05-15 13:38:51 +0200 (Thu, 15 May 2003) | 2 lines
+Changed paths:
+   D /trunk/socketapi/socketapi/x
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r19 | dreibh | 2003-05-15 13:35:48 +0200 (Thu, 15 May 2003) | 2 lines
+Changed paths:
+   A /trunk/socketapi
+   A /trunk/socketapi/AUTHORS
+   A /trunk/socketapi/COPYING
+   A /trunk/socketapi/ChangeLog
+   A /trunk/socketapi/INSTALL
+   A /trunk/socketapi/Makefile.am
+   A /trunk/socketapi/NEWS
+   A /trunk/socketapi/README
+   A /trunk/socketapi/acconfig.h
+   A /trunk/socketapi/acinclude.m4
+   A /trunk/socketapi/acinclude.m4.in
+   A /trunk/socketapi/aclocal.m4
+   A /trunk/socketapi/admin
+   A /trunk/socketapi/admin/ChangeLog
+   A /trunk/socketapi/admin/Makefile.common
+   A /trunk/socketapi/admin/acinclude.m4.in
+   A /trunk/socketapi/admin/am_edit
+   A /trunk/socketapi/admin/am_edit.py
+   A /trunk/socketapi/admin/conf.change.pl
+   A /trunk/socketapi/admin/config.guess
+   A /trunk/socketapi/admin/config.pl
+   A /trunk/socketapi/admin/config.sub
+   A /trunk/socketapi/admin/configure.in.min
+   A /trunk/socketapi/admin/debianrules
+   A /trunk/socketapi/admin/depcomp
+   A /trunk/socketapi/admin/install-sh
+   A /trunk/socketapi/admin/libtool.m4.in
+   A /trunk/socketapi/admin/ltcf-c.sh
+   A /trunk/socketapi/admin/ltcf-cxx.sh
+   A /trunk/socketapi/admin/ltcf-gcj.sh
+   A /trunk/socketapi/admin/ltconfig
+   A /trunk/socketapi/admin/ltmain.sh
+   A /trunk/socketapi/admin/missing
+   A /trunk/socketapi/admin/mkinstalldirs
+   A /trunk/socketapi/admin/ylwrap
+   A /trunk/socketapi/autogen.sh
+   A /trunk/socketapi/config.h.in
+   A /trunk/socketapi/configure.in
+   A /trunk/socketapi/cppsocket_programs
+   A /trunk/socketapi/cppsocket_programs/Makefile.am
+   A /trunk/socketapi/cppsocket_programs/README
+   A /trunk/socketapi/cppsocket_programs/ansicolor.h
+   A /trunk/socketapi/cppsocket_programs/debug
+   A /trunk/socketapi/cppsocket_programs/sctpinfoprinter.cc
+   A /trunk/socketapi/cppsocket_programs/sctpinfoprinter.h
+   A /trunk/socketapi/cppsocket_programs/sctpmultiserver.cc
+   A /trunk/socketapi/cppsocket_programs/sctpportscanner.cc
+   A /trunk/socketapi/cppsocket_programs/sctpsockettest.cc
+   A /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+   A /trunk/socketapi/cppsocket_programs/sctptest.cc
+   A /trunk/socketapi/cppsocket_programs/sctptftp.cc
+   A /trunk/socketapi/cppsocket_programs/sctptftp.h
+   A /trunk/socketapi/cppsocket_programs/tracelevels.in
+   A /trunk/socketapi/cppsocketapi
+   A /trunk/socketapi/cppsocketapi/DEADJOE
+   A /trunk/socketapi/cppsocketapi/Makefile.am
+   A /trunk/socketapi/cppsocketapi/breakdetector.cc
+   A /trunk/socketapi/cppsocketapi/breakdetector.h
+   A /trunk/socketapi/cppsocketapi/multitimerthread.cc
+   A /trunk/socketapi/cppsocketapi/multitimerthread.h
+   A /trunk/socketapi/cppsocketapi/multitimerthread.icc
+   A /trunk/socketapi/cppsocketapi/packetaddress.cc
+   A /trunk/socketapi/cppsocketapi/packetaddress.h
+   A /trunk/socketapi/cppsocketapi/packetaddress.icc
+   A /trunk/socketapi/cppsocketapi/range.cc
+   A /trunk/socketapi/cppsocketapi/range.h
+   A /trunk/socketapi/cppsocketapi/range.icc
+   A /trunk/socketapi/cppsocketapi/ringbuffer.cc
+   A /trunk/socketapi/cppsocketapi/ringbuffer.h
+   A /trunk/socketapi/cppsocketapi/ringbuffer.icc
+   A /trunk/socketapi/cppsocketapi/streamsrcdest.cc
+   A /trunk/socketapi/cppsocketapi/streamsrcdest.h
+   A /trunk/socketapi/cppsocketapi/tdsocket.cc
+   A /trunk/socketapi/cppsocketapi/tdsocket.h
+   A /trunk/socketapi/cppsocketapi/tdsocket.icc
+   A /trunk/socketapi/cppsocketapi/timedthread.cc
+   A /trunk/socketapi/cppsocketapi/timedthread.h
+   A /trunk/socketapi/cppsocketapi/timedthread.icc
+   A /trunk/socketapi/cppsocketapi/trafficclassvalues.cc
+   A /trunk/socketapi/cppsocketapi/trafficclassvalues.h
+   A /trunk/socketapi/cppsocketapi/trafficclassvalues.icc
+   A /trunk/socketapi/install-sh
+   A /trunk/socketapi/missing
+   A /trunk/socketapi/mkinstalldirs
+   A /trunk/socketapi/socket_programs
+   A /trunk/socketapi/socket_programs/Makefile.am
+   A /trunk/socketapi/socket_programs/TCP_combined_server.c
+   A /trunk/socketapi/socket_programs/UDP_combined_server.c
+   A /trunk/socketapi/socket_programs/idexampletcp.c
+   A /trunk/socketapi/socket_programs/idexampleudp.c
+   A /trunk/socketapi/socket_programs/inet_ntop.c
+   A /trunk/socketapi/socket_programs/tracelevels.in
+   A /trunk/socketapi/socketapi
+   A /trunk/socketapi/socketapi/CHANGES
+   A /trunk/socketapi/socketapi/Makefile.am
+   A /trunk/socketapi/socketapi/condition.cc
+   A /trunk/socketapi/socketapi/condition.h
+   A /trunk/socketapi/socketapi/condition.icc
+   A /trunk/socketapi/socketapi/ext_socket.h
+   A /trunk/socketapi/socketapi/extsocketdescriptor.h
+   A /trunk/socketapi/socketapi/internetaddress.cc
+   A /trunk/socketapi/socketapi/internetaddress.h
+   A /trunk/socketapi/socketapi/internetaddress.icc
+   A /trunk/socketapi/socketapi/internetflow.cc
+   A /trunk/socketapi/socketapi/internetflow.h
+   A /trunk/socketapi/socketapi/internetflow.icc
+   A /trunk/socketapi/socketapi/portableaddress.h
+   A /trunk/socketapi/socketapi/portableaddress.icc
+   A /trunk/socketapi/socketapi/randomizer.cc
+   A /trunk/socketapi/socketapi/randomizer.h
+   A /trunk/socketapi/socketapi/randomizer.icc
+   A /trunk/socketapi/socketapi/sctpassociation.cc
+   A /trunk/socketapi/socketapi/sctpassociation.h
+   A /trunk/socketapi/socketapi/sctpassociation.icc
+   A /trunk/socketapi/socketapi/sctpnotificationqueue.cc
+   A /trunk/socketapi/socketapi/sctpnotificationqueue.h
+   A /trunk/socketapi/socketapi/sctpnotificationqueue.icc
+   A /trunk/socketapi/socketapi/sctpsocket.cc
+   A /trunk/socketapi/socketapi/sctpsocket.h
+   A /trunk/socketapi/socketapi/sctpsocket.icc
+   A /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   A /trunk/socketapi/socketapi/sctpsocketmaster.h
+   A /trunk/socketapi/socketapi/sctpsocketmaster.icc
+   A /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+   A /trunk/socketapi/socketapi/sctpsocketwrapper.h
+   A /trunk/socketapi/socketapi/socketaddress.cc
+   A /trunk/socketapi/socketapi/socketaddress.h
+   A /trunk/socketapi/socketapi/socketaddress.icc
+   A /trunk/socketapi/socketapi/staticglobals.cc
+   A /trunk/socketapi/socketapi/synchronizable.cc
+   A /trunk/socketapi/socketapi/synchronizable.h
+   A /trunk/socketapi/socketapi/synchronizable.icc
+   A /trunk/socketapi/socketapi/tdin6.h
+   A /trunk/socketapi/socketapi/tdmessage.h
+   A /trunk/socketapi/socketapi/tdmessage.icc
+   A /trunk/socketapi/socketapi/tdstrings.cc
+   A /trunk/socketapi/socketapi/tdstrings.h
+   A /trunk/socketapi/socketapi/tdstrings.icc
+   A /trunk/socketapi/socketapi/tdsystem.h
+   A /trunk/socketapi/socketapi/thread.cc
+   A /trunk/socketapi/socketapi/thread.h
+   A /trunk/socketapi/socketapi/thread.icc
+   A /trunk/socketapi/socketapi/tools.cc
+   A /trunk/socketapi/socketapi/tools.h
+   A /trunk/socketapi/socketapi/tools.icc
+   A /trunk/socketapi/socketapi/unixaddress.cc
+   A /trunk/socketapi/socketapi/unixaddress.h
+   A /trunk/socketapi/socketapi/unixaddress.icc
+   A /trunk/socketapi/socketapi/x
+   A /trunk/socketapi/stamp-h.in
+   A /trunk/socketapi/start
+
+Initial revision
+
+------------------------------------------------------------------------

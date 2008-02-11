@@ -1,4 +1,0 @@
-debian/tmp/usr/lib/libsctplib*.so
-debian/tmp/usr/lib/libsctplib*.a
-debian/tmp/usr/lib/libsctplib*.la
-debian/tmp/usr/include/sctp.h
