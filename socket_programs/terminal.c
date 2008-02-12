@@ -213,7 +213,7 @@ int main(int argc, char** argv)
       exit(1);
    }
    if(!string2address(argv[1], &remoteAddress)) {
-      fprintf(stderr, "ERROR: Bad remote address <%s>!\n", argv[i]);
+      fprintf(stderr, "ERROR: Bad remote address <%s>!\n", argv[1]);
       exit(1);
    }
 

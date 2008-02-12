@@ -1,4 +1,0 @@
-debian/tmp/usr/lib/libsocketapi*.so
-debian/tmp/usr/lib/libsocketapi*.a
-debian/tmp/usr/lib/libsocketapi*.la
-debian/tmp/usr/include/ext_socket.h

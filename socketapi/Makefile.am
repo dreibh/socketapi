@@ -20,8 +20,7 @@ libsctpsocket_la_SOURCES = thread.cc tdstrings.cc synchronizable.cc \
 
 libsctpsocket_la_LIBADD =  @sctplib_LIBS@ @glib_LIBS@ @thread_LIBS@
 libsctpsocket_la_LDFLAGS = \
-   -version-info $(SOCKETAPI_CURRENT):$(SOCKETAPI_REVISION):$(SOCKETAPI_AGE) \
-   -release $(SOCKETAPI_RELEASE)
+   -version-info $(SOCKETAPI_CURRENT):$(SOCKETAPI_REVISION):$(SOCKETAPI_AGE)
 
 
 #noinst_PROGRAMS = t1
