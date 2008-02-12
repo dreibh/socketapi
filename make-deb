@@ -5,7 +5,7 @@
 # ---------------------------------------------------------
 INPUT="$HOME/src/socketapi"
 PACKAGE="socketapi"
-CONFOPT=""
+CONFOPT="--with-sctplib=/usr"
 # ---------------------------------------------------------
 
 
