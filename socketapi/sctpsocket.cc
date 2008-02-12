@@ -773,7 +773,7 @@ int SCTPSocket::internalReceive(SCTPNotificationQueue& queue,
          if(sda->sda_flags & SCTP_ARRIVE_UNORDERED) {
             flags |= MSG_UNORDERED;
          }
-         size_t receivedBytes = std::min((size_t) sda->sda_bytes_arrived, (size_t) bufferSize);
+         unsigned int receivedBytes = std::min((size_t) sda->sda_bytes_arrived, (size_t) bufferSize);
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0)
          unsigned int pathIndex;
          const int ok = sctp_receivefrom(assocID, streamID,
