@@ -1087,11 +1087,11 @@ static int getRTOInfo(ExtSocketDescriptor* tdSocket,
 static int getDelayedAckTime(ExtSocketDescriptor*     tdSocket,
                              void* optval, socklen_t* optlen)
 {
-   if((optval == NULL) || ((size_t)*optlen < sizeof(sctp_assoc_value))) {
+   if((optval == NULL) || ((size_t)*optlen < sizeof(sctp_sack_info))) {
       errno_return(-EINVAL);
    }
-   sctp_assoc_value* value   = (sctp_assoc_value*)optval;
-   unsigned int      assocID = value->assoc_id;
+   sctp_sack_info* sackInfo  = (sctp_sack_info*)optval;
+   unsigned int      assocID = sackInfo->sack_assoc_id;
 
    if((assocID == 0) && (tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr)) {
       assocID = tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->getID();
@@ -1101,8 +1101,8 @@ static int getDelayedAckTime(ExtSocketDescriptor*     tdSocket,
       SCTP_Association_Status parameters;
       int result = getAssocParams(tdSocket, assocID, parameters);
       if(result == 0) {
-         value->assoc_value = parameters.delay;
-         *optlen = sizeof(sctp_assoc_value);
+         sackInfo->sack_delay = parameters.delay;
+         *optlen = sizeof(sctp_sack_info);
       }
       errno_return(result);
    }
@@ -1111,8 +1111,8 @@ static int getDelayedAckTime(ExtSocketDescriptor*     tdSocket,
       if(tdSocket->Type == ExtSocketDescriptor::ESDT_SCTP) {
          if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr) {
             if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->getAssocDefaults(parameters)) {
-               value->assoc_value = parameters.delay;
-               *optlen = sizeof(sctp_assoc_value);
+               sackInfo->sack_delay = parameters.delay;
+               *optlen = sizeof(sctp_sack_info);
                errno_return(0);
             }
          }
@@ -1532,11 +1532,11 @@ static int setDelayedAckTime(ExtSocketDescriptor* tdSocket,
                              const void*          optval,
                              const socklen_t      optlen)
 {
-   if((optval == NULL) || (optlen < sizeof(sctp_assoc_value))) {
+   if((optval == NULL) || (optlen < sizeof(sctp_sack_info))) {
       errno_return(-EINVAL);
    }
-   const sctp_assoc_value* value   = (const sctp_assoc_value*)optval;
-   unsigned int            assocID = value->assoc_id;
+   const sctp_sack_info* sackInfo = (const sctp_sack_info*)optval;
+   unsigned int          assocID  = sackInfo->sack_assoc_id;
 
    if((assocID == 0) && (tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr)) {
       assocID = tdSocket->Socket.SCTPSocketDesc.SCTPAssociationPtr->getID();
@@ -1546,7 +1546,7 @@ static int setDelayedAckTime(ExtSocketDescriptor* tdSocket,
       SCTP_Association_Status parameters;
       int result = getAssocParams(tdSocket, assocID, parameters);
       if(result == 0) {
-         parameters.delay = value->assoc_value;
+         parameters.delay = sackInfo->sack_delay;
          result = setAssocParams(tdSocket, assocID, parameters);
       }
       errno_return(result);
@@ -1556,7 +1556,7 @@ static int setDelayedAckTime(ExtSocketDescriptor* tdSocket,
       if(tdSocket->Type == ExtSocketDescriptor::ESDT_SCTP) {
          if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr) {
             if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->getAssocDefaults(parameters)) {
-               parameters.delay = value->assoc_value;
+               parameters.delay = sackInfo->sack_delay;
                if(tdSocket->Socket.SCTPSocketDesc.SCTPSocketPtr->setAssocDefaults(parameters)) {
                   errno_return(0);
                }
