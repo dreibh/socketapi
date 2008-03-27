@@ -83,13 +83,6 @@
 #include <iostream>
 
 
-// In socket.cc: CMSG_NXTHDR: (__cmsg_nxthdr) is not found,
-// if compiled with -O0 -> extern inline definition required.
-#if !defined __USE_EXTERN_INLINES
- #define __USE_EXTERN_INLINES 1
-#endif
-
-
 // ###### Operating system definitions ######################################
 #define OS_Linux   1
 #define OS_FreeBSD 2
