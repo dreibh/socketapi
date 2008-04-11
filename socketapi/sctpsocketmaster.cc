@@ -475,7 +475,7 @@ void SCTPSocketMaster::dataArriveNotif(unsigned int   assocID,
    SCTPSocket* socket = getSocketForAssociationID(assocID);
    if(socket != NULL) {
       SCTPNotification notification;
-      initNotification(notification,assocID,streamID);
+      initNotification(notification, assocID, streamID);
       sctp_data_arrive* sda = &notification.Content.sn_data_arrive;
       sda->sda_type          = SCTP_DATA_ARRIVE;
       sda->sda_flags         = (unordered == 1) ? SCTP_ARRIVE_UNORDERED : 0;
@@ -508,7 +508,7 @@ void SCTPSocketMaster::sendFailureNotif(unsigned int   assocID,
    SCTPSocket* socket = getSocketForAssociationID(assocID);
    if(socket != NULL) {
       SCTPNotification notification;
-      initNotification(notification,assocID,0);
+      initNotification(notification, assocID, 0);
       sctp_send_failed* ssf = &notification.Content.sn_send_failed;
       ssf->ssf_type     = SCTP_REMOTE_ERROR;
       ssf->ssf_flags    = 0;
@@ -585,7 +585,7 @@ void SCTPSocketMaster::networkStatusChangeNotif(unsigned int assocID,
    SCTPSocket* socket = getSocketForAssociationID(assocID);
    if(socket != NULL) {
       SCTPNotification notification;
-      initNotification(notification,assocID,0);
+      initNotification(notification, assocID, 0);
       sctp_paddr_change* spc = &notification.Content.sn_paddr_change;
       spc->spc_type     = SCTP_PEER_ADDR_CHANGE;
       spc->spc_flags    = 0;
@@ -887,7 +887,7 @@ void SCTPSocketMaster::communicationErrorNotif(unsigned int assocID,
    SCTPSocket* socket = getSocketForAssociationID(assocID);
    if(socket != NULL) {
       SCTPNotification notification;
-      initNotification(notification,assocID,0);
+      initNotification(notification, assocID, 0);
       sctp_remote_error* sre = &notification.Content.sn_remote_error;
       sre->sre_type      = SCTP_REMOTE_ERROR;
       sre->sre_flags     = 0;
@@ -914,7 +914,7 @@ void SCTPSocketMaster::restartNotif(unsigned int assocID, void* ulpDataPtr)
    SCTPSocket* socket = getSocketForAssociationID(assocID);
    if(socket != NULL) {
       SCTPNotification notification;
-      initNotification(notification,assocID,0);
+      initNotification(notification);
       sctp_assoc_change* sac = &notification.Content.sn_assoc_change;
       sac->sac_type             = SCTP_ASSOC_CHANGE;
       sac->sac_flags            = 0;
@@ -1157,7 +1157,7 @@ bool SCTPSocketMaster::initNotification(SCTPNotification& notification,
    notification.Content.sn_header.sn_type = SCTP_UNDEFINED;
    notification.ContentPosition = 0;
    SCTP_Association_Status status;
-   if(sctp_getAssocStatus(assocID,&status) == 0) {
+   if(sctp_getAssocStatus(assocID, &status) == 0) {
       notification.RemotePort      = status.destPort;
 #if (SCTPLIB_VERSION == SCTPLIB_1_0_0_PRE19) || (SCTPLIB_VERSION == SCTPLIB_1_0_0)
       notification.RemoteAddresses = std::min((unsigned short)SCTP_MAX_NUM_ADDRESSES,
