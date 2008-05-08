@@ -1,8 +1,8 @@
-socketapi (2:2.2.0~beta3.1-1) hardy; urgency=low
+socketapi (2:2.2.0~beta3-1) hardy; urgency=low
 
   * Packaged latest version.
 
- -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Sun, 10 Feb 2008 14:22:12 +0800
+ -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Thu, 08 May 2008 09:53:12 +0800
 
 socketapi (1.7.0-5) edgy; urgency=low
 
