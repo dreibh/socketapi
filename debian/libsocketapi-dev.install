@@ -1,4 +1,4 @@
-debian/tmp/usr/lib/libsctpsocket*.so
-debian/tmp/usr/lib/libsctpsocket*.a
-debian/tmp/usr/lib/libsctpsocket*.la
-debian/tmp/usr/include/ext_socket.h
+usr/lib/libsctpsocket*.so
+usr/lib/libsctpsocket*.a
+usr/lib/libsctpsocket*.la
+usr/include/ext_socket.h
