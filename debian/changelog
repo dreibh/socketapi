@@ -1,5 +1,5 @@
-socketapi (2:2.2.0~rc1-0ubuntu1) intrepid; urgency=low
+socketapi (2:2.2.0~rc1-0ubuntu3) intrepid; urgency=low
 
   * Packaged latest version.
 
- -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Thu, 27 Aug 2008 13:03:12 +0800
+ -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Thu, 27 Aug 2008 14:40:12 +0800

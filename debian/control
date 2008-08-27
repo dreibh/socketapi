@@ -1,10 +1,11 @@
 Source: socketapi
 Section: net
 Priority: optional
-Maintainer: Thomas Dreibholz <dreibh@iem.uni-due.de>
-Homepage: http://www.sctp.de/
+XSBC-Original-Maintainer: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Maintainer: Ubuntu MOTU Developers <ubuntu-motu@lists.ubuntu.com>
+Homepage: http://tdrwww.exp-math.uni-essen.de/dreibholz/rserpool/index.html
 Build-Depends: debhelper (>= 5), autotools-dev, libsctplib-dev (>= 1.0.8~rc1), libglib2.0-dev
-Standards-Version: 3.7.3
+Standards-Version: 3.8.0
 
 Package: libsocketapi2
 Section: libs
