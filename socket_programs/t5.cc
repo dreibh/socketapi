@@ -1,6 +1,6 @@
 /*
  * A SCTP terminal using the socket API.
- * Copyright (C) 2005-2006 by Thomas Dreibholz, dreibh@exp-math.uni-essen.de
+ * Copyright (C) 2005-2008 by Thomas Dreibholz, dreibh@exp-math.uni-essen.de
  *
  * $Id: terminal.c 1045 2006-03-27 13:47:32Z dreibh $
  *

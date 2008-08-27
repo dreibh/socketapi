@@ -1,6 +1,6 @@
 /*
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 1999-2003 by Thomas Dreibholz
+ * Copyright (C) 2005-2008 by Thomas Dreibholz
  *
  * $Id$
  *
