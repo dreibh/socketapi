@@ -289,9 +289,26 @@ int SCTPSocket::bind(const unsigned short    localPort,
 
 
    // ====== Register SCTP instance =========================================
-   InstanceName = sctp_registerInstance(LocalPort, NoOfInStreams, NoOfOutStreams,
-                                        NoOfLocalAddresses, LocalAddressList,
-                                        SCTPSocketMaster::Callbacks);
+   if(LocalPort == 0) {
+      for(cardinal i = 0;i < 50000;i++) {
+         const card16 port = (card16)(16384 + SCTPSocketMaster::Random.random32() % (61000 - 16384));
+         InstanceName = sctp_registerInstance(port, NoOfInStreams, NoOfOutStreams,
+                                              NoOfLocalAddresses, LocalAddressList,
+                                              SCTPSocketMaster::Callbacks);
+         if(InstanceName > 0) {
+            LocalPort = port;
+#ifdef PRINT_BIND
+            std::cout << "Allocated port " << LocalPort << std::endl;
+#endif
+            break;
+         }
+      }
+   }
+   else {
+      InstanceName = sctp_registerInstance(LocalPort, NoOfInStreams, NoOfOutStreams,
+                                           NoOfLocalAddresses, LocalAddressList,
+                                           SCTPSocketMaster::Callbacks);
+   }
    if(InstanceName <= 0) {
 #ifdef PRINT_BIND
       std::cerr << "ERROR: SCTPSocket::bind() - sctp_registerInstance() failed!" << std::endl;
