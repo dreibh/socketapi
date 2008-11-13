@@ -1272,7 +1272,7 @@ void SCTPSocketMaster::addUserSocketNotification(UserSocketNotification* usn)
 #ifdef PRINT_PIPE
       std::cout << "Sending Break via break pipe..." << std::endl;
 #endif
-      write(BreakPipe[1],&dummy,sizeof(dummy));
+      dummy = write(BreakPipe[1],&dummy,sizeof(dummy));
    }
 
    unlock();

@@ -121,6 +121,7 @@ static void echo(int fd, int socketModeUDP)
    char                     buf[BUFLEN];
    size_t                   buflen;
    ssize_t                  received;
+   ssize_t                  result;
    int                      flags;
    unsigned int             incoming = 1;
    unsigned int             outgoing = 1;
@@ -143,7 +144,7 @@ static void echo(int fd, int socketModeUDP)
       else {
          printf("got %u bytes on stream %hu:\n", (unsigned int)received, sri.sinfo_stream);
          fflush(stdout);
-         write(0, buf, received);
+         result = write(0, buf, received);
 
          /* Echo it back */
          if(sctp_sendmsg(fd, buf, received, NULL, 0,

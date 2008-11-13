@@ -63,7 +63,7 @@ struct info {
 
 
 
-char Usage[] ="\
+const char* Usage = "\
 Usage: tsctp\n\
 Options:\n\
         -v      verbose\n\
@@ -181,7 +181,7 @@ int main(int argc, char **argv)
             nodelay = 1;
           break;
          default:
-            fprintf(stderr, Usage);
+            fputs(Usage, stderr);
             exit(1);
           break;
       }

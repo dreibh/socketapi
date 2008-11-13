@@ -241,7 +241,11 @@ void CopyThread::run()
 
       // For some reason, cin.getline() causes problems with Ctrl-C
       // handling. Therefore, we use fgets() and feof() instead.
-      fgets((char*)&str, sizeof(str), stdin);
+      if(fgets((char*)&str, sizeof(str), stdin) == NULL) {
+         CopySocket->shutdown(2);
+         sendBreak(true);
+         return;
+      }
       if(feof(stdin)) {
          CopySocket->shutdown(2);
          sendBreak(true);
