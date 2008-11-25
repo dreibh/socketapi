@@ -1308,6 +1308,9 @@ int ext_getsockopt(int sockfd, int level, int optname, void* optval, socklen_t* 
                          case SCTP_DELAYED_SACK:
                             return(getDelayedAckTime(tdSocket,optval,optlen));
                           break;
+                         case SCTP_NODELAY:
+                            errno_return(0);
+                          break;
                          case SCTP_ASSOCINFO:
                             return(getAssocInfo(tdSocket,optval,optlen));
                           break;
@@ -1752,6 +1755,9 @@ int ext_setsockopt(int sockfd, int level, int optname, const void* optval, sockl
                           break;
                          case SCTP_DELAYED_SACK:
                             return(setDelayedAckTime(tdSocket,optval,optlen));
+                          break;
+                         case SCTP_NODELAY:
+                            errno_return(0);
                           break;
                          case SCTP_ASSOCINFO:
                             return(setAssocInfo(tdSocket,optval,optlen));
