@@ -308,6 +308,15 @@ int SCTPSocket::bind(const unsigned short    localPort,
       InstanceName = sctp_registerInstance(LocalPort, NoOfInStreams, NoOfOutStreams,
                                            NoOfLocalAddresses, LocalAddressList,
                                            SCTPSocketMaster::Callbacks);
+      if(InstanceName <= 0) {
+         /* If the socket has been closed recently, it may not be deleted yet
+            (by garbage collector thread). Therefore, we run the garbage collector
+            now and try again ... */
+         SCTPSocketMaster::socketGarbageCollection();
+         InstanceName = sctp_registerInstance(LocalPort, NoOfInStreams, NoOfOutStreams,
+                                              NoOfLocalAddresses, LocalAddressList,
+                                              SCTPSocketMaster::Callbacks);
+      }
    }
    if(InstanceName <= 0) {
 #ifdef PRINT_BIND
