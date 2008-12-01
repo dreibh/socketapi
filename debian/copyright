@@ -1,12 +1,12 @@
-This is socketapi, maintained by Dr. Thomas Dreibholz <dreibh@iem.uni-due.de>
-on Mon, 11 Feb 2008 13:31:18 +0200.
+This is socketapi, maintained by Thomas Dreibholz <dreibh@iem.uni-due.de>
+on Mon, 01 Dec 2008 13:13:18 +0200.
 
 The original source can always be found at:
 http://tdrwww.exp-math.uni-essen.de/dreibholz/rserpool/
 
-Upstream Author: Thomas Dreibholz <dreibh@exp-math.uni-essen.de>
+Upstream Author: Thomas Dreibholz <dreibh@iem.uni-due.de>
 
-Copyright: LGPL Version 2.1
+Copyright: GPL Version 3
 
 Copyright (C) 1999-2008 by Thomas Dreibholz
 Copyright (C) 1999-2003 by Michael Tuexen
