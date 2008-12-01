@@ -1,6 +1,7 @@
 /*
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2003 by Michael Tuexen
+ * Copyright (C) 2003-2008 by Thomas Dreibholz
  *
  * $Id$
  *
@@ -30,9 +31,6 @@
  * Contact: discussion@sctp.de
  *          dreibh@iem.uni-due.de
  *          tuexen@fh-muenster.de
- *
- * Purpose: Example
- *
  */
 
 #include <stdlib.h>
