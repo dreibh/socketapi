@@ -28,9 +28,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * There are two mailinglists available at http://www.sctp.de which should be
- * used for any discussion related to this implementation.
- *
  * Contact: discussion@sctp.de
  *          dreibh@exp-math.uni-essen.de
  *          tuexen@fh-muenster.de
