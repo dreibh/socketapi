@@ -28,7 +28,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Contact: discussion@sctp.de
- *          dreibh@exp-math.uni-essen.de
+ *          dreibh@iem.uni-due.de
  *          tuexen@fh-muenster.de
  *
  * Purpose: Synchronizable Implementation

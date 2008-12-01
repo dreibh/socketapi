@@ -28,7 +28,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Contact: discussion@sctp.de
- *          dreibh@exp-math.uni-essen.de
+ *          dreibh@iem.uni-due.de
  *          tuexen@fh-muenster.de
  *
  * Purpose: Range Template
@@ -49,7 +49,7 @@
   * value 0, which is available even if it is outside of the given range.
   *
   * @short   Range
-  * @author  Thomas Dreibholz (dreibh@exp-math.uni-essen.de)
+  * @author  Thomas Dreibholz (dreibh@iem.uni-due.de)
   * @version 1.0
   */
 template<class T> class Range

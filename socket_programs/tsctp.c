@@ -3,7 +3,7 @@
  * Copyright (C) 1999-2003 by Michael Tuexen
  * Copyright (C) 2008-2008 by Thomas Dreibholz
  *
- * $Id: idexample1toM.c 2005 2008-11-13 18:07:57Z dreibh $
+ * $Id$
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -33,7 +33,7 @@
  * used for any discussion related to this implementation.
  *
  * Contact: discussion@sctp.de
- *          dreibh@exp-math.uni-essen.de
+ *          dreibh@iem.uni-due.de
  *          tuexen@fh-muenster.de
  *
  * Purpose: SCTP Test

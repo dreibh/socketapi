@@ -28,7 +28,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Contact: discussion@sctp.de
- *          dreibh@exp-math.uni-essen.de
+ *          dreibh@iem.uni-due.de
  *          tuexen@fh-muenster.de
  *
  * Purpose: Socket Message
@@ -57,7 +57,7 @@
   * of the control data block.
   *
   * @short   Socket Message
-  * @author  Thomas Dreibholz (dreibh@exp-math.uni-essen.de)
+  * @author  Thomas Dreibholz (dreibh@iem.uni-due.de)
   * @version 1.0
   */
 template<const size_t size> class SocketMessage
