@@ -118,7 +118,7 @@
  #include <stdint.h>
 #elif (SYSTEM == OS_FreeBSD)
  #include <machine/endian.h>
- #include <sys/inttypes.h>
+ #include <inttypes.h>
 #elif (SYSTEM == OS_Darwin)
  #include <machine/endian.h>
  #include <stdint.h>
