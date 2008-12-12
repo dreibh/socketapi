@@ -224,7 +224,7 @@ int ExtSocketDescriptorMaster::setSocket(const ExtSocketDescriptor& newSocket)
 {
    // This operation must be atomic!
    SCTPSocketMaster::MasterInstance.lock();
-   for(int i = (int)(std::min(FD_SETSIZE, getdtablesize())) - 1;i >= 0;i--) {
+   for(int i = (int)(std::min((int)FD_SETSIZE, getdtablesize())) - 1;i >= 0;i--) {
       if(Sockets[i].Type == ExtSocketDescriptor::ESDT_Invalid) {
          Sockets[i] = newSocket;
          SCTPSocketMaster::MasterInstance.unlock();
@@ -2818,7 +2818,7 @@ int ext_select(int             n,
    selectData.ExceptCondition.addParent(&selectData.GlobalCondition);
 
    int result = 0;
-   for(int i = 0;i < std::min((const int)n,FD_SETSIZE);i++) {
+   for(int i = 0;i < std::min((const int)n,(const int)FD_SETSIZE);i++) {
       short int eventMask = 0;
       if(SAFE_FD_ISSET(i,readfds)) {
          eventMask |= POLLIN|POLLPRI;
@@ -3003,7 +3003,7 @@ int ext_poll(struct pollfd* fdlist, long unsigned int count, int time)
    FD_ZERO(&writefdset);
    FD_ZERO(&exceptfdset);
    for(unsigned int i = 0; i < count; i++) {
-      if((fdlist[i].fd >= 0) && (fdlist[i].fd < FD_SETSIZE)) {
+      if((fdlist[i].fd >= 0) && (fdlist[i].fd < (const int)FD_SETSIZE)) {
          if(fdlist[i].events & POLLIN) {
             FD_SET(fdlist[i].fd,&readfdset);
          }
@@ -3034,7 +3034,7 @@ int ext_poll(struct pollfd* fdlist, long unsigned int count, int time)
    // ====== Set result flags ===============================================
    result = 0;
    for(unsigned int i = 0;i < count;i++) {
-      if((fdlist[i].fd >= 0) && (fdlist[i].fd < FD_SETSIZE)) {
+      if((fdlist[i].fd >= 0) && (fdlist[i].fd < (const int)FD_SETSIZE)) {
          fdlist[i].revents = 0;
          if(SAFE_FD_ISSET(fdlist[i].fd,&readfdset) && (fdlist[i].events & POLLIN)) {
             fdlist[i].revents |= POLLIN;

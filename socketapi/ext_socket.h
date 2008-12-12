@@ -84,10 +84,10 @@
 #define MSG_ADDR_OVER     MSG_MORE
 #define MSG_SEND_TO_ALL   MSG_PROXY
 #else
-#define MSG_ABORT         MSG_HOLD
-#define MSG_PR_SCTP_TTL   MSG_FLUSH
-#define MSG_ADDR_OVER     MSG_SEND
-#define MSG_SEND_TO_ALL   MSG_HAVEMORE
+#define MSG_ABORT         0x200
+#define MSG_PR_SCTP_TTL   0x400
+#define MSG_ADDR_OVER     0x800
+#define MSG_SEND_TO_ALL   0xc00
 #endif
 
 #define SCTP_UNORDERED    MSG_UNORDERED
