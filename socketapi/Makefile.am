@@ -1,3 +1,5 @@
+SUBDIRS = docs
+
 lib_LTLIBRARIES = libsctpsocket.la
 
 libsctpsocketincludedir      = $(prefix)/include

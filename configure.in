@@ -6,7 +6,7 @@
 AC_INIT(socketapi/ext_socket.h)
 AC_CONFIG_AUX_DIR(admin)
 AC_CANONICAL_HOST
-AM_INIT_AUTOMAKE(socketapi, 2.2.0~rc6)
+AM_INIT_AUTOMAKE(socketapi, 2.2.0~rc6.1)
 AC_PREFIX_DEFAULT(/usr/local)
 if test "x$prefix" = "xNONE"; then
   prefix=$ac_default_prefix
@@ -185,7 +185,7 @@ AC_SUBST(SOCKETAPI_AGE)
 
 
 # ###### Makefiles ##########################################################
-AC_OUTPUT(Makefile socketapi/Makefile cppsocketapi/Makefile socket_programs/Makefile cppsocket_programs/Makefile scripts/Makefile )
+AC_OUTPUT(Makefile socketapi/Makefile socketapi/docs/Makefile cppsocketapi/Makefile socket_programs/Makefile cppsocket_programs/Makefile scripts/Makefile )
 
 
 # ###### Configuration results ##############################################
