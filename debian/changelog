@@ -1,4 +1,4 @@
-socketapi (2:2.2.0-2ubuntu1) karmic; urgency=low
+socketapi (2:2.2.1~rc1-1ubuntu1) karmic; urgency=low
 
   * Packaged latest version.
 

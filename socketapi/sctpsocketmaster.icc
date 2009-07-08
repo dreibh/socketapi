@@ -69,10 +69,10 @@ inline void SCTPSocketMaster::unlock()
 #endif
    LockLevel--;
    const cardinal lockLevel = LockLevel;
-   unsynchronized();
    if(lockLevel == 0) {
       Thread::setCancelState(OldCancelState);
    }
+   unsynchronized();
 }
 
 
