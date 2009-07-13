@@ -114,14 +114,19 @@ SCTPSocket::~SCTPSocket()
 SCTPAssociation* SCTPSocket::getAssociationForAssociationID(const unsigned int assocID,
                                                             const bool activeOnly)
 {
+   SCTPAssociation* association = NULL;
+
+   SCTPSocketMaster::MasterInstance.lock();
    std::multimap<unsigned int, SCTPAssociation*>::iterator iterator =
       AssociationList.find(assocID);
    if(iterator != AssociationList.end()) {
       if(!((iterator->second->IsShuttingDown) && (activeOnly))) {
-         return(iterator->second);
+         association = iterator->second;
       }
    }
-   return(NULL);
+   SCTPSocketMaster::MasterInstance.unlock();
+   
+   return(association);
 }
 
 
