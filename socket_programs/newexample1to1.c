@@ -72,7 +72,7 @@ static void handle_event(void *buf)
    struct sockaddr_in  *sin;
    struct sockaddr_in6 *sin6;
 
-   snp = buf;
+   snp = (union sctp_notification*)buf;
 
    switch(snp->sn_header.sn_type) {
       case SCTP_ASSOC_CHANGE:

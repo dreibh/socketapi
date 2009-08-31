@@ -98,7 +98,7 @@ static void* handle_connection(void *arg)
    unsigned long messages=0;
    struct info* info;
 
-   buf = malloc(BUFFERSIZE);
+   buf = (char*)malloc(BUFFERSIZE);
    info = (struct info*)arg;
    fdc = info->fd;
    tid = pthread_self();
@@ -159,7 +159,7 @@ int main(int argc, char **argv)
 #endif
    local_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-   server_info = malloc(sizeof(struct info));
+   server_info = (struct info*)malloc(sizeof(struct info));
 
    while ((c = getopt(argc, argv, "p:l:L:n:vVD")) != -1) {
       switch(c) {
@@ -218,7 +218,7 @@ int main(int argc, char **argv)
       while (1) {
          memset(&remote_addr, 0, sizeof(remote_addr));
          addr_len = sizeof(struct sockaddr_in);
-         cfdptr = malloc(sizeof(int));
+         cfdptr = (int*)malloc(sizeof(int));
          if ((*cfdptr = ext_accept(fd, (struct sockaddr *)&remote_addr, &addr_len)) < 0)
             perror("accept");
          if (verbose)
@@ -244,7 +244,7 @@ int main(int argc, char **argv)
          if(ext_setsockopt(fd, IPPROTO_SCTP, SCTP_NODELAY, (char *)&one, sizeof(one)) < 0)
             perror("setsockopt: nodelay");
       }
-      buffer = malloc(length);
+      buffer = (char*)malloc(length);
       gettimeofday(&start_time, NULL);
       if (verbose) {
          printf("Start sending %ld messages...", (long)number_of_messages);

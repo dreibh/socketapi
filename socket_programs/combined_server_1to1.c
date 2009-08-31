@@ -294,7 +294,7 @@ start_server(void *arg)
     bzero(&remote_addr, sizeof(remote_addr));
     remote_addr_len = sizeof(remote_addr);
     for(;;){
-        fdp = malloc(sizeof(int));
+        fdp = (int*)malloc(sizeof(int));
         if((*fdp=ext_accept(data.fd, (struct sockaddr *) &remote_addr, &remote_addr_len)) < 0)
             perror("accept call failed");
         if (verbose) {
@@ -307,7 +307,7 @@ start_server(void *arg)
 }
 
 static pthread_t
-init_server(struct sockaddr_in local_addr, int port, void *(connection_handler ()))
+init_server(struct sockaddr_in local_addr, int port, void *(connection_handler (void*)))
 {
     pthread_t tid;
     int fd;
@@ -324,7 +324,7 @@ init_server(struct sockaddr_in local_addr, int port, void *(connection_handler (
     if(ext_listen(fd, 1) < 0)
         perror("listen call failed");
 
-    server_data_p = malloc(sizeof(struct server_data));
+    server_data_p = (struct server_data*)malloc(sizeof(struct server_data));
     server_data_p->fd = fd;
     server_data_p->connection_handler = connection_handler;
     if (verbose) {

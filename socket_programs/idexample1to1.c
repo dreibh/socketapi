@@ -59,7 +59,7 @@ handle_event(void *buf)
   struct sockaddr_in *sin;
   struct sockaddr_in6 *sin6;
 
-  snp = buf;
+  snp = (union sctp_notification*)buf;
 
   switch (snp->sn_header.sn_type) {
     case SCTP_ASSOC_CHANGE:
@@ -161,7 +161,7 @@ echo(int fd, int socketModeone_to_many)
 
   /* Allocate the initial data buffer */
   buflen = BUFLEN;
-  if (!(buf = malloc(BUFLEN))) {
+  if (!(buf = (char*)malloc(BUFLEN))) {
     fprintf(stderr, "out of memory\n");
     exit(1);
   }
@@ -175,7 +175,7 @@ echo(int fd, int socketModeone_to_many)
   sri = (struct sctp_sndrcvinfo *)(cmsg + 1);
 
   /* Wait for something to echo */
-  while ((buf = mysctp_recvmsg(fd, msg, buf, &buflen, &nr, cmsglen))) {
+  while ((buf = (char*)mysctp_recvmsg(fd, msg, buf, &buflen, &nr, cmsglen))) {
 
     /* Intercept notifications here */
     if (msg->msg_flags & MSG_NOTIFICATION) {
