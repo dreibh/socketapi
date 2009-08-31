@@ -1,4 +1,186 @@
 ------------------------------------------------------------------------
+r2160 | dreibh | 2009-07-13 14:54:50 +0200 (Mon, 13 Jul 2009) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+
+Fixed mutex problem found by Helgrind.
+
+------------------------------------------------------------------------
+r2149 | dreibh | 2009-07-08 16:14:51 +0200 (Wed, 08 Jul 2009) | 1 line
+Changed paths:
+   A /trunk/socketapi/make-ppa (from /trunk/rsplib2/make-ppa:2137)
+
+
+------------------------------------------------------------------------
+r2148 | dreibh | 2009-07-08 16:12:22 +0200 (Wed, 08 Jul 2009) | 2 lines
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/debian/changelog
+   M /trunk/socketapi/socketapi/sctpsocketmaster.icc
+
+Fixed thread locking problem found by Helgrind.
+
+------------------------------------------------------------------------
+r2129 | dreibh | 2009-06-03 12:09:43 +0200 (Wed, 03 Jun 2009) | 2 lines
+Changed paths:
+   M /trunk/socketapi/debian/changelog
+   M /trunk/socketapi/debian.conf
+
+Update of Debian files from jaunty to karmic.
+
+------------------------------------------------------------------------
+r2110 | dreibh | 2009-02-21 15:38:39 +0100 (Sat, 21 Feb 2009) | 2 lines
+Changed paths:
+   M /trunk/socketapi/clean-deb
+   M /trunk/socketapi/debian/changelog
+   M /trunk/socketapi/debian.conf
+   M /trunk/socketapi/make-deb
+
+Debian script updates.
+
+------------------------------------------------------------------------
+r2103 | dreibh | 2009-01-29 12:16:09 +0100 (Thu, 29 Jan 2009) | 1 line
+Changed paths:
+   D /trunk/socketapi/admin
+
+
+------------------------------------------------------------------------
+r2101 | dreibh | 2009-01-28 17:01:22 +0100 (Wed, 28 Jan 2009) | 1 line
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/debian/changelog
+
+
+------------------------------------------------------------------------
+r2096 | dreibh | 2009-01-15 11:22:27 +0100 (Thu, 15 Jan 2009) | 1 line
+Changed paths:
+   M /trunk/socketapi/ChangeLog
+
+
+------------------------------------------------------------------------
+r2094 | dreibh | 2009-01-15 11:20:14 +0100 (Thu, 15 Jan 2009) | 1 line
+Changed paths:
+   M /trunk/socketapi/ChangeLog
+
+
+------------------------------------------------------------------------
+r2091 | dreibh | 2009-01-15 11:18:23 +0100 (Thu, 15 Jan 2009) | 2 lines
+Changed paths:
+   A /trunk/socketapi/UpdateDoc1.sed
+   A /trunk/socketapi/UpdateDocFile1.sh
+   M /trunk/socketapi/clean-deb
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/cppsocket_programs/ansicolor.h
+   M /trunk/socketapi/cppsocket_programs/sctpinfoprinter.cc
+   M /trunk/socketapi/cppsocket_programs/sctpinfoprinter.h
+   M /trunk/socketapi/cppsocket_programs/sctpmultiserver.cc
+   M /trunk/socketapi/cppsocket_programs/sctpportscanner.cc
+   M /trunk/socketapi/cppsocket_programs/sctpsockettest.cc
+   M /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+   M /trunk/socketapi/cppsocket_programs/sctptest.cc
+   M /trunk/socketapi/cppsocket_programs/sctptftp.cc
+   M /trunk/socketapi/cppsocket_programs/sctptftp.h
+   M /trunk/socketapi/cppsocketapi/breakdetector.cc
+   M /trunk/socketapi/cppsocketapi/breakdetector.h
+   M /trunk/socketapi/cppsocketapi/multitimerthread.h
+   M /trunk/socketapi/cppsocketapi/multitimerthread.icc
+   M /trunk/socketapi/cppsocketapi/packetaddress.cc
+   M /trunk/socketapi/cppsocketapi/packetaddress.h
+   M /trunk/socketapi/cppsocketapi/packetaddress.icc
+   M /trunk/socketapi/cppsocketapi/range.cc
+   M /trunk/socketapi/cppsocketapi/range.h
+   M /trunk/socketapi/cppsocketapi/range.icc
+   M /trunk/socketapi/cppsocketapi/ringbuffer.cc
+   M /trunk/socketapi/cppsocketapi/ringbuffer.h
+   M /trunk/socketapi/cppsocketapi/ringbuffer.icc
+   M /trunk/socketapi/cppsocketapi/streamsrcdest.cc
+   M /trunk/socketapi/cppsocketapi/streamsrcdest.h
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+   M /trunk/socketapi/cppsocketapi/tdsocket.h
+   M /trunk/socketapi/cppsocketapi/tdsocket.icc
+   M /trunk/socketapi/cppsocketapi/timedthread.cc
+   M /trunk/socketapi/cppsocketapi/timedthread.h
+   M /trunk/socketapi/cppsocketapi/timedthread.icc
+   M /trunk/socketapi/cppsocketapi/trafficclassvalues.cc
+   M /trunk/socketapi/cppsocketapi/trafficclassvalues.h
+   M /trunk/socketapi/cppsocketapi/trafficclassvalues.icc
+   M /trunk/socketapi/debian/changelog
+   M /trunk/socketapi/debian/copyright
+   M /trunk/socketapi/debian.conf
+   M /trunk/socketapi/make-deb
+   M /trunk/socketapi/scripts/ext.sh
+   M /trunk/socketapi/scripts/unext.sh
+   M /trunk/socketapi/socket_programs/combined_server_1to1.c
+   M /trunk/socketapi/socket_programs/combined_server_1toM.c
+   M /trunk/socketapi/socket_programs/idexample1to1.c
+   M /trunk/socketapi/socket_programs/idexample1toM.c
+   M /trunk/socketapi/socket_programs/newexample1to1.c
+   M /trunk/socketapi/socket_programs/terminal.c
+   M /trunk/socketapi/socket_programs/tsctp.c
+   M /trunk/socketapi/socketapi/condition.cc
+   M /trunk/socketapi/socketapi/condition.h
+   M /trunk/socketapi/socketapi/condition.icc
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/extsocketdescriptor.h
+   M /trunk/socketapi/socketapi/internetaddress.cc
+   M /trunk/socketapi/socketapi/internetaddress.h
+   M /trunk/socketapi/socketapi/internetaddress.icc
+   M /trunk/socketapi/socketapi/internetflow.cc
+   M /trunk/socketapi/socketapi/internetflow.h
+   M /trunk/socketapi/socketapi/internetflow.icc
+   M /trunk/socketapi/socketapi/portableaddress.h
+   M /trunk/socketapi/socketapi/portableaddress.icc
+   M /trunk/socketapi/socketapi/randomizer.cc
+   M /trunk/socketapi/socketapi/randomizer.h
+   M /trunk/socketapi/socketapi/randomizer.icc
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpassociation.h
+   M /trunk/socketapi/socketapi/sctpassociation.icc
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.cc
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.h
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.icc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocket.h
+   M /trunk/socketapi/socketapi/sctpsocket.icc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.h
+   M /trunk/socketapi/socketapi/sctpsocketmaster.icc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.h
+   M /trunk/socketapi/socketapi/socketaddress.cc
+   M /trunk/socketapi/socketapi/socketaddress.h
+   M /trunk/socketapi/socketapi/socketaddress.icc
+   M /trunk/socketapi/socketapi/staticglobals.cc
+   M /trunk/socketapi/socketapi/synchronizable.cc
+   M /trunk/socketapi/socketapi/synchronizable.h
+   M /trunk/socketapi/socketapi/synchronizable.icc
+   M /trunk/socketapi/socketapi/tdin6.h
+   M /trunk/socketapi/socketapi/tdmessage.h
+   M /trunk/socketapi/socketapi/tdmessage.icc
+   M /trunk/socketapi/socketapi/tdstrings.cc
+   M /trunk/socketapi/socketapi/tdstrings.h
+   M /trunk/socketapi/socketapi/tdstrings.icc
+   M /trunk/socketapi/socketapi/tdsystem.h
+   M /trunk/socketapi/socketapi/thread.cc
+   M /trunk/socketapi/socketapi/thread.h
+   M /trunk/socketapi/socketapi/thread.icc
+   M /trunk/socketapi/socketapi/tools.cc
+   M /trunk/socketapi/socketapi/tools.h
+   M /trunk/socketapi/socketapi/tools.icc
+   M /trunk/socketapi/socketapi/unixaddress.cc
+   M /trunk/socketapi/socketapi/unixaddress.h
+   M /trunk/socketapi/socketapi/unixaddress.icc
+
+Header updates.
+
+------------------------------------------------------------------------
+r2084 | dreibh | 2008-12-29 11:18:38 +0100 (Mon, 29 Dec 2008) | 1 line
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/debian/changelog
+
+
+------------------------------------------------------------------------
 r2083 | dreibh | 2008-12-28 23:19:00 +0100 (Sun, 28 Dec 2008) | 3 lines
 Changed paths:
    M /trunk/socketapi/configure.in
