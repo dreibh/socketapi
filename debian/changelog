@@ -1,3 +1,9 @@
+socketapi (2:2.2.1-2ubuntu1) karmic; urgency=low
+
+  * Version update.
+
+ -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Sun, 08 Nov 2009 10:27:31 +0200
+
 socketapi (2:2.2.1-1ubuntu1) karmic; urgency=low
 
   * Packaged latest version.
