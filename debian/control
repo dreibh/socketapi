@@ -3,8 +3,8 @@ Section: net
 Priority: optional
 Maintainer: Thomas Dreibholz <dreibh@iem.uni-due.de>
 Homepage: http://tdrwww.iem.uni-due.de/dreibholz/rserpool/index.html
-Build-Depends: debhelper (>= 5), autotools-dev, libsctplib-dev (>= 1.0.8~rc1), libglib2.0-dev
-Standards-Version: 3.8.0
+Build-Depends: debhelper (>= 5), autotools-dev, libsctplib-dev (>= 1.0.9), libglib2.0-dev
+Standards-Version: 3.9.1
 
 Package: libsocketapi2
 Section: libs
