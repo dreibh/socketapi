@@ -23,6 +23,6 @@ Package: libsocketapi-dev
 Section: libdevel
 Priority: optional
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libsocketapi2
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsocketapi2 (= ${binary:Version})
 Description: development package for socketapi2
  This package contains development files for socketapi.
