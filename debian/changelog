@@ -1,4 +1,4 @@
-socketapi (2:2.2.2-1ubuntu1) natty; urgency=low
+socketapi (2:2.2.3-1ubuntu1) natty; urgency=low
 
   * Initial Ubuntu release (LP: #228052).
 
