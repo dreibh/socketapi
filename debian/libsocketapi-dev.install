@@ -1,4 +1,4 @@
-usr/lib/libsctpsocket*.so
+usr/include/ext_socket.h
 usr/lib/libsctpsocket*.a
 usr/lib/libsctpsocket*.la
-usr/include/ext_socket.h
+usr/lib/libsctpsocket*.so

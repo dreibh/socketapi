@@ -3,17 +3,21 @@ Section: net
 Priority: optional
 Maintainer: Thomas Dreibholz <dreibh@iem.uni-due.de>
 Homepage: http://tdrwww.iem.uni-due.de/dreibholz/rserpool/index.html
-Build-Depends: debhelper (>= 5), autotools-dev, libsctplib-dev (>= 1.0.9), libglib2.0-dev
+Build-Depends: autotools-dev,
+               debhelper (>= 5),
+               libglib2.0-dev,
+               libsctplib-dev (>= 1.0.9)
 Standards-Version: 3.9.1
 
 Package: libsocketapi2
 Section: libs
-Priority: optional
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libsctplib1 (>= 1.0.8~rc1)
+Depends: libsctplib1 (>= 1.0.8~rc1),
+         ${misc:Depends},
+         ${shlibs:Depends}
 Description: socket API library for sctplib
  Socketapi provides a socket API for the SCTP userland implementation sctplib,
- conforming to draft-ietf-tsvwg-sctpsocket-15.txt.
+ conforming to draft-ietf-tsvwg-sctpsocket.
  .
  This implementation is the product of a cooperation between Siemens AG (ICN),
  Munich, Germany and the Computer Networking Technology Group at the IEM of
@@ -21,8 +25,16 @@ Description: socket API library for sctplib
 
 Package: libsocketapi-dev
 Section: libdevel
-Priority: optional
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libsocketapi2 (= ${binary:Version})
+Depends: libsocketapi2 (= ${binary:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends}
 Description: development package for socketapi2
  This package contains development files for socketapi.
+ .
+ Socketapi provides a socket API for the SCTP userland implementation sctplib,
+ conforming to draft-ietf-tsvwg-sctpsocket.
+ .
+ This implementation is the product of a cooperation between Siemens AG (ICN),
+ Munich, Germany and the Computer Networking Technology Group at the IEM of
+ the University of Essen, Germany.
