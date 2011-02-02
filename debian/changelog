@@ -1,5 +1,6 @@
 socketapi (2:2.2.4~rc2-1ubuntu1) natty; urgency=low
 
+  * New upstream version.
   * Initial Ubuntu release (LP: #228052).
 
  -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Tue, 25 Jan 2011 14:14:14 +0200
