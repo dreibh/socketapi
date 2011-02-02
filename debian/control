@@ -9,12 +9,14 @@ Build-Depends: autotools-dev,
                libsctplib-dev (>= 1.0.9)
 Standards-Version: 3.9.1
 
-Package: libsocketapi2
+Package: libsctpsocket2
 Section: libs
 Architecture: any
-Depends: libsctplib1 (>= 1.0.8~rc1),
+Depends: libsctplib1 (>= 1.0.9),
          ${misc:Depends},
          ${shlibs:Depends}
+Replaces: libsocketapi2
+Conflicts: libsocketapi2
 Description: socket API library for sctplib
  Socketapi provides a socket API for the SCTP userland implementation sctplib,
  conforming to draft-ietf-tsvwg-sctpsocket.
@@ -23,12 +25,14 @@ Description: socket API library for sctplib
  Munich, Germany and the Computer Networking Technology Group at the IEM of
  the University of Essen, Germany.
 
-Package: libsocketapi-dev
+Package: libsctpsocket-dev
 Section: libdevel
 Architecture: any
-Depends: libsocketapi2 (= ${binary:Version}),
+Depends: libsctpsocket2 (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
+Replaces: libsocketapi-dev
+Conflicts: libsocketapi-dev
 Description: development package for socketapi2
  This package contains development files for socketapi.
  .
