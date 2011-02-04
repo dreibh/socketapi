@@ -138,7 +138,7 @@ inline void Synchronizable::unsynchronized()
    if(RecursionLevel == 0) {
 #ifndef DISABLE_WARNINGS
       std::cerr << "ERROR: Synchronizable::unsynchronized() - Mutex is already unlocked!" << std::endl;
-      exit(1);
+      abort();
 #endif
    }
    if(!Recursive) {
@@ -156,7 +156,7 @@ inline void Synchronizable::unsynchronized()
       else {
 #ifndef DISABLE_WARNINGS
          std::cerr << "ERROR: Synchronizable::unsynchronized() - Mutex is not owned!" << std::endl;
-         exit(1);
+         abort();
 #endif
       }
    }

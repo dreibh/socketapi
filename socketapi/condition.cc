@@ -69,7 +69,7 @@ Condition::~Condition()
       std::cerr << "ERROR: Condition::~Condition() - "
                    "Another thread is still waiting for this condition!" << std::endl;
       std::cerr << "Condition name is \"" << MutexName << "\"." << std::endl;
-      exit(1);
+      abort();
 #endif
    }
 }

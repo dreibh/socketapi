@@ -67,7 +67,7 @@ bool Thread::checkSyncDebugger()
                    "source package and update _Thread::pthread_descr_struct definition in Threads/thread.h!"
                 << std::endl;
       std::cerr << "Your glibc version: " << __GLIBC__ << "." << __GLIBC_MINOR__ << "!" << std::endl;
-      ::exit(1);
+      abort();
    }
    test.unsynchronized();
    std::cerr << "okay!" << std::endl;

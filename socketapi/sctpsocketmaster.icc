@@ -64,7 +64,7 @@ inline void SCTPSocketMaster::unlock()
 #ifndef DISABLE_WARNINGS
    if(LockLevel == 0) {
       std::cerr << "INTERNAL ERROR: Too many calls to SCTPSocketMaster::unlock()!" << std::endl;
-      ::exit(1);
+      abort();
    }
 #endif
    LockLevel--;
