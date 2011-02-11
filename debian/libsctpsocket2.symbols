@@ -1,5 +1,4 @@
 libsctpsocket.so.2 libsctpsocket2 #MINVER#
- _Z11getUserNamePcmbj@Base 2:2.2.4
  _Z14printTimeStampRSo@Base 2:2.2.4
  _Z15sctp_getlpaddrsijPP8sockaddrb@Base 2:2.2.4
  _Z23calculateBytesPerSecondjjjj@Base 2:2.2.4
@@ -13,11 +12,8 @@ libsctpsocket.so.2 libsctpsocket2 #MINVER#
  _ZN10RandomizerC2Ev@Base 2:2.2.4
  _ZN10SCTPSocket10addAddressEjRK13SocketAddress@Base 2:2.2.4
  _ZN10SCTPSocket10setPrimaryEjRK13SocketAddress@Base 2:2.2.4
- _ZN10SCTPSocket11receiveFromEPcRmRiRjRtS3_S4_S3_PP13SocketAddress@Base 2:2.2.4
  _ZN10SCTPSocket12getErrorCodeEj@Base 2:2.2.4
- _ZN10SCTPSocket12internalSendEPKcmijtjjP9ConditionPK13SocketAddress@Base 2:2.2.4
  _ZN10SCTPSocket13deleteAddressEjRK13SocketAddress@Base 2:2.2.4
- _ZN10SCTPSocket13setSendBufferEm@Base 2:2.2.4
  _ZN10SCTPSocket14checkAutoCloseEv@Base 2:2.2.4
  _ZN10SCTPSocket14getAssocStatusEjR23SCTP_Association_Status@Base 2:2.2.4
  _ZN10SCTPSocket14setAssocStatusEjRK23SCTP_Association_Status@Base 2:2.2.4
@@ -27,7 +23,6 @@ libsctpsocket.so.2 libsctpsocket2 #MINVER#
  _ZN10SCTPSocket16checkAutoConnectEv@Base 2:2.2.4
  _ZN10SCTPSocket16getAssocDefaultsER24SCTP_Instance_Parameters@Base 2:2.2.4
  _ZN10SCTPSocket16setAssocDefaultsERK24SCTP_Instance_Parameters@Base 2:2.2.4
- _ZN10SCTPSocket16setReceiveBufferEm@Base 2:2.2.4
  _ZN10SCTPSocket17getLocalAddressesERPP13SocketAddress@Base 2:2.2.4
  _ZN10SCTPSocket17getPathParametersEjPK13SocketAddressR16SCTP_Path_Status@Base 2:2.2.4
  _ZN10SCTPSocket17getPrimaryAddressEj@Base 2:2.2.4
@@ -43,22 +38,17 @@ libsctpsocket.so.2 libsctpsocket2 #MINVER#
  _ZN10SCTPSocket4bindEtttPPK13SocketAddress@Base 2:2.2.4
  _ZN10SCTPSocket6acceptEPPP13SocketAddressb@Base 2:2.2.4
  _ZN10SCTPSocket6listenEj@Base 2:2.2.4
- _ZN10SCTPSocket6sendToEPKcmiRjtjjttbPPK13SocketAddressj@Base 2:2.2.4
  _ZN10SCTPSocket6unbindEb@Base 2:2.2.4
  _ZN10SCTPSocket7hasDataEv@Base 2:2.2.4
  _ZN10SCTPSocket7peelOffERK13SocketAddress@Base 2:2.2.4
  _ZN10SCTPSocket7peelOffEj@Base 2:2.2.4
- _ZN10SCTPSocket7receiveEPcRmRiRjRtS3_S4_S3_@Base 2:2.2.4
  _ZN10SCTPSocket9associateEtttPPK13SocketAddressb@Base 2:2.2.4
  _ZN10SCTPSocketC1Eij@Base 2:2.2.4
  _ZN10SCTPSocketC2Eij@Base 2:2.2.4
  _ZN10SCTPSocketD1Ev@Base 2:2.2.4
  _ZN10SCTPSocketD2Ev@Base 2:2.2.4
- _ZN11UnixAddress16setSystemAddressEP8sockaddrj@Base 2:2.2.4
  _ZN11UnixAddress4initERK6String@Base 2:2.2.4
  _ZN11UnixAddress4initERKS_@Base 2:2.2.4
- _ZN11UnixAddress5resetEv@Base 2:2.2.4
- _ZN11UnixAddress7setPortEt@Base 2:2.2.4
  _ZN11UnixAddressC1EP8sockaddrj@Base 2:2.2.4
  _ZN11UnixAddressC1ERK6String@Base 2:2.2.4
  _ZN11UnixAddressC1ERKS_@Base 2:2.2.4
@@ -67,19 +57,12 @@ libsctpsocket.so.2 libsctpsocket2 #MINVER#
  _ZN11UnixAddressC2ERK6String@Base 2:2.2.4
  _ZN11UnixAddressC2ERKS_@Base 2:2.2.4
  _ZN11UnixAddressC2Ev@Base 2:2.2.4
- _ZN11UnixAddressD0Ev@Base 2:2.2.4
- _ZN11UnixAddressD1Ev@Base 2:2.2.4
- _ZN11UnixAddressD2Ev@Base 2:2.2.4
- _ZN12InternetFlow16setSystemAddressEP8sockaddrj@Base 2:2.2.4
- _ZN12InternetFlow5resetEv@Base 2:2.2.4
  _ZN12InternetFlowC1ERK15InternetAddressjh@Base 2:2.2.4
  _ZN12InternetFlowC1ERKS_@Base 2:2.2.4
  _ZN12InternetFlowC1Ev@Base 2:2.2.4
  _ZN12InternetFlowC2ERK15InternetAddressjh@Base 2:2.2.4
  _ZN12InternetFlowC2ERKS_@Base 2:2.2.4
  _ZN12InternetFlowC2Ev@Base 2:2.2.4
- _ZN12InternetFlowD0Ev@Base 2:2.2.4
- _ZN12InternetFlowD1Ev@Base 2:2.2.4
  _ZN13SocketAddress14newAddressListEj@Base 2:2.2.4
  _ZN13SocketAddress15getLocalAddressERKS_@Base 2:2.2.4
  _ZN13SocketAddress17deleteAddressListERPPS_@Base 2:2.2.4
@@ -103,19 +86,15 @@ libsctpsocket.so.2 libsctpsocket2 #MINVER#
  _ZN15InternetAddress13getHostByNameERK6StringPt@Base 2:2.2.4
  _ZN15InternetAddress14getIPv4AddressERK7in_addr@Base 2:2.2.4
  _ZN15InternetAddress14setIPv4AddressERKS_P7in_addr@Base 2:2.2.4
- _ZN15InternetAddress15getFullHostNameEPcm@Base 2:2.2.4
  _ZN15InternetAddress15getLocalAddressERKS_@Base 2:2.2.4
  _ZN15InternetAddress16getServiceByNameEPKc@Base 2:2.2.4
- _ZN15InternetAddress16setSystemAddressEP8sockaddrj@Base 2:2.2.4
  _ZN15InternetAddress17calculateChecksumEPhjj@Base 2:2.2.4
  _ZN15InternetAddress4initEP8sockaddrj@Base 2:2.2.4
  _ZN15InternetAddress4initERK15PortableAddress@Base 2:2.2.4
  _ZN15InternetAddress4initERK6Stringt@Base 2:2.2.4
  _ZN15InternetAddress4initERKS_@Base 2:2.2.4
  _ZN15InternetAddress4initEt@Base 2:2.2.4
- _ZN15InternetAddress5resetEv@Base 2:2.2.4
  _ZN15InternetAddress7UseIPv6E@Base 2:2.2.4
- _ZN15InternetAddress7setPortEt@Base 2:2.2.4
  _ZN15InternetAddress9checkIPv6Ev@Base 2:2.2.4
  _ZN15InternetAddressC1EP8sockaddrj@Base 2:2.2.4
  _ZN15InternetAddressC1ERK15PortableAddress@Base 2:2.2.4
@@ -131,22 +110,16 @@ libsctpsocket.so.2 libsctpsocket2 #MINVER#
  _ZN15InternetAddressC2ERKS_@Base 2:2.2.4
  _ZN15InternetAddressC2Et@Base 2:2.2.4
  _ZN15InternetAddressC2Ev@Base 2:2.2.4
- _ZN15InternetAddressD0Ev@Base 2:2.2.4
- _ZN15InternetAddressD1Ev@Base 2:2.2.4
- _ZN15InternetAddressD2Ev@Base 2:2.2.4
  _ZN15SCTPAssociation10addAddressERK13SocketAddress@Base 2:2.2.4
  _ZN15SCTPAssociation10setPrimaryERK13SocketAddress@Base 2:2.2.4
- _ZN15SCTPAssociation11receiveFromEPcRmRiRtRjS3_S4_PP13SocketAddress@Base 2:2.2.4
  _ZN15SCTPAssociation13deleteAddressERK13SocketAddress@Base 2:2.2.4
  _ZN15SCTPAssociation13getSendBufferEv@Base 2:2.2.4
- _ZN15SCTPAssociation13setSendBufferEm@Base 2:2.2.4
  _ZN15SCTPAssociation14getAssocStatusER23SCTP_Association_Status@Base 2:2.2.4
  _ZN15SCTPAssociation14setAssocStatusERK23SCTP_Association_Status@Base 2:2.2.4
  _ZN15SCTPAssociation14setPeerPrimaryERK13SocketAddress@Base 2:2.2.4
  _ZN15SCTPAssociation15getTrafficClassEi@Base 2:2.2.4
  _ZN15SCTPAssociation15setTrafficClassEhi@Base 2:2.2.4
  _ZN15SCTPAssociation16getReceiveBufferEv@Base 2:2.2.4
- _ZN15SCTPAssociation16setReceiveBufferEm@Base 2:2.2.4
  _ZN15SCTPAssociation17getLocalAddressesERPP13SocketAddress@Base 2:2.2.4
  _ZN15SCTPAssociation17getPathParametersEPK13SocketAddressR16SCTP_Path_Status@Base 2:2.2.4
  _ZN15SCTPAssociation17getPrimaryAddressEv@Base 2:2.2.4
@@ -158,9 +131,7 @@ libsctpsocket.so.2 libsctpsocket2 #MINVER#
  _ZN15SCTPAssociation24setDefaultStreamTimeoutsEjtt@Base 2:2.2.4
  _ZN15SCTPAssociation27sendPreEstablishmentPacketsEv@Base 2:2.2.4
  _ZN15SCTPAssociation5abortEv@Base 2:2.2.4
- _ZN15SCTPAssociation6sendToEPKcmitjjbPK13SocketAddress@Base 2:2.2.4
  _ZN15SCTPAssociation7hasDataEv@Base 2:2.2.4
- _ZN15SCTPAssociation7receiveEPcRmRiRtRjS3_S4_@Base 2:2.2.4
  _ZN15SCTPAssociation8shutdownEv@Base 2:2.2.4
  _ZN15SCTPAssociationC1EP10SCTPSocketjjb@Base 2:2.2.4
  _ZN15SCTPAssociationC2EP10SCTPSocketjjb@Base 2:2.2.4
@@ -251,7 +222,6 @@ libsctpsocket.so.2 libsctpsocket2 #MINVER#
  _ZN6Thread2goEPv@Base 2:2.2.4
  _ZN6Thread4joinEv@Base 2:2.2.4
  _ZN6Thread4stopEv@Base 2:2.2.4
- _ZN6Thread5delayEmb@Base 2:2.2.4
  _ZN6Thread5startEPKc@Base 2:2.2.4
  _ZN6Thread6cancelEv@Base 2:2.2.4
  _ZN6Thread9ThreadSetE@Base 2:2.2.4
@@ -266,7 +236,6 @@ libsctpsocket.so.2 libsctpsocket2 #MINVER#
  _ZN9Condition6signalEv@Base 2:2.2.4
  _ZN9Condition9addParentEPS_@Base 2:2.2.4
  _ZN9Condition9broadcastEv@Base 2:2.2.4
- _ZN9Condition9timedWaitEm@Base 2:2.2.4
  _ZN9ConditionC1EPKcPS_b@Base 2:2.2.4
  _ZN9ConditionC2EPKcPS_b@Base 2:2.2.4
  _ZN9ConditionD1Ev@Base 2:2.2.4
@@ -402,3 +371,29 @@ libsctpsocket.so.2 libsctpsocket2 #MINVER#
  sctp_sendmsg@Base 2:2.2.4
  sctp_sendx@Base 2:2.2.4
  socketAPIGetVersion@Base 2:2.2.4
+ (c++|regex)"^Condition::timedWait\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^getUserName\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^InternetAddress::getFullHostName\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^InternetAddress::~InternetAddress\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^InternetAddress::reset\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^InternetAddress::setPort\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^InternetAddress::setSystemAddress\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^InternetFlow::~InternetFlow\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^InternetFlow::reset\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^InternetFlow::setSystemAddress\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^SCTPAssociation::receive\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^SCTPAssociation::receiveFrom\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^SCTPAssociation::sendTo\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^SCTPAssociation::setReceiveBuffer\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^SCTPAssociation::setSendBuffer\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^SCTPSocket::internalSend\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^SCTPSocket::receive\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^SCTPSocket::receiveFrom\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^SCTPSocket::sendTo\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^SCTPSocket::setReceiveBuffer\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^SCTPSocket::setSendBuffer\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^Thread::delay\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^UnixAddress::reset\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^UnixAddress::setPort\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^UnixAddress::setSystemAddress\(.*\)@Base" 2:2.2.4
+ (c++|regex)"^UnixAddress::~UnixAddress\(.*\)@Base" 2:2.2.4

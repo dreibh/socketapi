@@ -26,6 +26,50 @@
 # Use case: symbols which are different on 32/64 bit systems,
 #           e.g. functions using size_t parameters.
 CPP_SYMBOLS_TO_BE_REPLACED='
+getUserName
+SCTPSocket::receiveFrom
+SCTPSocket::internalSend
+SCTPSocket::setSendBuffer
+SCTPSocket::setReceiveBuffer
+SCTPSocket::sendTo
+SCTPSocket::receive
+InternetAddress::getFullHostName
+SCTPAssociation::receiveFrom
+SCTPAssociation::setSendBuffer
+SCTPAssociation::setReceiveBuffer
+SCTPAssociation::sendTo
+SCTPAssociation::receive
+Thread::delay
+Condition::timedWait
+UnixAddress::~UnixAddress
+UnixAddress::~UnixAddress
+InternetFlow::~InternetFlow
+InternetFlow::~InternetFlow
+InternetAddress::~InternetAddress
+InternetAddress::~InternetAddress
+UnixAddress::duplicate
+InternetFlow::duplicate
+InternetAddress::duplicate
+UnixAddress::reset
+InternetFlow::reset
+InternetAddress::reset
+UnixAddress::isValid
+InternetAddress::isValid
+UnixAddress::getPort
+InternetAddress::getPort
+UnixAddress::setPort
+InternetAddress::setPort
+UnixAddress::getFamily
+InternetAddress::getFamily
+UnixAddress::getAddressString
+InternetFlow::getAddressString
+InternetAddress::getAddressString
+UnixAddress::getSystemAddress
+InternetFlow::getSystemAddress
+InternetAddress::getSystemAddres
+UnixAddress::setSystemAddress
+InternetFlow::setSystemAddress
+InternetAddress::setSystemAddress
 '
 # ###########################################################################
 
