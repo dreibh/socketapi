@@ -28,7 +28,7 @@ Description: socket API library for sctplib
 Package: libsctpsocket-dev
 Section: libdevel
 Architecture: any
-Depends: libsctpsocket2 (= ${binary:Version}),
+Depends: libsctpsocket2 (>= 2.2.1),
          ${misc:Depends},
          ${shlibs:Depends}
 Replaces: libsocketapi-dev
