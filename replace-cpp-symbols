@@ -28,6 +28,7 @@
 CPP_SYMBOLS_TO_BE_REPLACED='
 getUserName
 SCTPSocket::receiveFrom
+SCTPSocket::internalReceive
 SCTPSocket::internalSend
 SCTPSocket::setSendBuffer
 SCTPSocket::setReceiveBuffer
