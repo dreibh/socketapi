@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 2005-2011 by Thomas Dreibholz
+ * Copyright (C) 2005-2009 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -648,10 +648,10 @@ bool Socket::connectx(const SocketAddress** addressArray,
 {
    // ====== Get address ====================================================
    sockaddr_storage socketAddressArray[addresses];
-   socklen_t        socketAddressLength[addresses];
+   // socklen_t        socketAddressLength[addresses];
 
    for(cardinal i = 0;i < addresses;i++) {
-      socketAddressLength[i] =
+      // socketAddressLength[i] =
          addressArray[i]->getSystemAddress((sockaddr*)&socketAddressArray[i],
                                            sizeof(socketAddressArray[addresses]),
                                            CommunicationDomain);
@@ -661,9 +661,9 @@ bool Socket::connectx(const SocketAddress** addressArray,
    // ====== Connect ========================================================
    sockaddr_storage packedSocketAddressArray[addresses];
    packSocketAddressArray(socketAddressArray, addresses, (sockaddr*)&packedSocketAddressArray);
-   int result = ext_connectx(SocketDescriptor,
-                             (sockaddr*)&packedSocketAddressArray,
-                             addresses, NULL);
+   int result = sctp_connectx(SocketDescriptor,
+                              (sockaddr*)&packedSocketAddressArray,
+                              addresses, NULL);
    if(result != 0) {
       LastError = errno;
       if(LastError != EINPROGRESS) {
@@ -680,7 +680,11 @@ ssize_t Socket::receiveMsg(struct msghdr* msg,
                            const cardinal flags,
                            const bool     internalCall)
 {
-   int cc = ext_recvmsg2(SocketDescriptor,msg,flags,(internalCall == true) ? 0 : 1);
+#ifdef SOCKETAPI_MAJOR_VERSION
+   const int cc = ext_recvmsg2(SocketDescriptor,msg,flags,(internalCall == true) ? 0 : 1);
+#else
+   const int cc = ext_recvmsg(SocketDescriptor,msg,flags);
+#endif
    if(cc < 0) {
       LastError = errno;
       return(-LastError);
@@ -1092,7 +1096,7 @@ bool Socket::getPeerAddress(SocketAddress& address) const
 // ###### Get blocking mode #################################################
 bool Socket::getBlockingMode()
 {
-   const long result = fcntl(F_GETFL,0);
+   const long result = fcntl(F_GETFL,(long)0);
    return(!(result & O_NONBLOCK));
 }
 
@@ -1100,7 +1104,7 @@ bool Socket::getBlockingMode()
 // ###### Set blocking mode #################################################
 bool Socket::setBlockingMode(const bool on)
 {
-   long flags = fcntl(F_GETFL,0);
+   long flags = fcntl(F_GETFL,(long)0);
    if(flags != -1) {
       flags = on ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
       return(fcntl(F_SETFL,flags) == 0);

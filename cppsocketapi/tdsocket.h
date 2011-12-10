@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 2005-2011 by Thomas Dreibholz
+ * Copyright (C) 2005-2009 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -73,7 +73,7 @@ const cardinal IPv6HeaderSize = 40;
   * @short   Socket
   * @author  Thomas Dreibholz (dreibh@iem.uni-due.de)
   * @version 1.0
-  */            
+  */
 class Socket
 {
    // ====== Definitions ====================================================
@@ -84,7 +84,7 @@ class Socket
       IPv4                               = AF_INET,  // Do not use IPv4/IPv6,
       IPv6                               = AF_INET6, // use IP instead!
       Unix                               = AF_UNIX
-   }; 
+   };
    enum SocketType {
       UndefinedSocketType = -1,
       UDP                 = SOCK_DGRAM,
@@ -562,11 +562,10 @@ O     * Bind socket to one or more given addresses. If no addresses are given,
      * Wrapper for fcntl().
      *
      * @param cmd Command.
-     * @param arg Argument.
      * @param lock Lock.
      * @return Result of fcntl() call.
      */
-   inline integer fcntl(const integer cmd, long arg, struct flock* lock);
+   inline integer fcntl(const integer cmd, struct flock* lock);
 
    /**
      * Wrapper for ioctl().
