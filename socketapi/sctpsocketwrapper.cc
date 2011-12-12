@@ -1659,7 +1659,7 @@ static int setPeerPrimaryAddr(ExtSocketDescriptor* tdSocket,
 
 
 // ###### Get address parameters ############################################
-static void setInitMsg(SCTPSocket* sctpSocket, struct sctp_initmsg* initmsg)
+static bool setInitMsg(SCTPSocket* sctpSocket, struct sctp_initmsg* initmsg)
 {
    SCTP_Instance_Parameters parameters;
    bool                     result = false;
@@ -1673,6 +1673,7 @@ static void setInitMsg(SCTPSocket* sctpSocket, struct sctp_initmsg* initmsg)
       }
    }
    SCTPSocketMaster::MasterInstance.unlock();
+   return(result);
 }
 
 

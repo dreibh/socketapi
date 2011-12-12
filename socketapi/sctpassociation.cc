@@ -496,7 +496,7 @@ bool SCTPAssociation::setAssocStatus(
       newStatus.rtoMax = InitTimeout;
       RTOMax = assocStatus.rtoMax;
    }
-   return(Socket->setAssocStatus(AssociationID,assocStatus));
+   return(Socket->setAssocStatus(AssociationID,newStatus));
 }
 
 

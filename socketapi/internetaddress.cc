@@ -489,6 +489,7 @@ cardinal InternetAddress::getSystemAddress(sockaddr*       buffer,
             address->sin6_family   = AF_INET6;
             address->sin6_flowinfo = 0;
             address->sin6_port     = Port;
+            address->sin6_scope_id = 0;
 #if (SYSTEM == OS_Linux)
             memcpy((char*)&address->sin6_addr.s6_addr16[0],(char*)&AddrSpec.Host16,16);
 #elif (SYSTEM == OS_SOLARIS)
