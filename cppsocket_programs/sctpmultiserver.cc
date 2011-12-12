@@ -198,7 +198,7 @@ EchoServer::EchoServer(Socket* socket, const cardinal unreliable, const bool dis
 // ###### Main loop #########################################################
 void EchoServer::run()
 {
-   cardinal inStreams  = 1;
+   // cardinal inStreams  = 1;
    cardinal outStreams = 1;
    bool     shutdown   = false;
    char dataBuffer[16384 + 1];
@@ -310,7 +310,7 @@ void EchoServer::run()
          printNotification(notification);
          if(notification->sn_header.sn_type == SCTP_ASSOC_CHANGE) {
             const sctp_assoc_change* sac = &notification->sn_assoc_change;
-            inStreams  = sac->sac_inbound_streams;
+            // inStreams  = sac->sac_inbound_streams;
             outStreams = sac->sac_outbound_streams;
          }
          else if(notification->sn_header.sn_type == SCTP_SHUTDOWN_EVENT) {
