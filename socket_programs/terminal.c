@@ -198,7 +198,7 @@ int string2address(const char* string, struct sockaddr_storage* address)
 /* ###### Main program ################################################### */
 int main(int argc, char** argv)
 {
-   union sctp_notification*    notification;
+   /* union sctp_notification*    notification; */
    struct sockaddr_storage     remoteAddress;
    struct sctp_initmsg         init;
    struct sctp_event_subscribe event;
@@ -325,7 +325,7 @@ int main(int argc, char** argv)
                                     &sinfo, &flags);
             if(received > 0) {
                if(flags & MSG_NOTIFICATION) {
-                  notification = (union sctp_notification*)&buffer;
+                  /* notification = (union sctp_notification*)&buffer; */
 
                }
                else {

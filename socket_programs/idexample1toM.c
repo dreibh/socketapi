@@ -148,7 +148,6 @@ mysctp_recvmsg(int fd, struct msghdr *msg, void *buf, size_t *buflen, ssize_t *n
 static void
 echo(int fd, int socketModeone_to_many)
 {
-  ssize_t result;
   ssize_t nr;
   struct sctp_sndrcvinfo *sri;
   struct msghdr msg[1];
@@ -189,7 +188,7 @@ echo(int fd, int socketModeone_to_many)
     msg->msg_iovlen = 1;
 
     printf("got %u bytes on stream %hu:\n", (unsigned int)nr, sri->sinfo_stream);
-    result = write(0, buf, nr);
+    write(0, buf, nr);
 
     /* Echo it back */
     msg->msg_flags = MSG_XPG4_2;

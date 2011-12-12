@@ -115,9 +115,7 @@ static void echo(int fd, int socketModeUDP)
    char                     buf[BUFLEN];
    size_t                   buflen;
    ssize_t                  received;
-   ssize_t                  result;
    int                      flags;
-   unsigned int             incoming = 1;
    unsigned int             outgoing = 1;
    union sctp_notification *snp;
 
@@ -130,7 +128,7 @@ static void echo(int fd, int socketModeUDP)
       if(flags & MSG_NOTIFICATION) {
          snp = (union sctp_notification *)buf;
          if(snp->sn_header.sn_type == SCTP_ASSOC_CHANGE) {
-            incoming = snp->sn_assoc_change.sac_inbound_streams;
+            /* incoming = snp->sn_assoc_change.sac_inbound_streams; */
             outgoing = snp->sn_assoc_change.sac_outbound_streams;
          }
          handle_event(buf);
@@ -138,7 +136,7 @@ static void echo(int fd, int socketModeUDP)
       else {
          printf("got %u bytes on stream %hu:\n", (unsigned int)received, sri.sinfo_stream);
          fflush(stdout);
-         result = write(0, buf, received);
+         write(0, buf, received);
 
          /* Echo it back */
          if(sctp_sendmsg(fd, buf, received, NULL, 0,
