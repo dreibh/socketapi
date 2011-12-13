@@ -64,7 +64,7 @@ template<const size_t size> inline void SocketMessage<size>::clear()
    Header.msg_iov        = NULL;
    Header.msg_iovlen     = 0;
    Header.msg_control    = (char*)&Control;
-   Header.msg_controllen = size;
+   Header.msg_controllen = 0;
    Header.msg_flags      = 0;
    NextMsg               = NULL;
    if(size >= sizeof(cmsghdr)) {
@@ -93,7 +93,7 @@ template<const size_t size> inline void SocketMessage<size>::setAddress(const So
 
 
 // ###### Set buffer ########################################################
-template<const size_t size> inline void SocketMessage<size>::setBuffer(char* buffer, const size_t buffersize)
+template<const size_t size> inline void SocketMessage<size>::setBuffer(void* buffer, const size_t buffersize)
 {
    Header.msg_iov    = &IOVector;
    Header.msg_iovlen = 1;
@@ -117,18 +117,18 @@ template<const size_t size> inline void SocketMessage<size>::setControl(const si
 
 // ###### Add cmsg header ###################################################
 template<const size_t size> inline char* SocketMessage<size>::addHeader(
-                                            const cardinal payload,
-                                            const int      level,
-                                            const int      type)
+                                            const size_t payload,
+                                            const int    level,
+                                            const int    type)
 {
    if(NextMsg == NULL) {
       NextMsg = (cmsghdr*)&Control;
       Header.msg_control    = (char*)&Control;
       Header.msg_controllen = 0;
    }
-   const cardinal length = payload + sizeof(cmsghdr);
+   const cardinal length = CSpace(payload);
 
-   if(Header.msg_controllen + length > size) {
+   if(Header.msg_controllen > size) {
       std::cerr << "WARNING: SocketMessage<" << size << ">:addHeader() - Too much control data!" << std::endl;
       return(NULL);
    }
@@ -158,6 +158,20 @@ template<const size_t size> inline cmsghdr* SocketMessage<size>::getFirstHeader(
 template<const size_t size> inline cmsghdr* SocketMessage<size>::getNextHeader(const cmsghdr* prev) const
 {
    return(CNext(&Header,prev));
+}
+
+
+// ###### Get flags #########################################################
+template<const size_t size> inline int SocketMessage<size>::getFlags() const
+{
+   return(Header.msg_flags);
+}
+
+
+// ###### Set flags #########################################################
+template<const size_t size> inline void SocketMessage<size>::setFlags(const int flags)
+{
+   Header.msg_flags = flags;
 }
 
 

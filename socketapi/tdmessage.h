@@ -97,7 +97,7 @@ template<const size_t size> class SocketMessage
      * @param buffer Buffer.
      * @param bufferSize Size of buffer.
      */
-   inline void setBuffer(char* buffer, const size_t buffersize);
+   inline void setBuffer(void* buffer, const size_t buffersize);
 
    /**
      * Set size of control block. Sizes greater than the template parameter
@@ -116,9 +116,9 @@ template<const size_t size> class SocketMessage
      * @param type Type (e.g. SCTP_INIT).
      * @return Pointer to begin of *payload* area.
      */
-   inline char* addHeader(const cardinal payload,
-                          const int      level,
-                          const int      type);
+   inline char* addHeader(const size_t payload,
+                          const int    level,
+                          const int    type);
 
    /**
      * Get first cmsg header in control block.
@@ -135,6 +135,19 @@ template<const size_t size> class SocketMessage
      */
    inline cmsghdr* getNextHeader(const cmsghdr* prev) const;
 
+   /**
+     * Get flags.
+     *
+     * @return Flags.
+     */
+   inline int getFlags() const;
+
+   /**
+     * Set flags.
+     *
+     * @param flags Flags.
+     */
+   inline void setFlags(const int flags);
 
    // ====== Message structures =============================================
    /**
