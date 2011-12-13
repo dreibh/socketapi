@@ -237,7 +237,7 @@ SCTPSocketMaster::~SCTPSocketMaster()
 
    // ====== Remove break pipe ==============================================
    if(BreakPipe[0] != -1) {
-      SCTPSocketMaster::MasterInstance.addUserSocketNotification(&BreakNotification);
+      SCTPSocketMaster::MasterInstance.deleteUserSocketNotification(&BreakNotification);
       close(BreakPipe[0]);
       close(BreakPipe[1]);
       BreakPipe[0] = -1;
