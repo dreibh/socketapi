@@ -1,4 +1,29 @@
 ------------------------------------------------------------------------
+r2638 | dreibh | 2011-12-14 09:12:19 +0100 (Wed, 14 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/ChangeLog
+   M /trunk/socketapi/UpdateDoc1.sed
+
+Updated ChangeLog.
+
+------------------------------------------------------------------------
+r2636 | dreibh | 2011-12-14 09:07:23 +0100 (Wed, 14 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/UpdateDoc1.sed
+   D /trunk/socketapi/UpdateDocFile1.sh
+   A /trunk/socketapi/UpdateDocFiles
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/cppsocket_programs/sctpmultiserver.cc
+   M /trunk/socketapi/cppsocket_programs/sctpportscanner.cc
+   M /trunk/socketapi/cppsocket_programs/sctpsockettest.cc
+   M /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+   M /trunk/socketapi/cppsocket_programs/sctptest.cc
+   M /trunk/socketapi/cppsocket_programs/sctptftp.cc
+   M /trunk/socketapi/debian/changelog
+
+Version update.
+
+------------------------------------------------------------------------
 r2629 | dreibh | 2011-12-13 13:55:16 +0100 (Tue, 13 Dec 2011) | 2 lines
 Changed paths:
    M /trunk/socketapi/socketapi/sctpsocketmaster.cc
