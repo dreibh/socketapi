@@ -1,4 +1,153 @@
 ------------------------------------------------------------------------
+r2629 | dreibh | 2011-12-13 13:55:16 +0100 (Tue, 13 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+
+Notification disposal bugfix.
+
+------------------------------------------------------------------------
+r2628 | dreibh | 2011-12-13 11:13:04 +0100 (Tue, 13 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/debian/changelog
+   M /trunk/socketapi/socketapi/tdmessage.h
+   M /trunk/socketapi/socketapi/tdmessage.icc
+
+msg_control handling fixes.
+
+------------------------------------------------------------------------
+r2627 | dreibh | 2011-12-12 22:04:34 +0100 (Mon, 12 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/Makefile.am
+   D /trunk/socketapi/cppsocketapi/ringbuffer.cc
+   D /trunk/socketapi/cppsocketapi/ringbuffer.h
+   D /trunk/socketapi/cppsocketapi/ringbuffer.icc
+   D /trunk/socketapi/cppsocketapi/streamsrcdest.cc
+   D /trunk/socketapi/cppsocketapi/streamsrcdest.h
+   D /trunk/socketapi/cppsocketapi/trafficclassvalues.cc
+   D /trunk/socketapi/cppsocketapi/trafficclassvalues.h
+   D /trunk/socketapi/cppsocketapi/trafficclassvalues.icc
+
+Removed some obsolete files.
+
+------------------------------------------------------------------------
+r2623 | dreibh | 2011-12-12 12:46:08 +0100 (Mon, 12 Dec 2011) | 3 lines
+Changed paths:
+   M /trunk/socketapi/configure.in
+   D /trunk/socketapi/cppsocketapi/MakeLinks.sh
+   M /trunk/socketapi/debian/changelog
+
+- Version update.
+- Removed obsolete file.
+
+------------------------------------------------------------------------
+r2622 | dreibh | 2011-12-12 12:43:43 +0100 (Mon, 12 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocket_programs/sctpmultiserver.cc
+
+Compiler warning fix.
+
+------------------------------------------------------------------------
+r2621 | dreibh | 2011-12-12 12:42:22 +0100 (Mon, 12 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socket_programs/idexample1to1.c
+   M /trunk/socketapi/socket_programs/idexample1toM.c
+   M /trunk/socketapi/socket_programs/newexample1to1.c
+   M /trunk/socketapi/socket_programs/terminal.c
+
+Compiler warning fixes.
+
+------------------------------------------------------------------------
+r2620 | dreibh | 2011-12-12 12:42:10 +0100 (Mon, 12 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/internetaddress.cc
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+
+Minor fixes.
+
+------------------------------------------------------------------------
+r2617 | dreibh | 2011-12-11 11:07:56 +0100 (Sun, 11 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/Makefile.am
+   D /trunk/socketapi/cppsocketapi/range.cc
+   D /trunk/socketapi/cppsocketapi/range.h
+   D /trunk/socketapi/cppsocketapi/range.icc
+
+Removed obsolete files.
+
+------------------------------------------------------------------------
+r2616 | dreibh | 2011-12-10 21:57:58 +0100 (Sat, 10 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+   M /trunk/socketapi/cppsocketapi/tdsocket.h
+   M /trunk/socketapi/cppsocketapi/tdsocket.icc
+
+Some small fixes for compiling TDSocket class with kernel SCTP.
+
+------------------------------------------------------------------------
+r2548 | dreibh | 2011-05-04 07:57:27 +0200 (Wed, 04 May 2011) | 2 lines
+Changed paths:
+   M /trunk/rsplib2/make-ppa
+   M /trunk/sctplib1/make-ppa
+   M /trunk/socketapi/make-ppa
+   M /trunk/socketapi/replace-cpp-symbols
+
+Scripts updates.
+
+------------------------------------------------------------------------
+r2546 | dreibh | 2011-04-14 14:34:56 +0200 (Thu, 14 Apr 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/debian/changelog
+   M /trunk/socketapi/debian/control
+   D /trunk/socketapi/debian/libsctpsocket2.symbols
+
+Packaging update.
+
+------------------------------------------------------------------------
+r2514 | dreibh | 2011-02-11 23:51:49 +0100 (Fri, 11 Feb 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/debian/libsctpsocket2.symbols
+   M /trunk/socketapi/replace-cpp-symbols
+
+Updated socketapi's symbols file.
+
+------------------------------------------------------------------------
+r2513 | dreibh | 2011-02-11 23:34:17 +0100 (Fri, 11 Feb 2011) | 2 lines
+Changed paths:
+   M /trunk/sctplib1/debian/changelog
+   M /trunk/sctplib1/debian/libsctplib1.symbols
+   M /trunk/sctplib1/make-deb
+   M /trunk/sctplib1/make-symbols
+   A /trunk/sctplib1/replace-cpp-symbols
+   M /trunk/socketapi/debian/changelog
+   M /trunk/socketapi/debian/libsctpsocket2.symbols
+   M /trunk/socketapi/make-deb
+   M /trunk/socketapi/make-symbols
+   A /trunk/socketapi/replace-cpp-symbols
+
+Updated packaging files.
+
+------------------------------------------------------------------------
+r2501 | dreibh | 2011-02-04 11:21:46 +0100 (Fri, 04 Feb 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/ChangeLog
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/debian/changelog
+
+Version update.
+
+------------------------------------------------------------------------
+r2500 | dreibh | 2011-02-04 11:18:31 +0100 (Fri, 04 Feb 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/condition.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.icc
+   M /trunk/socketapi/socketapi/synchronizable.icc
+   M /trunk/socketapi/socketapi/thread.cc
+
+Fixed calls to exit() in library. Now, on fatal error, abort() is used.
+
+------------------------------------------------------------------------
 r2495 | dreibh | 2011-02-02 15:19:15 +0100 (Wed, 02 Feb 2011) | 1 line
 Changed paths:
    M /trunk/socketapi/debian/changelog
