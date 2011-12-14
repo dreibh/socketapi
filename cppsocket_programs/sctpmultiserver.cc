@@ -936,7 +936,7 @@ int main(int argc, char** argv)
 
 
    // ====== Print information ==============================================
-   std::cout << "SCTP Multi Server - Copyright (C) 2001-2011 Thomas Dreibholz" << std::endl;
+   std::cout << "SCTP Multi Server - Copyright (C) 2001-2012 Thomas Dreibholz" << std::endl;
    std::cout << "------------------------------------------------------------" << std::endl;
    std::cout << "Version:           " << __DATE__ << ", " << __TIME__ << std::endl;
    localAddressArray[0]->setPrintFormat(SocketAddress::PF_Address|SocketAddress::PF_Legacy|SocketAddress::PF_HidePort);
