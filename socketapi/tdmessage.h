@@ -60,20 +60,37 @@ inline static size_t CSpace(const size_t payloadLength);
   */
 inline static size_t CLength(const size_t payloadLength);
 
+
 /**
   * Wrapper for CMSG_DATA macro.
   */
-inline static void* CData(const cmsghdr* cmsg);
+inline static void* CData(cmsghdr* cmsg);
 
 /**
   * Wrapper for CMSG_FIRSTHDR macro.
   */
-inline static cmsghdr* CFirstHeader(const msghdr* header);
+inline static cmsghdr* CFirstHeader(msghdr* header);
 
 /**
   * Wrapper for CMSG_NXTHDR macro.
   */
-inline static cmsghdr* CNextHeader(const msghdr* header, const cmsghdr* cmsg);
+inline static cmsghdr* CNextHeader(msghdr* header, const cmsghdr* cmsg);
+
+
+/**
+  * Wrapper for CMSG_DATA macro (constant version).
+  */
+inline static const void* CData(const cmsghdr* cmsg);
+
+/**
+  * Wrapper for CMSG_FIRSTHDR macro (constant version).
+  */
+inline static const cmsghdr* CFirstHeader(const msghdr* header);
+
+/**
+  * Wrapper for CMSG_NXTHDR macro (constant version).
+  */
+inline static const cmsghdr* CNextHeader(const msghdr* header, const cmsghdr* cmsg);
 
 
 /**
@@ -145,7 +162,7 @@ template<const size_t size> class SocketMessage
      *
      * @return First cmsg header or NULL, if there are none.
      */
-   inline cmsghdr* getFirstHeader() const;
+   inline cmsghdr* getFirstHeader();
 
    /**
      * Get next cmsg header in control block.
@@ -153,7 +170,7 @@ template<const size_t size> class SocketMessage
      * @param prev Previous cmsg header.
      * @return Next cmsg header or NULL, if there are no more.
      */
-   inline cmsghdr* getNextHeader(const cmsghdr* prev) const;
+   inline cmsghdr* getNextHeader(cmsghdr* prev);
 
    /**
      * Get flags.

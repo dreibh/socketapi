@@ -107,7 +107,7 @@ void printControl(const msghdr* header)
       return;
    }
 
-   cmsghdr* cmsg = CFirstHeader(header);
+   const cmsghdr* cmsg = CFirstHeader(header);
    if((cmsg != NULL) && (header->msg_controllen >= (socklen_t)sizeof(cmsghdr))) {
       if(ColorMode) {
          std::cout << "\x1b[" << getANSIColor(CONTROL_COLOR)

@@ -130,19 +130,19 @@ template<const size_t size> inline void* SocketMessage<size>::addHeader(
 
 
 // ###### Get first cmsg header #############################################
-template<const size_t size> inline cmsghdr* SocketMessage<size>::getFirstHeader() const
+template<const size_t size> inline cmsghdr* SocketMessage<size>::getFirstHeader()
 {
    if(Header.msg_controllen > 0) {
-      return(CFirstHeader(&Header));
+      return(CMSG_FIRSTHDR(&Header));
    }
    return(NULL);
 }
 
 
 // ###### Get next cmsg header ##############################################
-template<const size_t size> inline cmsghdr* SocketMessage<size>::getNextHeader(const cmsghdr* prev) const
+template<const size_t size> inline cmsghdr* SocketMessage<size>::getNextHeader(cmsghdr* prev)
 {
-   return(CNextHeader(&Header,prev));
+   return(CMSG_NXTHDR(&Header,prev));
 }
 
 
@@ -183,24 +183,44 @@ inline static size_t CLength(const size_t payloadLength)
 
 
 // ###### Wrapper for CMSG_DATA #############################################
-inline static void* CData(const cmsghdr* cmsg)
+inline static void* CData(cmsghdr* cmsg)
 {
    return(CMSG_DATA(cmsg));
 }
 
 
 // ###### Wrapper for CMSG_FIRSTHDR #########################################
-inline static cmsghdr* CFirstHeader(const msghdr* header)
+inline static cmsghdr* CFirstHeader(msghdr* header)
 {
-   return(CMSG_FIRSTHDR((msghdr*)header));
+   return(CMSG_FIRSTHDR(header));
 }
 
 
 // ###### Wrapper for CMSG_NXTHDR ###########################################
-inline static cmsghdr* CNextHeader(const msghdr* header, const cmsghdr* cmsg)
+inline static cmsghdr* CNextHeader(msghdr* header, const cmsghdr* cmsg)
+{
+   return(CMSG_NXTHDR(header,(cmsghdr*)cmsg));
+}
+
+
+// ###### Wrapper for CMSG_DATA #############################################
+inline static const void* CData(const cmsghdr* cmsg)
+{
+   return(CMSG_DATA(cmsg));
+}
+
+
+// ###### Wrapper for CMSG_FIRSTHDR #########################################
+inline static const cmsghdr* CFirstHeader(const msghdr* header)
+{
+   return(CMSG_FIRSTHDR(header));
+}
+
+
+// ###### Wrapper for CMSG_NXTHDR ###########################################
+inline static const cmsghdr* CNextHeader(const msghdr* header, const cmsghdr* cmsg)
 {
    return(CMSG_NXTHDR((msghdr*)header,(cmsghdr*)cmsg));
 }
-
 
 #endif

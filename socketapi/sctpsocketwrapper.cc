@@ -2291,7 +2291,7 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                bindToAny(tdSocket);
                bool             useDefaults = true;
                sctp_sndrcvinfo* info        = NULL;
-               for(cmsghdr* cmsg = CFirstHeader(msg);
+               for(const cmsghdr* cmsg = CFirstHeader(msg);
                   cmsg != NULL;
                   cmsg = CNextHeader(msg,cmsg)) {
                   if(cmsg->cmsg_level == IPPROTO_SCTP) {

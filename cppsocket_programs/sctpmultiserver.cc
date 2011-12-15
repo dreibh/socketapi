@@ -233,7 +233,7 @@ void EchoServer::run()
          while(cmsg != NULL) {
             if((cmsg->cmsg_level == IPPROTO_SCTP) &&
                (cmsg->cmsg_type  == SCTP_SNDRCV)) {
-               sctp_sndrcvinfo* info = (sctp_sndrcvinfo*)CData(cmsg);
+               const sctp_sndrcvinfo* info = (const sctp_sndrcvinfo*)CData(cmsg);
                assocID  = info->sinfo_assoc_id;
                streamID = info->sinfo_stream;
                protoID  = ntohl(info->sinfo_ppid);
