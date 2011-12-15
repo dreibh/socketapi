@@ -204,7 +204,7 @@ void EchoServer::run()
    char dataBuffer[16384 + 1];
    while(!shutdown) {
       // ====== Receive string from association =============================
-      SocketMessage<CSpace(sizeof(sctp_sndrcvinfo))> message;
+      SocketMessage<sizeof(sctp_sndrcvinfo)> message;
       message.setBuffer((char*)&dataBuffer,sizeof(dataBuffer));
 
       // ====== Receive string from association =============================
@@ -352,7 +352,7 @@ CharGenServer::CharGenServer(Socket* socket, const cardinal unreliable)
 // ###### Main loop #########################################################
 void CharGenServer::run()
 {
-   SocketMessage<CSpace(sizeof(sctp_sndrcvinfo))> message;
+   SocketMessage<sizeof(sctp_sndrcvinfo)> message;
    char   dataBuffer[512];
    card64 line = 1;
 

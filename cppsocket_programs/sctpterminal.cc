@@ -109,7 +109,7 @@ void EchoThread::run()
 {
    char buffer[16384];
    for(;;) {
-      SocketMessage<CSpace(sizeof(sctp_sndrcvinfo))> message;
+      SocketMessage<sizeof(sctp_sndrcvinfo)> message;
       message.setBuffer((char*)&buffer,sizeof(buffer));
 
       // ====== Receive string from association =============================
@@ -295,7 +295,7 @@ void CopyThread::run()
          toSend[length]   = '\n';
          toSend[length++] = 0x00;
 
-         SocketMessage<CSpace(sizeof(sctp_sndrcvinfo))> message;
+         SocketMessage<sizeof(sctp_sndrcvinfo)> message;
          message.setBuffer(toSend,length);
          sctp_sndrcvinfo* info = (sctp_sndrcvinfo*)message.addHeader(sizeof(sctp_sndrcvinfo),IPPROTO_SCTP,SCTP_SNDRCV);
          info->sinfo_assoc_id = 0;

@@ -2291,9 +2291,9 @@ static int ext_sendmsg_singlebuffer(int sockfd, const struct msghdr* msg, int fl
                bindToAny(tdSocket);
                bool             useDefaults = true;
                sctp_sndrcvinfo* info        = NULL;
-               for(cmsghdr* cmsg = CFirst(msg);
+               for(cmsghdr* cmsg = CFirstHeader(msg);
                   cmsg != NULL;
-                  cmsg = CNext(msg,cmsg)) {
+                  cmsg = CNextHeader(msg,cmsg)) {
                   if(cmsg->cmsg_level == IPPROTO_SCTP) {
                      if(cmsg->cmsg_type == SCTP_SNDRCV) {
                         if(cmsg->cmsg_len >= (socklen_t)sizeof(sctp_sndrcvinfo)) {
@@ -3284,7 +3284,7 @@ ssize_t sctp_sendmsg(int                    s,
       flags
    };
 
-   cmsg = (struct cmsghdr*)CFirst(&msg);
+   cmsg = (struct cmsghdr*)CFirstHeader(&msg);
    cmsg->cmsg_len   = CLength(sizeof(struct sctp_sndrcvinfo));
    cmsg->cmsg_level = IPPROTO_SCTP;
    cmsg->cmsg_type  = SCTP_SNDRCV;
@@ -3323,7 +3323,7 @@ ssize_t sctp_send(int                           s,
       flags
    };
 
-   cmsg = (struct cmsghdr*)CFirst(&msg);
+   cmsg = (struct cmsghdr*)CFirstHeader(&msg);
    cmsg->cmsg_len   = CLength(sizeof(struct sctp_sndrcvinfo));
    cmsg->cmsg_level = IPPROTO_SCTP;
    cmsg->cmsg_type  = SCTP_SNDRCV;
@@ -3361,7 +3361,7 @@ ssize_t sctp_sendx(int                           sd,
       flags | MSG_MULTIADDRS,
    };
 
-   cmsg = (struct cmsghdr*)CFirst(&msg);
+   cmsg = (struct cmsghdr*)CFirstHeader(&msg);
    cmsg->cmsg_len   = CLength(sizeof(struct sctp_sndrcvinfo));
    cmsg->cmsg_level = IPPROTO_SCTP;
    cmsg->cmsg_type  = SCTP_SNDRCV;
@@ -3408,7 +3408,7 @@ ssize_t sctp_recvmsg(int                     s,
    cc = ext_recvmsg(s, &msg, 0);
 
    if((cc > 0) && (msg.msg_control != NULL) && (msg.msg_controllen > 0)) {
-      cmsg = (struct cmsghdr*)CFirst(&msg);
+      cmsg = (struct cmsghdr*)CFirstHeader(&msg);
       if((sinfo != NULL) &&
          (cmsg != NULL)  &&
          (cmsg->cmsg_len   == CLength(sizeof(struct sctp_sndrcvinfo))) &&

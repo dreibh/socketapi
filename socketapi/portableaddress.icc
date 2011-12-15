@@ -105,7 +105,7 @@ inline int PortableAddress::operator==(const PortableAddress& address) const
           (Host[6] == address.Host[6]) &&
           (Host[7] == address.Host[7]) &&
           (Port == address.Port));
-          
+
 }
 
 
@@ -120,7 +120,7 @@ inline int PortableAddress::operator!=(const PortableAddress& address) const
           (Host[5] != address.Host[5]) ||
           (Host[6] != address.Host[6]) ||
           (Host[7] != address.Host[7]) ||
-          (Port != address.Port));          
+          (Port != address.Port));
 }
 
 

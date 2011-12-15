@@ -60,10 +60,10 @@ inline integer Socket::getType() const
 }
 
 
-// ###### Get socket communication domain ###################################
-inline integer Socket::getCommunicationDomain() const
+// ###### Get socket family #################################################
+inline integer Socket::getFamily() const
 {
-   return(CommunicationDomain);
+   return(Family);
 }
 
 

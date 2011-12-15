@@ -78,12 +78,12 @@ class Socket
 {
    // ====== Definitions ====================================================
    public:
-   enum SocketCommunicationDomain {
-      UndefinedSocketCommunicationDomain = -1,
-      IP                                 = 255,
-      IPv4                               = AF_INET,  // Do not use IPv4/IPv6,
-      IPv6                               = AF_INET6, // use IP instead!
-      Unix                               = AF_UNIX
+   enum SocketFamily {
+      UndefinedSocketFamily = -1,
+      IP                    = 255,
+      IPv4                  = AF_INET,  // Do not use IPv4/IPv6,
+      IPv6                  = AF_INET6, // use IP instead!
+      Unix                  = AF_UNIX
    };
    enum SocketType {
       UndefinedSocketType = -1,
@@ -123,17 +123,17 @@ class Socket
 
    /**
      * Constructor for a new socket. For automatic usage of IPv6 when available,
-     * set communication domain to IP. Use IPv4/IPv6 only if a special
+     * set communication family to IP. Use IPv4/IPv6 only if a special
      * protocol version is necessary!
      * The creation success can be checked using ready() method.
      *
-     * @param communicationDomain Communication domain (e.g. IP).
+     * @param family Communication family (e.g. IP).
      * @param socketType Socket type (e.g. TCP, UDP).
      * @param socketProtocol Socket protocol (e.g. Default).
      *
      * @see ready
      */
-   Socket(const integer communicationDomain,
+   Socket(const integer family,
           const integer socketType,
           const integer socketProtocol = Default);
 
@@ -146,17 +146,17 @@ class Socket
    // ====== Create/close socket ============================================
    /**
      * Close existing socket and create new socket. For automatic usage of
-     * IPv6 when available, set communication domain to IP.
+     * IPv6 when available, set communication family to IP.
      * Use IPv4/IPv6 only if a special protocol version is necessary!
      *
-     * @param communicationDomain Communication domain (e.g. IP).
+     * @param socketFamily Communication family (e.g. IP).
      * @param socketType Socket type (e.g. TCP, UDP).
      * @param socketProtocol Socket protocol (e.g. Default).
      * @return true, if creation was sucessful; false otherwise.
      */
-   bool create(const integer communicationDomain = IP,
-               const integer socketType          = TCP,
-               const integer socketProtocol      = Default);
+   bool create(const integer socketFamily   = IP,
+               const integer socketType     = TCP,
+               const integer socketProtocol = Default);
 
    /**
      * Close socket.
@@ -176,18 +176,18 @@ class Socket
 
    // ====== Socket properties ==============================================
    /**
+     * Get socket's family.
+     *
+     * @return Socket family.
+     */
+   inline integer getFamily() const;
+   
+   /**
      * Get socket's type.
      *
      * @return Socket type.
      */
    inline integer getType() const;
-
-   /**
-     * Get socket's communication domain.
-     *
-     * @return Socket communication domain.
-     */
-   inline integer getCommunicationDomain() const;
 
    /**
      * Get socket's protocol.
@@ -813,7 +813,7 @@ O     * Bind socket to one or more given addresses. If no addresses are given,
    integer   LastError;
    int       SocketDescriptor;
    sockaddr* Destination;
-   integer   CommunicationDomain;
+   integer   Family;
    integer   Type;
    integer   Protocol;
 };

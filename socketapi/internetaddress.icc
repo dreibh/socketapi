@@ -319,7 +319,7 @@ inline PortableAddress InternetAddress::getPortableAddress() const
    }
    pa.Port = Port;
    return(pa);
-} 
+}
 
 
 #endif

@@ -53,7 +53,7 @@
   * @short   Internet Flow
   * @author  Thomas Dreibholz (dreibh@iem.uni-due.de)
   * @version 1.0
-  */            
+  */
 class InternetFlow : public InternetAddress
 {
    // ====== Constructors/Destructor ========================================
@@ -111,7 +111,7 @@ class InternetFlow : public InternetAddress
      * getSystemAddress() implementation of SocketAddressInterface.
      *
      * @see SocketAddressInterface#getSystemAddress
-     */            
+     */
    cardinal getSystemAddress(sockaddr*       buffer,
                              const socklen_t length,
                              const cardinal  type) const;

@@ -107,7 +107,7 @@ void printControl(const msghdr* header)
       return;
    }
 
-   cmsghdr* cmsg = CFirst(header);
+   cmsghdr* cmsg = CFirstHeader(header);
    if((cmsg != NULL) && (header->msg_controllen >= (socklen_t)sizeof(cmsghdr))) {
       if(ColorMode) {
          std::cout << "\x1b[" << getANSIColor(CONTROL_COLOR)
@@ -135,7 +135,7 @@ void printControl(const msghdr* header)
                       << ", Type #"     << cmsg->cmsg_type
                       << ". Length is " << cmsg->cmsg_len  << "." << std::endl;
          }
-         cmsg = CNext(header,cmsg);
+         cmsg = CNextHeader(header,cmsg);
       }
       if(ColorMode) {
          std::cout << "\x1b[" << getANSIColor(0) << "m";

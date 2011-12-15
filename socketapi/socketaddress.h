@@ -251,7 +251,7 @@ class SocketAddress
      * @param address sockaddr.
      * @param length Length of sockaddr.
      */
-   virtual bool setSystemAddress(sockaddr* address, const socklen_t length) = 0;
+   virtual bool setSystemAddress(const sockaddr* address, const socklen_t length) = 0;
 
 
    // ====== SocketAddress lists ============================================

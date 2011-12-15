@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 2005-2011 by Thomas Dreibholz
+ * Copyright (C) 2005-2009 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -57,7 +57,7 @@
   * @short   Packet Address
   * @author  Thomas Dreibholz (dreibh@iem.uni-due.de)
   * @version 1.0
-  */            
+  */
 class PacketAddress : virtual public SocketAddress
 {
    // ====== Constructors/Destructor ========================================

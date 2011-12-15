@@ -124,7 +124,7 @@ void Socket::packSocketAddressArray(const sockaddr_storage* addrArray,
             std::cerr << "ERROR: pack_sockaddr_storage() - Unknown address type #" << ((sockaddr*)&addrArray[i])->sa_family << "!" << std::endl;
             std::cerr << "IMPORTANT NOTE:" << std::endl
                       << "The standardizers have changed the socket API; the sockaddr_storage array has been replaced by a variable-sized sockaddr_in/in6 blocks. Do not blame us for this change, send your complaints to the standardizers at sctp-impl@external.cisco.com!" << std::endl;
-            exit(1);
+            ::abort();
           break;
       }
    }
@@ -134,17 +134,17 @@ void Socket::packSocketAddressArray(const sockaddr_storage* addrArray,
 // ###### Initialize socket #################################################
 void Socket::init()
 {
-   CommunicationDomain = UndefinedSocketCommunicationDomain;
-   Type                = UndefinedSocketType;
-   Protocol            = UndefinedSocketProtocol;
-   Destination         = NULL;
-   Backlog             = 0;
-   SendFlow            = 0;
-   ReceivedFlow        = 0;
-   BytesSent           = 0;
-   BytesReceived       = 0;
-   SocketDescriptor    = -1;
-   LastError           = 0;
+   Family           = UndefinedSocketFamily;
+   Type             = UndefinedSocketType;
+   Protocol         = UndefinedSocketProtocol;
+   Destination      = NULL;
+   Backlog          = 0;
+   SendFlow         = 0;
+   ReceivedFlow     = 0;
+   BytesSent        = 0;
+   BytesReceived    = 0;
+   SocketDescriptor = -1;
+   LastError        = 0;
 }
 
 
@@ -154,26 +154,25 @@ bool Socket::create(const integer communicationDomain,
                     const integer socketProtocol)
 {
    close();
-   CommunicationDomain = communicationDomain;
-   Type                = socketType;
-   Protocol            = socketProtocol;
-   if(CommunicationDomain == IP) {
+   Family   = communicationDomain;
+   Type     = socketType;
+   Protocol = socketProtocol;
+   if(Family == IP) {
       if(InternetAddress::UseIPv6) {
-         CommunicationDomain = IPv6;
+         Family = IPv6;
       }
       else
-         CommunicationDomain = IPv4;
+         Family = IPv4;
    }
 
    // ====== Create socket ==================================================
-   int result = ext_socket(CommunicationDomain,socketType,socketProtocol);
-   if(result < 0) {
+   SocketDescriptor = ext_socket(Family,socketType,socketProtocol);
+   if(SocketDescriptor < 0) {
 #ifndef DISABLE_WARNINGS
       std::cerr << "WARNING: Socket::Socket() - Unable to create socket!" << std::endl;
 #endif
       return(false);
    }
-   SocketDescriptor = result;
 
    // ====== Set options ====================================================
    // Send and receive IPv6 flow labels.
@@ -224,7 +223,7 @@ bool Socket::bind(const SocketAddress& address)
    sockaddr_in6* socketAddress       = (sockaddr_in6*)&socketAddressBuffer;
    socklen_t     socketAddressLength =
       address.getSystemAddress((sockaddr*)socketAddress,SocketAddress::MaxSockLen,
-                               CommunicationDomain);
+                               Family);
    if(socketAddressLength == 0) {
       LastError = ENAMETOOLONG;
       return(false);
@@ -567,7 +566,7 @@ Socket* Socket::accept(SocketAddress** address)
    Socket* accepted = new Socket;
    if(accepted != NULL) {
       accepted->SocketDescriptor    = result;
-      accepted->CommunicationDomain = CommunicationDomain;
+      accepted->Family = Family;
       accepted->Type                = Type;
       accepted->Protocol            = Protocol;
       if(address != NULL) {
@@ -594,7 +593,7 @@ bool Socket::connect(const SocketAddress& address, const card8 trafficClass)
    sockaddr_in6* socketAddress       = (sockaddr_in6*)&socketAddressBuffer;
    socklen_t     socketAddressLength =
       address.getSystemAddress((sockaddr*)socketAddress,SocketAddress::MaxSockLen,
-                               CommunicationDomain);
+                               Family);
    if(socketAddressLength == 0) {
       return(false);
    }
@@ -654,7 +653,7 @@ bool Socket::connectx(const SocketAddress** addressArray,
       // socketAddressLength[i] =
          addressArray[i]->getSystemAddress((sockaddr*)&socketAddressArray[i],
                                            sizeof(socketAddressArray[addresses]),
-                                           CommunicationDomain);
+                                           Family);
    }
    Destination = NULL;
 
@@ -691,7 +690,7 @@ ssize_t Socket::receiveMsg(struct msghdr* msg,
    }
 
    ReceivedFlow = 0;
-   for(cmsghdr* c = CFirst(msg);c;c = CNext(msg,c)) {
+   for(cmsghdr* c = CFirstHeader(msg);c;c = CNextHeader(msg,c)) {
       switch(c->cmsg_level) {
 #if (SYSTEM == OS_Linux)
          case SOL_IPV6:
@@ -842,7 +841,7 @@ ssize_t Socket::sendTo(const void*          buffer,
    sockaddr_in6* socketAddress       = (sockaddr_in6*)&socketAddressBuffer;
    socklen_t     socketAddressLength =
       receiver.getSystemAddress((sockaddr*)socketAddress,SocketAddress::MaxSockLen,
-                               CommunicationDomain);
+                               Family);
    if(socketAddressLength == 0) {
       return(-1);
    }
@@ -906,6 +905,7 @@ ssize_t Socket::sendMsg(const struct msghdr* msg,
    if(trafficClass != 0x00) {
       setTypeOfService(trafficClass);
    }
+
    ssize_t result = ext_sendmsg(SocketDescriptor,msg,(int)flags);
    if(result >= 0) {
       BytesSent += (card64)result;
@@ -914,6 +914,7 @@ ssize_t Socket::sendMsg(const struct msghdr* msg,
       LastError = errno;
       result    = -LastError;
    }
+
    if(trafficClass != 0x00) {
       setTypeOfService(SendFlow >> 20);
    }
@@ -1193,7 +1194,7 @@ bool Socket::multicastMembership(const SocketAddress& address,
                                  const char*          interface,
                                  const bool           add)
 {
-   if(CommunicationDomain == AF_INET) {
+   if(Family == AF_INET) {
       sockaddr_in addr;
       if(address.getSystemAddress((sockaddr*)&addr,sizeof(addr),AF_INET) == 0) {
 #ifndef DISABLE_WARNINGS
@@ -1222,7 +1223,7 @@ bool Socket::multicastMembership(const SocketAddress& address,
                                 &mreq,sizeof(mreq)));
       }
    }
-   else if(CommunicationDomain == AF_INET6) {
+   else if(Family == AF_INET6) {
       sockaddr_in6 addr;
       if(address.getSystemAddress((sockaddr*)&addr,sizeof(addr),AF_INET6) == 0) {
 #ifndef DISABLE_WARNINGS
@@ -1255,14 +1256,14 @@ bool Socket::multicastMembership(const SocketAddress& address,
 // ###### Get multicast loop mode ###########################################
 bool Socket::getMulticastLoop()
 {
-   if(CommunicationDomain == AF_INET) {
+   if(Family == AF_INET) {
       u_char    loop;
       socklen_t size = sizeof(loop);
       if(getSocketOption(IPPROTO_IP,IP_MULTICAST_LOOP,&loop,&size) == 0) {
          return(loop);
       }
    }
-   else if(CommunicationDomain == AF_INET6) {
+   else if(Family == AF_INET6) {
       int       loop;
       socklen_t size = sizeof(loop);
       if(getSocketOption(IPPROTO_IPV6,IPV6_MULTICAST_LOOP,&loop,&size) == 0) {
@@ -1281,11 +1282,11 @@ bool Socket::getMulticastLoop()
 // ###### Set multicast loop mode ###########################################
 bool Socket::setMulticastLoop(const bool on)
 {
-   if(CommunicationDomain == AF_INET) {
+   if(Family == AF_INET) {
       const u_char value = (on ? 1 : 0);
       return(setSocketOption(IPPROTO_IP,IP_MULTICAST_LOOP,&value,sizeof(value)) == 0);
    }
-   else if(CommunicationDomain == AF_INET6) {
+   else if(Family == AF_INET6) {
       const int value = (on ? 1 : 0);
       return(setSocketOption(IPPROTO_IPV6,IPV6_MULTICAST_LOOP,&value,sizeof(value)) == 0);
    }
@@ -1301,14 +1302,14 @@ bool Socket::setMulticastLoop(const bool on)
 // ###### Get multicast TTL #################################################
 card8 Socket::getMulticastTTL()
 {
-   if(CommunicationDomain == AF_INET) {
+   if(Family == AF_INET) {
       u_char    ttl;
       socklen_t size = sizeof(ttl);
       if(getSocketOption(IPPROTO_IP,IP_MULTICAST_TTL,&ttl,&size) == 0) {
          return(ttl);
       }
    }
-   else if(CommunicationDomain == AF_INET6) {
+   else if(Family == AF_INET6) {
       int       ttl;
       socklen_t size = sizeof(ttl);
       if(getSocketOption(IPPROTO_IPV6,IPV6_MULTICAST_HOPS,&ttl,&size) == 0) {
@@ -1327,10 +1328,10 @@ card8 Socket::getMulticastTTL()
 // ###### Set multicast TTL #################################################
 bool Socket::setMulticastTTL(const card8 ttl)
 {
-   if(CommunicationDomain == AF_INET) {
+   if(Family == AF_INET) {
       return(setSocketOption(IPPROTO_IP,IP_MULTICAST_TTL,&ttl,sizeof(ttl)) == 0);
    }
-   else if(CommunicationDomain == AF_INET6) {
+   else if(Family == AF_INET6) {
       const int value = (int)ttl;
       return(setSocketOption(IPPROTO_IPV6,IPV6_MULTICAST_HOPS,&value,sizeof(value)) == 0);
    }

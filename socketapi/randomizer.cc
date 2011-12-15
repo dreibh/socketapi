@@ -47,7 +47,7 @@ Randomizer::Randomizer()
    setSeed();
 }
 
-   
+
 // ###### Set randomizer seed ###############################################
 void Randomizer::setSeed()
 {
@@ -71,7 +71,7 @@ cardinal Randomizer::random(const cardinal a, const cardinal b)
       number = random32();
    else
       number = random64();
-   
+
    if(c == 0)
       return(a);
    else

@@ -50,6 +50,31 @@
 #include <sys/socket.h>
 
 
+/**
+  * Wrapper for CMSG_SPACE macro.
+  */
+inline static size_t CSpace(const size_t payloadLength);
+
+/**
+  * Wrapper for CMSG_LEN macro.
+  */
+inline static size_t CLength(const size_t payloadLength);
+
+/**
+  * Wrapper for CMSG_DATA macro.
+  */
+inline static void* CData(const cmsghdr* cmsg);
+
+/**
+  * Wrapper for CMSG_FIRSTHDR macro.
+  */
+inline static cmsghdr* CFirstHeader(const msghdr* header);
+
+/**
+  * Wrapper for CMSG_NXTHDR macro.
+  */
+inline static cmsghdr* CNextHeader(const msghdr* header, const cmsghdr* cmsg);
+
 
 /**
   * This template class manages manages message structures used by
@@ -88,8 +113,10 @@ template<const size_t size> class SocketMessage
      * Set address.
      *
      * @param address SocketAddress object.
+     * @param type Address type (AF_UNSPEC to take default from address).
      */
-   inline void setAddress(const SocketAddress& address);
+   inline void setAddress(const SocketAddress& address,
+                          const integer        family = AF_UNSPEC);
 
    /**
      * Set buffer.
@@ -100,23 +127,16 @@ template<const size_t size> class SocketMessage
    inline void setBuffer(void* buffer, const size_t buffersize);
 
    /**
-     * Set size of control block. Sizes greater than the template parameter
-     * are adjusted to the maximum possible value.
-     *
-     * @param controlsize Size of controlblock.
-     */
-   inline void setControl(const size_t controlsize);
-
-   /**
      * Add control header of given cmsg level and type. Returns NULL,
      * if there is not enough free space in the control data block.
+     * The new control header is cleared (i.e. all bytes set to 0).
      *
      * @param payload Size of payload.
      * @param level Level (e.g. IPPROTO_SCTP).
      * @param type Type (e.g. SCTP_INIT).
      * @return Pointer to begin of *payload* area.
      */
-   inline char* addHeader(const size_t payload,
+   inline void* addHeader(const size_t payloadLength,
                           const int    level,
                           const int    type);
 
@@ -172,43 +192,12 @@ template<const size_t size> class SocketMessage
      * Control data block, its size is given by the template parameter.
      */
    public:
-   char Control[size];
+#ifdef SOLARIS
+   char Control[_CMSG_DATA_ALIGN(sizeof(struct cmsghdr)) + _CMSG_DATA_ALIGN(size)];
+#else
+   char Control[CMSG_SPACE(size)];
+#endif
 };
-
-
-/**
-  * Wrapper for CMSG_SPACE macro.
-  */
-#if (SYSTEM == OS_SOLARIS)
-#define CSpace(payload) (_CMSG_DATA_ALIGN(sizeof(struct cmsghdr)) + _CMSG_DATA_ALIGN(payload))
-#else
-#define CSpace(payload) CMSG_SPACE(payload)
-#endif
-
-/**
-  * Wrapper for CMSG_LEN macro.
-  */
-
-#if (SYSTEM == OS_SOLARIS)
-#define CLength(l) (_CMSG_DATA_ALIGN(sizeof(struct cmsghdr)) + (l))
-#else
-#define CLength(l) CMSG_LEN(l)
-#endif
-
-/**
-  * Wrapper for CMSG_DATA macro.
-  */
-inline static char* CData(const cmsghdr* cmsg);
-
-/**
-  * Wrapper for CMSG_FIRSTHDR macro.
-  */
-inline static cmsghdr* CFirst(const msghdr* header);
-
-/**
-  * Wrapper for CMSG_NXTHDR macro.
-  */
-inline static cmsghdr* CNext(const msghdr* header, const cmsghdr* cmsg);
 
 
 #include "tdmessage.icc"

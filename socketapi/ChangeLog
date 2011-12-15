@@ -1,12 +1,1351 @@
-ChangeLog:
-- SCTPSocket::getLocalAddresses()
-   - Fixes and workarounds
-- SCTPSocket::internalReceiver()
-   - association->ReadReady = (association->hasData() || (getErrorCode(association->AssociationID) < 0));
-     ReadReady has to be set in case of error (Shutdown or Abort)
-     -> ext_select() will return and recv*() will then return 0
-        Otherwise: blocking!
-   - Call queue.signal() if notification is left in queue.
-- SCTPSocket::setAssocStatus()
-   const int ok = sctp_setAssocStatus(assocID,
-                                      (SCTP_Association_Status*)&associationParameters);
+------------------------------------------------------------------------
+r1196 | dreibh | 2011-12-12 16:17:05 +0100 (Mon, 12 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/audioclient.cc
+   M /trunk/rtpaudio2/rtpaudio/audioserver.cc
+   M /trunk/rtpaudio2/rtpaudio/rtcpabstractserver.cc
+   M /trunk/rtpaudio2/rtpaudio/rtpsender.cc
+   M /trunk/rtpaudio2/rtpaudio/rtpsender.h
+
+Working with kernel SCTP now.
+
+------------------------------------------------------------------------
+r1195 | dreibh | 2011-12-12 14:47:26 +0100 (Mon, 12 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/audioencoderrepository.cc
+
+Fixed uninitialized variable.
+
+------------------------------------------------------------------------
+r1194 | dreibh | 2011-12-12 14:38:15 +0100 (Mon, 12 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/audioserver.cc
+   M /trunk/rtpaudio2/rtpaudio/simpleaudiopacket.h
+
+Frame rate handling bugfix for problem introduced by previous commit.
+
+------------------------------------------------------------------------
+r1193 | dreibh | 2011-12-12 14:08:45 +0100 (Mon, 12 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/Makefile.am
+   M /trunk/rtpaudio2/rtpaudio/advancedaudioencoder.cc
+   M /trunk/rtpaudio2/rtpaudio/audioserver.cc
+   D /trunk/rtpaudio2/rtpaudio/extsocketdescriptor.h
+   M /trunk/rtpaudio2/rtpaudio/rtcpsender.cc
+   M /trunk/rtpaudio2/rtpaudio/rtpa-server.cc
+   M /trunk/rtpaudio2/rtpaudio/simpleaudioencoder.cc
+
+Minor improvements.
+
+------------------------------------------------------------------------
+r1192 | dreibh | 2011-12-12 13:35:22 +0100 (Mon, 12 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/configure.in
+   M /trunk/rtpaudio2/debian/changelog
+
+Version update.
+
+------------------------------------------------------------------------
+r1191 | dreibh | 2011-12-12 12:33:21 +0100 (Mon, 12 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/rtpa-qclient.cc
+
+String handling fixes.
+
+------------------------------------------------------------------------
+r1190 | dreibh | 2011-12-12 12:33:11 +0100 (Mon, 12 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiodecoder.cc
+
+"delete []" mismatch fix.
+
+------------------------------------------------------------------------
+r1189 | dreibh | 2011-12-12 12:13:03 +0100 (Mon, 12 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/multiaudiowriter.cc
+   M /trunk/rtpaudio2/rtpaudio/spectrumanalyzer.cc
+
+Fixed uninitialized variables.
+
+------------------------------------------------------------------------
+r1188 | dreibh | 2011-12-12 11:42:37 +0100 (Mon, 12 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/configure.in
+   M /trunk/rtpaudio2/debian/changelog
+   M /trunk/rtpaudio2/rtpaudio/audiodevice.cc
+
+Removed debug output.
+
+------------------------------------------------------------------------
+r1187 | dreibh | 2011-12-12 09:27:19 +0100 (Mon, 12 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiopacket.h
+   M /trunk/rtpaudio2/rtpaudio/audioclient.cc
+   M /trunk/rtpaudio2/rtpaudio/audioclientapppacket.h
+   M /trunk/rtpaudio2/rtpaudio/rtcppacket.h
+   M /trunk/rtpaudio2/rtpaudio/rtcppacket.icc
+   M /trunk/rtpaudio2/rtpaudio/rtcpreceiver.cc
+   M /trunk/rtpaudio2/rtpaudio/rtcpsender.cc
+   M /trunk/rtpaudio2/rtpaudio/simpleaudiopacket.h
+
+Some more fixes.
+
+------------------------------------------------------------------------
+r1186 | dreibh | 2011-12-12 08:36:45 +0100 (Mon, 12 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiodecoder.cc
+   M /trunk/rtpaudio2/rtpaudio/audiodecoderrepository.cc
+   M /trunk/rtpaudio2/rtpaudio/internetaddress.cc
+   M /trunk/rtpaudio2/rtpaudio/rtcppacket.h
+   M /trunk/rtpaudio2/rtpaudio/rtcpreceiver.cc
+   M /trunk/rtpaudio2/rtpaudio/rtcpsender.cc
+
+Some fixes.
+
+------------------------------------------------------------------------
+r1185 | dreibh | 2011-12-11 19:20:50 +0100 (Sun, 11 Dec 2011) | 2 lines
+Changed paths:
+   A /trunk/rtpaudio2/UpdateDoc1.sed
+   A /trunk/rtpaudio2/UpdateDocFiles
+   A /trunk/rtpaudio2/debian/libmpegsound0.symbols
+   A /trunk/rtpaudio2/make-symbols
+
+Packaging updates.
+
+------------------------------------------------------------------------
+r1184 | dreibh | 2011-12-11 19:18:56 +0100 (Sun, 11 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/abstractlayerdescription.h
+   M /trunk/rtpaudio2/rtpaudio/abstractqosdescription.h
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiodecoder.h
+   M /trunk/rtpaudio2/rtpaudio/advancedaudioencoder.h
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiopacket.h
+   M /trunk/rtpaudio2/rtpaudio/audioclient.h
+   M /trunk/rtpaudio2/rtpaudio/audioclientapppacket.h
+   M /trunk/rtpaudio2/rtpaudio/audiodebug.h
+   M /trunk/rtpaudio2/rtpaudio/audiodecoderinterface.h
+   M /trunk/rtpaudio2/rtpaudio/audiodecoderrepository.h
+   M /trunk/rtpaudio2/rtpaudio/audiodevice.h
+   M /trunk/rtpaudio2/rtpaudio/audioencoderinterface.h
+   M /trunk/rtpaudio2/rtpaudio/audioencoderrepository.h
+   M /trunk/rtpaudio2/rtpaudio/audiomixer.h
+   M /trunk/rtpaudio2/rtpaudio/audionull.h
+   M /trunk/rtpaudio2/rtpaudio/audioquality.h
+   M /trunk/rtpaudio2/rtpaudio/audioqualityinterface.h
+   M /trunk/rtpaudio2/rtpaudio/audioreaderinterface.h
+   M /trunk/rtpaudio2/rtpaudio/audioserver.h
+   M /trunk/rtpaudio2/rtpaudio/audiowriterinterface.h
+   M /trunk/rtpaudio2/rtpaudio/bandwidthinfo.h
+   M /trunk/rtpaudio2/rtpaudio/cbrframesizescalability.h
+   M /trunk/rtpaudio2/rtpaudio/decoderinterface.h
+   M /trunk/rtpaudio2/rtpaudio/decoderrepositoryinterface.h
+   M /trunk/rtpaudio2/rtpaudio/encoderinterface.h
+   M /trunk/rtpaudio2/rtpaudio/encoderrepositoryinterface.h
+   M /trunk/rtpaudio2/rtpaudio/fft.h
+   M /trunk/rtpaudio2/rtpaudio/frameratescalabilityinterface.h
+   M /trunk/rtpaudio2/rtpaudio/framesizescalabilityinterface.h
+   M /trunk/rtpaudio2/rtpaudio/genericframesizescalability.h
+   M /trunk/rtpaudio2/rtpaudio/managedstreaminterface.h
+   M /trunk/rtpaudio2/rtpaudio/mediainfo.h
+   M /trunk/rtpaudio2/rtpaudio/mp3audioreader.h
+   M /trunk/rtpaudio2/rtpaudio/multiaudioreader.h
+   M /trunk/rtpaudio2/rtpaudio/multiaudiowriter.h
+   M /trunk/rtpaudio2/rtpaudio/qaudiomixer.h
+   M /trunk/rtpaudio2/rtpaudio/qinfotabwidget.h
+   M /trunk/rtpaudio2/rtpaudio/qspectrumanalyzer.h
+   M /trunk/rtpaudio2/rtpaudio/resourceutilizationpoint.h
+   M /trunk/rtpaudio2/rtpaudio/rtcpabstractserver.h
+   M /trunk/rtpaudio2/rtpaudio/rtcppacket.h
+   M /trunk/rtpaudio2/rtpaudio/rtcpreceiver.h
+   M /trunk/rtpaudio2/rtpaudio/rtcpsender.h
+   M /trunk/rtpaudio2/rtpaudio/rtpa-qclient.h
+   M /trunk/rtpaudio2/rtpaudio/rtppacket.h
+   M /trunk/rtpaudio2/rtpaudio/rtpreceiver.h
+   M /trunk/rtpaudio2/rtpaudio/rtpsender.h
+   M /trunk/rtpaudio2/rtpaudio/s2.cc
+   M /trunk/rtpaudio2/rtpaudio/seqnumvalidator.h
+   M /trunk/rtpaudio2/rtpaudio/simpleaudiodecoder.h
+   M /trunk/rtpaudio2/rtpaudio/simpleaudioencoder.h
+   M /trunk/rtpaudio2/rtpaudio/simpleaudiopacket.h
+   M /trunk/rtpaudio2/rtpaudio/sourcestateinfo.h
+   M /trunk/rtpaudio2/rtpaudio/spectrumanalyzer.h
+   M /trunk/rtpaudio2/rtpaudio/trafficshaper.h
+   M /trunk/rtpaudio2/rtpaudio/wavaudioreader.h
+
+Header fixes.
+
+------------------------------------------------------------------------
+r1183 | dreibh | 2011-12-11 19:09:32 +0100 (Sun, 11 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/ChangeLog
+   M /trunk/rtpaudio2/debian/control
+   A /trunk/rtpaudio2/debian/libmpegsound-dev.install
+   A /trunk/rtpaudio2/debian/libmpegsound0.install
+   M /trunk/rtpaudio2/debian/rtpaudio.install
+   M /trunk/rtpaudio2/debian/rules
+   M /trunk/rtpaudio2/debian.conf
+
+Updated packaging files.
+
+------------------------------------------------------------------------
+r1182 | dreibh | 2011-12-11 19:09:18 +0100 (Sun, 11 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/Makefile.am
+   M /trunk/rtpaudio2/rtpaudio/rtpa-client.cc
+   M /trunk/rtpaudio2/rtpaudio/rtpa-server.cc
+   M /trunk/rtpaudio2/rtpaudio/rtpa-vclient.cc
+
+A few fixes.
+
+------------------------------------------------------------------------
+r1181 | dreibh | 2011-12-11 11:18:05 +0100 (Sun, 11 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/debian/control
+   M /trunk/rtpaudio2/rtpaudio/Makefile.am
+
+Some build fixes.
+
+------------------------------------------------------------------------
+r1180 | dreibh | 2011-12-11 11:06:23 +0100 (Sun, 11 Dec 2011) | 2 lines
+Changed paths:
+   A /trunk/rtpaudio2/clean-deb (from /trunk/bibtexconv/clean-deb:1174)
+   A /trunk/rtpaudio2/debian (from /trunk/subnetcalc/debian:1174)
+   M /trunk/rtpaudio2/debian/changelog
+   M /trunk/rtpaudio2/debian/control
+   M /trunk/rtpaudio2/debian/copyright
+   A /trunk/rtpaudio2/debian/rtpaudio.install (from /trunk/subnetcalc/debian/subnetcalc.install:1174)
+   D /trunk/rtpaudio2/debian/subnetcalc.install
+   D /trunk/rtpaudio2/debian/subnetcalc.manpages
+   M /trunk/rtpaudio2/debian/watch
+   A /trunk/rtpaudio2/debian.conf (from /trunk/bibtexconv/debian.conf:1174)
+   A /trunk/rtpaudio2/filter-empty-entries (from /trunk/bibtexconv/filter-empty-entries:1174)
+   A /trunk/rtpaudio2/make-deb (from /trunk/bibtexconv/make-deb:1174)
+   A /trunk/rtpaudio2/make-ppa (from /trunk/bibtexconv/make-ppa:1174)
+
+Added initial Debian/Ubuntu packaging files.
+
+------------------------------------------------------------------------
+r1179 | dreibh | 2011-12-11 11:06:06 +0100 (Sun, 11 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/encoderinterface.h
+   D /trunk/rtpaudio2/rtpaudio/range.cc
+   D /trunk/rtpaudio2/rtpaudio/range.h
+   D /trunk/rtpaudio2/rtpaudio/range.icc
+
+Removed obsolete code.
+
+------------------------------------------------------------------------
+r1178 | dreibh | 2011-12-11 10:38:11 +0100 (Sun, 11 Dec 2011) | 2 lines
+Changed paths:
+   A /trunk/rtpaudio2/rtpaudio/Test-MP3s/DieGlorreichenSieben.mp3
+   A /trunk/rtpaudio2/rtpaudio/Test-MP3s/Zirkusmusik.ogg
+   M /trunk/rtpaudio2/rtpaudio/Test.list
+   A /trunk/rtpaudio2/rtpaudio/Test1.list (from /trunk/rtpaudio2/rtpaudio/Test.list:1174)
+   A /trunk/rtpaudio2/rtpaudio/Test2.list (from /trunk/rtpaudio2/rtpaudio/Test.list:1174)
+   A /trunk/rtpaudio2/rtpaudio/Test3.list (from /trunk/rtpaudio2/rtpaudio/Test.list:1174)
+   A /trunk/rtpaudio2/rtpaudio/Test4.list (from /trunk/rtpaudio2/rtpaudio/Test.list:1174)
+
+Added more tests.
+
+------------------------------------------------------------------------
+r1177 | dreibh | 2011-12-11 10:35:23 +0100 (Sun, 11 Dec 2011) | 2 lines
+Changed paths:
+   A /trunk/rtpaudio2/rtpaudio/convert-to-ogg
+
+Added conversion script to create OGG files.
+
+------------------------------------------------------------------------
+r1176 | dreibh | 2011-12-11 10:34:53 +0100 (Sun, 11 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/rtpa-qclient.cc
+
+A small parameter fix.
+
+------------------------------------------------------------------------
+r1175 | dreibh | 2011-12-11 10:13:57 +0100 (Sun, 11 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/rtpa-qclient.cc
+   M /trunk/rtpaudio2/rtpaudio/rtpa-qclient.h
+
+Fixed bookmark code.
+
+------------------------------------------------------------------------
+r1174 | dreibh | 2011-12-10 23:28:15 +0100 (Sat, 10 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/libmpegsound/Makefile.am
+
+Using libtool for libmpegsound, too.
+
+------------------------------------------------------------------------
+r1173 | dreibh | 2011-12-10 23:28:01 +0100 (Sat, 10 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/Makefile.am
+
+Using libtool.
+
+------------------------------------------------------------------------
+r1172 | dreibh | 2011-12-10 23:14:15 +0100 (Sat, 10 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/Makefile.am
+
+Minor fix.
+
+------------------------------------------------------------------------
+r1171 | dreibh | 2011-12-10 23:13:26 +0100 (Sat, 10 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/configure.in
+   M /trunk/rtpaudio2/libmpegsound/Makefile.am
+   M /trunk/rtpaudio2/rtpaudio/Makefile.am
+   D /trunk/rtpaudio2/rtpaudio/client.cc
+   D /trunk/rtpaudio2/rtpaudio/qclient.cc
+   D /trunk/rtpaudio2/rtpaudio/qclient.h
+   A /trunk/rtpaudio2/rtpaudio/rtpa-client.cc (from /trunk/rtpaudio2/rtpaudio/client.cc:1169)
+   A /trunk/rtpaudio2/rtpaudio/rtpa-qclient.cc (from /trunk/rtpaudio2/rtpaudio/qclient.cc:1170)
+   A /trunk/rtpaudio2/rtpaudio/rtpa-qclient.h (from /trunk/rtpaudio2/rtpaudio/qclient.h:1169)
+   A /trunk/rtpaudio2/rtpaudio/rtpa-server.cc (from /trunk/rtpaudio2/rtpaudio/server.cc:1170)
+   A /trunk/rtpaudio2/rtpaudio/rtpa-vclient.cc (from /trunk/rtpaudio2/rtpaudio/vclient.cc:1169)
+   D /trunk/rtpaudio2/rtpaudio/server.cc
+   D /trunk/rtpaudio2/rtpaudio/vclient.cc
+
+Target naming changes and build script improvements.
+
+------------------------------------------------------------------------
+r1170 | dreibh | 2011-12-10 22:36:04 +0100 (Sat, 10 Dec 2011) | 1 line
+Changed paths:
+   M /trunk/rtpaudio2/Makefile.am
+   M /trunk/rtpaudio2/autogen.sh
+   M /trunk/rtpaudio2/configure.in
+   A /trunk/rtpaudio2/libmpegsound
+   A /trunk/rtpaudio2/libmpegsound/Makefile.am
+   A /trunk/rtpaudio2/libmpegsound/bitwindow.cc
+   A /trunk/rtpaudio2/libmpegsound/cyclicbuffer.cc
+   A /trunk/rtpaudio2/libmpegsound/cyclicbuffer.h
+   A /trunk/rtpaudio2/libmpegsound/esdplayer.cc
+   A /trunk/rtpaudio2/libmpegsound/fileinput.cc
+   A /trunk/rtpaudio2/libmpegsound/fileplayer.cc
+   A /trunk/rtpaudio2/libmpegsound/filter.cc
+   A /trunk/rtpaudio2/libmpegsound/filter_2.cc
+   A /trunk/rtpaudio2/libmpegsound/httpinput.cc
+   A /trunk/rtpaudio2/libmpegsound/huffmantable.cc
+   A /trunk/rtpaudio2/libmpegsound/mpeglayer1.cc
+   A /trunk/rtpaudio2/libmpegsound/mpeglayer2.cc
+   A /trunk/rtpaudio2/libmpegsound/mpeglayer3.cc
+   A /trunk/rtpaudio2/libmpegsound/mpegsound.h
+   A /trunk/rtpaudio2/libmpegsound/mpegsound_locals.h
+   A /trunk/rtpaudio2/libmpegsound/mpegtable.cc
+   A /trunk/rtpaudio2/libmpegsound/mpegtoraw.cc
+   A /trunk/rtpaudio2/libmpegsound/nasplayer.cc
+   A /trunk/rtpaudio2/libmpegsound/oggplayer.cc
+   A /trunk/rtpaudio2/libmpegsound/rawplayer.cc
+   A /trunk/rtpaudio2/libmpegsound/rawtofile.cc
+   A /trunk/rtpaudio2/libmpegsound/sdlplayer.cc
+   A /trunk/rtpaudio2/libmpegsound/sidplayer.cc
+   A /trunk/rtpaudio2/libmpegsound/soundinputstream.cc
+   A /trunk/rtpaudio2/libmpegsound/soundplayer.cc
+   A /trunk/rtpaudio2/libmpegsound/wavetoraw.cc
+   A /trunk/rtpaudio2/libmpegsound/xingheader.cc
+   A /trunk/rtpaudio2/libmpegsound/xingheader.h
+   M /trunk/rtpaudio2/rtpaudio/Makefile.am
+   M /trunk/rtpaudio2/rtpaudio/internetaddress.h
+   M /trunk/rtpaudio2/rtpaudio/internetaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/internetflow.h
+   M /trunk/rtpaudio2/rtpaudio/packetaddress.h
+   M /trunk/rtpaudio2/rtpaudio/portableaddress.h
+   M /trunk/rtpaudio2/rtpaudio/portableaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/qaudiomixer.cc
+   M /trunk/rtpaudio2/rtpaudio/qclient.cc
+   M /trunk/rtpaudio2/rtpaudio/randomizer.cc
+   M /trunk/rtpaudio2/rtpaudio/randomizer.h
+   M /trunk/rtpaudio2/rtpaudio/server.cc
+   M /trunk/rtpaudio2/rtpaudio/unixaddress.h
+
+Merged libmpegsound sources. Package now compiles independently.
+------------------------------------------------------------------------
+r1169 | dreibh | 2011-12-10 22:05:12 +0100 (Sat, 10 Dec 2011) | 1 line
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/condition.cc
+   M /trunk/rtpaudio2/rtpaudio/condition.h
+   M /trunk/rtpaudio2/rtpaudio/condition.icc
+   M /trunk/rtpaudio2/rtpaudio/ext_socket.h
+   M /trunk/rtpaudio2/rtpaudio/extsocketdescriptor.h
+   M /trunk/rtpaudio2/rtpaudio/internetaddress.cc
+   M /trunk/rtpaudio2/rtpaudio/internetaddress.h
+   M /trunk/rtpaudio2/rtpaudio/internetaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/internetflow.cc
+   M /trunk/rtpaudio2/rtpaudio/internetflow.h
+   M /trunk/rtpaudio2/rtpaudio/internetflow.icc
+   M /trunk/rtpaudio2/rtpaudio/portableaddress.h
+   M /trunk/rtpaudio2/rtpaudio/portableaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/randomizer.cc
+   M /trunk/rtpaudio2/rtpaudio/randomizer.h
+   M /trunk/rtpaudio2/rtpaudio/randomizer.icc
+   M /trunk/rtpaudio2/rtpaudio/socketaddress.cc
+   M /trunk/rtpaudio2/rtpaudio/socketaddress.h
+   M /trunk/rtpaudio2/rtpaudio/socketaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/staticglobals.cc
+   M /trunk/rtpaudio2/rtpaudio/synchronizable.cc
+   M /trunk/rtpaudio2/rtpaudio/synchronizable.h
+   M /trunk/rtpaudio2/rtpaudio/synchronizable.icc
+   M /trunk/rtpaudio2/rtpaudio/tdin6.h
+   M /trunk/rtpaudio2/rtpaudio/tdmessage.h
+   M /trunk/rtpaudio2/rtpaudio/tdmessage.icc
+   M /trunk/rtpaudio2/rtpaudio/tdstrings.cc
+   M /trunk/rtpaudio2/rtpaudio/tdstrings.h
+   M /trunk/rtpaudio2/rtpaudio/tdstrings.icc
+   M /trunk/rtpaudio2/rtpaudio/tdsystem.h
+   M /trunk/rtpaudio2/rtpaudio/thread.cc
+   M /trunk/rtpaudio2/rtpaudio/thread.h
+   M /trunk/rtpaudio2/rtpaudio/thread.icc
+   M /trunk/rtpaudio2/rtpaudio/tools.cc
+   M /trunk/rtpaudio2/rtpaudio/tools.h
+   M /trunk/rtpaudio2/rtpaudio/tools.icc
+   M /trunk/rtpaudio2/rtpaudio/unixaddress.cc
+   M /trunk/rtpaudio2/rtpaudio/unixaddress.h
+   M /trunk/rtpaudio2/rtpaudio/unixaddress.icc
+
+Merged files from socketapi.
+------------------------------------------------------------------------
+r1168 | dreibh | 2011-12-10 22:02:41 +0100 (Sat, 10 Dec 2011) | 1 line
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/qaudiomixer.cc
+
+Header fix.
+------------------------------------------------------------------------
+r1167 | dreibh | 2011-12-10 21:58:43 +0100 (Sat, 10 Dec 2011) | 3 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/breakdetector.cc
+   M /trunk/rtpaudio2/rtpaudio/breakdetector.h
+   M /trunk/rtpaudio2/rtpaudio/ext_socket.h
+   M /trunk/rtpaudio2/rtpaudio/multitimerthread.h
+   M /trunk/rtpaudio2/rtpaudio/multitimerthread.icc
+   M /trunk/rtpaudio2/rtpaudio/packetaddress.cc
+   M /trunk/rtpaudio2/rtpaudio/packetaddress.h
+   M /trunk/rtpaudio2/rtpaudio/packetaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/range.cc
+   M /trunk/rtpaudio2/rtpaudio/range.h
+   M /trunk/rtpaudio2/rtpaudio/range.icc
+   M /trunk/rtpaudio2/rtpaudio/ringbuffer.cc
+   M /trunk/rtpaudio2/rtpaudio/ringbuffer.h
+   M /trunk/rtpaudio2/rtpaudio/ringbuffer.icc
+   M /trunk/rtpaudio2/rtpaudio/streamsrcdest.cc
+   M /trunk/rtpaudio2/rtpaudio/streamsrcdest.h
+   M /trunk/rtpaudio2/rtpaudio/tdsocket.cc
+   M /trunk/rtpaudio2/rtpaudio/tdsocket.h
+   M /trunk/rtpaudio2/rtpaudio/tdsocket.icc
+   M /trunk/rtpaudio2/rtpaudio/timedthread.cc
+   M /trunk/rtpaudio2/rtpaudio/timedthread.h
+   M /trunk/rtpaudio2/rtpaudio/timedthread.icc
+   M /trunk/rtpaudio2/rtpaudio/trafficclassvalues.cc
+   M /trunk/rtpaudio2/rtpaudio/trafficclassvalues.h
+   M /trunk/rtpaudio2/rtpaudio/trafficclassvalues.icc
+
+- Merged files from cppsocketapi.
+- Some small fixes.
+
+------------------------------------------------------------------------
+r1166 | dreibh | 2011-12-10 21:55:06 +0100 (Sat, 10 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/rtcppacket.h
+
+Some fixes.
+
+------------------------------------------------------------------------
+r1165 | dreibh | 2011-12-10 21:53:48 +0100 (Sat, 10 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/multiaudiowriter.cc
+   M /trunk/rtpaudio2/rtpaudio/wavaudioreader.cc
+
+Minor fixes.
+
+------------------------------------------------------------------------
+r1164 | dreibh | 2011-12-10 21:24:30 +0100 (Sat, 10 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/AUTHORS
+   A /trunk/rtpaudio2/COPYING (from /trunk/subnetcalc/COPYING:1156)
+   A /trunk/rtpaudio2/INSTALL (from /trunk/subnetcalc/INSTALL:1156)
+   M /trunk/rtpaudio2/configure.in
+   M /trunk/rtpaudio2/rtpaudio/abstractlayerdescription.cc
+   M /trunk/rtpaudio2/rtpaudio/abstractlayerdescription.h
+   M /trunk/rtpaudio2/rtpaudio/abstractlayerdescription.icc
+   M /trunk/rtpaudio2/rtpaudio/abstractqosdescription.cc
+   M /trunk/rtpaudio2/rtpaudio/abstractqosdescription.h
+   M /trunk/rtpaudio2/rtpaudio/abstractqosdescription.icc
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiodecoder.cc
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiodecoder.h
+   M /trunk/rtpaudio2/rtpaudio/advancedaudioencoder.cc
+   M /trunk/rtpaudio2/rtpaudio/advancedaudioencoder.h
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiopacket.cc
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiopacket.h
+   M /trunk/rtpaudio2/rtpaudio/audioclient.cc
+   M /trunk/rtpaudio2/rtpaudio/audioclient.h
+   M /trunk/rtpaudio2/rtpaudio/audioclient.icc
+   M /trunk/rtpaudio2/rtpaudio/audioclientapppacket.cc
+   M /trunk/rtpaudio2/rtpaudio/audioclientapppacket.h
+   M /trunk/rtpaudio2/rtpaudio/audioconverter.cc
+   M /trunk/rtpaudio2/rtpaudio/audioconverter.h
+   M /trunk/rtpaudio2/rtpaudio/audiodebug.cc
+   M /trunk/rtpaudio2/rtpaudio/audiodebug.h
+   M /trunk/rtpaudio2/rtpaudio/audiodecoderinterface.h
+   M /trunk/rtpaudio2/rtpaudio/audiodecoderrepository.cc
+   M /trunk/rtpaudio2/rtpaudio/audiodecoderrepository.h
+   M /trunk/rtpaudio2/rtpaudio/audiodecoderrepository.icc
+   M /trunk/rtpaudio2/rtpaudio/audiodevice.cc
+   M /trunk/rtpaudio2/rtpaudio/audiodevice.h
+   M /trunk/rtpaudio2/rtpaudio/audiodevice.icc
+   M /trunk/rtpaudio2/rtpaudio/audioencoderinterface.h
+   M /trunk/rtpaudio2/rtpaudio/audioencoderrepository.cc
+   M /trunk/rtpaudio2/rtpaudio/audioencoderrepository.h
+   M /trunk/rtpaudio2/rtpaudio/audioencoderrepository.icc
+   M /trunk/rtpaudio2/rtpaudio/audiomixer.cc
+   M /trunk/rtpaudio2/rtpaudio/audiomixer.h
+   M /trunk/rtpaudio2/rtpaudio/audiomixer.icc
+   M /trunk/rtpaudio2/rtpaudio/audionull.cc
+   M /trunk/rtpaudio2/rtpaudio/audionull.h
+   M /trunk/rtpaudio2/rtpaudio/audioquality.cc
+   M /trunk/rtpaudio2/rtpaudio/audioquality.h
+   M /trunk/rtpaudio2/rtpaudio/audioquality.icc
+   M /trunk/rtpaudio2/rtpaudio/audioqualityinterface.h
+   M /trunk/rtpaudio2/rtpaudio/audioqualityinterface.icc
+   M /trunk/rtpaudio2/rtpaudio/audioreaderinterface.cc
+   M /trunk/rtpaudio2/rtpaudio/audioreaderinterface.h
+   M /trunk/rtpaudio2/rtpaudio/audioserver.cc
+   M /trunk/rtpaudio2/rtpaudio/audioserver.h
+   M /trunk/rtpaudio2/rtpaudio/audioserver.icc
+   M /trunk/rtpaudio2/rtpaudio/audiowriterinterface.cc
+   M /trunk/rtpaudio2/rtpaudio/audiowriterinterface.h
+   M /trunk/rtpaudio2/rtpaudio/avsender.cc
+   M /trunk/rtpaudio2/rtpaudio/bandwidthinfo.cc
+   M /trunk/rtpaudio2/rtpaudio/bandwidthinfo.h
+   M /trunk/rtpaudio2/rtpaudio/bandwidthinfo.icc
+   M /trunk/rtpaudio2/rtpaudio/bandwidthmanager.h
+   M /trunk/rtpaudio2/rtpaudio/breakdetector.cc
+   M /trunk/rtpaudio2/rtpaudio/breakdetector.h
+   M /trunk/rtpaudio2/rtpaudio/cbrframesizescalability.cc
+   M /trunk/rtpaudio2/rtpaudio/cbrframesizescalability.h
+   M /trunk/rtpaudio2/rtpaudio/client.cc
+   M /trunk/rtpaudio2/rtpaudio/condition.cc
+   M /trunk/rtpaudio2/rtpaudio/condition.h
+   M /trunk/rtpaudio2/rtpaudio/condition.icc
+   M /trunk/rtpaudio2/rtpaudio/decoderinterface.cc
+   M /trunk/rtpaudio2/rtpaudio/decoderinterface.h
+   M /trunk/rtpaudio2/rtpaudio/decoderrepositoryinterface.h
+   M /trunk/rtpaudio2/rtpaudio/encoderinfo.cc
+   M /trunk/rtpaudio2/rtpaudio/encoderinterface.cc
+   M /trunk/rtpaudio2/rtpaudio/encoderinterface.h
+   M /trunk/rtpaudio2/rtpaudio/encoderrepositoryinterface.h
+   M /trunk/rtpaudio2/rtpaudio/ext_socket.h
+   M /trunk/rtpaudio2/rtpaudio/extsocketdescriptor.h
+   M /trunk/rtpaudio2/rtpaudio/fft.cc
+   M /trunk/rtpaudio2/rtpaudio/fft.h
+   M /trunk/rtpaudio2/rtpaudio/frameratescalabilityinterface.h
+   M /trunk/rtpaudio2/rtpaudio/framesizescalabilityinterface.h
+   M /trunk/rtpaudio2/rtpaudio/genericframesizescalability.cc
+   M /trunk/rtpaudio2/rtpaudio/genericframesizescalability.h
+   M /trunk/rtpaudio2/rtpaudio/internetaddress.cc
+   M /trunk/rtpaudio2/rtpaudio/internetaddress.h
+   M /trunk/rtpaudio2/rtpaudio/internetaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/internetflow.cc
+   M /trunk/rtpaudio2/rtpaudio/internetflow.h
+   M /trunk/rtpaudio2/rtpaudio/internetflow.icc
+   M /trunk/rtpaudio2/rtpaudio/managedstreaminterface.h
+   M /trunk/rtpaudio2/rtpaudio/mediainfo.cc
+   M /trunk/rtpaudio2/rtpaudio/mediainfo.h
+   M /trunk/rtpaudio2/rtpaudio/mp3audioreader.cc
+   M /trunk/rtpaudio2/rtpaudio/mp3audioreader.h
+   M /trunk/rtpaudio2/rtpaudio/multiaudioreader.cc
+   M /trunk/rtpaudio2/rtpaudio/multiaudioreader.h
+   M /trunk/rtpaudio2/rtpaudio/multiaudiowriter.cc
+   M /trunk/rtpaudio2/rtpaudio/multiaudiowriter.h
+   M /trunk/rtpaudio2/rtpaudio/multitimerthread.h
+   M /trunk/rtpaudio2/rtpaudio/multitimerthread.icc
+   M /trunk/rtpaudio2/rtpaudio/packetaddress.cc
+   M /trunk/rtpaudio2/rtpaudio/packetaddress.h
+   M /trunk/rtpaudio2/rtpaudio/packetaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/portableaddress.h
+   M /trunk/rtpaudio2/rtpaudio/portableaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/qaudiomixer.cc
+   M /trunk/rtpaudio2/rtpaudio/qaudiomixer.h
+   M /trunk/rtpaudio2/rtpaudio/qclient.cc
+   M /trunk/rtpaudio2/rtpaudio/qclient.h
+   M /trunk/rtpaudio2/rtpaudio/qinfotabwidget.cc
+   M /trunk/rtpaudio2/rtpaudio/qinfotabwidget.h
+   M /trunk/rtpaudio2/rtpaudio/qspectrumanalyzer.cc
+   M /trunk/rtpaudio2/rtpaudio/qspectrumanalyzer.h
+   M /trunk/rtpaudio2/rtpaudio/randomizer.cc
+   M /trunk/rtpaudio2/rtpaudio/randomizer.h
+   M /trunk/rtpaudio2/rtpaudio/randomizer.icc
+   M /trunk/rtpaudio2/rtpaudio/range.cc
+   M /trunk/rtpaudio2/rtpaudio/range.h
+   M /trunk/rtpaudio2/rtpaudio/range.icc
+   M /trunk/rtpaudio2/rtpaudio/resourceutilizationpoint.cc
+   M /trunk/rtpaudio2/rtpaudio/resourceutilizationpoint.h
+   M /trunk/rtpaudio2/rtpaudio/resourceutilizationpoint.icc
+   M /trunk/rtpaudio2/rtpaudio/ringbuffer.cc
+   M /trunk/rtpaudio2/rtpaudio/ringbuffer.h
+   M /trunk/rtpaudio2/rtpaudio/ringbuffer.icc
+   M /trunk/rtpaudio2/rtpaudio/rtcpabstractserver.cc
+   M /trunk/rtpaudio2/rtpaudio/rtcpabstractserver.h
+   M /trunk/rtpaudio2/rtpaudio/rtcpabstractserver.icc
+   M /trunk/rtpaudio2/rtpaudio/rtcppacket.cc
+   M /trunk/rtpaudio2/rtpaudio/rtcppacket.h
+   M /trunk/rtpaudio2/rtpaudio/rtcppacket.icc
+   M /trunk/rtpaudio2/rtpaudio/rtcpreceiver.cc
+   M /trunk/rtpaudio2/rtpaudio/rtcpreceiver.h
+   M /trunk/rtpaudio2/rtpaudio/rtcpsender.cc
+   M /trunk/rtpaudio2/rtpaudio/rtcpsender.h
+   M /trunk/rtpaudio2/rtpaudio/rtppacket.cc
+   M /trunk/rtpaudio2/rtpaudio/rtppacket.h
+   M /trunk/rtpaudio2/rtpaudio/rtppacket.icc
+   M /trunk/rtpaudio2/rtpaudio/rtpreceiver.cc
+   M /trunk/rtpaudio2/rtpaudio/rtpreceiver.h
+   M /trunk/rtpaudio2/rtpaudio/rtpreceiver.icc
+   M /trunk/rtpaudio2/rtpaudio/rtpsender.cc
+   M /trunk/rtpaudio2/rtpaudio/rtpsender.h
+   M /trunk/rtpaudio2/rtpaudio/rtpsender.icc
+   M /trunk/rtpaudio2/rtpaudio/s2.cc
+   M /trunk/rtpaudio2/rtpaudio/seqnumvalidator.cc
+   M /trunk/rtpaudio2/rtpaudio/seqnumvalidator.h
+   M /trunk/rtpaudio2/rtpaudio/seqnumvalidator.icc
+   M /trunk/rtpaudio2/rtpaudio/server.cc
+   M /trunk/rtpaudio2/rtpaudio/simpleaudiodecoder.cc
+   M /trunk/rtpaudio2/rtpaudio/simpleaudiodecoder.h
+   M /trunk/rtpaudio2/rtpaudio/simpleaudioencoder.cc
+   M /trunk/rtpaudio2/rtpaudio/simpleaudioencoder.h
+   M /trunk/rtpaudio2/rtpaudio/simpleaudiopacket.cc
+   M /trunk/rtpaudio2/rtpaudio/simpleaudiopacket.h
+   M /trunk/rtpaudio2/rtpaudio/socketaddress.cc
+   M /trunk/rtpaudio2/rtpaudio/socketaddress.h
+   M /trunk/rtpaudio2/rtpaudio/socketaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/sourcestateinfo.cc
+   M /trunk/rtpaudio2/rtpaudio/sourcestateinfo.h
+   M /trunk/rtpaudio2/rtpaudio/sourcestateinfo.icc
+   M /trunk/rtpaudio2/rtpaudio/spectrumanalyzer.cc
+   M /trunk/rtpaudio2/rtpaudio/spectrumanalyzer.h
+   M /trunk/rtpaudio2/rtpaudio/streamsrcdest.cc
+   M /trunk/rtpaudio2/rtpaudio/streamsrcdest.h
+   M /trunk/rtpaudio2/rtpaudio/synchronizable.cc
+   M /trunk/rtpaudio2/rtpaudio/synchronizable.h
+   M /trunk/rtpaudio2/rtpaudio/synchronizable.icc
+   D /trunk/rtpaudio2/rtpaudio/t1.cc
+   D /trunk/rtpaudio2/rtpaudio/t2.cc
+   D /trunk/rtpaudio2/rtpaudio/t3.cc
+   D /trunk/rtpaudio2/rtpaudio/t4.cc
+   D /trunk/rtpaudio2/rtpaudio/t5.cc
+   D /trunk/rtpaudio2/rtpaudio/t6.cc
+   M /trunk/rtpaudio2/rtpaudio/tdin6.h
+   M /trunk/rtpaudio2/rtpaudio/tdmessage.h
+   M /trunk/rtpaudio2/rtpaudio/tdmessage.icc
+   M /trunk/rtpaudio2/rtpaudio/tdsocket.cc
+   M /trunk/rtpaudio2/rtpaudio/tdsocket.h
+   M /trunk/rtpaudio2/rtpaudio/tdsocket.icc
+   M /trunk/rtpaudio2/rtpaudio/tdstrings.cc
+   M /trunk/rtpaudio2/rtpaudio/tdstrings.h
+   M /trunk/rtpaudio2/rtpaudio/tdstrings.icc
+   M /trunk/rtpaudio2/rtpaudio/tdsystem.h
+   M /trunk/rtpaudio2/rtpaudio/thread.cc
+   M /trunk/rtpaudio2/rtpaudio/thread.h
+   M /trunk/rtpaudio2/rtpaudio/thread.icc
+   M /trunk/rtpaudio2/rtpaudio/timedthread.cc
+   M /trunk/rtpaudio2/rtpaudio/timedthread.h
+   M /trunk/rtpaudio2/rtpaudio/timedthread.icc
+   M /trunk/rtpaudio2/rtpaudio/tools.cc
+   M /trunk/rtpaudio2/rtpaudio/tools.h
+   M /trunk/rtpaudio2/rtpaudio/tools.icc
+   M /trunk/rtpaudio2/rtpaudio/trafficclassvalues.cc
+   M /trunk/rtpaudio2/rtpaudio/trafficclassvalues.h
+   M /trunk/rtpaudio2/rtpaudio/trafficclassvalues.icc
+   M /trunk/rtpaudio2/rtpaudio/trafficshaper.cc
+   M /trunk/rtpaudio2/rtpaudio/trafficshaper.h
+   M /trunk/rtpaudio2/rtpaudio/trafficshaper.icc
+   M /trunk/rtpaudio2/rtpaudio/unixaddress.cc
+   M /trunk/rtpaudio2/rtpaudio/unixaddress.h
+   M /trunk/rtpaudio2/rtpaudio/unixaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/vclient.cc
+   M /trunk/rtpaudio2/rtpaudio/wavaudioreader.cc
+   M /trunk/rtpaudio2/rtpaudio/wavaudioreader.h
+
+Header updates.
+
+------------------------------------------------------------------------
+r1163 | dreibh | 2011-12-10 20:57:20 +0100 (Sat, 10 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/qaudiomixer.cc
+   M /trunk/rtpaudio2/rtpaudio/qclient.cc
+
+Minor fixes.
+
+------------------------------------------------------------------------
+r1162 | dreibh | 2011-12-10 20:46:24 +0100 (Sat, 10 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/qspectrumanalyzer.cc
+   M /trunk/rtpaudio2/rtpaudio/qspectrumanalyzer.h
+
+Made QSpectrumAnalyzer class working again.
+
+------------------------------------------------------------------------
+r1161 | dreibh | 2011-12-10 20:11:57 +0100 (Sat, 10 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/qaudiomixer.cc
+   M /trunk/rtpaudio2/rtpaudio/qclient.cc
+
+Some layout fixes.
+
+------------------------------------------------------------------------
+r1160 | dreibh | 2011-12-10 19:40:29 +0100 (Sat, 10 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/qclient.cc
+
+UTF-8 handling fix.
+
+------------------------------------------------------------------------
+r1159 | dreibh | 2011-12-10 19:40:16 +0100 (Sat, 10 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/qclient.cc
+
+Some layout fixes.
+
+------------------------------------------------------------------------
+r1158 | dreibh | 2011-12-10 19:14:03 +0100 (Sat, 10 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/qclient.cc
+   M /trunk/rtpaudio2/rtpaudio/qclient.h
+   M /trunk/rtpaudio2/rtpaudio/qinfotabwidget.cc
+   M /trunk/rtpaudio2/rtpaudio/qinfotabwidget.h
+   M /trunk/rtpaudio2/rtpaudio/qspectrumanalyzer.cc
+
+It compiles again!
+
+------------------------------------------------------------------------
+r1157 | dreibh | 2011-12-09 19:11:56 +0100 (Fri, 09 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/qaudiomixer.cc
+   M /trunk/rtpaudio2/rtpaudio/qclient.cc
+   M /trunk/rtpaudio2/rtpaudio/qclient.h
+   M /trunk/rtpaudio2/rtpaudio/qinfotabwidget.h
+   M /trunk/rtpaudio2/rtpaudio/qspectrumanalyzer.cc
+
+Some compile fixes. Still not compiling.
+
+------------------------------------------------------------------------
+r1156 | dreibh | 2011-12-06 15:23:57 +0100 (Tue, 06 Dec 2011) | 2 lines
+Changed paths:
+   A /trunk/rtpaudio2/rtpaudio/Test-MP3s
+   A /trunk/rtpaudio2/rtpaudio/Test-MP3s/BornToBeWild.mp3
+   A /trunk/rtpaudio2/rtpaudio/Test-MP3s/GoWest.mp3
+   A /trunk/rtpaudio2/rtpaudio/Test-MP3s/Hellraiser.mp3
+   A /trunk/rtpaudio2/rtpaudio/Test-MP3s/HighwayToHell.mp3
+   A /trunk/rtpaudio2/rtpaudio/Test-MP3s/SanFrancisco.mp3
+
+Added test media files.
+
+------------------------------------------------------------------------
+r1155 | dreibh | 2011-12-06 15:23:39 +0100 (Tue, 06 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/Test.list
+   M /trunk/rtpaudio2/rtpaudio/qaudiomixer.cc
+   M /trunk/rtpaudio2/rtpaudio/qaudiomixer.h
+   M /trunk/rtpaudio2/rtpaudio/qclient.cc
+   M /trunk/rtpaudio2/rtpaudio/qclient.h
+   M /trunk/rtpaudio2/rtpaudio/qinfotabwidget.cc
+   M /trunk/rtpaudio2/rtpaudio/qinfotabwidget.h
+   M /trunk/rtpaudio2/rtpaudio/qspectrumanalyzer.cc
+   M /trunk/rtpaudio2/rtpaudio/qspectrumanalyzer.h
+
+Qt 4.x compile fixes. Incomplete yet.
+
+------------------------------------------------------------------------
+r1154 | dreibh | 2011-12-06 15:23:23 +0100 (Tue, 06 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/audiodevice.cc
+   M /trunk/rtpaudio2/rtpaudio/multiaudioreader.cc
+
+Minor updates.
+
+------------------------------------------------------------------------
+r1153 | dreibh | 2011-12-06 15:22:09 +0100 (Tue, 06 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/acinclude.m4
+
+Copied Qt detection fix from rsplib.
+
+------------------------------------------------------------------------
+r1152 | dreibh | 2011-12-06 15:21:51 +0100 (Tue, 06 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/rtcppacket.h
+   M /trunk/rtpaudio2/rtpaudio/rtcpreceiver.cc
+   M /trunk/rtpaudio2/rtpaudio/rtppacket.h
+
+Packet handling improvement.
+
+------------------------------------------------------------------------
+r1028 | dreibh | 2011-05-03 19:46:53 +0200 (Tue, 03 May 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/acinclude.m4
+   D /trunk/rtpaudio2/aclocal.m4
+   D /trunk/rtpaudio2/configure
+
+Updated configure scripts.
+
+------------------------------------------------------------------------
+r1021 | dreibh | 2011-04-28 08:51:45 +0200 (Thu, 28 Apr 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiodecoder.cc
+   M /trunk/rtpaudio2/rtpaudio/audioquality.cc
+   M /trunk/rtpaudio2/rtpaudio/client.cc
+   M /trunk/rtpaudio2/rtpaudio/mp3audioreader.cc
+   M /trunk/rtpaudio2/rtpaudio/simpleaudiodecoder.cc
+
+More compile fixes.
+
+------------------------------------------------------------------------
+r1020 | dreibh | 2011-04-28 08:42:18 +0200 (Thu, 28 Apr 2011) | 2 lines
+Changed paths:
+   M /trunk/rtpaudio2/aclocal.m4
+   M /trunk/rtpaudio2/autogen.sh
+   A /trunk/rtpaudio2/bootstrap
+   M /trunk/rtpaudio2/configure
+   M /trunk/rtpaudio2/configure.in
+   M /trunk/rtpaudio2/rtpaudio/Makefile.am
+   M /trunk/rtpaudio2/rtpaudio/advancedaudioencoder.cc
+   M /trunk/rtpaudio2/rtpaudio/client.cc
+   M /trunk/rtpaudio2/rtpaudio/internetaddress.cc
+   M /trunk/rtpaudio2/rtpaudio/internetaddress.h
+   M /trunk/rtpaudio2/rtpaudio/internetaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/resourceutilizationpoint.cc
+   M /trunk/rtpaudio2/rtpaudio/simpleaudioencoder.cc
+   M /trunk/rtpaudio2/rtpaudio/tdsocket.cc
+   M /trunk/rtpaudio2/rtpaudio/tdstrings.cc
+   M /trunk/rtpaudio2/rtpaudio/trafficshaper.cc
+
+Updated files to compile under Ubuntu Natty.
+
+------------------------------------------------------------------------
+r125 | dreibh | 2007-02-01 20:23:42 +0100 (Thu, 01 Feb 2007) | 1 line
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/AudioServer.config
+   M /trunk/rtpaudio2/rtpaudio/Test.list
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiodecoder.cc
+   M /trunk/rtpaudio2/rtpaudio/advancedaudioencoder.cc
+   M /trunk/rtpaudio2/rtpaudio/advancedaudioencoder.h
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiopacket.cc
+   M /trunk/rtpaudio2/rtpaudio/audioclient.cc
+   M /trunk/rtpaudio2/rtpaudio/audioclient.h
+   M /trunk/rtpaudio2/rtpaudio/audioencoderrepository.cc
+   M /trunk/rtpaudio2/rtpaudio/audioencoderrepository.h
+   M /trunk/rtpaudio2/rtpaudio/audioserver.cc
+   M /trunk/rtpaudio2/rtpaudio/audioserver.h
+   M /trunk/rtpaudio2/rtpaudio/client.cc
+   M /trunk/rtpaudio2/rtpaudio/condition.cc
+   M /trunk/rtpaudio2/rtpaudio/condition.h
+   M /trunk/rtpaudio2/rtpaudio/encoderinterface.h
+   A /trunk/rtpaudio2/rtpaudio/info.xpm
+   M /trunk/rtpaudio2/rtpaudio/multiaudioreader.cc
+   A /trunk/rtpaudio2/rtpaudio/pinguin.xpm
+   M /trunk/rtpaudio2/rtpaudio/qclient.cc
+   M /trunk/rtpaudio2/rtpaudio/ringbuffer.cc
+   M /trunk/rtpaudio2/rtpaudio/rtcpsender.cc
+   M /trunk/rtpaudio2/rtpaudio/rtpsender.cc
+   M /trunk/rtpaudio2/rtpaudio/rtpsender.h
+   M /trunk/rtpaudio2/rtpaudio/server.cc
+   M /trunk/rtpaudio2/rtpaudio/simpleaudioencoder.cc
+   M /trunk/rtpaudio2/rtpaudio/simpleaudioencoder.h
+
+
+------------------------------------------------------------------------
+r124 | dreibh | 2007-02-01 15:29:42 +0100 (Thu, 01 Feb 2007) | 1 line
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/server.cc
+
+
+------------------------------------------------------------------------
+r123 | dreibh | 2007-02-01 15:26:03 +0100 (Thu, 01 Feb 2007) | 1 line
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/Makefile.am
+   M /trunk/rtpaudio2/rtpaudio/abstractqosdescription.cc
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiodecoder.cc
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiodecoder.h
+   M /trunk/rtpaudio2/rtpaudio/advancedaudioencoder.cc
+   M /trunk/rtpaudio2/rtpaudio/audioclient.cc
+   M /trunk/rtpaudio2/rtpaudio/audioclient.h
+   M /trunk/rtpaudio2/rtpaudio/audioconverter.cc
+   M /trunk/rtpaudio2/rtpaudio/audiodebug.cc
+   M /trunk/rtpaudio2/rtpaudio/audiodecoderrepository.cc
+   M /trunk/rtpaudio2/rtpaudio/audiodecoderrepository.h
+   M /trunk/rtpaudio2/rtpaudio/audiodevice.cc
+   M /trunk/rtpaudio2/rtpaudio/audioencoderrepository.cc
+   M /trunk/rtpaudio2/rtpaudio/audioencoderrepository.h
+   M /trunk/rtpaudio2/rtpaudio/audiomixer.cc
+   M /trunk/rtpaudio2/rtpaudio/audioquality.cc
+   M /trunk/rtpaudio2/rtpaudio/audioquality.h
+   M /trunk/rtpaudio2/rtpaudio/audioserver.cc
+   M /trunk/rtpaudio2/rtpaudio/audioserver.h
+   M /trunk/rtpaudio2/rtpaudio/bandwidthinfo.cc
+   M /trunk/rtpaudio2/rtpaudio/breakdetector.cc
+   M /trunk/rtpaudio2/rtpaudio/breakdetector.h
+   M /trunk/rtpaudio2/rtpaudio/cbrframesizescalability.cc
+   M /trunk/rtpaudio2/rtpaudio/client.cc
+   M /trunk/rtpaudio2/rtpaudio/condition.cc
+   M /trunk/rtpaudio2/rtpaudio/condition.h
+   M /trunk/rtpaudio2/rtpaudio/condition.icc
+   M /trunk/rtpaudio2/rtpaudio/extsocketdescriptor.h
+   M /trunk/rtpaudio2/rtpaudio/fft.cc
+   M /trunk/rtpaudio2/rtpaudio/genericframesizescalability.cc
+   M /trunk/rtpaudio2/rtpaudio/internetaddress.cc
+   M /trunk/rtpaudio2/rtpaudio/internetaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/internetflow.cc
+   M /trunk/rtpaudio2/rtpaudio/mediainfo.cc
+   M /trunk/rtpaudio2/rtpaudio/mp3audioreader.cc
+   M /trunk/rtpaudio2/rtpaudio/multiaudioreader.cc
+   M /trunk/rtpaudio2/rtpaudio/multiaudioreader.h
+   M /trunk/rtpaudio2/rtpaudio/multiaudiowriter.cc
+   M /trunk/rtpaudio2/rtpaudio/multiaudiowriter.h
+   D /trunk/rtpaudio2/rtpaudio/multitimerthread.cc
+   M /trunk/rtpaudio2/rtpaudio/multitimerthread.h
+   M /trunk/rtpaudio2/rtpaudio/multitimerthread.icc
+   M /trunk/rtpaudio2/rtpaudio/packetaddress.cc
+   M /trunk/rtpaudio2/rtpaudio/packetaddress.h
+   M /trunk/rtpaudio2/rtpaudio/packetaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/portableaddress.h
+   M /trunk/rtpaudio2/rtpaudio/portableaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/qaudiomixer.cc
+   M /trunk/rtpaudio2/rtpaudio/qclient.cc
+   M /trunk/rtpaudio2/rtpaudio/qinfotabwidget.cc
+   M /trunk/rtpaudio2/rtpaudio/randomizer.cc
+   M /trunk/rtpaudio2/rtpaudio/randomizer.h
+   M /trunk/rtpaudio2/rtpaudio/randomizer.icc
+   M /trunk/rtpaudio2/rtpaudio/range.cc
+   M /trunk/rtpaudio2/rtpaudio/range.h
+   M /trunk/rtpaudio2/rtpaudio/range.icc
+   M /trunk/rtpaudio2/rtpaudio/resourceutilizationpoint.cc
+   M /trunk/rtpaudio2/rtpaudio/ringbuffer.cc
+   M /trunk/rtpaudio2/rtpaudio/ringbuffer.h
+   M /trunk/rtpaudio2/rtpaudio/ringbuffer.icc
+   M /trunk/rtpaudio2/rtpaudio/rtcpabstractserver.cc
+   M /trunk/rtpaudio2/rtpaudio/rtcpabstractserver.h
+   M /trunk/rtpaudio2/rtpaudio/rtcpreceiver.cc
+   M /trunk/rtpaudio2/rtpaudio/rtcpsender.cc
+   M /trunk/rtpaudio2/rtpaudio/rtcpsender.h
+   M /trunk/rtpaudio2/rtpaudio/rtppacket.cc
+   M /trunk/rtpaudio2/rtpaudio/rtpreceiver.cc
+   M /trunk/rtpaudio2/rtpaudio/rtpsender.cc
+   M /trunk/rtpaudio2/rtpaudio/server.cc
+   M /trunk/rtpaudio2/rtpaudio/simpleaudioencoder.cc
+   M /trunk/rtpaudio2/rtpaudio/socketaddress.cc
+   M /trunk/rtpaudio2/rtpaudio/socketaddress.h
+   M /trunk/rtpaudio2/rtpaudio/socketaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/spectrumanalyzer.cc
+   A /trunk/rtpaudio2/rtpaudio/staticglobals.cc
+   M /trunk/rtpaudio2/rtpaudio/streamsrcdest.cc
+   M /trunk/rtpaudio2/rtpaudio/streamsrcdest.h
+   M /trunk/rtpaudio2/rtpaudio/synchronizable.cc
+   M /trunk/rtpaudio2/rtpaudio/synchronizable.h
+   M /trunk/rtpaudio2/rtpaudio/synchronizable.icc
+   M /trunk/rtpaudio2/rtpaudio/tdin6.h
+   M /trunk/rtpaudio2/rtpaudio/tdmessage.h
+   M /trunk/rtpaudio2/rtpaudio/tdmessage.icc
+   M /trunk/rtpaudio2/rtpaudio/tdsocket.cc
+   M /trunk/rtpaudio2/rtpaudio/tdstrings.cc
+   M /trunk/rtpaudio2/rtpaudio/tdstrings.h
+   M /trunk/rtpaudio2/rtpaudio/tdstrings.icc
+   M /trunk/rtpaudio2/rtpaudio/tdsystem.h
+   M /trunk/rtpaudio2/rtpaudio/thread.cc
+   M /trunk/rtpaudio2/rtpaudio/thread.h
+   M /trunk/rtpaudio2/rtpaudio/thread.icc
+   M /trunk/rtpaudio2/rtpaudio/timedthread.cc
+   M /trunk/rtpaudio2/rtpaudio/timedthread.h
+   M /trunk/rtpaudio2/rtpaudio/timedthread.icc
+   M /trunk/rtpaudio2/rtpaudio/tools.cc
+   M /trunk/rtpaudio2/rtpaudio/tools.h
+   M /trunk/rtpaudio2/rtpaudio/tools.icc
+   M /trunk/rtpaudio2/rtpaudio/trafficclassvalues.cc
+   M /trunk/rtpaudio2/rtpaudio/trafficclassvalues.h
+   M /trunk/rtpaudio2/rtpaudio/trafficclassvalues.icc
+   M /trunk/rtpaudio2/rtpaudio/trafficshaper.cc
+   M /trunk/rtpaudio2/rtpaudio/trafficshaper.h
+   M /trunk/rtpaudio2/rtpaudio/unixaddress.cc
+   M /trunk/rtpaudio2/rtpaudio/unixaddress.h
+   M /trunk/rtpaudio2/rtpaudio/unixaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/wavaudioreader.cc
+
+
+------------------------------------------------------------------------
+r122 | dreibh | 2007-02-01 13:12:12 +0100 (Thu, 01 Feb 2007) | 1 line
+Changed paths:
+   M /trunk/rtpaudio2/rtpaudio/Makefile.am
+   M /trunk/rtpaudio2/rtpaudio/abstractlayerdescription.cc
+   M /trunk/rtpaudio2/rtpaudio/abstractlayerdescription.h
+   M /trunk/rtpaudio2/rtpaudio/abstractlayerdescription.icc
+   M /trunk/rtpaudio2/rtpaudio/abstractqosdescription.cc
+   M /trunk/rtpaudio2/rtpaudio/abstractqosdescription.h
+   M /trunk/rtpaudio2/rtpaudio/abstractqosdescription.icc
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiodecoder.cc
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiodecoder.h
+   M /trunk/rtpaudio2/rtpaudio/advancedaudioencoder.cc
+   M /trunk/rtpaudio2/rtpaudio/advancedaudioencoder.h
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiopacket.cc
+   M /trunk/rtpaudio2/rtpaudio/advancedaudiopacket.h
+   M /trunk/rtpaudio2/rtpaudio/audioclient.cc
+   M /trunk/rtpaudio2/rtpaudio/audioclient.h
+   M /trunk/rtpaudio2/rtpaudio/audioclient.icc
+   M /trunk/rtpaudio2/rtpaudio/audioclientapppacket.cc
+   M /trunk/rtpaudio2/rtpaudio/audioclientapppacket.h
+   M /trunk/rtpaudio2/rtpaudio/audioconverter.cc
+   M /trunk/rtpaudio2/rtpaudio/audioconverter.h
+   M /trunk/rtpaudio2/rtpaudio/audiodebug.cc
+   M /trunk/rtpaudio2/rtpaudio/audiodebug.h
+   M /trunk/rtpaudio2/rtpaudio/audiodecoderinterface.h
+   M /trunk/rtpaudio2/rtpaudio/audiodecoderrepository.cc
+   M /trunk/rtpaudio2/rtpaudio/audiodecoderrepository.h
+   M /trunk/rtpaudio2/rtpaudio/audiodecoderrepository.icc
+   M /trunk/rtpaudio2/rtpaudio/audiodevice.cc
+   M /trunk/rtpaudio2/rtpaudio/audiodevice.h
+   M /trunk/rtpaudio2/rtpaudio/audiodevice.icc
+   M /trunk/rtpaudio2/rtpaudio/audioencoderinterface.h
+   M /trunk/rtpaudio2/rtpaudio/audioencoderrepository.cc
+   M /trunk/rtpaudio2/rtpaudio/audioencoderrepository.h
+   M /trunk/rtpaudio2/rtpaudio/audioencoderrepository.icc
+   M /trunk/rtpaudio2/rtpaudio/audiomixer.cc
+   M /trunk/rtpaudio2/rtpaudio/audiomixer.h
+   M /trunk/rtpaudio2/rtpaudio/audiomixer.icc
+   M /trunk/rtpaudio2/rtpaudio/audionull.cc
+   M /trunk/rtpaudio2/rtpaudio/audionull.h
+   M /trunk/rtpaudio2/rtpaudio/audioquality.cc
+   M /trunk/rtpaudio2/rtpaudio/audioquality.h
+   M /trunk/rtpaudio2/rtpaudio/audioquality.icc
+   M /trunk/rtpaudio2/rtpaudio/audioqualityinterface.h
+   M /trunk/rtpaudio2/rtpaudio/audioqualityinterface.icc
+   M /trunk/rtpaudio2/rtpaudio/audioreaderinterface.cc
+   M /trunk/rtpaudio2/rtpaudio/audioreaderinterface.h
+   M /trunk/rtpaudio2/rtpaudio/audioserver.cc
+   M /trunk/rtpaudio2/rtpaudio/audioserver.h
+   M /trunk/rtpaudio2/rtpaudio/audioserver.icc
+   M /trunk/rtpaudio2/rtpaudio/audiowriterinterface.cc
+   M /trunk/rtpaudio2/rtpaudio/audiowriterinterface.h
+   M /trunk/rtpaudio2/rtpaudio/avsender.cc
+   M /trunk/rtpaudio2/rtpaudio/bandwidthinfo.cc
+   M /trunk/rtpaudio2/rtpaudio/bandwidthinfo.h
+   M /trunk/rtpaudio2/rtpaudio/bandwidthinfo.icc
+   M /trunk/rtpaudio2/rtpaudio/bandwidthmanager.h
+   M /trunk/rtpaudio2/rtpaudio/cbrframesizescalability.cc
+   M /trunk/rtpaudio2/rtpaudio/cbrframesizescalability.h
+   M /trunk/rtpaudio2/rtpaudio/client.cc
+   M /trunk/rtpaudio2/rtpaudio/decoderinterface.cc
+   M /trunk/rtpaudio2/rtpaudio/decoderinterface.h
+   M /trunk/rtpaudio2/rtpaudio/decoderrepositoryinterface.h
+   M /trunk/rtpaudio2/rtpaudio/encoderinfo.cc
+   M /trunk/rtpaudio2/rtpaudio/encoderinterface.cc
+   M /trunk/rtpaudio2/rtpaudio/encoderinterface.h
+   M /trunk/rtpaudio2/rtpaudio/encoderrepositoryinterface.h
+   M /trunk/rtpaudio2/rtpaudio/fft.cc
+   M /trunk/rtpaudio2/rtpaudio/fft.h
+   M /trunk/rtpaudio2/rtpaudio/frameratescalabilityinterface.h
+   M /trunk/rtpaudio2/rtpaudio/framesizescalabilityinterface.h
+   M /trunk/rtpaudio2/rtpaudio/genericframesizescalability.cc
+   M /trunk/rtpaudio2/rtpaudio/genericframesizescalability.h
+   M /trunk/rtpaudio2/rtpaudio/managedstreaminterface.h
+   M /trunk/rtpaudio2/rtpaudio/mediainfo.cc
+   M /trunk/rtpaudio2/rtpaudio/mediainfo.h
+   M /trunk/rtpaudio2/rtpaudio/mp3audioreader.cc
+   M /trunk/rtpaudio2/rtpaudio/mp3audioreader.h
+   M /trunk/rtpaudio2/rtpaudio/multiaudioreader.cc
+   M /trunk/rtpaudio2/rtpaudio/multiaudioreader.h
+   M /trunk/rtpaudio2/rtpaudio/multiaudiowriter.cc
+   M /trunk/rtpaudio2/rtpaudio/multiaudiowriter.h
+   M /trunk/rtpaudio2/rtpaudio/qaudiomixer.cc
+   M /trunk/rtpaudio2/rtpaudio/qaudiomixer.h
+   M /trunk/rtpaudio2/rtpaudio/qclient.cc
+   M /trunk/rtpaudio2/rtpaudio/qclient.h
+   M /trunk/rtpaudio2/rtpaudio/qinfotabwidget.cc
+   M /trunk/rtpaudio2/rtpaudio/qinfotabwidget.h
+   M /trunk/rtpaudio2/rtpaudio/qspectrumanalyzer.cc
+   M /trunk/rtpaudio2/rtpaudio/qspectrumanalyzer.h
+   M /trunk/rtpaudio2/rtpaudio/resourceutilizationpoint.cc
+   M /trunk/rtpaudio2/rtpaudio/resourceutilizationpoint.h
+   M /trunk/rtpaudio2/rtpaudio/resourceutilizationpoint.icc
+   M /trunk/rtpaudio2/rtpaudio/rtcpabstractserver.cc
+   M /trunk/rtpaudio2/rtpaudio/rtcpabstractserver.h
+   M /trunk/rtpaudio2/rtpaudio/rtcpabstractserver.icc
+   M /trunk/rtpaudio2/rtpaudio/rtcppacket.cc
+   M /trunk/rtpaudio2/rtpaudio/rtcppacket.h
+   M /trunk/rtpaudio2/rtpaudio/rtcppacket.icc
+   M /trunk/rtpaudio2/rtpaudio/rtcpreceiver.cc
+   M /trunk/rtpaudio2/rtpaudio/rtcpreceiver.h
+   M /trunk/rtpaudio2/rtpaudio/rtcpsender.cc
+   M /trunk/rtpaudio2/rtpaudio/rtcpsender.h
+   M /trunk/rtpaudio2/rtpaudio/rtppacket.cc
+   M /trunk/rtpaudio2/rtpaudio/rtppacket.h
+   M /trunk/rtpaudio2/rtpaudio/rtppacket.icc
+   M /trunk/rtpaudio2/rtpaudio/rtpreceiver.cc
+   M /trunk/rtpaudio2/rtpaudio/rtpreceiver.h
+   M /trunk/rtpaudio2/rtpaudio/rtpreceiver.icc
+   M /trunk/rtpaudio2/rtpaudio/rtpsender.cc
+   M /trunk/rtpaudio2/rtpaudio/rtpsender.h
+   M /trunk/rtpaudio2/rtpaudio/rtpsender.icc
+   M /trunk/rtpaudio2/rtpaudio/s2.cc
+   M /trunk/rtpaudio2/rtpaudio/seqnumvalidator.cc
+   M /trunk/rtpaudio2/rtpaudio/seqnumvalidator.h
+   M /trunk/rtpaudio2/rtpaudio/seqnumvalidator.icc
+   M /trunk/rtpaudio2/rtpaudio/server.cc
+   M /trunk/rtpaudio2/rtpaudio/simpleaudiodecoder.cc
+   M /trunk/rtpaudio2/rtpaudio/simpleaudiodecoder.h
+   M /trunk/rtpaudio2/rtpaudio/simpleaudioencoder.cc
+   M /trunk/rtpaudio2/rtpaudio/simpleaudioencoder.h
+   M /trunk/rtpaudio2/rtpaudio/simpleaudiopacket.cc
+   M /trunk/rtpaudio2/rtpaudio/simpleaudiopacket.h
+   M /trunk/rtpaudio2/rtpaudio/socketaddress.h
+   M /trunk/rtpaudio2/rtpaudio/socketaddress.icc
+   M /trunk/rtpaudio2/rtpaudio/sourcestateinfo.cc
+   M /trunk/rtpaudio2/rtpaudio/sourcestateinfo.h
+   M /trunk/rtpaudio2/rtpaudio/sourcestateinfo.icc
+   M /trunk/rtpaudio2/rtpaudio/spectrumanalyzer.cc
+   M /trunk/rtpaudio2/rtpaudio/spectrumanalyzer.h
+   D /trunk/rtpaudio2/rtpaudio/staticglobals.cc
+   M /trunk/rtpaudio2/rtpaudio/t1.cc
+   M /trunk/rtpaudio2/rtpaudio/t2.cc
+   M /trunk/rtpaudio2/rtpaudio/t3.cc
+   M /trunk/rtpaudio2/rtpaudio/t4.cc
+   M /trunk/rtpaudio2/rtpaudio/t5.cc
+   M /trunk/rtpaudio2/rtpaudio/t6.cc
+   M /trunk/rtpaudio2/rtpaudio/tdstrings.h
+   M /trunk/rtpaudio2/rtpaudio/tdsystem.h
+   M /trunk/rtpaudio2/rtpaudio/tools.h
+   M /trunk/rtpaudio2/rtpaudio/tools.icc
+   M /trunk/rtpaudio2/rtpaudio/trafficshaper.cc
+   M /trunk/rtpaudio2/rtpaudio/trafficshaper.h
+   M /trunk/rtpaudio2/rtpaudio/trafficshaper.icc
+   M /trunk/rtpaudio2/rtpaudio/vclient.cc
+   M /trunk/rtpaudio2/rtpaudio/wavaudioreader.cc
+   M /trunk/rtpaudio2/rtpaudio/wavaudioreader.h
+
+
+------------------------------------------------------------------------
+r121 | dreibh | 2007-01-17 21:59:43 +0100 (Wed, 17 Jan 2007) | 1 line
+Changed paths:
+   A /trunk/rtpaudio2
+   A /trunk/rtpaudio2/AUTHORS
+   A /trunk/rtpaudio2/ChangeLog
+   A /trunk/rtpaudio2/Makefile.am
+   A /trunk/rtpaudio2/NEWS
+   A /trunk/rtpaudio2/README
+   A /trunk/rtpaudio2/acinclude.m4
+   A /trunk/rtpaudio2/aclocal.m4
+   A /trunk/rtpaudio2/admin
+   A /trunk/rtpaudio2/admin/config.guess
+   A /trunk/rtpaudio2/admin/config.sub
+   A /trunk/rtpaudio2/admin/depcomp
+   A /trunk/rtpaudio2/admin/install-sh
+   A /trunk/rtpaudio2/admin/ltmain.sh
+   A /trunk/rtpaudio2/admin/missing
+   A /trunk/rtpaudio2/autogen.sh
+   A /trunk/rtpaudio2/configure
+   A /trunk/rtpaudio2/configure.in
+   A /trunk/rtpaudio2/rtpaudio
+   A /trunk/rtpaudio2/rtpaudio/AudioServer.config
+   A /trunk/rtpaudio2/rtpaudio/Makefile.am
+   A /trunk/rtpaudio2/rtpaudio/SLA.config
+   A /trunk/rtpaudio2/rtpaudio/Test.list
+   A /trunk/rtpaudio2/rtpaudio/abstractlayerdescription.cc
+   A /trunk/rtpaudio2/rtpaudio/abstractlayerdescription.h
+   A /trunk/rtpaudio2/rtpaudio/abstractlayerdescription.icc
+   A /trunk/rtpaudio2/rtpaudio/abstractqosdescription.cc
+   A /trunk/rtpaudio2/rtpaudio/abstractqosdescription.h
+   A /trunk/rtpaudio2/rtpaudio/abstractqosdescription.icc
+   A /trunk/rtpaudio2/rtpaudio/advancedaudiodecoder.cc
+   A /trunk/rtpaudio2/rtpaudio/advancedaudiodecoder.h
+   A /trunk/rtpaudio2/rtpaudio/advancedaudioencoder.cc
+   A /trunk/rtpaudio2/rtpaudio/advancedaudioencoder.h
+   A /trunk/rtpaudio2/rtpaudio/advancedaudiopacket.cc
+   A /trunk/rtpaudio2/rtpaudio/advancedaudiopacket.h
+   A /trunk/rtpaudio2/rtpaudio/audioclient.cc
+   A /trunk/rtpaudio2/rtpaudio/audioclient.h
+   A /trunk/rtpaudio2/rtpaudio/audioclient.icc
+   A /trunk/rtpaudio2/rtpaudio/audioclientapppacket.cc
+   A /trunk/rtpaudio2/rtpaudio/audioclientapppacket.h
+   A /trunk/rtpaudio2/rtpaudio/audioconverter.cc
+   A /trunk/rtpaudio2/rtpaudio/audioconverter.h
+   A /trunk/rtpaudio2/rtpaudio/audiodebug.cc
+   A /trunk/rtpaudio2/rtpaudio/audiodebug.h
+   A /trunk/rtpaudio2/rtpaudio/audiodecoderinterface.h
+   A /trunk/rtpaudio2/rtpaudio/audiodecoderrepository.cc
+   A /trunk/rtpaudio2/rtpaudio/audiodecoderrepository.h
+   A /trunk/rtpaudio2/rtpaudio/audiodecoderrepository.icc
+   A /trunk/rtpaudio2/rtpaudio/audiodevice.cc
+   A /trunk/rtpaudio2/rtpaudio/audiodevice.h
+   A /trunk/rtpaudio2/rtpaudio/audiodevice.icc
+   A /trunk/rtpaudio2/rtpaudio/audioencoderinterface.h
+   A /trunk/rtpaudio2/rtpaudio/audioencoderrepository.cc
+   A /trunk/rtpaudio2/rtpaudio/audioencoderrepository.h
+   A /trunk/rtpaudio2/rtpaudio/audioencoderrepository.icc
+   A /trunk/rtpaudio2/rtpaudio/audiomixer.cc
+   A /trunk/rtpaudio2/rtpaudio/audiomixer.h
+   A /trunk/rtpaudio2/rtpaudio/audiomixer.icc
+   A /trunk/rtpaudio2/rtpaudio/audionull.cc
+   A /trunk/rtpaudio2/rtpaudio/audionull.h
+   A /trunk/rtpaudio2/rtpaudio/audioquality.cc
+   A /trunk/rtpaudio2/rtpaudio/audioquality.h
+   A /trunk/rtpaudio2/rtpaudio/audioquality.icc
+   A /trunk/rtpaudio2/rtpaudio/audioqualityinterface.h
+   A /trunk/rtpaudio2/rtpaudio/audioqualityinterface.icc
+   A /trunk/rtpaudio2/rtpaudio/audioreaderinterface.cc
+   A /trunk/rtpaudio2/rtpaudio/audioreaderinterface.h
+   A /trunk/rtpaudio2/rtpaudio/audioserver.cc
+   A /trunk/rtpaudio2/rtpaudio/audioserver.h
+   A /trunk/rtpaudio2/rtpaudio/audioserver.icc
+   A /trunk/rtpaudio2/rtpaudio/audiowriterinterface.cc
+   A /trunk/rtpaudio2/rtpaudio/audiowriterinterface.h
+   A /trunk/rtpaudio2/rtpaudio/avsender.cc
+   A /trunk/rtpaudio2/rtpaudio/bandwidthinfo.cc
+   A /trunk/rtpaudio2/rtpaudio/bandwidthinfo.h
+   A /trunk/rtpaudio2/rtpaudio/bandwidthinfo.icc
+   A /trunk/rtpaudio2/rtpaudio/bandwidthmanager.h
+   A /trunk/rtpaudio2/rtpaudio/breakdetector.cc
+   A /trunk/rtpaudio2/rtpaudio/breakdetector.h
+   A /trunk/rtpaudio2/rtpaudio/cbrframesizescalability.cc
+   A /trunk/rtpaudio2/rtpaudio/cbrframesizescalability.h
+   A /trunk/rtpaudio2/rtpaudio/client.cc
+   A /trunk/rtpaudio2/rtpaudio/condition.cc
+   A /trunk/rtpaudio2/rtpaudio/condition.h
+   A /trunk/rtpaudio2/rtpaudio/condition.icc
+   A /trunk/rtpaudio2/rtpaudio/decoderinterface.cc
+   A /trunk/rtpaudio2/rtpaudio/decoderinterface.h
+   A /trunk/rtpaudio2/rtpaudio/decoderrepositoryinterface.h
+   A /trunk/rtpaudio2/rtpaudio/encoderinfo.cc
+   A /trunk/rtpaudio2/rtpaudio/encoderinterface.cc
+   A /trunk/rtpaudio2/rtpaudio/encoderinterface.h
+   A /trunk/rtpaudio2/rtpaudio/encoderrepositoryinterface.h
+   A /trunk/rtpaudio2/rtpaudio/ext_socket.h
+   A /trunk/rtpaudio2/rtpaudio/extsocketdescriptor.h
+   A /trunk/rtpaudio2/rtpaudio/fft.cc
+   A /trunk/rtpaudio2/rtpaudio/fft.h
+   A /trunk/rtpaudio2/rtpaudio/frameratescalabilityinterface.h
+   A /trunk/rtpaudio2/rtpaudio/framesizescalabilityinterface.h
+   A /trunk/rtpaudio2/rtpaudio/genericframesizescalability.cc
+   A /trunk/rtpaudio2/rtpaudio/genericframesizescalability.h
+   A /trunk/rtpaudio2/rtpaudio/internetaddress.cc
+   A /trunk/rtpaudio2/rtpaudio/internetaddress.h
+   A /trunk/rtpaudio2/rtpaudio/internetaddress.icc
+   A /trunk/rtpaudio2/rtpaudio/internetflow.cc
+   A /trunk/rtpaudio2/rtpaudio/internetflow.h
+   A /trunk/rtpaudio2/rtpaudio/internetflow.icc
+   A /trunk/rtpaudio2/rtpaudio/managedstreaminterface.h
+   A /trunk/rtpaudio2/rtpaudio/mediainfo.cc
+   A /trunk/rtpaudio2/rtpaudio/mediainfo.h
+   A /trunk/rtpaudio2/rtpaudio/mp3audioreader.cc
+   A /trunk/rtpaudio2/rtpaudio/mp3audioreader.h
+   A /trunk/rtpaudio2/rtpaudio/multiaudioreader.cc
+   A /trunk/rtpaudio2/rtpaudio/multiaudioreader.h
+   A /trunk/rtpaudio2/rtpaudio/multiaudiowriter.cc
+   A /trunk/rtpaudio2/rtpaudio/multiaudiowriter.h
+   A /trunk/rtpaudio2/rtpaudio/multitimerthread.cc
+   A /trunk/rtpaudio2/rtpaudio/multitimerthread.h
+   A /trunk/rtpaudio2/rtpaudio/multitimerthread.icc
+   A /trunk/rtpaudio2/rtpaudio/packetaddress.cc
+   A /trunk/rtpaudio2/rtpaudio/packetaddress.h
+   A /trunk/rtpaudio2/rtpaudio/packetaddress.icc
+   A /trunk/rtpaudio2/rtpaudio/portableaddress.h
+   A /trunk/rtpaudio2/rtpaudio/portableaddress.icc
+   A /trunk/rtpaudio2/rtpaudio/qaudiomixer.cc
+   A /trunk/rtpaudio2/rtpaudio/qaudiomixer.h
+   A /trunk/rtpaudio2/rtpaudio/qclient.cc
+   A /trunk/rtpaudio2/rtpaudio/qclient.h
+   A /trunk/rtpaudio2/rtpaudio/qinfotabwidget.cc
+   A /trunk/rtpaudio2/rtpaudio/qinfotabwidget.h
+   A /trunk/rtpaudio2/rtpaudio/qspectrumanalyzer.cc
+   A /trunk/rtpaudio2/rtpaudio/qspectrumanalyzer.h
+   A /trunk/rtpaudio2/rtpaudio/randomizer.cc
+   A /trunk/rtpaudio2/rtpaudio/randomizer.h
+   A /trunk/rtpaudio2/rtpaudio/randomizer.icc
+   A /trunk/rtpaudio2/rtpaudio/range.cc
+   A /trunk/rtpaudio2/rtpaudio/range.h
+   A /trunk/rtpaudio2/rtpaudio/range.icc
+   A /trunk/rtpaudio2/rtpaudio/resourceutilizationpoint.cc
+   A /trunk/rtpaudio2/rtpaudio/resourceutilizationpoint.h
+   A /trunk/rtpaudio2/rtpaudio/resourceutilizationpoint.icc
+   A /trunk/rtpaudio2/rtpaudio/ringbuffer.cc
+   A /trunk/rtpaudio2/rtpaudio/ringbuffer.h
+   A /trunk/rtpaudio2/rtpaudio/ringbuffer.icc
+   A /trunk/rtpaudio2/rtpaudio/rtcpabstractserver.cc
+   A /trunk/rtpaudio2/rtpaudio/rtcpabstractserver.h
+   A /trunk/rtpaudio2/rtpaudio/rtcpabstractserver.icc
+   A /trunk/rtpaudio2/rtpaudio/rtcppacket.cc
+   A /trunk/rtpaudio2/rtpaudio/rtcppacket.h
+   A /trunk/rtpaudio2/rtpaudio/rtcppacket.icc
+   A /trunk/rtpaudio2/rtpaudio/rtcpreceiver.cc
+   A /trunk/rtpaudio2/rtpaudio/rtcpreceiver.h
+   A /trunk/rtpaudio2/rtpaudio/rtcpsender.cc
+   A /trunk/rtpaudio2/rtpaudio/rtcpsender.h
+   A /trunk/rtpaudio2/rtpaudio/rtppacket.cc
+   A /trunk/rtpaudio2/rtpaudio/rtppacket.h
+   A /trunk/rtpaudio2/rtpaudio/rtppacket.icc
+   A /trunk/rtpaudio2/rtpaudio/rtpreceiver.cc
+   A /trunk/rtpaudio2/rtpaudio/rtpreceiver.h
+   A /trunk/rtpaudio2/rtpaudio/rtpreceiver.icc
+   A /trunk/rtpaudio2/rtpaudio/rtpsender.cc
+   A /trunk/rtpaudio2/rtpaudio/rtpsender.h
+   A /trunk/rtpaudio2/rtpaudio/rtpsender.icc
+   A /trunk/rtpaudio2/rtpaudio/s2.cc
+   A /trunk/rtpaudio2/rtpaudio/seqnumvalidator.cc
+   A /trunk/rtpaudio2/rtpaudio/seqnumvalidator.h
+   A /trunk/rtpaudio2/rtpaudio/seqnumvalidator.icc
+   A /trunk/rtpaudio2/rtpaudio/server.cc
+   A /trunk/rtpaudio2/rtpaudio/simpleaudiodecoder.cc
+   A /trunk/rtpaudio2/rtpaudio/simpleaudiodecoder.h
+   A /trunk/rtpaudio2/rtpaudio/simpleaudioencoder.cc
+   A /trunk/rtpaudio2/rtpaudio/simpleaudioencoder.h
+   A /trunk/rtpaudio2/rtpaudio/simpleaudiopacket.cc
+   A /trunk/rtpaudio2/rtpaudio/simpleaudiopacket.h
+   A /trunk/rtpaudio2/rtpaudio/socketaddress.cc
+   A /trunk/rtpaudio2/rtpaudio/socketaddress.h
+   A /trunk/rtpaudio2/rtpaudio/socketaddress.icc
+   A /trunk/rtpaudio2/rtpaudio/sourcestateinfo.cc
+   A /trunk/rtpaudio2/rtpaudio/sourcestateinfo.h
+   A /trunk/rtpaudio2/rtpaudio/sourcestateinfo.icc
+   A /trunk/rtpaudio2/rtpaudio/spectrumanalyzer.cc
+   A /trunk/rtpaudio2/rtpaudio/spectrumanalyzer.h
+   A /trunk/rtpaudio2/rtpaudio/staticglobals.cc
+   A /trunk/rtpaudio2/rtpaudio/storage
+   A /trunk/rtpaudio2/rtpaudio/streamsrcdest.cc
+   A /trunk/rtpaudio2/rtpaudio/streamsrcdest.h
+   A /trunk/rtpaudio2/rtpaudio/synchronizable.cc
+   A /trunk/rtpaudio2/rtpaudio/synchronizable.h
+   A /trunk/rtpaudio2/rtpaudio/synchronizable.icc
+   A /trunk/rtpaudio2/rtpaudio/t1.cc
+   A /trunk/rtpaudio2/rtpaudio/t2.cc
+   A /trunk/rtpaudio2/rtpaudio/t3.cc
+   A /trunk/rtpaudio2/rtpaudio/t4.cc
+   A /trunk/rtpaudio2/rtpaudio/t5.cc
+   A /trunk/rtpaudio2/rtpaudio/t6.cc
+   A /trunk/rtpaudio2/rtpaudio/tdin6.h
+   A /trunk/rtpaudio2/rtpaudio/tdmessage.h
+   A /trunk/rtpaudio2/rtpaudio/tdmessage.icc
+   A /trunk/rtpaudio2/rtpaudio/tdsocket.cc
+   A /trunk/rtpaudio2/rtpaudio/tdsocket.h
+   A /trunk/rtpaudio2/rtpaudio/tdsocket.icc
+   A /trunk/rtpaudio2/rtpaudio/tdstrings.cc
+   A /trunk/rtpaudio2/rtpaudio/tdstrings.h
+   A /trunk/rtpaudio2/rtpaudio/tdstrings.icc
+   A /trunk/rtpaudio2/rtpaudio/tdsystem.h
+   A /trunk/rtpaudio2/rtpaudio/thread.cc
+   A /trunk/rtpaudio2/rtpaudio/thread.h
+   A /trunk/rtpaudio2/rtpaudio/thread.icc
+   A /trunk/rtpaudio2/rtpaudio/timedthread.cc
+   A /trunk/rtpaudio2/rtpaudio/timedthread.h
+   A /trunk/rtpaudio2/rtpaudio/timedthread.icc
+   A /trunk/rtpaudio2/rtpaudio/tools.cc
+   A /trunk/rtpaudio2/rtpaudio/tools.h
+   A /trunk/rtpaudio2/rtpaudio/tools.icc
+   A /trunk/rtpaudio2/rtpaudio/trafficclassvalues.cc
+   A /trunk/rtpaudio2/rtpaudio/trafficclassvalues.h
+   A /trunk/rtpaudio2/rtpaudio/trafficclassvalues.icc
+   A /trunk/rtpaudio2/rtpaudio/trafficshaper.cc
+   A /trunk/rtpaudio2/rtpaudio/trafficshaper.h
+   A /trunk/rtpaudio2/rtpaudio/trafficshaper.icc
+   A /trunk/rtpaudio2/rtpaudio/unixaddress.cc
+   A /trunk/rtpaudio2/rtpaudio/unixaddress.h
+   A /trunk/rtpaudio2/rtpaudio/unixaddress.icc
+   A /trunk/rtpaudio2/rtpaudio/vclient.cc
+   A /trunk/rtpaudio2/rtpaudio/wavaudioreader.cc
+   A /trunk/rtpaudio2/rtpaudio/wavaudioreader.h
+
+
+------------------------------------------------------------------------

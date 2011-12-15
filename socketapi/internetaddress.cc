@@ -176,7 +176,7 @@ InternetAddress::InternetAddress(const card16 port)
 
 
 // ###### Internet address constructor ######################################
-InternetAddress::InternetAddress(sockaddr* address, const socklen_t length)
+InternetAddress::InternetAddress(const sockaddr* address, const socklen_t length)
 {
    init(address,length);
 }
@@ -297,7 +297,7 @@ void InternetAddress::init(const PortableAddress& address)
 
 
 // ###### Initialize internet address from system's sockaddr structure ######
-void InternetAddress::init(sockaddr* address, const socklen_t length)
+void InternetAddress::init(const sockaddr* address, const socklen_t length)
 {
    setSystemAddress(address,length);
    setPrintFormat(PF_Default);
@@ -486,7 +486,10 @@ cardinal InternetAddress::getSystemAddress(sockaddr*       buffer,
       case AF_INET6: {
          sockaddr_in6* address = (sockaddr_in6*)buffer;
          if(sizeof(sockaddr_in6) <= (size_t)length) {
-            address->sin6_family   = AF_INET6;
+            address->sin6_family = AF_INET6;
+#ifdef HAVE_SIN6_LEN
+            address->sin6_len = sizeof(sockaddr_in6);
+#endif
             address->sin6_flowinfo = 0;
             address->sin6_port     = Port;
             address->sin6_scope_id = 0;
@@ -511,6 +514,9 @@ cardinal InternetAddress::getSystemAddress(sockaddr*       buffer,
          sockaddr_in* address = (sockaddr_in*)buffer;
          if(sizeof(sockaddr_in) <= (size_t)length) {
             address->sin_family = AF_INET;
+#ifdef HAVE_SIN_LEN
+            address->sin_len = sizeof(sockaddr_in);
+#endif
             if(isIPv4()) {
                address->sin_port = Port;
                memcpy((char*)&address->sin_addr.s_addr,(char*)&AddrSpec.Host16[6],4);
@@ -537,9 +543,9 @@ cardinal InternetAddress::getSystemAddress(sockaddr*       buffer,
 
 
 // ###### Initialize internet address from sockaddr structure ###############
-bool InternetAddress::setSystemAddress(sockaddr* address, const socklen_t length)
+bool InternetAddress::setSystemAddress(const sockaddr* address, const socklen_t length)
 {
-   sockaddr_in* address4 = (sockaddr_in*)address;
+   const sockaddr_in* address4 = (const sockaddr_in*)address;
    Port = address4->sin_port;
 
    switch(address4->sin_family) {
@@ -548,18 +554,18 @@ bool InternetAddress::setSystemAddress(sockaddr* address, const socklen_t length
             AddrSpec.Host16[i] = 0x0000;
          }
          AddrSpec.Host16[5] = 0xffff;
-         memcpy((char*)&AddrSpec.Host16[6],(char*)&address4->sin_addr.s_addr,4);
+         memcpy((char*)&AddrSpec.Host16[6],(const char*)&address4->sin_addr.s_addr,4);
          Valid = true;
          return(true);
        break;
       case AF_INET6: {
-         sockaddr_in6* address6 = (sockaddr_in6*)address;
+         const sockaddr_in6* address6 = (const sockaddr_in6*)address;
 #if (SYSTEM == OS_Linux)
-         memcpy((char*)&AddrSpec.Host16,(char*)&address6->sin6_addr.s6_addr16[0],16);
+         memcpy((char*)&AddrSpec.Host16,(const char*)&address6->sin6_addr.s6_addr16[0],16);
 #elif (SYSTEM == OS_SOLARIS)
-         memcpy((char*)&AddrSpec.Host16,(char*)&address6->sin6_addr._S6_un._S6_u8[0],16);
+         memcpy((char*)&AddrSpec.Host16,(const char*)&address6->sin6_addr._S6_un._S6_u8[0],16);
 #else
-         memcpy((char*)&AddrSpec.Host16,(char*)&address6->sin6_addr.__u6_addr.__u6_addr8[0],16);
+         memcpy((char*)&AddrSpec.Host16,(const char*)&address6->sin6_addr.__u6_addr.__u6_addr8[0],16);
 #endif
          Valid = true;
          return(true);

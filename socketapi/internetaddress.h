@@ -56,7 +56,7 @@
   * @short   Socket Address
   * @author  Thomas Dreibholz (dreibh@iem.uni-due.de)
   * @version 1.0
-  */            
+  */
 class InternetAddress : virtual public SocketAddress
 {
    // ====== Constructors/Destructor ========================================
@@ -79,7 +79,7 @@ class InternetAddress : virtual public SocketAddress
      *
      * @param address Address string.
      */
-   InternetAddress(const String& address);      
+   InternetAddress(const String& address);
 
    /**
      * Constructor for a internet address given by host name and port.
@@ -104,7 +104,7 @@ class InternetAddress : virtual public SocketAddress
      * @param address sockaddr.
      * @param length Length of sockaddr (sizeof(sockaddr_in) or sizeof(sockaddr_in6)).
      */
-   InternetAddress(sockaddr* address, socklen_t length);
+   InternetAddress(const sockaddr* address, const socklen_t length);
 
    /**
      * Destructor.
@@ -135,7 +135,7 @@ class InternetAddress : virtual public SocketAddress
      *
      * @param hostName Host name.
      * @param port Port number.
-     */    
+     */
    void init(const String& hostName, const card16 port);
 
    /**
@@ -152,7 +152,7 @@ class InternetAddress : virtual public SocketAddress
      * @param address sockaddr.
      * @param length Length of sockaddr (sizeof(sockaddr_in) or sizeof(sockaddr_in6)).
      */
-   void init(sockaddr* address, socklen_t length);
+   void init(const sockaddr* address, const socklen_t length);
 
 
    // ====== Operators ======================================================
@@ -342,7 +342,7 @@ class InternetAddress : virtual public SocketAddress
      * getSystemAddress() implementation of SocketAddress
      *
      * @see SocketAddress#getSystemAddress
-     */            
+     */
    cardinal getSystemAddress(sockaddr*       buffer,
                              const socklen_t length,
                              const cardinal  type) const;
@@ -352,7 +352,7 @@ class InternetAddress : virtual public SocketAddress
      *
      * @see SocketAddress#setSystemAddress
      */
-   bool setSystemAddress(sockaddr* address, const socklen_t length);
+   bool setSystemAddress(const sockaddr* address, const socklen_t length);
 
 
    // ====== IPv6 support functions ========================================

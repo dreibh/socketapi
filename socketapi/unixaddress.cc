@@ -69,7 +69,7 @@ UnixAddress::~UnixAddress()
 
 
 // ###### Unix address constructor ######################################
-UnixAddress::UnixAddress(sockaddr* address, const cardinal length)
+UnixAddress::UnixAddress(const sockaddr* address, const cardinal length)
 {
    setSystemAddress(address,length);
 }
@@ -189,7 +189,7 @@ cardinal UnixAddress::getSystemAddress(sockaddr*       buffer,
 
 
 // ###### Initialize internet address from sockaddr structure ###############
-bool UnixAddress::setSystemAddress(sockaddr* address, const socklen_t length)
+bool UnixAddress::setSystemAddress(const sockaddr* address, const socklen_t length)
 {
    sockaddr_un* unixAddress = (sockaddr_un*)address;
    switch(unixAddress->sun_family) {
