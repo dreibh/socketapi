@@ -80,7 +80,8 @@ void tftpGet(const char* name, Socket* socket)
    snprintf((char*)&packet.Data,sizeof(packet.Data),"%s",name);
    ssize_t result = socket->send((char*)&packet,2 + strlen(name));
    if(result >= 0) {
-      result = socket->receive((char*)&packet,sizeof(packet));
+      integer flags = 0;
+      result = socket->receive((char*)&packet,sizeof(packet),flags);
       if(result > 0) {
          if(packet.Type == TFTP_ERR) {
             printError(packet,result);
@@ -114,7 +115,8 @@ void tftpGet(const char* name, Socket* socket)
                   std::cout << ". OK!" << std::endl;
                   break;
                }
-               result = socket->receive((char*)&packet,sizeof(packet));
+               flags  = 0;
+               result = socket->receive((char*)&packet,sizeof(packet),flags);
             }
             fclose(out);
          }
@@ -154,7 +156,8 @@ void tftpPut(const char* name, Socket* socket)
              << std::endl;
 
    if(result >= 0) {
-      result = socket->receive((char*)&packet,sizeof(packet));
+      integer flags = 0;
+      result = socket->receive((char*)&packet,sizeof(packet),flags);
       if(result > 0) {
          if(packet.Type == TFTP_ERR) {
             printError(packet,result);
@@ -178,7 +181,8 @@ void tftpPut(const char* name, Socket* socket)
                packet.Code++;
             }
 
-            result = socket->receive((char*)&packet,sizeof(packet));
+            integer flags = 0;
+            result = socket->receive((char*)&packet,sizeof(packet),flags);
             if(result > 0) {
                if(packet.Type == TFTP_ERR) {
                   printError(packet,result);

@@ -676,7 +676,7 @@ bool Socket::connectx(const SocketAddress** addressArray,
 
 // ###### Receive message ###################################################
 ssize_t Socket::receiveMsg(struct msghdr* msg,
-                           const cardinal flags,
+                           const integer  flags,
                            const bool     internalCall)
 {
 #ifdef SOCKETAPI_MAJOR_VERSION
@@ -721,7 +721,7 @@ ssize_t Socket::receiveMsg(struct msghdr* msg,
 ssize_t Socket::recvFrom(int              fd,
                          void*            buf,
                          const size_t     len,
-                         const integer    flags,
+                         integer&         flags,
                          struct sockaddr* addr,
                          socklen_t*       addrlen)
 {
@@ -737,13 +737,15 @@ ssize_t Socket::recvFrom(int              fd,
       *addrlen,
       &iov, 1,
       cbuf, sizeof(cbuf),
-      0
+      flags
    };
 
    cc = receiveMsg(&msg,flags,true);
    if(cc < 0) {
       return(cc);
    }
+
+   flags = msg.msg_flags;
    *addrlen = msg.msg_namelen;
    return(cc);
 }
@@ -753,7 +755,7 @@ ssize_t Socket::recvFrom(int              fd,
 ssize_t Socket::receiveFrom(void*          buffer,
                             const size_t   length,
                             SocketAddress& sender,
-                            const cardinal flags)
+                            integer&       flags)
 {
    char      socketAddressBuffer[SocketAddress::MaxSockLen];
    socklen_t socketAddressLength = SocketAddress::MaxSockLen;
@@ -772,10 +774,10 @@ ssize_t Socket::receiveFrom(void*          buffer,
 
 
 // ###### Send data #########################################################
-ssize_t Socket::send(const void*    buffer,
-                     const size_t   length,
-                     const cardinal flags,
-                     const card8    trafficClass)
+ssize_t Socket::send(const void*   buffer,
+                     const size_t  length,
+                     const integer flags,
+                     const card8   trafficClass)
 {
    // ====== Check, if traffic class has to be set ==========================
    if((trafficClass != 0) && (Destination != NULL)) {
@@ -832,7 +834,7 @@ ssize_t Socket::send(const void*    buffer,
 // ###### Send data to receiver address #####################################
 ssize_t Socket::sendTo(const void*          buffer,
                        const size_t         length,
-                       const cardinal       flags,
+                       const integer        flags,
                        const SocketAddress& receiver,
                        const card8          trafficClass)
 {
@@ -899,7 +901,7 @@ ssize_t Socket::sendTo(const void*          buffer,
 
 // ###### Send message ######################################################
 ssize_t Socket::sendMsg(const struct msghdr* msg,
-                        const cardinal       flags,
+                        const integer        flags,
                         const card8          trafficClass)
 {
    if(trafficClass != 0x00) {

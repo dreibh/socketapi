@@ -218,9 +218,9 @@ inline integer Socket::getLastError()
 
 
 // ###### Receive data ######################################################
-inline ssize_t Socket::receive(void*          buffer,
-                               const size_t   length,
-                               const cardinal flags)
+inline ssize_t Socket::receive(void*        buffer,
+                               const size_t length,
+                               integer&     flags)
 {
    char      socketAddressBuffer[SocketAddress::MaxSockLen];
    socklen_t socketAddressLength = SocketAddress::MaxSockLen;

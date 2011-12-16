@@ -181,7 +181,7 @@ class Socket
      * @return Socket family.
      */
    inline integer getFamily() const;
-   
+
    /**
      * Get socket's type.
      *
@@ -457,10 +457,10 @@ O     * Bind socket to one or more given addresses. If no addresses are given,
      * @param trafficClass Traffic class for packet.
      * @return Bytes sent or error code < 0.
      */
-   ssize_t send(const void*    buffer,
-                const size_t   length,
-                const cardinal flags        = 0,
-                const card8    trafficClass = 0x00);
+   ssize_t send(const void*   buffer,
+                const size_t  length,
+                const integer flags        = 0,
+                const card8   trafficClass = 0x00);
 
    /**
      * Wrapper for sendto().
@@ -475,7 +475,7 @@ O     * Bind socket to one or more given addresses. If no addresses are given,
      */
    ssize_t sendTo(const void*          buffer,
                   const size_t         length,
-                  const cardinal       flags,
+                  const integer        flags,
                   const SocketAddress& receiver,
                   const card8          trafficClass = 0x00);
 
@@ -488,7 +488,7 @@ O     * Bind socket to one or more given addresses. If no addresses are given,
      * @return Result of sendmsg() call.
      */
    ssize_t sendMsg(const struct msghdr* msg,
-                   const cardinal       flags,
+                   const integer        flags,
                    const card8          trafficClass = 0x00);
 
    /**
@@ -506,12 +506,12 @@ O     * Bind socket to one or more given addresses. If no addresses are given,
      *
      * @param buffer Buffer to read data to.
      * @param length Maximum length of data to be received.
-     * @param flags Flags for recv().
+     * @param flags Flags for recvmsg().
      * @return Bytes read or error code < 0.
      */
-   inline ssize_t receive(void*          buffer,
-                          const size_t   length,
-                          const cardinal flags = 0);
+   inline ssize_t receive(void*        buffer,
+                          const size_t length,
+                          integer&     flags);
 
    /**
      * Wrapper for recvfrom().
@@ -519,24 +519,24 @@ O     * Bind socket to one or more given addresses. If no addresses are given,
      * @param buffer Buffer to receive data to.
      * @param length Maximum length of data to be received.
      * @param sender Address to store sender's address.
-     * @param flags Flags for recvfrom().
+     * @param flags Flags for recvmsg().
      * @return Bytes received or error code < 0.
      */
    ssize_t receiveFrom(void*          buffer,
                        const size_t   length,
                        SocketAddress& sender,
-                       const cardinal flags = 0);
+                       integer&       flags);
 
    /**
      * Wrapper for recvmsg().
      *
      * @param msg Message.
-     * @param flags Flags.
+     * @param flags Flags for recvmsg().
      * @param internalCall Internal usage only; set to false.
      * @return Result of recvmsg() call.
      */
    ssize_t receiveMsg(struct msghdr* msg,
-                      const cardinal flags,
+                      const integer  flags,
                       const bool     internalCall = false);
 
    /**
@@ -794,7 +794,7 @@ O     * Bind socket to one or more given addresses. If no addresses are given,
    ssize_t recvFrom(int              fd,
                     void*            buf,
                     const size_t     len,
-                    const integer    flags,
+                    integer&         flags,
                     struct sockaddr* addr,
                     socklen_t*       addrlen);
    bool multicastMembership(const SocketAddress& address,

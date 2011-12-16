@@ -472,8 +472,8 @@ ssize_t TrivialFileTransferServer::sendAck(const char code)
 // ###### Main loop #########################################################
 void TrivialFileTransferServer::run()
 {
-   ssize_t result;
-   result = ServerSocket->receive((char*)&Packet,sizeof(Packet));
+   integer flags  = 0;
+   ssize_t result = ServerSocket->receive((char*)&Packet,sizeof(Packet),flags);
    if(result >= 3) {
       // ====== Read Request ================================================
       if(Packet.Type == TFTP_RRQ) {
@@ -512,7 +512,8 @@ void TrivialFileTransferServer::run()
                result = sendAck(0);
                if(result > 0) {
                   // ====== Write loop ======================================
-                  result = ServerSocket->receive((char*)&Packet,sizeof(Packet));
+                  flags  = 0;
+                  result = ServerSocket->receive((char*)&Packet,sizeof(Packet),flags);
                   while(result >= 2) {
                      if(Packet.Type != TFTP_DAT) {
                         sendError(0,"Bad request!");
@@ -527,7 +528,8 @@ void TrivialFileTransferServer::run()
                         sendAck(Packet.Code);
                         break;
                      }
-                     result = ServerSocket->receive((char*)&Packet,sizeof(Packet));
+                     flags  = 0;
+                     result = ServerSocket->receive((char*)&Packet,sizeof(Packet),flags);
                   }
                }
                fclose(out);
