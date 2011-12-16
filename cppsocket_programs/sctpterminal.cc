@@ -463,6 +463,7 @@ int main(int argc, char** argv)
       }
       localAddresses = 1;
 */
+      SocketAddress::deleteAddressList(localAddressArray);
       if(!Socket::getLocalAddressList(
             localAddressArray,
             localAddresses,
