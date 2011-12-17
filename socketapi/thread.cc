@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 1999-2011 by Thomas Dreibholz
+ * Copyright (C) 1999-2012 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -36,7 +36,6 @@
  */
 
 
-
 #include "tdsystem.h"
 #include "thread.h"
 
@@ -44,37 +43,8 @@
 #include <sys/time.h>
 
 
-
 // Print starts/stops
 // #define PRINT_STARTSTOP
-
-
-
-// ###### Do compatibility check for SyncDebugger ###########################
-#ifdef SYNCDEBUGGER
-bool Thread::checkSyncDebugger()
-{
-   std::cerr << "*****************************************" << std::endl
-             << "**** SyncDebugger mode is activated! ****" << std::endl
-             << "*****************************************" << std::endl;
-   std::cerr << "Testing SyncDebugger... ";
-   Synchronizable test("CheckSyncDebuggerTest");
-   test.synchronized();
-   Thread::pthread_descr pthread = (Thread::pthread_descr)(test.Mutex.__m_owner);
-   if(pthread->p_pid != getpid()) {
-      std::cerr << "INTERNAL ERROR: _Thread::pthread_descr_struct definition is incompatible to your "
-                   "libpthread version! Check linuxthreads/internals.h of your glibc "
-                   "source package and update _Thread::pthread_descr_struct definition in Threads/thread.h!"
-                << std::endl;
-      std::cerr << "Your glibc version: " << __GLIBC__ << "." << __GLIBC_MINOR__ << "!" << std::endl;
-      abort();
-   }
-   test.unsynchronized();
-   std::cerr << "okay!" << std::endl;
-   return(true);
-}
-#endif
-
 
 
 // ###### Constructor #######################################################
@@ -84,10 +54,6 @@ Thread::Thread(const char* name, cardinal flags)
    PThread = 0;
    PID     = 0;
    Flags   = flags;
-
-#ifdef SYNCDEBUGGER
-   InternalPThreadPtr = NULL;
-#endif
 }
 
 
@@ -112,9 +78,6 @@ bool Thread::start(const char* name)
       if(name != NULL) {
          setName(name);
       }
-#ifdef SYNCDEBUGGER
-      InternalPThreadPtr = NULL;
-#endif
 
       pthread_mutex_init(&StartupMutex,NULL);
       pthread_cond_init(&StartupCondition,NULL);
@@ -126,15 +89,6 @@ bool Thread::start(const char* name)
          // Wait for startup. Note: The Mutex will always be locked. Unlocking
          // is only done within this call!
          pthread_cond_wait(&StartupCondition,&StartupMutex);
-
-#ifdef PRINT_STARTSTOP
-         std::cout << "Process #" << PID
-#ifdef SYNCDEBUGGER
-                   << " \"" << MutexName << "\""
-#endif
-                   << " started." << std::endl;
-#endif
-         ThreadSet.insert(this);
       }
       else {
 #ifndef DISABLE_WARNINGS
@@ -174,9 +128,6 @@ void* Thread::go(void* argument)
    // ====== Initialize PID and signalize successful startup ================
    thisThread->PID = getpid();
    pthread_mutex_lock(&thisThread->StartupMutex);
-#ifdef SYNCDEBUGGER
-   thisThread->InternalPThreadPtr = (Thread::pthread_descr)(thisThread->StartupMutex.__m_owner);
-#endif
    pthread_cond_signal(&thisThread->StartupCondition);
    pthread_mutex_unlock(&thisThread->StartupMutex);
 
@@ -191,30 +142,16 @@ void* Thread::stop()
 {
    synchronized();
    if(running()) {
-#ifdef PRINT_STARTSTOP
-         std::cout << "Process #" << PID
-#ifdef SYNCDEBUGGER
-                   << " \"" << MutexName << "\""
-#endif
-                   << " stopping..." << std::endl;
-#endif
-
-
       // ====== Stop thread =================================================
       pthread_cancel(PThread);
       unsynchronized();
       // Unsynchronizing is necessary, since the thread may not be locked to
       // shutdown gracefully!
 
-
       // ====== Wait for thread to shutdown =================================
       void* result = NULL;
       pthread_join(PThread,(void**)&result);
       PThread = 0;
-#ifdef SYNCDEBUGGER
-      InternalPThreadPtr = NULL;
-#endif
-
 
       // ====== Resynchronize ===============================================
       // The stopped thread may hold its own mutex or waiting for this own
@@ -225,91 +162,6 @@ void* Thread::stop()
              (cardinal)Mutex.__m_lock.__status,(cardinal)Mutex.__m_lock.__spinlock);
       */
       resynchronize();
-
-
-      // ====== Check for synchronization problems ==========================
-      SyncSetLock.synchronized();
-#ifdef SYNCDEBUGGER
-      bool found = false;
-      set<Synchronizable*>::iterator iterator = Synchronizable::MutexSet.begin();
-      while(iterator != Synchronizable::MutexSet.end()) {
-         Thread::pthread_descr pthread = (Thread::pthread_descr)((*iterator)->Mutex.__m_owner);
-         bool nextLock = false;
-         while(pthread != NULL) {
-
-            // There seems to be an error in libpthread: Sometimes,
-            // pthread is set to 0x1. In this case, a segfault occurs.
-            if((pthread > (pthread_descr)0) && (pthread < (pthread_descr)10)) {
-               pthread = NULL;
-               continue;
-            }
-
-            if(pthread == InternalPThreadPtr) {
-               if(!found) {
-                  found = true;
-                  std::cerr << "ERROR: Thread::stop() - Mutex problems detected after stopping process #"
-                            << PID << " \"" << MutexName << "\"!" << std::endl;
-               }
-               if(!nextLock) {
-                  std::cerr << "Mutex \"" << (*iterator)->getName()
-                            << "\" is still owned by stopped process #" << PID
-                            << " \"" << getName() << "\"!" << std::endl;
-               }
-               else {
-                  std::cerr << "Mutex \"" << (*iterator)->getName()
-                            << "\" is in *p_nextlock* list of stopped process #" << PID
-                            << " \"" << getName() << "\"!" << std::endl;
-               }
-            }
-            pthread = pthread->p_nextlock;
-            nextLock = true;
-         }
-         iterator++;
-      }
-      if(found) {
-         std::cerr << std::endl;
-         iterator = Synchronizable::MutexSet.begin();
-         while(iterator != Synchronizable::MutexSet.end()) {
-            Thread::pthread_descr pthread = (Thread::pthread_descr)((*iterator)->Mutex.__m_owner);
-            if(pthread != NULL) {
-               if(pthread->p_pid != PID) {
-                  std::cerr << "Mutex \"" << (*iterator)->getName()
-                            << "\" is owned by process #" << pthread->p_pid;
-                  set<Thread*>::iterator threadIterator = ThreadSet.begin();
-                  while(threadIterator != ThreadSet.end()) {
-                     if((*threadIterator)->PID == pthread->p_pid) {
-                        std::cerr << " \"" << (*threadIterator)->MutexName << "\"";
-                        break;
-                     }
-                     threadIterator++;
-                  }
-                  std::cerr << "." << std::endl;
-               }
-            }
-            else {
-               std::cerr << "Mutex \"" << (*iterator)->getName() << "\" is free." << std::endl;
-            }
-            iterator++;
-         }
-         std::cerr << std::endl << "Program HALT!" << std::endl;
-         kill(getpid(),SYNCDEBUGGER_FAILURESIGNAL);
-      }
-#endif
-
-
-      // ====== Remove thread from list =====================================
-#ifdef PRINT_STARTSTOP
-         std::cout << "Process #" << PID
-#ifdef SYNCDEBUGGER
-                   << " \"" << MutexName << "\""
-#endif
-                   << " stopped." << std::endl;
-#endif
-      ThreadSet.erase(this);
-      PID = 0;
-
-
-      SyncSetLock.unsynchronized();
       return(result);
    }
    unsynchronized();

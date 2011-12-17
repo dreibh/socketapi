@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 1999-2011 by Thomas Dreibholz
+ * Copyright (C) 1999-2012 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -69,10 +69,6 @@
 #ifndef USE_PTHREADS
  #define USE_PTHREADS
 #endif
-
-
-// Use libefence for debugging
-// #define USE_EFENCE
 
 
 #include <stdio.h>
@@ -196,16 +192,6 @@ typedef uint_least32_t cardinal;
 #else
 typedef card32 cardinal;
 #endif
-
-
-#ifdef DMALLOC
-#define USE_DMALLOC
-#include <dmalloc.h>
-#endif
-
-
-// Include tools.h with libefence replacement for new and delete.
-#include "tools.h"
 
 
 #endif

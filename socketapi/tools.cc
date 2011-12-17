@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 1999-2011 by Thomas Dreibholz
+ * Copyright (C) 1999-2012 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -164,76 +164,3 @@ bool getUserName(char*        str,
    str[0] = 0x00;
    return(false);
 }
-
-
-#ifdef USE_EFENCE
-
-
-// VERY IMPORTANT:
-// 1. malloc() and free() have to be synchronized in order to get correct
-//    results!!!
-// 2. new() and delete() are replaced by compatible versions.
-//    This does *not* include the C-functions malloc() and free()!
-//    C sources using malloc() and free() require additional care!
-
-
-#include "thread.h"
-
-
-// Allocation balance to detect memory leaks.
-static int64 AllocationBalance = 0;
-
-
-// ###### Operator new() replacement for libefence usage ####################
-void* operator new(size_t size) throw (std::bad_alloc)
-{
-   const cardinal oldstate = Thread::setCancelState(Thread::TCS_CancelDisabled);
-   Thread::MemoryManagementLock.synchronized();
-
-   if(size <= 0) {
-      size = 1;
-#ifndef DISABLE_WARNINGS
-      std::cerr << "WARNING: operator new() - Size is 0!" << std::endl;
-#endif
-   }
-   void* ptr = malloc(size + 4);
-   if(ptr != NULL) {
-      card32* ptr32 = (card32*)ptr;
-      *ptr32 = (card32)size;
-      ptr = (void*)((long)ptr + (long)4);
-      AllocationBalance += (int64)size;
-
-#ifdef PRINT_ALLOCATIONS
-   std::cout << "Allocated " << size << " bytes -> Balance is "
-             << AllocationBalance << "." << std::endl;
-#endif
-   }
-
-   Thread::MemoryManagementLock.unsynchronized();
-   Thread::setCancelState(oldstate);
-   return(ptr);
-}
-
-
-// ###### Operator delete() replacement for libefence usage #################
-void operator delete(void* ptr) throw ()
-{
-   const cardinal oldstate = Thread::setCancelState(Thread::TCS_CancelDisabled);
-   Thread::MemoryManagementLock.synchronized();
-
-   card32* ptr32 = (card32*)((long)ptr - (long)4);
-   card32 size = *ptr32;
-   AllocationBalance -= (int64)size;
-   free(ptr32);
-
-#ifdef PRINT_ALLOCATIONS
-   std::cout << "Freed " << size << " bytes -> Balance is "
-             << AllocationBalance << "." << std::endl;
-#endif
-
-   Thread::MemoryManagementLock.unsynchronized();
-   Thread::setCancelState(oldstate);
-}
-
-
-#endif

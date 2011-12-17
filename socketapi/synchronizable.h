@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 1999-2011 by Thomas Dreibholz
+ * Copyright (C) 1999-2012 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -46,30 +46,6 @@
 #include <sys/types.h>
 #include <pthread.h>
 #include <set>
-
-
-
-// Do verbose error checks to detect possible deadlock conditions.
-// IMPORTANT: This will use *internal* libpthread variables. See thread.h for details!
-// #define SYNCDEBUGGER
-
-// Assume synchronization failure after waiting for given number of microseconds
-// Note: A too low value can cause false alarms!
-#define SYNCDEBUGGER_TIMEOUT 20000000
-
-// Print all synchronized/unsynchronized calls with file name
-// and line number using macros synchronized() and unsynchronized()
-// to call debug functions.
-// #define SYNCDEBUGGER_PRINTING
-// #define SYNCDEBUGGER_VERBOSE_PRINTING
-
-// Signal to send to process in case of failure (e.g. SIGSEGV). Using a recent
-// Alan Cox kernel with multithreaded core dump patch, SIGSEGV can be used to abort
-// with core dump for gdb debugging.
-#ifdef SYNCDEBUGGER
-#include <signal.h>
-#define SYNCDEBUGGER_FAILURESIGNAL SIGSEGV
-#endif
 
 
 // System does not support recursive mutex.
@@ -165,62 +141,16 @@ class Synchronizable
    inline static bool setCancelState(const bool enabled);
 
 
-   // ====== Debug functions ================================================
-   /**
-     * Debug version of synchronized. This will print PID, file name
-     * and line number, followed by debug information.
-     *
-     * @param file File name.
-     * @param line Line number.
-     *
-     * @see synchronized
-     */
-   void synchronized_debug(const char* file, const cardinal line);
-
-   /**
-     * Debug version of unsynchronized. This will print PID, file name
-     * and line number, followed by debug information.
-     *
-     * @param file File name.
-     * @param line Line number.
-     *
-     * @see unsynchronized
-     */
-   void unsynchronized_debug(const char* file, const cardinal line);
-
-   /**
-     * Debug version of synchronizedTry. This will print PID, file name
-     * and line number, followed by debug information.
-     *
-     * @param file File name.
-     * @param line Line number.
-     *
-     * @see synchronizedTry
-     */
-   bool synchronizedTry_debug(const char* file, const cardinal line);
-
-   /**
-     * Debug version of resynchronize. This will print PID, file name
-     * and line number, followed by debug information.
-     *
-     * @param file File name.
-     * @param line Line number.
-     *
-     * @see resynchronize
-     */
-   void resynchronize_debug(const char* file, const cardinal line);
-
-
    // ====== Synchronizable naming for debugging ============================
    /**
-     * Get name of synchronizable object (SYNCDEBUGGER mode only, see synchronizable.h).
+     * Get name of synchronizable object.
      *
      * @return Name.
      */
    inline const char* getName() const;
 
    /**
-     * Set name of synchronizable object (SYNCDEBUGGER mode only, see synchronizable.h).
+     * Set name of synchronizable object.
      *
      * @param name Name.
      */
@@ -235,26 +165,11 @@ class Synchronizable
    pthread_t       Owner;
 #endif
    bool            Recursive;
-
-
-   // ====== Private data ===================================================
-   char                        MutexName[256];
-#ifdef SYNCDEBUGGER
-   friend class Thread;
-   static set<Synchronizable*> MutexSet;
-#endif
+   char            MutexName[64];
 };
 
 
 #include "synchronizable.icc"
-
-
-#ifdef SYNCDEBUGGER
-#define synchronized()    synchronized_debug(__FILE__,__LINE__)
-#define unsynchronized()  unsynchronized_debug(__FILE__,__LINE__)
-#define synchronizedTry() synchronizedTry_debug(__FILE__,__LINE__)
-#define resynchronize()   resynchronize_debug(__FILE__,__LINE__)
-#endif
 
 
 #endif

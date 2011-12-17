@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 1999-2011 by Thomas Dreibholz
+ * Copyright (C) 1999-2012 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -38,7 +38,9 @@
 
 
 #include "tdsystem.h"
+#include "tools.h"
 #include "sctpsocketmaster.h"
+#include "extsocketdescriptor.h"
 
 
 #include <signal.h>
@@ -61,6 +63,27 @@
 
 // Do not show a warning on initialization failure.
 // #define NO_INITFAIL_WARNING
+
+
+
+// ###### SCTPSocketMaster static attributes ################################
+int                              SCTPSocketMaster::InitializationResult     = -1000;
+int                              SCTPSocketMaster::GarbageCollectionTimerID = -1;
+cardinal                         SCTPSocketMaster::LockLevel                = 0;
+cardinal                         SCTPSocketMaster::OldCancelState           = true;
+card64                           SCTPSocketMaster::LastGarbageCollection;
+std::set<int>                    SCTPSocketMaster::ClosingSockets;
+std::multimap<unsigned int, int> SCTPSocketMaster::ClosingAssociations;
+std::multimap<int, SCTPSocket*>  SCTPSocketMaster::SocketList;
+SCTP_ulpCallbacks                SCTPSocketMaster::Callbacks;
+SCTPSocketMaster                 SCTPSocketMaster::MasterInstance;
+Randomizer                       SCTPSocketMaster::Random;
+int                              SCTPSocketMaster::BreakPipe[2];
+SCTPSocketMaster::UserSocketNotification
+                                 SCTPSocketMaster::BreakNotification;
+
+ExtSocketDescriptor              ExtSocketDescriptorMaster::Sockets[ExtSocketDescriptorMaster::MaxSockets];
+ExtSocketDescriptorMaster        ExtSocketDescriptorMaster::MasterInstance;
 
 
 

@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 1999-2011 by Thomas Dreibholz
+ * Copyright (C) 1999-2012 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -233,32 +233,7 @@ template<class T> cardinal removeDuplicates(T*             array,
 void printTimeStamp(std::ostream& os = std::cout);
 
 
-#ifdef USE_EFENCE
-
-
-#include "synchronizable.h"
-
-
-extern Synchronizable MemoryManagementLock;
-
-
-/**
-  * operator new() replacement for usage with libefence.
-  */
-void* operator new(size_t size) throw (std::bad_alloc);
-
-
-/**
-  * operator delete() replacement for usage with libefence.
-  */
-void operator delete(void* ptr) throw ();
-
-
-#endif
-
-
 #include "tools.icc"
 
 
 #endif
-

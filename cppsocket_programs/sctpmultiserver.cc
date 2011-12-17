@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 1999-2011 by Thomas Dreibholz
+ * Copyright (C) 1999-2012 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -46,6 +46,7 @@
 
 
 #include "tdsystem.h"
+#include "tools.h"
 #include "thread.h"
 #include "tdsocket.h"
 #include "tdmessage.h"

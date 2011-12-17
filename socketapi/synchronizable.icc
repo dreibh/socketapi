@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 1999-2011 by Thomas Dreibholz
+ * Copyright (C) 1999-2012 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -52,10 +52,6 @@
 // ###### Begin of synchronized access ######################################
 inline void Synchronizable::synchronized()
 {
-#ifdef SYNCDEBUGGER_PRINTING
-   std::cerr << "u";
-#endif
-
 #ifndef NO_RECURSIVE_MUTEX
    pthread_mutex_lock(&Mutex);
 #else
@@ -70,20 +66,12 @@ inline void Synchronizable::synchronized()
    }
    RecursionLevel++;
 #endif
-
-#ifdef SYNCDEBUGGER_PRINTING
-   std::cerr << "U";
-#endif
 }
 
 
 // ###### Try begin of synchronized access ##################################
 inline bool Synchronizable::synchronizedTry()
 {
-#ifdef SYNCDEBUGGER_PRINTING
-   std::cerr << "t";
-#endif
-
 #ifndef NO_RECURSIVE_MUTEX
    const int result = pthread_mutex_trylock(&Mutex);
 #else
@@ -109,29 +97,13 @@ inline bool Synchronizable::synchronizedTry()
       }
    }
 #endif
-
-   if(result == 0) {
-#ifdef SYNCDEBUGGER_PRINTING
-      std::cerr << "T";
-#endif
-      return(true);
-   }
-#ifdef SYNCDEBUGGER_PRINTING
-   else {
-      std::cerr << ".";
-   }
-#endif
-   return(false);
+   return(result == 0);
 }
 
 
 // ###### End of synchronized access ########################################
 inline void Synchronizable::unsynchronized()
 {
-#ifdef SYNCDEBUGGER_PRINTING
-   std::cerr << "s";
-#endif
-
 #ifndef NO_RECURSIVE_MUTEX
    pthread_mutex_unlock(&Mutex);
 #else
@@ -160,10 +132,6 @@ inline void Synchronizable::unsynchronized()
 #endif
       }
    }
-#endif
-
-#ifdef SYNCDEBUGGER_PRINTING
-   std::cerr << "S";
 #endif
 }
 

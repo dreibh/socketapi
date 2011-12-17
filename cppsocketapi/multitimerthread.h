@@ -41,6 +41,7 @@
 
 
 #include "tdsystem.h"
+#include "tools.h"
 #include "thread.h"
 
 

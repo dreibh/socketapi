@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 1999-2011 by Thomas Dreibholz
+ * Copyright (C) 1999-2012 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -166,27 +166,6 @@ class Thread : public Synchronizable
    inline static cardinal setCancelState(const cardinal state);
 
 
-   // ====== Public data ====================================================
-   public:
-   /**
-     * Mutex for set of Synchronizable objects (for SYNCDEBUGGER mode only!).
-     *
-     * @see Synchronizable
-     */
-   static Synchronizable SyncSetLock;
-
-   /**
-     * This mutex is necessary to avoid simultaneous access to malloc()
-     * and free() when using libefence.
-     */
-   static Synchronizable MemoryManagementLock;
-
-   /**
-     * Set of all running threads.
-     */
-   static std::set<Thread*> ThreadSet;
-
-
    // ====== Tests for cancellation =========================================
    protected:
    /**
@@ -233,41 +212,6 @@ class Thread : public Synchronizable
    cardinal        Flags;
    pthread_mutex_t StartupMutex;
    pthread_cond_t  StartupCondition;
-
-
-#ifdef SYNCDEBUGGER
-   friend class Synchronizable;
-   struct _pthread_descr_struct;
-   typedef struct _pthread_descr_struct* pthread_descr;
-
-   // ***********************************************************************
-   // * IMPORTANT: Insert _pthread_descr_struct from
-   // *            linuxthreads/internals.h of your glibc package here!
-   // ***********************************************************************
-   struct _pthread_descr_struct {
-#if ((__GLIBC__ >= 2) && (__GLIBC_MINOR__ >= 2))
-     union {
-       struct {
-         Thread::pthread_descr self;	/* Pointer to this structure */
-       } data;
-       void *__padding[16];
-     } p_header;
-#endif
-     pthread_descr p_nextlive, p_prevlive;
-                                   /* Double chaining of active threads */
-     pthread_descr p_nextwaiting;  /* Next element in the queue holding the thr */
-     pthread_descr p_nextlock;	/* can be on a queue and waiting on a lock */
-     pthread_t p_tid;              /* Thread identifier */
-     int p_pid;                    /* PID of Unix process */
-   };
-   // ***********************************************************************
-
-   pthread_descr InternalPThreadPtr;
-
-
-   static bool checkSyncDebugger();
-   static bool syncDebuggerChecked;
-#endif
 };
 
 

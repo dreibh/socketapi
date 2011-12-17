@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 1999-2011 by Thomas Dreibholz
+ * Copyright (C) 1999-2012 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -48,9 +48,12 @@
 #include <ctype.h>
 
 
-
 // Print note, if IPv6 is not available.
 // #ifdef PRINT_NOIPV6_NOTE
+
+
+// Check, if IPv6 is available on this host.
+bool InternetAddress::UseIPv6 = checkIPv6();
 
 
 

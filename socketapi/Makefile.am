@@ -7,7 +7,7 @@ libsctpsocketinclude_HEADERS = ext_socket.h
 libsctpsocket_la_SOURCES = thread.cc tdstrings.cc synchronizable.cc \
                            sctpsocketwrapper.cc sctpsocketmaster.cc sctpsocket.cc \
                            sctpnotificationqueue.cc sctpassociation.cc randomizer.cc \
-                           internetaddress.cc condition.cc tools.cc socketaddress.cc staticglobals.cc \
+                           internetaddress.cc condition.cc tools.cc socketaddress.cc \
                            internetflow.cc unixaddress.cc \
                            condition.h randomizer.h socketaddress.h thread.h \
                            sctpassociation.h synchronizable.h tools.h \
