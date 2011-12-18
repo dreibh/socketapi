@@ -230,6 +230,7 @@ template<const cardinal Timers> class MultiTimerThread : public Thread
    // ====== Private data ===================================================
    private:
    void run();
+   inline bool isShuttingDown();
 
    struct TimerParameters {
       card64   Interval;

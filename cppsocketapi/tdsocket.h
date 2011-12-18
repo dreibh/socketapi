@@ -197,32 +197,6 @@ class Socket
    inline integer getProtocol() const;
 
 
-   // ====== Statistics functions ===========================================
-   /**
-     * Get number of bytes sent.
-     *
-     * @return Number of bytes sent.
-     */
-   inline card64 getBytesSent() const;
-
-   /**
-     * Get number of bytes received.
-     *
-     * @return Number of bytes received.
-     */
-   inline card64 getBytesReceived() const;
-
-   /**
-     * Reset number of bytes sent.
-     */
-   inline void resetBytesSent();
-
-   /**
-     * Reset number of bytes received.
-     */
-   inline void resetBytesReceived();
-
-
    // ====== Socket control functions =======================================
    /**
      * Check, if socket is ready.
@@ -805,17 +779,15 @@ O     * Bind socket to one or more given addresses. If no addresses are given,
                                sockaddr*               packedArray);
 
 
-   card64    BytesSent;
-   card64    BytesReceived;
-   card32    SendFlow;
-   card32    ReceivedFlow;
-   cardinal  Backlog;
-   integer   LastError;
    int       SocketDescriptor;
-   sockaddr* Destination;
    integer   Family;
    integer   Type;
    integer   Protocol;
+   card32    SendFlow;
+   card32    ReceivedFlow;
+   integer   LastError;
+   cardinal  Backlog;
+   sockaddr* Destination;
 };
 
 

@@ -70,16 +70,30 @@ template<const cardinal Timers> MultiTimerThread<Timers>::~MultiTimerThread()
 // ###### Reimplementation of cancel() ######################################
 template<const cardinal Timers> void MultiTimerThread<Timers>::cancel()
 {
+   synchronized();
    Shutdown = true;
+   unsynchronized();
 }
 
 
 // ###### Reimplementation of stop() ########################################
 template<const cardinal Timers> void* MultiTimerThread<Timers>::stop()
 {
+   synchronized();
    Shutdown = true;
+   unsynchronized();
    join();
    return(NULL);
+}
+
+
+// ###### Check for pending shutdown ########################################
+template<const cardinal Timers> bool MultiTimerThread<Timers>::isShuttingDown()
+{
+   synchronized();
+   const bool shutdownPending = Shutdown;
+   unsynchronized();
+   return(shutdownPending);
 }
 
 
@@ -102,7 +116,7 @@ template<const cardinal Timers> void MultiTimerThread<Timers>::run()
 
    card64 now           = getMicroTime();
    card64 nextTimeStamp = now;
-   while(!Shutdown) {
+   while(!isShuttingDown()) {
       synchronized();
 
       // ====== Check for parameter updates =================================

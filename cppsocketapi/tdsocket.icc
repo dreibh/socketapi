@@ -44,9 +44,6 @@
 #include "ext_socket.h"
 
 
-//#include "tdin6.h"
-
-
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
@@ -109,34 +106,6 @@ inline card8 Socket::getReceivedTrafficClass() const
 }
 
 
-// ###### Get bytes sent ####################################################
-inline card64 Socket::getBytesSent() const
-{
-   return(BytesSent);
-}
-
-
-// ###### Get bytes received ################################################
-inline card64 Socket::getBytesReceived() const
-{
-   return(BytesReceived);
-}
-
-
-// ###### Reset bytes sent ##################################################
-inline void Socket::resetBytesSent()
-{
-   BytesSent = 0;
-}
-
-
-// ###### Reset bytes received ##############################################
-inline void Socket::resetBytesReceived()
-{
-   BytesReceived = 0;
-}
-
-
 // ###### Socket control ####################################################
 inline integer Socket::fcntl(const integer cmd, long arg)
 {
@@ -178,7 +147,7 @@ inline integer Socket::getSocketOption(const cardinal level,
                                        socklen_t*     optionLength)
 {
    const integer result = ext_getsockopt(SocketDescriptor,
-                                        level,optionNumber,optionValue,optionLength);
+                                         level,optionNumber,optionValue,optionLength);
    if(result != 0) {
       LastError = errno;
    }
@@ -193,7 +162,7 @@ inline integer Socket::setSocketOption(const cardinal  level,
                                        const socklen_t optionLength)
 {
    const integer result = ext_setsockopt(SocketDescriptor,
-                                        level,optionNumber,optionValue,optionLength);
+                                         level,optionNumber,optionValue,optionLength);
    if(result != 0) {
       LastError = errno;
    }
@@ -229,8 +198,9 @@ inline ssize_t Socket::receive(void*        buffer,
                              length, flags,
                              (sockaddr*)&socketAddressBuffer,
                              &socketAddressLength);
-   if(result > 0) {
-      BytesReceived += (card64)result;
+   if(result < 0) {
+      LastError = errno;
+      result    = -LastError;
    }
    return(result);
 }
@@ -240,10 +210,7 @@ inline ssize_t Socket::receive(void*        buffer,
 inline ssize_t Socket::read(void* buffer, const size_t length)
 {
    ssize_t result = ext_read(SocketDescriptor,buffer,length);
-   if(result >= 0) {
-      BytesReceived += (card64)result;
-   }
-   else {
+   if(result < 0) {
       LastError = errno;
       result    = -LastError;
    }
@@ -256,10 +223,7 @@ inline ssize_t Socket::write(const void*  buffer,
                              const size_t length)
 {
    ssize_t result = ext_write(SocketDescriptor,buffer,length);
-   if(result >= 0) {
-      BytesSent += (card64)result;
-   }
-   else {
+   if(result < 0) {
       LastError = errno;
       result    = -LastError;
    }

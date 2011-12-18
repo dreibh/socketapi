@@ -134,17 +134,15 @@ void Socket::packSocketAddressArray(const sockaddr_storage* addrArray,
 // ###### Initialize socket #################################################
 void Socket::init()
 {
+   SocketDescriptor = -1;
    Family           = UndefinedSocketFamily;
    Type             = UndefinedSocketType;
    Protocol         = UndefinedSocketProtocol;
    Destination      = NULL;
-   Backlog          = 0;
    SendFlow         = 0;
    ReceivedFlow     = 0;
-   BytesSent        = 0;
-   BytesReceived    = 0;
-   SocketDescriptor = -1;
    LastError        = 0;
+   Backlog          = 0;
 }
 
 
@@ -760,14 +758,13 @@ ssize_t Socket::receiveFrom(void*          buffer,
    char      socketAddressBuffer[SocketAddress::MaxSockLen];
    socklen_t socketAddressLength = SocketAddress::MaxSockLen;
 
-   ssize_t result = recvFrom(SocketDescriptor, buffer,
-                             length, flags,
-                             (sockaddr*)&socketAddressBuffer,
-                             &socketAddressLength);
+   const ssize_t result = recvFrom(SocketDescriptor, buffer,
+                                   length, flags,
+                                   (sockaddr*)&socketAddressBuffer,
+                                   &socketAddressLength);
    if(result > 0) {
       sender.setSystemAddress((sockaddr*)&socketAddressBuffer,
                               socketAddressLength);
-      BytesReceived += (card64)result;
    }
    return(result);
 }
@@ -791,12 +788,10 @@ ssize_t Socket::send(const void*   buffer,
                                            & IPV6_FLOWINFO_FLOWLABEL) |
                                            ((card32)trafficClass << 20));
          ssize_t result = ext_sendto(SocketDescriptor, buffer, length, flags,
-                                       (sockaddr*)&newAddress, sizeof(sockaddr_in6));
-         if(result > 0) {
-            BytesSent += (card64)result;
-         }
-         else {
+                                     (sockaddr*)&newAddress, sizeof(sockaddr_in6));
+         if(result < 0) {
             LastError = errno;
+            result    = -LastError;
          }
          return(result);
       }
@@ -807,10 +802,7 @@ ssize_t Socket::send(const void*   buffer,
          setTypeOfService(trafficClass);
          ssize_t result = ext_send(SocketDescriptor,buffer,length,flags);
          setTypeOfService(SendFlow >> 20);
-         if(result > 0) {
-            BytesSent += (card64)result;
-         }
-         else {
+         if(result < 0) {
             LastError = errno;
             result    = -LastError;
          }
@@ -820,10 +812,7 @@ ssize_t Socket::send(const void*   buffer,
 
    // ====== Do simple send() without setting traffic class =================
    ssize_t result = ext_send(SocketDescriptor,buffer,length,flags);
-   if(result > 0) {
-      BytesSent += (card64)result;
-   }
-   else {
+   if(result < 0) {
       LastError = errno;
       result    = -LastError;
    }
@@ -860,11 +849,9 @@ ssize_t Socket::sendTo(const void*          buffer,
                                            ((card32)trafficClass << 20));
          ssize_t result = ext_sendto(SocketDescriptor,buffer,length,flags,
                                       (sockaddr*)&newAddress,sizeof(sockaddr_in6));
-         if(result > 0) {
-            BytesSent += (card64)result;
-         }
-         else {
+         if(result < 0) {
             LastError = errno;
+            result    = -LastError;
          }
          return(result);
       }
@@ -876,11 +863,9 @@ ssize_t Socket::sendTo(const void*          buffer,
          ssize_t result = ext_sendto(SocketDescriptor,buffer,length,flags,
                                        (sockaddr*)socketAddress,socketAddressLength);
          setTypeOfService(SendFlow >> 20);
-         if(result > 0) {
-            BytesSent += (card64)result;
-         }
-         else {
+         if(result < 0) {
             LastError = errno;
+            result    = -LastError;
          }
          return(result);
       }
@@ -889,11 +874,9 @@ ssize_t Socket::sendTo(const void*          buffer,
    // ====== Do simple send() without setting traffic class =================
    ssize_t result = ext_sendto(SocketDescriptor,buffer,length,flags,
                                  (sockaddr*)socketAddress,socketAddressLength);
-   if(result > 0) {
-      BytesSent += (card64)result;
-   }
-   else {
+   if(result < 0) {
       LastError = errno;
+      result    = -LastError;
    }
    return(result);
 }
@@ -909,10 +892,7 @@ ssize_t Socket::sendMsg(const struct msghdr* msg,
    }
 
    ssize_t result = ext_sendmsg(SocketDescriptor,msg,(int)flags);
-   if(result >= 0) {
-      BytesSent += (card64)result;
-   }
-   else {
+   if(result < 0) {
       LastError = errno;
       result    = -LastError;
    }
