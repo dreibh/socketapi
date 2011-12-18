@@ -189,8 +189,14 @@ template<const cardinal Timers> void MultiTimerThread<Timers>::run()
             if(now >= next[i]) {
                if(now < next[i] + (parameters[i].TimerCorrection * parameters[i].Interval)) {
                   while(next[i] < now) {
+                     synchronized();
+                     bool leave = false;
                      if(LeaveCorrectionLoop[i]) {
                         LeaveCorrectionLoop[i] = false;
+                        leave = true;
+                     }
+                     unsynchronized();
+                     if(leave) {
                         break;
                      }
                      next[i] += parameters[i].Interval;
@@ -298,7 +304,9 @@ template<const cardinal Timers> inline void MultiTimerThread<Timers>::leaveCorre
                                                const cardinal timer)
 {
    if(timer < Timers) {
+      synchronized();
       LeaveCorrectionLoop[timer] = true;
+      unsynchronized();
    }
 }
 
