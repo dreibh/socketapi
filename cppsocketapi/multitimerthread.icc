@@ -100,6 +100,8 @@ template<const cardinal Timers> bool MultiTimerThread<Timers>::isShuttingDown()
 // ###### The thread's run() implementation #################################
 template<const cardinal Timers> void MultiTimerThread<Timers>::run()
 {
+   // ====== Initialize =====================================================
+   synchronized();
    Shutdown          = false;
    ParametersUpdated = true;
 
@@ -107,12 +109,14 @@ template<const cardinal Timers> void MultiTimerThread<Timers>::run()
    TimerParameters parameters[Timers];
    card64          calls[Timers];
    card64          next[Timers];
+
    for(cardinal i = 0;i < Timers;i++) {
       parameters[i] = Parameters[i];
       parameters[i].Updated = true;
       next[i]  = 0;
       calls[i] = 0;
    }
+   unsynchronized();
 
    card64 now           = getMicroTime();
    card64 nextTimeStamp = now;
@@ -216,12 +220,12 @@ template<const cardinal Timers> void MultiTimerThread<Timers>::run()
 
 // ###### Get interval ######################################################
 template<const cardinal Timers> inline card64 MultiTimerThread<Timers>::getInterval(
-                                                 const cardinal timer) const
+                                                 const cardinal timer)
 {
    if(timer < Timers) {
-      ((MultiTimerThread<Timers>*)this)->synchronized();
+      synchronized();
       const card64 interval = Parameters[timer].Interval;
-      ((MultiTimerThread<Timers>*)this)->unsynchronized();
+      unsynchronized();
       return(interval);
    }
    return(0);
@@ -277,12 +281,12 @@ template<const cardinal Timers> inline void MultiTimerThread<Timers>::setNextAct
 
 // ###### Get timer correction mode #########################################
 template<const cardinal Timers> inline cardinal MultiTimerThread<Timers>::getTimerCorrection(
-                                                   const cardinal timer) const
+                                                   const cardinal timer)
 {
    if(timer < Timers) {
-      ((MultiTimerThread<Timers>*)this)->synchronized();
+      synchronized();
       const cardinal correction = Parameters[timer].TimerCorrection;
-      ((MultiTimerThread<Timers>*)this)->unsynchronized();
+      unsynchronized();
       return(correction);
    }
    return(0);

@@ -98,7 +98,7 @@ class TimedThread : public SingleTimerThread
      *
      * @return Interval in microseconds.
      */
-   inline card64 getInterval() const;
+   inline card64 getInterval();
 
    /**
      * Set timed thread's interval.
@@ -139,7 +139,7 @@ class TimedThread : public SingleTimerThread
      *
      * @see setTimerCorrection
      */
-   inline cardinal getTimerCorrection() const;
+   inline cardinal getTimerCorrection();
 
    /**
      * Set correction of inaccurate system timer to given value.

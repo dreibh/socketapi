@@ -42,7 +42,7 @@
 
 
 // ###### Get interval ######################################################
-inline card64 TimedThread::getInterval() const
+inline card64 TimedThread::getInterval()
 {
    return(SingleTimerThread::getInterval(0));
 }
@@ -56,7 +56,7 @@ inline void TimedThread::setInterval(const card64 usec)
 
 
 // ###### Get timer correction mode #########################################
-inline cardinal TimedThread::getTimerCorrection() const
+inline cardinal TimedThread::getTimerCorrection()
 {
    return(SingleTimerThread::getTimerCorrection(0));
 }

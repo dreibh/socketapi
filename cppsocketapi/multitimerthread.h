@@ -100,7 +100,7 @@ template<const cardinal Timers> class MultiTimerThread : public Thread
      * @param timer Timer number.
      * @return Interval in microseconds.
      */
-   inline card64 getInterval(const cardinal timer) const;
+   inline card64 getInterval(const cardinal timer);
 
    /**
      * Set timer interval. Note, that the first timerEvent() call will
@@ -156,7 +156,7 @@ template<const cardinal Timers> class MultiTimerThread : public Thread
      *
      * @see setTimerCorrection
      */
-   inline cardinal getTimerCorrection(const cardinal timer) const;
+   inline cardinal getTimerCorrection(const cardinal timer);
 
    /**
      * Set correction of inaccurate system timer to given value.
