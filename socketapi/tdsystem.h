@@ -44,31 +44,11 @@
 #endif
 
 
-// Use TransportInfo
-#define USE_TRANSPORTINFO
-
 // Use traffic shaper
 // #define USE_TRAFFICSHAPER
 
-
 // Disable all warning outputs. Not recommended!
 // #define DISABLE_WARNINGS
-
-
-// Some important definitions for usage of reentrant versions.
-#ifndef _REENTRANT
- #define _REENTRANT
-#endif
-#ifndef _THREAD_SAFE
- #define _THREAD_SAFE
-#endif
-
-#ifndef _GNU_SOURCE
- #define _GNU_SOURCE
-#endif
-#ifndef USE_PTHREADS
- #define USE_PTHREADS
-#endif
 
 
 #include <stdio.h>

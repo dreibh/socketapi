@@ -74,14 +74,16 @@ inline void debug(const char* string)
 // ##########################################################################
 
 
-#if __BYTE_ORDER == __BIG_ENDIAN
+#if BYTE_ORDER == BIG_ENDIAN
+
+#error BIG??
 
 // No byteorder translation for big endian necessary!
 inline card16 translate16(const card16 x) { return(x); }
 inline card32 translate32(const card32 x) { return(x); }
 inline card64 translate64(const card64 x) { return(x); }
 
-#elif  __BYTE_ORDER == __LITTLE_ENDIAN
+#elif  BYTE_ORDER == LITTLE_ENDIAN
 
 #ifdef USE_BYTESWAP
 #include <byteswap.h>
