@@ -173,22 +173,19 @@ bool Socket::create(const integer communicationDomain,
    }
 
    // ====== Set options ====================================================
-   // Send and receive IPv6 flow labels.
 #if (SYSTEM == OS_Linux)
-   int opt1 = 1;
-   ext_setsockopt(SocketDescriptor,SOL_IPV6,IPV6_FLOWINFO,&opt1,sizeof(opt1));
-   ext_setsockopt(SocketDescriptor,SOL_IPV6,IPV6_FLOWINFO_SEND,&opt1,sizeof(opt1));
+   const int yes = 1;
+   // Send and receive IPv6 flow labels.
+   ext_setsockopt(SocketDescriptor,SOL_IPV6,IPV6_FLOWINFO,&yes,sizeof(yes));
+   ext_setsockopt(SocketDescriptor,SOL_IPV6,IPV6_FLOWINFO_SEND,&yes,sizeof(yes));
+   // Receive IPv4 TOS field.
+   ext_setsockopt(SocketDescriptor,SOL_IP,IP_RECVTOS,&yes,sizeof(yes));
 #endif
    if(Family == IPv6) {
-      int no = 0;
+      const int no = 0;
       ext_setsockopt(SocketDescriptor,IPPROTO_IPV6,IPV6_V6ONLY,&no,sizeof(no));
    }
 
-   // Receive IPv4 TOS field.
-#if (SYSTEM == OS_Linux)
-   bool opt2 = true;
-   setsockopt(SocketDescriptor,SOL_IP,IP_RECVTOS,&opt2,sizeof(opt2));
-#endif
    return(true);
 }
 
