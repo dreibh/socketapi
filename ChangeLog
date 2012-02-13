@@ -1,4 +1,277 @@
 ------------------------------------------------------------------------
+r2660 | dreibh | 2011-12-23 13:41:42 +0100 (Fri, 23 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+
+Code improvement.
+
+------------------------------------------------------------------------
+r2659 | dreibh | 2011-12-23 13:36:08 +0100 (Fri, 23 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+
+FreeBSD: need to set IPV6_V6ONLY to "no".
+
+------------------------------------------------------------------------
+r2658 | dreibh | 2011-12-23 12:08:58 +0100 (Fri, 23 Dec 2011) | 3 lines
+Changed paths:
+   M /trunk/socketapi/socketapi/tdsystem.h
+   M /trunk/socketapi/socketapi/tools.icc
+
+FreeBSD compile fixes.
+
+
+------------------------------------------------------------------------
+r2654 | dreibh | 2011-12-22 08:51:45 +0100 (Thu, 22 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/rsplib2/UpdateDoc1.sed
+   M /trunk/sctplib1/UpdateDoc1.sed
+   M /trunk/sctplib1/configure.in
+   M /trunk/sctplib1/debian/changelog
+   M /trunk/socketapi/UpdateDoc1.sed
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/debian/changelog
+
+Minor updates.
+
+------------------------------------------------------------------------
+r2653 | dreibh | 2011-12-21 13:49:32 +0100 (Wed, 21 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/cppsocketapi/Makefile.am
+   A /trunk/socketapi/cppsocketapi/multitimerthread.h
+   A /trunk/socketapi/cppsocketapi/multitimerthread.icc
+   M /trunk/socketapi/debian/changelog
+   M /trunk/socketapi/debian/control
+   M /trunk/socketapi/make-symbols
+   M /trunk/socketapi/replace-cpp-symbols
+
+Re-added mistakenly removed multitimerthread.h/.icc files.
+
+------------------------------------------------------------------------
+r2652 | dreibh | 2011-12-18 14:24:43 +0100 (Sun, 18 Dec 2011) | 3 lines
+Changed paths:
+   M /trunk/socketapi/UpdateDoc1.sed
+   M /trunk/socketapi/cppsocketapi/Makefile.am
+   M /trunk/socketapi/cppsocketapi/breakdetector.cc
+   M /trunk/socketapi/cppsocketapi/breakdetector.h
+   D /trunk/socketapi/cppsocketapi/multitimerthread.h
+   D /trunk/socketapi/cppsocketapi/multitimerthread.icc
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+   M /trunk/socketapi/cppsocketapi/tdsocket.h
+   M /trunk/socketapi/cppsocketapi/tdsocket.icc
+   M /trunk/socketapi/cppsocketapi/timedthread.cc
+   M /trunk/socketapi/cppsocketapi/timedthread.h
+   M /trunk/socketapi/cppsocketapi/timedthread.icc
+
+- Removed unnecessary files.
+- Header updates.
+
+------------------------------------------------------------------------
+r2651 | dreibh | 2011-12-18 13:58:41 +0100 (Sun, 18 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/multitimerthread.icc
+
+Minor fixes.
+
+------------------------------------------------------------------------
+r2650 | dreibh | 2011-12-18 11:41:34 +0100 (Sun, 18 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/multitimerthread.h
+   M /trunk/socketapi/cppsocketapi/multitimerthread.icc
+   M /trunk/socketapi/cppsocketapi/timedthread.h
+   M /trunk/socketapi/cppsocketapi/timedthread.icc
+
+Some code clean-ups.
+
+------------------------------------------------------------------------
+r2649 | dreibh | 2011-12-18 10:38:12 +0100 (Sun, 18 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/multitimerthread.h
+   M /trunk/socketapi/cppsocketapi/multitimerthread.icc
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+   M /trunk/socketapi/cppsocketapi/tdsocket.h
+   M /trunk/socketapi/cppsocketapi/tdsocket.icc
+
+Code clean-ups and removal of unused code.
+
+------------------------------------------------------------------------
+r2648 | dreibh | 2011-12-17 14:26:02 +0100 (Sat, 17 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/UpdateDoc1.sed
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/cppsocket_programs/ansicolor.h
+   M /trunk/socketapi/cppsocket_programs/sctpinfoprinter.cc
+   M /trunk/socketapi/cppsocket_programs/sctpinfoprinter.h
+   M /trunk/socketapi/cppsocket_programs/sctpmultiserver.cc
+   M /trunk/socketapi/cppsocket_programs/sctpportscanner.cc
+   M /trunk/socketapi/cppsocket_programs/sctpsockettest.cc
+   M /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+   M /trunk/socketapi/cppsocket_programs/sctptest.cc
+   M /trunk/socketapi/cppsocket_programs/sctptftp.cc
+   M /trunk/socketapi/cppsocket_programs/sctptftp.h
+   M /trunk/socketapi/cppsocketapi/multitimerthread.h
+   M /trunk/socketapi/debian/changelog
+   M /trunk/socketapi/socketapi/Makefile.am
+   M /trunk/socketapi/socketapi/condition.cc
+   M /trunk/socketapi/socketapi/condition.h
+   M /trunk/socketapi/socketapi/condition.icc
+   M /trunk/socketapi/socketapi/ext_socket.h
+   M /trunk/socketapi/socketapi/extsocketdescriptor.h
+   M /trunk/socketapi/socketapi/internetaddress.cc
+   M /trunk/socketapi/socketapi/internetaddress.h
+   M /trunk/socketapi/socketapi/internetaddress.icc
+   M /trunk/socketapi/socketapi/internetflow.cc
+   M /trunk/socketapi/socketapi/internetflow.h
+   M /trunk/socketapi/socketapi/internetflow.icc
+   M /trunk/socketapi/socketapi/portableaddress.h
+   M /trunk/socketapi/socketapi/portableaddress.icc
+   M /trunk/socketapi/socketapi/randomizer.cc
+   M /trunk/socketapi/socketapi/randomizer.h
+   M /trunk/socketapi/socketapi/randomizer.icc
+   M /trunk/socketapi/socketapi/sctpassociation.cc
+   M /trunk/socketapi/socketapi/sctpassociation.h
+   M /trunk/socketapi/socketapi/sctpassociation.icc
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.cc
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.h
+   M /trunk/socketapi/socketapi/sctpnotificationqueue.icc
+   M /trunk/socketapi/socketapi/sctpsocket.cc
+   M /trunk/socketapi/socketapi/sctpsocket.h
+   M /trunk/socketapi/socketapi/sctpsocket.icc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketmaster.h
+   M /trunk/socketapi/socketapi/sctpsocketmaster.icc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.h
+   M /trunk/socketapi/socketapi/socketaddress.cc
+   M /trunk/socketapi/socketapi/socketaddress.h
+   M /trunk/socketapi/socketapi/socketaddress.icc
+   D /trunk/socketapi/socketapi/staticglobals.cc
+   M /trunk/socketapi/socketapi/synchronizable.cc
+   M /trunk/socketapi/socketapi/synchronizable.h
+   M /trunk/socketapi/socketapi/synchronizable.icc
+   M /trunk/socketapi/socketapi/tdin6.h
+   M /trunk/socketapi/socketapi/tdmessage.h
+   M /trunk/socketapi/socketapi/tdmessage.icc
+   M /trunk/socketapi/socketapi/tdstrings.cc
+   M /trunk/socketapi/socketapi/tdstrings.h
+   M /trunk/socketapi/socketapi/tdstrings.icc
+   M /trunk/socketapi/socketapi/tdsystem.h
+   M /trunk/socketapi/socketapi/thread.cc
+   M /trunk/socketapi/socketapi/thread.h
+   M /trunk/socketapi/socketapi/thread.icc
+   M /trunk/socketapi/socketapi/tools.cc
+   M /trunk/socketapi/socketapi/tools.h
+   M /trunk/socketapi/socketapi/tools.icc
+   M /trunk/socketapi/socketapi/unixaddress.cc
+   M /trunk/socketapi/socketapi/unixaddress.h
+   M /trunk/socketapi/socketapi/unixaddress.icc
+
+Merged files.
+
+------------------------------------------------------------------------
+r2647 | dreibh | 2011-12-16 15:33:26 +0100 (Fri, 16 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+
+Fixed memory leak.
+
+------------------------------------------------------------------------
+r2646 | dreibh | 2011-12-16 12:38:02 +0100 (Fri, 16 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocket_programs/sctpmultiserver.cc
+   M /trunk/socketapi/cppsocket_programs/sctptftp.cc
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+   M /trunk/socketapi/cppsocketapi/tdsocket.h
+   M /trunk/socketapi/cppsocketapi/tdsocket.icc
+
+Changed flags handling of TDSocket class to handle MSG_EOF/MSG_NOTIFICATION.
+
+------------------------------------------------------------------------
+r2645 | dreibh | 2011-12-15 16:15:34 +0100 (Thu, 15 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/cppsocketapi/Makefile.am
+   M /trunk/socketapi/debian/changelog
+
+Fixed Makefile.am (duplicate entry).
+
+------------------------------------------------------------------------
+r2644 | dreibh | 2011-12-15 13:36:21 +0100 (Thu, 15 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/cppsocket_programs/sctpinfoprinter.cc
+   M /trunk/socketapi/cppsocket_programs/sctpmultiserver.cc
+   M /trunk/socketapi/debian/changelog
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+   M /trunk/socketapi/socketapi/tdmessage.h
+   M /trunk/socketapi/socketapi/tdmessage.icc
+
+Some sendmsg() control handling fixes.
+
+------------------------------------------------------------------------
+r2643 | dreibh | 2011-12-15 13:36:00 +0100 (Thu, 15 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocketapi/Makefile.am
+   D /trunk/socketapi/cppsocketapi/packetaddress.cc
+   D /trunk/socketapi/cppsocketapi/packetaddress.h
+   D /trunk/socketapi/cppsocketapi/packetaddress.icc
+
+Removed unnecessary files.
+
+------------------------------------------------------------------------
+r2642 | dreibh | 2011-12-15 10:53:26 +0100 (Thu, 15 Dec 2011) | 2 lines
+Changed paths:
+   M /trunk/socketapi/cppsocket_programs/sctpinfoprinter.cc
+   M /trunk/socketapi/cppsocket_programs/sctpmultiserver.cc
+   M /trunk/socketapi/cppsocket_programs/sctpterminal.cc
+   M /trunk/socketapi/cppsocketapi/breakdetector.cc
+   M /trunk/socketapi/cppsocketapi/breakdetector.h
+   M /trunk/socketapi/cppsocketapi/multitimerthread.h
+   M /trunk/socketapi/cppsocketapi/multitimerthread.icc
+   M /trunk/socketapi/cppsocketapi/packetaddress.cc
+   M /trunk/socketapi/cppsocketapi/packetaddress.h
+   M /trunk/socketapi/cppsocketapi/packetaddress.icc
+   M /trunk/socketapi/cppsocketapi/tdsocket.cc
+   M /trunk/socketapi/cppsocketapi/tdsocket.h
+   M /trunk/socketapi/cppsocketapi/tdsocket.icc
+   M /trunk/socketapi/cppsocketapi/timedthread.cc
+   M /trunk/socketapi/cppsocketapi/timedthread.h
+   M /trunk/socketapi/cppsocketapi/timedthread.icc
+   M /trunk/socketapi/socketapi/ChangeLog
+   M /trunk/socketapi/socketapi/internetaddress.cc
+   M /trunk/socketapi/socketapi/internetaddress.h
+   M /trunk/socketapi/socketapi/internetaddress.icc
+   M /trunk/socketapi/socketapi/internetflow.h
+   M /trunk/socketapi/socketapi/portableaddress.h
+   M /trunk/socketapi/socketapi/portableaddress.icc
+   M /trunk/socketapi/socketapi/randomizer.cc
+   M /trunk/socketapi/socketapi/randomizer.h
+   M /trunk/socketapi/socketapi/sctpsocketmaster.cc
+   M /trunk/socketapi/socketapi/sctpsocketwrapper.cc
+   M /trunk/socketapi/socketapi/socketaddress.h
+   M /trunk/socketapi/socketapi/tdmessage.h
+   M /trunk/socketapi/socketapi/tdmessage.icc
+   M /trunk/socketapi/socketapi/unixaddress.cc
+   M /trunk/socketapi/socketapi/unixaddress.h
+
+Merged updated classes from RTP Audio project.
+
+------------------------------------------------------------------------
+r2641 | dreibh | 2011-12-14 14:55:47 +0100 (Wed, 14 Dec 2011) | 1 line
+Changed paths:
+   M /trunk/rsplib2/configure.in
+   M /trunk/sctplib/configure.in
+   M /trunk/socketapi/configure.in
+
+Fixed detection code for sa_len, sin_len and sin6_len.
+------------------------------------------------------------------------
+r2640 | dreibh | 2011-12-14 09:17:11 +0100 (Wed, 14 Dec 2011) | 1 line
+Changed paths:
+   M /trunk/socketapi/ChangeLog
+
+Updated ChangeLog.
+------------------------------------------------------------------------
 r2638 | dreibh | 2011-12-14 09:12:19 +0100 (Wed, 14 Dec 2011) | 2 lines
 Changed paths:
    M /trunk/socketapi/ChangeLog
