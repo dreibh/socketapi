@@ -44,6 +44,7 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <sys/utsname.h>
+#include <net/if.h>
 #include <arpa/nameser.h>
 #include <ctype.h>
 
@@ -158,8 +159,9 @@ InternetAddress::InternetAddress(const PortableAddress& address)
    for(cardinal i = 0;i < 8;i++) {
       AddrSpec.Host16[i] = address.Host[i];
    }
-   Port  = address.Port;
-   Valid = true;
+   Port    = address.Port;
+   ScopeID = 0;
+   Valid   = true;
    setPrintFormat(PF_Default);
 }
 
@@ -205,7 +207,8 @@ void InternetAddress::reset()
    for(cardinal i = 0;i < 8;i++) {
       AddrSpec.Host16[i] = 0x0000;
    }
-   Valid = true;
+   ScopeID = 0;
+   Valid   = true;
    setPort(0);
    setPrintFormat(PF_Default);
 }
@@ -242,7 +245,8 @@ void InternetAddress::init(const InternetAddress& address)
    for(cardinal i = 0;i < 8;i++) {
       AddrSpec.Host16[i] = address.AddrSpec.Host16[i];
    }
-   Valid = address.Valid;
+   ScopeID = address.ScopeID;
+   Valid   = address.Valid;
    setPrintFormat(address.getPrintFormat());
 }
 
@@ -253,7 +257,8 @@ void InternetAddress::init(const card16 port)
    for(cardinal i = 0;i < 8;i++) {
       AddrSpec.Host16[i] = 0x0000;
    }
-   Valid = true;
+   ScopeID = 0;
+   Valid   = true;
    setPort(port);
    setPrintFormat(PF_Default);
 }
@@ -263,19 +268,21 @@ void InternetAddress::init(const card16 port)
 void InternetAddress::init(const String& hostName, const card16 port)
 {
    card16   address[8];
-   cardinal length = getHostByName(hostName.getData(),(card16*)&address);
+   card16   scopeID;
+   cardinal length = getHostByName(hostName.getData(),(card16*)&address,&scopeID);
 
    Valid = true;
    setPort(port);
    setPrintFormat(PF_Default);
+   ScopeID = scopeID;
    switch(length) {
       case 4:
-          for(cardinal i = 0;i < 5;i++) {
-             AddrSpec.Host16[i] = 0x0000;
-          }
-          AddrSpec.Host16[5] = 0xffff;
-          memcpy((char*)&AddrSpec.Host16[6],&address,4);
-        break;
+         for(cardinal i = 0;i < 5;i++) {
+            AddrSpec.Host16[i] = 0x0000;
+         }
+         AddrSpec.Host16[5] = 0xffff;
+         memcpy((char*)&AddrSpec.Host16[6],&address,4);
+       break;
       case 16:
          memcpy((char*)&AddrSpec.Host16,&address,16);
        break;
@@ -293,8 +300,9 @@ void InternetAddress::init(const PortableAddress& address)
    for(cardinal i = 0;i < 8;i++) {
       AddrSpec.Host16[i] = address.Host[i];
    }
-   Port  = address.Port;
-   Valid = true;
+   Port    = address.Port;
+   ScopeID = 0;
+   Valid   = true;
    setPrintFormat(PF_Default);
 }
 
@@ -443,6 +451,19 @@ String InternetAddress::getAddressString(const cardinal format) const
             strcat((char*)&addressString,(char*)&str);
          }
 
+         // ====== Interface for link-local address =========================
+         if((isIPv6()) && (isLinkLocal())) {
+            strcat((char*)&addressString,"%");
+            char        ifnamebuffer[IFNAMSIZ];
+            const char* ifname = if_indextoname(ScopeID, (char*)&ifnamebuffer);
+            if(ifname != NULL) {
+               strcat((char*)&addressString,ifname);
+            }
+            else {
+               strcat((char*)&addressString,"(BAD!)");
+            }
+         }
+
          // ====== Add port number ==========================================
          if(!(format & PF_HidePort)) {
             snprintf((char*)&str,sizeof(str),"]:%d",ntohs(Port));
@@ -495,7 +516,7 @@ cardinal InternetAddress::getSystemAddress(sockaddr*       buffer,
 #endif
             address->sin6_flowinfo = 0;
             address->sin6_port     = Port;
-            address->sin6_scope_id = 0;
+            address->sin6_scope_id = ScopeID;
 #if (SYSTEM == OS_Linux)
             memcpy((char*)&address->sin6_addr.s6_addr16[0],(char*)&AddrSpec.Host16,16);
 #elif (SYSTEM == OS_SOLARIS)
@@ -570,7 +591,8 @@ bool InternetAddress::setSystemAddress(const sockaddr* address, const socklen_t 
 #else
          memcpy((char*)&AddrSpec.Host16,(const char*)&address6->sin6_addr.__u6_addr.__u6_addr8[0],16);
 #endif
-         Valid = true;
+         ScopeID = address6->sin6_scope_id;
+         Valid   = true;
          return(true);
         }
        break;
@@ -601,9 +623,12 @@ bool InternetAddress::checkIPv6()
 
 
 // ###### Get host address by name ##########################################
-cardinal InternetAddress::getHostByName(const String& hostName, card16* myadr)
+cardinal InternetAddress::getHostByName(const String& hostName, card16* myadr, card16* myscope)
 {
    // ====== Check for null address =========================================
+   if(myscope) {
+      *myscope = 0;
+   }
    if(hostName.isNull()) {
       for(cardinal i = 0;i < 8;i++) myadr[i] = 0;
       if(UseIPv6) {
@@ -665,8 +690,18 @@ cardinal InternetAddress::getHostByName(const String& hostName, card16* myadr)
        break;
       case AF_INET6: {
              const sockaddr_in6* adr = (const sockaddr_in6*)res->ai_addr;
-             memcpy((char*)myadr,(const char*)&adr->sin6_addr,16);
-             result = 16;
+             if((IN6_IS_ADDR_LINKLOCAL(&adr->sin6_addr)) &&
+                (adr->sin6_scope_id == 0)) {
+                // Link-local without scope!
+                result = 0;
+             }
+             else {
+                memcpy((char*)myadr,(const char*)&adr->sin6_addr,16);
+                if(myscope) {
+                   *myscope = adr->sin6_scope_id;
+                }
+                result = 16;
+             }
           }
        break;
       default:

@@ -363,9 +363,10 @@ class InternetAddress : virtual public SocketAddress
      *
      * @param name Host name.
      * @param myadr Storage space to save a IPv6 address (16 bytes).
+     * @param myscope Storage space to save IPv6 link local scope ID to (or NULL).
      * @param length Length of the address saved in myaddr or 0 in case of failure.
      */
-   static cardinal getHostByName(const String& name, card16* myadr);
+   static cardinal getHostByName(const String& name, card16* myadr, card16* myscope = NULL);
 
    /**
      * Get port number for given service (e.g. http).
@@ -533,6 +534,11 @@ class InternetAddress : virtual public SocketAddress
      * Port number.
      */
    card16 Port;
+
+   /**
+     * Scope ID.
+     */
+   card16 ScopeID;
 
    /**
      * Is address valid?
