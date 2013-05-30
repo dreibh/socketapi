@@ -1,6 +1,6 @@
-socketapi (2:2.2.6-1ubuntu1) precise; urgency=low
+socketapi (2:2.2.7~rc1-1ubuntu1) precise; urgency=low
 
   * New upstream version.
   * Initial Ubuntu release (LP: #228052).
 
- -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Tue, 03 Jul 2012 12:12:12 +0200
+ -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Thu, 30 May 2013 12:12:12 +0200
