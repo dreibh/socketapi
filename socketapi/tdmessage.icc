@@ -75,7 +75,7 @@ template<const size_t size> inline void SocketMessage<size>::clear()
 template<const size_t size> inline SocketAddress* SocketMessage<size>::getAddress() const
 {
    return(SocketAddress::createSocketAddress(
-             (sockaddr*)&Address,sizeof(Address)));
+             0,(sockaddr*)&Address,sizeof(Address)));
 }
 
 

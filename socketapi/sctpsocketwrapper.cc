@@ -3281,7 +3281,7 @@ ssize_t sctp_sendmsg(int                    s,
       tolen,
       &iov, 1,
       cbuf, cmsglen,
-      flags
+      (int)flags
    };
 
    cmsg = (struct cmsghdr*)CFirstHeader(&msg);
@@ -3355,7 +3355,7 @@ ssize_t sctp_sendx(int                           sd,
 #else
       (struct sockaddr*)addrs,
 #endif
-      addrcnt,
+      (socklen_t)addrcnt,
       &iov, 1,
       cbuf, cmsglen,
       flags | MSG_MULTIADDRS,
