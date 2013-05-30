@@ -1,4 +1,32 @@
 ------------------------------------------------------------------------
+r2722 | dreibh | 2012-10-20 23:50:43 +0200 (Sat, 20 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/rsplib2/make-ppa
+   M /trunk/sctplib1/make-ppa
+   M /trunk/socketapi/make-ppa
+
+Build script updates.
+------------------------------------------------------------------------
+r2693 | dreibh | 2012-07-03 19:34:52 +0200 (Tue, 03 Jul 2012) | 2 lines
+Changed paths:
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/debian/changelog
+   M /trunk/socketapi/make-ppa
+   M /trunk/socketapi/socketapi/internetaddress.cc
+   M /trunk/socketapi/socketapi/internetaddress.h
+
+Fixed IPv6 scope ID handling.
+
+------------------------------------------------------------------------
+r2671 | dreibh | 2012-02-13 08:04:34 +0100 (Mon, 13 Feb 2012) | 2 lines
+Changed paths:
+   M /trunk/socketapi/ChangeLog
+   M /trunk/socketapi/configure.in
+   M /trunk/socketapi/debian/changelog
+
+Verion update.
+
+------------------------------------------------------------------------
 r2660 | dreibh | 2011-12-23 13:41:42 +0100 (Fri, 23 Dec 2011) | 2 lines
 Changed paths:
    M /trunk/socketapi/cppsocketapi/tdsocket.cc
