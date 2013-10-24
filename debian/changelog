@@ -1,4 +1,4 @@
-socketapi (2:2.2.8~rc1-1ubuntu1) precise; urgency=low
+socketapi (2:2.2.8-1ubuntu1) precise; urgency=low
 
   * New upstream version.
   * Initial Ubuntu release (LP: #228052).
