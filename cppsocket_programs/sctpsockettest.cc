@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 2005-2013 by Thomas Dreibholz
+ * Copyright (C) 2005-2015 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -619,7 +619,7 @@ int main(int argc, char** argv)
 
 
    // ====== Print information ==============================================
-   std::cout << "SCTP Socket Test - Copyright (C) 2013 Thomas Dreibholz" << std::endl;
+   std::cout << "SCTP Socket Test - Copyright (C) 2015 Thomas Dreibholz" << std::endl;
    std::cout << "------------------------------------------------------" << std::endl;
    std::cout << "Version:           " << __DATE__ << ", " << __TIME__ << std::endl;
    std::cout << "Server Mode:       " << ((server == true) ? "on" : "off") << std::endl;
