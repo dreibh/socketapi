@@ -7,7 +7,7 @@ Build-Depends: autotools-dev,
                debhelper (>= 5),
                libglib2.0-dev,
                libsctplib-dev (>= 1.0.9)
-Standards-Version: 3.9.6
+Standards-Version: 3.9.7
 
 Package: libsctpsocket2
 Section: libs

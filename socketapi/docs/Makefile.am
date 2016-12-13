@@ -1,4 +1,4 @@
-EXTRA_DIST = draft-ietf-tsvwg-sctpsocket-26.txt
+EXTRA_DIST = rfc6458.txt
 
 
 clean:
