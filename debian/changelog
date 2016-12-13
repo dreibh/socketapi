@@ -1,4 +1,4 @@
-socketapi (2:2.2.10~rc1-1ubuntu1) zesty; urgency=low
+socketapi (2:2.2.10-1ubuntu1) zesty; urgency=low
 
   * New upstream version.
   * Initial Ubuntu release (LP: #228052).
