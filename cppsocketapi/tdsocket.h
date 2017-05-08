@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 2005-2015 by Thomas Dreibholz
+ * Copyright (C) 2005-2017 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG

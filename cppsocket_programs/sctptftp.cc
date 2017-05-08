@@ -2,7 +2,7 @@
  *  $Id$
  *
  * SocketAPI implementation for the sctplib.
- * Copyright (C) 2001-2015 by Thomas Dreibholz
+ * Copyright (C) 2001-2017 by Thomas Dreibholz
  *
  * Realized in co-operation between
  * - Siemens AG
@@ -292,7 +292,7 @@ int main(int argc, char** argv)
 
 
    // ====== Print information ==============================================
-   std::cout << "SCTP TFTP - Copyright (C) 2001-2015 Thomas Dreibholz" << std::endl;
+   std::cout << "SCTP TFTP - Copyright (C) 2001-2017 Thomas Dreibholz" << std::endl;
    std::cout << "----------------------------------------------------" << std::endl;
    std::cout << "Version:               " << __DATE__ << ", " << __TIME__ << std::endl;
    std::cout << "Local Addresses:       " << *(localAddressArray[0]) << std::endl;
