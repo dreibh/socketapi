@@ -1,3 +1,13 @@
+commit 78efa2f8131f11c19e3c1bea6b08b1e81af51945
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 8 15:01:19 2017 +0200
+
+    Script updates.
+
+ ChangeLog | 138 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ make-ppa  |   2 +-
+ 2 files changed, 139 insertions(+), 1 deletion(-)
+
 commit 85a7e0d0d00434b7654ec0f0290d60101c55e521
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Mon May 8 14:51:44 2017 +0200
