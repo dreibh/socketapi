@@ -1,3 +1,14 @@
+commit b33003049a841c49a1847e1bb3f10cc47e249844
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon May 8 15:39:25 2017 +0200
+
+    Script updates.
+
+ ChangeLog        | 10 ++++++++++
+ configure.ac     |  2 +-
+ debian/changelog |  2 +-
+ 3 files changed, 12 insertions(+), 2 deletions(-)
+
 commit 78efa2f8131f11c19e3c1bea6b08b1e81af51945
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Mon May 8 15:01:19 2017 +0200
