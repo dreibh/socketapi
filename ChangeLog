@@ -1,3 +1,48 @@
+commit 9dc45c464d87dbf6119901eedbac8009949038f7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 6 11:48:20 2018 +0200
+
+    Updated packaging files.
+
+ debian/changelog | 4 ++--
+ debian/control   | 2 +-
+ debian/copyright | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+commit 228c95cd40a1e92e6491884323ca6ff95c6a1965
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 6 11:35:37 2018 +0200
+
+    Build script updates.
+
+ build-deb |  8 ++++----
+ clean-deb |  9 ++++++---
+ make-deb  | 54 +++++++++++++++++++++++++++---------------------------
+ make-ppa  |  2 +-
+ 4 files changed, 38 insertions(+), 35 deletions(-)
+
+commit db847681ca0586c6c8dcce000fa1befc41088675
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 9 12:37:10 2017 +0200
+
+    Script update.
+
+ make-ppa | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 3adc938259bfc4eb9e095fd9046afbe7c9d0cd63
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 9 12:36:43 2017 +0200
+
+    URL updates.
+
+ ChangeLog        | 11 +++++++++++
+ UpdateDoc1.sed   |  1 +
+ debian/control   |  2 +-
+ debian/copyright |  2 +-
+ debian/watch     |  2 +-
+ 5 files changed, 15 insertions(+), 3 deletions(-)
+
 commit b33003049a841c49a1847e1bb3f10cc47e249844
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Mon May 8 15:39:25 2017 +0200
