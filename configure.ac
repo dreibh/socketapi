@@ -3,7 +3,7 @@
 # $Id$
 # ###########################################################################
 
-AC_INIT([socketapi], [2.2.12], [dreib@iem.uni-due.de])
+AC_INIT([socketapi], [2.2.13], [dreib@iem.uni-due.de])
 AM_INIT_AUTOMAKE
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_HOST
@@ -189,13 +189,7 @@ if test ! -e $ac_sctplib_libraries/libsctplib.a ; then
    AC_MSG_ERROR([No sctplib installation found ($ac_sctplib_libraries/libsctplib.a)!])
 fi
 
-# In maintainer mode, use static linking for sctplib!
-if test "$enable_maintainer_mode" = "yes"; then
-   sctplib_LIBS="$ac_sctplib_libraries/libsctplib.a"
-else
-   sctplib_LIBS="-L$ac_sctplib_libraries -lsctplib"
-fi
-
+sctplib_LIBS="-L$ac_sctplib_libraries -lsctplib"
 AC_SUBST(sctplib_LIBS)
 CFLAGS="$CFLAGS -I$ac_sctplib_includes"
 CXXFLAGS="$CXXFLAGS -I$ac_sctplib_includes"
