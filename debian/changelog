@@ -1,4 +1,4 @@
-socketapi (2:2.2.13-1ubuntu1) artful; urgency=low
+socketapi (2:2.2.13-1ubuntu1) cosmic; urgency=low
 
   * New upstream version.
   * Initial Ubuntu release (LP: #228052).

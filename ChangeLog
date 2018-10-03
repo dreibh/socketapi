@@ -1,3 +1,113 @@
+commit f0e20ed2b16c71df2a01b2809c3127f85b6bee0e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Oct 3 15:55:25 2018 +0100
+
+    Header updates.
+
+ UpdateDoc1.sed                         |  4 ++--
+ configure.ac                           | 10 ++--------
+ cppsocket_programs/ansicolor.h         |  2 +-
+ cppsocket_programs/sctpinfoprinter.cc  |  2 +-
+ cppsocket_programs/sctpinfoprinter.h   |  2 +-
+ cppsocket_programs/sctpmultiserver.cc  |  4 ++--
+ cppsocket_programs/sctpportscanner.cc  |  4 ++--
+ cppsocket_programs/sctpsockettest.cc   |  4 ++--
+ cppsocket_programs/sctpterminal.cc     |  4 ++--
+ cppsocket_programs/sctptest.cc         |  4 ++--
+ cppsocket_programs/sctptftp.cc         |  4 ++--
+ cppsocket_programs/sctptftp.h          |  2 +-
+ cppsocketapi/breakdetector.cc          |  2 +-
+ cppsocketapi/breakdetector.h           |  2 +-
+ cppsocketapi/multitimerthread.h        |  2 +-
+ cppsocketapi/multitimerthread.icc      |  2 +-
+ cppsocketapi/tdsocket.cc               |  2 +-
+ cppsocketapi/tdsocket.h                |  2 +-
+ cppsocketapi/tdsocket.icc              |  2 +-
+ cppsocketapi/timedthread.cc            |  2 +-
+ cppsocketapi/timedthread.h             |  2 +-
+ cppsocketapi/timedthread.icc           |  2 +-
+ debian/changelog                       |  4 ++--
+ socket_programs/combined_server_1to1.c |  2 +-
+ socket_programs/combined_server_1toM.c |  2 +-
+ socket_programs/idexample1to1.c        |  2 +-
+ socket_programs/idexample1toM.c        |  2 +-
+ socket_programs/newexample1to1.c       |  2 +-
+ socket_programs/terminal.c             |  2 +-
+ socket_programs/tsctp.c                |  2 +-
+ socketapi/condition.cc                 |  2 +-
+ socketapi/condition.h                  |  2 +-
+ socketapi/condition.icc                |  2 +-
+ socketapi/ext_socket.h                 |  2 +-
+ socketapi/extsocketdescriptor.h        |  2 +-
+ socketapi/internetaddress.cc           |  2 +-
+ socketapi/internetaddress.h            |  2 +-
+ socketapi/internetaddress.icc          |  2 +-
+ socketapi/internetflow.cc              |  2 +-
+ socketapi/internetflow.h               |  2 +-
+ socketapi/internetflow.icc             |  2 +-
+ socketapi/portableaddress.h            |  2 +-
+ socketapi/portableaddress.icc          |  2 +-
+ socketapi/randomizer.cc                |  2 +-
+ socketapi/randomizer.h                 |  2 +-
+ socketapi/randomizer.icc               |  2 +-
+ socketapi/sctpassociation.cc           |  2 +-
+ socketapi/sctpassociation.h            |  2 +-
+ socketapi/sctpassociation.icc          |  2 +-
+ socketapi/sctpnotificationqueue.cc     |  2 +-
+ socketapi/sctpnotificationqueue.h      |  2 +-
+ socketapi/sctpnotificationqueue.icc    |  2 +-
+ socketapi/sctpsocket.cc                |  2 +-
+ socketapi/sctpsocket.h                 |  2 +-
+ socketapi/sctpsocket.icc               |  2 +-
+ socketapi/sctpsocketmaster.cc          |  2 +-
+ socketapi/sctpsocketmaster.h           |  2 +-
+ socketapi/sctpsocketmaster.icc         |  2 +-
+ socketapi/sctpsocketwrapper.cc         |  2 +-
+ socketapi/sctpsocketwrapper.h          |  2 +-
+ socketapi/socketaddress.cc             |  2 +-
+ socketapi/socketaddress.h              |  2 +-
+ socketapi/socketaddress.icc            |  2 +-
+ socketapi/synchronizable.cc            |  2 +-
+ socketapi/synchronizable.h             |  2 +-
+ socketapi/synchronizable.icc           |  2 +-
+ socketapi/tdin6.h                      |  2 +-
+ socketapi/tdmessage.h                  |  2 +-
+ socketapi/tdmessage.icc                |  2 +-
+ socketapi/tdstrings.cc                 |  2 +-
+ socketapi/tdstrings.h                  |  2 +-
+ socketapi/tdstrings.icc                |  2 +-
+ socketapi/tdsystem.h                   |  2 +-
+ socketapi/thread.cc                    |  2 +-
+ socketapi/thread.h                     |  2 +-
+ socketapi/thread.icc                   |  2 +-
+ socketapi/tools.cc                     |  2 +-
+ socketapi/tools.h                      |  2 +-
+ socketapi/tools.icc                    |  2 +-
+ socketapi/unixaddress.cc               |  2 +-
+ socketapi/unixaddress.h                |  2 +-
+ socketapi/unixaddress.icc              |  2 +-
+ 82 files changed, 91 insertions(+), 97 deletions(-)
+
+commit 13c48dc1446b2469114f3fcf8f08c08b909eca3d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Oct 3 15:54:54 2018 +0100
+
+    Updated autogen.sh.
+
+ autogen.sh | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+commit bd3ebc8c5aa4ee29565c801af62331ccd85ecd52
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jun 6 14:36:56 2018 +0200
+
+    Version bump.
+
+ ChangeLog        | 45 +++++++++++++++++++++++++++++++++++++++++++++
+ configure.ac     |  2 +-
+ debian/changelog |  4 ++--
+ 3 files changed, 48 insertions(+), 3 deletions(-)
+
 commit 9dc45c464d87dbf6119901eedbac8009949038f7
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Jun 6 11:48:20 2018 +0200
@@ -414,10 +524,9 @@ Date:   Thu May 30 11:28:49 2013 +0000
     git-svn-id: https://svn.tdr.iem.uni-due.de:8443/svn/sctp/trunk/socketapi@2775 516812f1-d3fd-0310-9ea4-9aededebcb87
 
  UpdateDoc1.sed                        |   5 +-
- build-deb                             | 114 +++++++++++++++++
+ build-deb                             | 114 ++++++++++++++++++
  clean-deb                             |   2 +-
- configure.ac                          | 231 ++++++++++++++++++++++++++++++++++
- configure.in                          | 231 ----------------------------------
+ configure.in => configure.ac          |   2 +-
  cppsocket_programs/ansicolor.h        |   2 +-
  cppsocket_programs/sctpinfoprinter.cc |   2 +-
  cppsocket_programs/sctpinfoprinter.h  |   2 +-
@@ -441,8 +550,8 @@ Date:   Thu May 30 11:28:49 2013 +0000
  debian/changelog                      |   4 +-
  debian/control                        |   2 +-
  debian/copyright                      |   4 +-
- filter-empty-entries                  |  61 +++++++++
- make-deb                              | 213 ++++++++++++++++++-------------
+ filter-empty-entries                  |  61 ++++++++++
+ make-deb                              | 213 ++++++++++++++++++++--------------
  make-ppa                              |   2 +-
  socketapi/condition.cc                |   2 +-
  socketapi/condition.h                 |   2 +-
@@ -496,7 +605,7 @@ Date:   Thu May 30 11:28:49 2013 +0000
  socketapi/unixaddress.cc              |   2 +-
  socketapi/unixaddress.h               |   2 +-
  socketapi/unixaddress.icc             |   2 +-
- 83 files changed, 621 insertions(+), 404 deletions(-)
+ 82 files changed, 391 insertions(+), 174 deletions(-)
 
 commit 39b37fa00dadb12915e5d4fac235c5809db466df
 Author: dreibh <dreibh@516812f1-d3fd-0310-9ea4-9aededebcb87>
@@ -1180,115 +1289,113 @@ Date:   Wed Feb 2 11:43:41 2011 +0000
     
     git-svn-id: https://svn.tdr.iem.uni-due.de:8443/svn/sctp/trunk/socketapi@2489 516812f1-d3fd-0310-9ea4-9aededebcb87
 
- UpdateDoc1.sed                         |  11 +-
- configure.in                           |   2 +-
- cppsocket_programs/ansicolor.h         |   2 +-
- cppsocket_programs/sctpinfoprinter.cc  |   2 +-
- cppsocket_programs/sctpinfoprinter.h   |   2 +-
- cppsocket_programs/sctpmultiserver.cc  |   4 +-
- cppsocket_programs/sctpportscanner.cc  |   4 +-
- cppsocket_programs/sctpsockettest.cc   |   4 +-
- cppsocket_programs/sctpterminal.cc     |   4 +-
- cppsocket_programs/sctptest.cc         |   4 +-
- cppsocket_programs/sctptftp.cc         |   4 +-
- cppsocket_programs/sctptftp.h          |   2 +-
- cppsocketapi/breakdetector.cc          |   2 +-
- cppsocketapi/breakdetector.h           |   2 +-
- cppsocketapi/multitimerthread.h        |   2 +-
- cppsocketapi/multitimerthread.icc      |   2 +-
- cppsocketapi/packetaddress.cc          |   2 +-
- cppsocketapi/packetaddress.h           |   2 +-
- cppsocketapi/packetaddress.icc         |   2 +-
- cppsocketapi/range.cc                  |   2 +-
- cppsocketapi/range.h                   |   2 +-
- cppsocketapi/range.icc                 |   2 +-
- cppsocketapi/ringbuffer.cc             |   2 +-
- cppsocketapi/ringbuffer.h              |   2 +-
- cppsocketapi/ringbuffer.icc            |   2 +-
- cppsocketapi/streamsrcdest.cc          |   2 +-
- cppsocketapi/streamsrcdest.h           |   2 +-
- cppsocketapi/tdsocket.cc               |   2 +-
- cppsocketapi/tdsocket.h                |   2 +-
- cppsocketapi/tdsocket.icc              |   2 +-
- cppsocketapi/timedthread.cc            |   2 +-
- cppsocketapi/timedthread.h             |   2 +-
- cppsocketapi/timedthread.icc           |   2 +-
- cppsocketapi/trafficclassvalues.cc     |   2 +-
- cppsocketapi/trafficclassvalues.h      |   2 +-
- cppsocketapi/trafficclassvalues.icc    |   2 +-
- debian.conf                            |   2 +-
- debian/changelog                       |   2 +-
- debian/control                         |  12 +-
- debian/copyright                       |   2 +-
- debian/libsctpsocket-dev.install       |   4 +
- debian/libsctpsocket2.install          |   1 +
- debian/libsctpsocket2.symbols          | 404 +++++++++++++++++++++++++++++++++
- debian/libsocketapi-dev.install        |   4 -
- debian/libsocketapi2.install           |   1 -
- make-symbols                           |   2 +-
- scripts/ext.sh                         |   2 +-
- scripts/unext.sh                       |   2 +-
- socket_programs/combined_server_1to1.c |   2 +-
- socket_programs/combined_server_1toM.c |   2 +-
- socket_programs/idexample1to1.c        |   2 +-
- socket_programs/idexample1toM.c        |   2 +-
- socket_programs/newexample1to1.c       |   2 +-
- socket_programs/terminal.c             |   2 +-
- socket_programs/tsctp.c                |   2 +-
- socketapi/condition.cc                 |   2 +-
- socketapi/condition.h                  |   2 +-
- socketapi/condition.icc                |   2 +-
- socketapi/ext_socket.h                 |   2 +-
- socketapi/extsocketdescriptor.h        |   2 +-
- socketapi/internetaddress.cc           |   2 +-
- socketapi/internetaddress.h            |   2 +-
- socketapi/internetaddress.icc          |   2 +-
- socketapi/internetflow.cc              |   2 +-
- socketapi/internetflow.h               |   2 +-
- socketapi/internetflow.icc             |   2 +-
- socketapi/portableaddress.h            |   2 +-
- socketapi/portableaddress.icc          |   2 +-
- socketapi/randomizer.cc                |   2 +-
- socketapi/randomizer.h                 |   2 +-
- socketapi/randomizer.icc               |   2 +-
- socketapi/sctpassociation.cc           |   2 +-
- socketapi/sctpassociation.h            |   2 +-
- socketapi/sctpassociation.icc          |   2 +-
- socketapi/sctpnotificationqueue.cc     |   2 +-
- socketapi/sctpnotificationqueue.h      |   2 +-
- socketapi/sctpnotificationqueue.icc    |   2 +-
- socketapi/sctpsocket.cc                |   2 +-
- socketapi/sctpsocket.h                 |   2 +-
- socketapi/sctpsocket.icc               |   2 +-
- socketapi/sctpsocketmaster.cc          |   2 +-
- socketapi/sctpsocketmaster.h           |   2 +-
- socketapi/sctpsocketmaster.icc         |   2 +-
- socketapi/sctpsocketwrapper.cc         |   2 +-
- socketapi/sctpsocketwrapper.h          |   2 +-
- socketapi/socketaddress.cc             |   2 +-
- socketapi/socketaddress.h              |   2 +-
- socketapi/socketaddress.icc            |   2 +-
- socketapi/staticglobals.cc             |   2 +-
- socketapi/synchronizable.cc            |   2 +-
- socketapi/synchronizable.h             |   2 +-
- socketapi/synchronizable.icc           |   2 +-
- socketapi/tdin6.h                      |   2 +-
- socketapi/tdmessage.h                  |   2 +-
- socketapi/tdmessage.icc                |   2 +-
- socketapi/tdstrings.cc                 |   2 +-
- socketapi/tdstrings.h                  |   2 +-
- socketapi/tdstrings.icc                |   2 +-
- socketapi/tdsystem.h                   |   2 +-
- socketapi/thread.cc                    |   2 +-
- socketapi/thread.h                     |   2 +-
- socketapi/thread.icc                   |   2 +-
- socketapi/tools.cc                     |   2 +-
- socketapi/tools.h                      |   2 +-
- socketapi/tools.icc                    |   2 +-
- socketapi/unixaddress.cc               |   2 +-
- socketapi/unixaddress.h                |   2 +-
- socketapi/unixaddress.icc              |   2 +-
- 108 files changed, 527 insertions(+), 124 deletions(-)
+ UpdateDoc1.sed                                     |  11 +-
+ configure.in                                       |   2 +-
+ cppsocket_programs/ansicolor.h                     |   2 +-
+ cppsocket_programs/sctpinfoprinter.cc              |   2 +-
+ cppsocket_programs/sctpinfoprinter.h               |   2 +-
+ cppsocket_programs/sctpmultiserver.cc              |   4 +-
+ cppsocket_programs/sctpportscanner.cc              |   4 +-
+ cppsocket_programs/sctpsockettest.cc               |   4 +-
+ cppsocket_programs/sctpterminal.cc                 |   4 +-
+ cppsocket_programs/sctptest.cc                     |   4 +-
+ cppsocket_programs/sctptftp.cc                     |   4 +-
+ cppsocket_programs/sctptftp.h                      |   2 +-
+ cppsocketapi/breakdetector.cc                      |   2 +-
+ cppsocketapi/breakdetector.h                       |   2 +-
+ cppsocketapi/multitimerthread.h                    |   2 +-
+ cppsocketapi/multitimerthread.icc                  |   2 +-
+ cppsocketapi/packetaddress.cc                      |   2 +-
+ cppsocketapi/packetaddress.h                       |   2 +-
+ cppsocketapi/packetaddress.icc                     |   2 +-
+ cppsocketapi/range.cc                              |   2 +-
+ cppsocketapi/range.h                               |   2 +-
+ cppsocketapi/range.icc                             |   2 +-
+ cppsocketapi/ringbuffer.cc                         |   2 +-
+ cppsocketapi/ringbuffer.h                          |   2 +-
+ cppsocketapi/ringbuffer.icc                        |   2 +-
+ cppsocketapi/streamsrcdest.cc                      |   2 +-
+ cppsocketapi/streamsrcdest.h                       |   2 +-
+ cppsocketapi/tdsocket.cc                           |   2 +-
+ cppsocketapi/tdsocket.h                            |   2 +-
+ cppsocketapi/tdsocket.icc                          |   2 +-
+ cppsocketapi/timedthread.cc                        |   2 +-
+ cppsocketapi/timedthread.h                         |   2 +-
+ cppsocketapi/timedthread.icc                       |   2 +-
+ cppsocketapi/trafficclassvalues.cc                 |   2 +-
+ cppsocketapi/trafficclassvalues.h                  |   2 +-
+ cppsocketapi/trafficclassvalues.icc                |   2 +-
+ debian.conf                                        |   2 +-
+ debian/changelog                                   |   2 +-
+ debian/control                                     |  12 +-
+ debian/copyright                                   |   2 +-
+ ...etapi-dev.install => libsctpsocket-dev.install} |   0
+ ...ibsocketapi2.install => libsctpsocket2.install} |   0
+ debian/libsctpsocket2.symbols                      | 404 +++++++++++++++++++++
+ make-symbols                                       |   2 +-
+ scripts/ext.sh                                     |   2 +-
+ scripts/unext.sh                                   |   2 +-
+ socket_programs/combined_server_1to1.c             |   2 +-
+ socket_programs/combined_server_1toM.c             |   2 +-
+ socket_programs/idexample1to1.c                    |   2 +-
+ socket_programs/idexample1toM.c                    |   2 +-
+ socket_programs/newexample1to1.c                   |   2 +-
+ socket_programs/terminal.c                         |   2 +-
+ socket_programs/tsctp.c                            |   2 +-
+ socketapi/condition.cc                             |   2 +-
+ socketapi/condition.h                              |   2 +-
+ socketapi/condition.icc                            |   2 +-
+ socketapi/ext_socket.h                             |   2 +-
+ socketapi/extsocketdescriptor.h                    |   2 +-
+ socketapi/internetaddress.cc                       |   2 +-
+ socketapi/internetaddress.h                        |   2 +-
+ socketapi/internetaddress.icc                      |   2 +-
+ socketapi/internetflow.cc                          |   2 +-
+ socketapi/internetflow.h                           |   2 +-
+ socketapi/internetflow.icc                         |   2 +-
+ socketapi/portableaddress.h                        |   2 +-
+ socketapi/portableaddress.icc                      |   2 +-
+ socketapi/randomizer.cc                            |   2 +-
+ socketapi/randomizer.h                             |   2 +-
+ socketapi/randomizer.icc                           |   2 +-
+ socketapi/sctpassociation.cc                       |   2 +-
+ socketapi/sctpassociation.h                        |   2 +-
+ socketapi/sctpassociation.icc                      |   2 +-
+ socketapi/sctpnotificationqueue.cc                 |   2 +-
+ socketapi/sctpnotificationqueue.h                  |   2 +-
+ socketapi/sctpnotificationqueue.icc                |   2 +-
+ socketapi/sctpsocket.cc                            |   2 +-
+ socketapi/sctpsocket.h                             |   2 +-
+ socketapi/sctpsocket.icc                           |   2 +-
+ socketapi/sctpsocketmaster.cc                      |   2 +-
+ socketapi/sctpsocketmaster.h                       |   2 +-
+ socketapi/sctpsocketmaster.icc                     |   2 +-
+ socketapi/sctpsocketwrapper.cc                     |   2 +-
+ socketapi/sctpsocketwrapper.h                      |   2 +-
+ socketapi/socketaddress.cc                         |   2 +-
+ socketapi/socketaddress.h                          |   2 +-
+ socketapi/socketaddress.icc                        |   2 +-
+ socketapi/staticglobals.cc                         |   2 +-
+ socketapi/synchronizable.cc                        |   2 +-
+ socketapi/synchronizable.h                         |   2 +-
+ socketapi/synchronizable.icc                       |   2 +-
+ socketapi/tdin6.h                                  |   2 +-
+ socketapi/tdmessage.h                              |   2 +-
+ socketapi/tdmessage.icc                            |   2 +-
+ socketapi/tdstrings.cc                             |   2 +-
+ socketapi/tdstrings.h                              |   2 +-
+ socketapi/tdstrings.icc                            |   2 +-
+ socketapi/tdsystem.h                               |   2 +-
+ socketapi/thread.cc                                |   2 +-
+ socketapi/thread.h                                 |   2 +-
+ socketapi/thread.icc                               |   2 +-
+ socketapi/tools.cc                                 |   2 +-
+ socketapi/tools.h                                  |   2 +-
+ socketapi/tools.icc                                |   2 +-
+ socketapi/unixaddress.cc                           |   2 +-
+ socketapi/unixaddress.h                            |   2 +-
+ socketapi/unixaddress.icc                          |   2 +-
+ 106 files changed, 522 insertions(+), 119 deletions(-)
 
 commit 13ca3327d23ee19c9913bdab7bac7818066f4893
 Author: dreibh <dreibh@516812f1-d3fd-0310-9ea4-9aededebcb87>
@@ -2444,9 +2551,8 @@ Date:   Mon Feb 11 14:32:49 2008 +0000
 
     git-svn-id: https://svn.tdr.iem.uni-due.de:8443/svn/sctp/trunk/socketapi@1706 516812f1-d3fd-0310-9ea4-9aededebcb87
 
- debian/libsctplib1.install   | 1 -
- debian/libsctpsocket.install | 1 +
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ debian/{libsctplib1.install => libsctpsocket.install} | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
 
 commit ece74916198e9bd387c770092f0a0f99f3e7bba2
 Author: dreibh <dreibh@516812f1-d3fd-0310-9ea4-9aededebcb87>
@@ -5139,18 +5245,17 @@ Date:   Mon Jul 7 16:13:28 2003 +0000
     
     git-svn-id: https://svn.tdr.iem.uni-due.de:8443/svn/sctp/trunk/socketapi@105 516812f1-d3fd-0310-9ea4-9aededebcb87
 
- socket_programs/Makefile.am            |  20 +--
- socket_programs/combined_server_1toM.c | 161 ++++++++++++++++++++++++
- socket_programs/combined_server_1toN.c | 161 ------------------------
- socket_programs/idexampletcp.c         | 212 --------------------------------
- socket_programs/idexampleudp.c         | 214 --------------------------------
- socket_programs/newexampletcp.c        | 193 -----------------------------
- socketapi/Makefile.am                  |   6 +-
- socketapi/ext_socket.h                 |   6 +-
- socketapi/sctpsocket.cc                |  49 ++++----
- socketapi/sctpsocketmaster.cc          |   4 +-
- socketapi/t2.c                         | 216 +++++++++++++++++++++++++++++++++
- 11 files changed, 423 insertions(+), 819 deletions(-)
+ socket_programs/Makefile.am                        |  20 +-
+ ...mbined_server_1toN.c => combined_server_1toM.c} |   0
+ socket_programs/idexampletcp.c                     | 212 --------------------
+ socket_programs/idexampleudp.c                     | 214 --------------------
+ socket_programs/newexampletcp.c                    | 193 ------------------
+ socketapi/Makefile.am                              |   6 +-
+ socketapi/ext_socket.h                             |   6 +-
+ socketapi/sctpsocket.cc                            |  49 ++---
+ socketapi/sctpsocketmaster.cc                      |   4 +-
+ socketapi/t2.c                                     | 216 +++++++++++++++++++++
+ 10 files changed, 262 insertions(+), 658 deletions(-)
 
 commit 4304d3902f3b3a7c923f4db5213ea8b356726473
 Author: dreibh <dreibh@516812f1-d3fd-0310-9ea4-9aededebcb87>
@@ -5189,12 +5294,10 @@ Date:   Sun Jun 29 15:46:19 2003 +0000
     
     git-svn-id: https://svn.tdr.iem.uni-due.de:8443/svn/sctp/trunk/socketapi@97 516812f1-d3fd-0310-9ea4-9aededebcb87
 
- socket_programs/Makefile.am            |  15 +-
- socket_programs/TCP_combined_server.c  | 319 ---------------------------------
- socket_programs/UDP_combined_server.c  | 161 -----------------
- socket_programs/combined_server_1to1.c | 319 +++++++++++++++++++++++++++++++++
- socket_programs/combined_server_1toN.c | 161 +++++++++++++++++
- 5 files changed, 486 insertions(+), 489 deletions(-)
+ socket_programs/Makefile.am                               | 15 ++++++---------
+ .../{TCP_combined_server.c => combined_server_1to1.c}     |  0
+ .../{UDP_combined_server.c => combined_server_1toN.c}     |  0
+ 3 files changed, 6 insertions(+), 9 deletions(-)
 
 commit aa05682315c6b54ee0b241173cba2ac31ead131b
 Author: dreibh <dreibh@516812f1-d3fd-0310-9ea4-9aededebcb87>
