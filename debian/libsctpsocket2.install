@@ -1,1 +1,1 @@
-usr/lib/libsctpsocket.so.*
+/usr/lib/*/libsctpsocket.so.*
