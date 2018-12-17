@@ -3,7 +3,7 @@
 # $Id$
 # ###########################################################################
 
-AC_INIT([socketapi], [2.2.14~rc1.0], [dreib@iem.uni-due.de])
+AC_INIT([socketapi], [2.2.14~rc1.1], [dreib@iem.uni-due.de])
 AM_INIT_AUTOMAKE
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_HOST
@@ -176,7 +176,7 @@ AC_ARG_WITH(sctplib,
    ])
 
 if test "$ac_sctplib_libraries" = "no"; then
-   ac_sctplib_defaultdir="/usr/local"
+   ac_sctplib_defaultdir="/usr"
    ac_sctplib_includes="$ac_sctplib_defaultdir"/include
    ac_sctplib_libraries="$ac_sctplib_defaultdir"/lib
    ac_sctplib_bindir="$ac_sctplib_defaultdir"/bin
