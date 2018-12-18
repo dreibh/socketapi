@@ -2485,7 +2485,7 @@ ssize_t ext_sendmsg(int sockfd, const struct msghdr* msg, int flags)
       newmsg.msg_flags      = msg->msg_flags;
       const int result = ext_sendmsg_singlebuffer(sockfd,&newmsg,flags);
 
-      delete buffer;
+      delete [] buffer;
       return(result);
    }
    else {
