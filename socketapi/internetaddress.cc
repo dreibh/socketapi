@@ -321,7 +321,7 @@ InternetAddress InternetAddress::getLocalAddress(const InternetAddress& peer)
    InternetAddress address;
 
    int sd = ext_socket((UseIPv6 == true) ? AF_INET6 : AF_INET,SOCK_DGRAM,IPPROTO_UDP);
-   if(socket >= 0) {
+   if(sd >= 0) {
       sockaddr_storage socketAddress;
       socklen_t        socketAddressLength =
                           peer.getSystemAddress((sockaddr*)&socketAddress,SocketAddress::MaxSockLen,

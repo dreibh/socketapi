@@ -94,7 +94,7 @@ SocketAddress* SocketAddress::getLocalAddress(const SocketAddress& peer)
    SocketAddress* address = createSocketAddress(family);
    if(address != NULL) {
       int sd = ext_socket(family,SOCK_DGRAM,0);
-      if(socket >= 0) {
+      if(sd >= 0) {
          sockaddr_storage socketAddress;
          socklen_t        socketAddressLength =
                              peer.getSystemAddress((sockaddr*)&socketAddress,SocketAddress::MaxSockLen,
