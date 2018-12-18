@@ -97,7 +97,7 @@ cardinal InternetFlow::getSystemAddress(sockaddr*       buffer,
 
 
 // ###### Set system address ################################################
-bool InternetFlow::setSystemAddress(sockaddr* address, const socklen_t length)
+bool InternetFlow::setSystemAddress(const sockaddr* address, const socklen_t length)
 {
    FlowInfo = 0;
    if(InternetAddress::setSystemAddress(address,length)) {
