@@ -1613,9 +1613,9 @@ bool SCTPSocket::setAssocStatus(const unsigned int             assocID,
 
 
 // ###### Get path index for address #########################################
-int SCTPSocket::getPathIndexForAddress(const unsigned int          assocID,
-                                       const struct SocketAddress* address,
-                                       SCTP_PathStatus&            pathParameters)
+int SCTPSocket::getPathIndexForAddress(const unsigned int   assocID,
+                                       const SocketAddress* address,
+                                       SCTP_PathStatus&     pathParameters)
 {
    if(address == NULL) {
 #ifdef PRINT_PATHFORINDEX
@@ -1667,9 +1667,9 @@ int SCTPSocket::getPathIndexForAddress(const unsigned int          assocID,
 
 
 // ###### Get path parameters ###############################################
-bool SCTPSocket::getPathParameters(const unsigned int          assocID,
-                                   const struct SocketAddress* address,
-                                   SCTP_PathStatus&            pathParameters)
+bool SCTPSocket::getPathParameters(const unsigned int   assocID,
+                                   const SocketAddress* address,
+                                   SCTP_PathStatus&     pathParameters)
 {
    SCTPSocketMaster::MasterInstance.lock();
    const int pathIndex = getPathIndexForAddress(assocID,address,pathParameters);
@@ -1682,9 +1682,9 @@ bool SCTPSocket::getPathParameters(const unsigned int          assocID,
 
 
 // ###### Set path parameters ###############################################
-bool SCTPSocket::setPathParameters(const unsigned int          assocID,
-                                   const struct SocketAddress* address,
-                                   const SCTP_PathStatus&      pathParameters)
+bool SCTPSocket::setPathParameters(const unsigned int     assocID,
+                                   const SocketAddress*   address,
+                                   const SCTP_PathStatus& pathParameters)
 {
    SCTP_PathStatus oldPathParameters;
 

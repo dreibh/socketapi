@@ -566,16 +566,16 @@ bool SCTPAssociation::getDefaultStreamTimeout(const unsigned short streamID,
 
 
 // ###### Get path parameters ###############################################
-bool SCTPAssociation::getPathParameters(const struct SocketAddress* address,
-                                        SCTP_PathStatus&            pathParameters)
+bool SCTPAssociation::getPathParameters(const SocketAddress* address,
+                                        SCTP_PathStatus&     pathParameters)
 {
    return(Socket->getPathParameters(AssociationID,address,pathParameters));
 }
 
 
 // ###### Set path parameters ###############################################
-bool SCTPAssociation::setPathParameters(const struct SocketAddress* address,
-                                        const SCTP_PathStatus&      pathParameters)
+bool SCTPAssociation::setPathParameters(const SocketAddress*   address,
+                                        const SCTP_PathStatus& pathParameters)
 {
    return(Socket->setPathParameters(AssociationID,address,pathParameters));
 }

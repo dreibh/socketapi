@@ -318,8 +318,8 @@ class SCTPAssociation
      * @param pathParameters Reference to store path parameters.
      * @return true, if successful; false otherwise.
      */
-   bool getPathParameters(const struct SocketAddress* address,
-                          SCTP_PathStatus&            pathParameters);
+   bool getPathParameters(const SocketAddress* address,
+                          SCTP_PathStatus&     pathParameters);
 
    /**
      * Set path parameters.
@@ -328,8 +328,8 @@ class SCTPAssociation
      * @param pathParameters Path parameters.
      * @return true, if successful; false otherwise.
      */
-   bool setPathParameters(const struct SocketAddress* address,
-                          const SCTP_PathStatus&      pathParameters);
+   bool setPathParameters(const SocketAddress*   address,
+                          const SCTP_PathStatus& pathParameters);
 
    /**
      * Get primary address.

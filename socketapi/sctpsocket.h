@@ -399,9 +399,9 @@ class SCTPSocket
      * @param pathParameters Reference to store path parameters.
      * @return true, if successful; false otherwise.
      */
-   bool getPathParameters(const unsigned int          assocID,
-                          const struct SocketAddress* address,
-                          SCTP_PathStatus&            pathParameters);
+   bool getPathParameters(const unsigned int   assocID,
+                          const SocketAddress* address,
+                          SCTP_PathStatus&     pathParameters);
 
    /**
      * Set path parameters.
@@ -411,9 +411,9 @@ class SCTPSocket
      * @param pathParameters Path parameters.
      * @return true, if successful; false otherwise.
      */
-   bool setPathParameters(const unsigned int          assocID,
-                          const struct SocketAddress* address,
-                          const SCTP_PathStatus&      pathParameters);
+   bool setPathParameters(const unsigned int     assocID,
+                          const SocketAddress*   address,
+                          const SCTP_PathStatus& pathParameters);
 
    /**
      * Get primary address of given association.
@@ -543,9 +543,9 @@ class SCTPSocket
                     const unsigned int   timeToLive,
                     Condition*           waitCondition,
                     const SocketAddress* pathDestinationAddress);
-   static int getPathIndexForAddress(const unsigned int          assocID,
-                                     const struct SocketAddress* address,
-                                     SCTP_PathStatus&            pathParameters);
+   static int getPathIndexForAddress(const unsigned int   assocID,
+                                     const SocketAddress* address,
+                                     SCTP_PathStatus&     pathParameters);
 
 
    struct IncomingConnection
