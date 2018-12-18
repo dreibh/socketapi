@@ -1927,8 +1927,8 @@ int ext_connectx(int                    sockfd,
                      if(addressArray[i] == NULL) {
                         for(int j = i - 1;j > 0;j--) {
                            delete addressArray[j];
-                           errno_return(-EINVAL);
                         }
+                        errno_return(-EINVAL);
                      }
                   }
                   addressArray[addrcnt] = NULL;
