@@ -165,34 +165,8 @@ fi
 
 
 # ###### Check for sctplib ##################################################
-ac_sctplib_includes=no ac_sctplib_libraries=no ac_sctplib_bindir=no
-sctplib_libraries=""
-sctplib_includes=""
-AC_ARG_WITH(sctplib,
-   [  --with-sctplib=DIR       where the root of sctplib is installed ],
-   [  ac_sctplib_includes="$withval"/include
-      ac_sctplib_libraries="$withval"/lib
-      ac_sctplib_bindir="$withval"/bin
-   ])
-
-if test "$ac_sctplib_libraries" = "no"; then
-   ac_sctplib_defaultdir="/usr"
-   ac_sctplib_includes="$ac_sctplib_defaultdir"/include
-   ac_sctplib_libraries="$ac_sctplib_defaultdir"/lib
-   ac_sctplib_bindir="$ac_sctplib_defaultdir"/bin
-fi
-
-if test ! -e "$ac_sctplib_includes/sctp.h" ; then
-   AC_MSG_ERROR([No sctplib installation found ($ac_sctplib_includes/sctp.h)!])
-fi
-if test ! -e $ac_sctplib_libraries/libsctplib.a ; then
-   AC_MSG_ERROR([No sctplib installation found ($ac_sctplib_libraries/libsctplib.a)!])
-fi
-
-sctplib_LIBS="-L$ac_sctplib_libraries -lsctplib"
-AC_SUBST(sctplib_LIBS)
-CFLAGS="$CFLAGS -I$ac_sctplib_includes"
-CXXFLAGS="$CXXFLAGS -I$ac_sctplib_includes"
+AC_CHECK_HEADERS([sctp.h])
+AC_SEARCH_LIBS([sctp_initLibrary], [sctplib])
 
 
 # ###### Version information ################################################
