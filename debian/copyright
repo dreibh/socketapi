@@ -1,11 +1,11 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: sctplib
 Upstream-Contact: Thomas Dreibholz <dreibh@iem.uni-due.de>
-Source: https://www.uni-due.de/~be0001/rserpool/
+Source: https://www.uni-due.de/~be0001/sctplib/
 
 Files: *
 Copyright:
- Copyright (C) 1999-2018 by Thomas Dreibholz <dreibh@iem.uni-due.de>
+ Copyright (C) 1999-2019 by Thomas Dreibholz <dreibh@iem.uni-due.de>
  Copyright (C) 1999-2003 by Michael Tuexen <tuexen@fh-muenster.de>
 License: GPL-3
  This program is free software: you can redistribute it and/or modify

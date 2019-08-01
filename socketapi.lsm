@@ -8,7 +8,7 @@ Keywords:       Stream Control Transmission Protocol, SCTP, Networking, Userland
                 Transport Protocol Implementation, Multi-Homing, Multi-Streaming
 Author:         dreibh@iem.uni-due.de (Thomas Dreibholz)
 Maintained-by:  dreibh@iem.uni-due.de (Thomas Dreibholz)
-Primary-site:   https://www.uni-due.de/~be0001/rserpool/
+Primary-site:   https://www.uni-due.de/~be0001/sctplib/
                 1273 KiB download/socketapi-2.2.14.tar.gz
 Alternate-site: http://www.sctp.de
                 1273 KiB socketapi-2.2.14.tar.gz

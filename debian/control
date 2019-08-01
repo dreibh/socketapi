@@ -2,14 +2,14 @@ Source: socketapi
 Section: net
 Priority: optional
 Maintainer: Thomas Dreibholz <dreibh@iem.uni-due.de>
-Homepage: https://www.uni-due.de/~be0001/rserpool/index.html
+Homepage: https://www.uni-due.de/~be0001/sctplib/index.html
 Build-Depends: autoconf,
                automake,
                debhelper (>= 9),
                libglib2.0-dev,
                libsctplib-dev (>= 1.0.9),
                libtool
-Standards-Version: 4.3.0
+Standards-Version: 4.4.0.1
 
 Package: libsctpsocket2
 Section: libs
