@@ -1,4 +1,4 @@
-socketapi (2:2.2.14~rc1.1-1ubuntu1) disco; urgency=low
+socketapi (2:2.2.14~rc1.2-1ubuntu1) disco; urgency=medium
 
   * New upstream version.
   * Initial Ubuntu release (LP: #228052).
