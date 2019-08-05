@@ -2,7 +2,7 @@ Name: socketapi
 Version: 2.2.14~rc1.3
 Release: 1
 Summary: Userland implementation of the SCTP protocol RFC 4960
-License: LGPL-3
+License: GPL-3
 Group: Applications/Internet
 URL: https://www.uni-due.de/~be0001/sctplib/
 Source: https://www.uni-due.de/~be0001/sctplib/download/%{name}-%{version}.tar.gz
@@ -10,6 +10,8 @@ Source: https://www.uni-due.de/~be0001/sctplib/download/%{name}-%{version}.tar.g
 AutoReqProv: on
 BuildRequires: autoconf
 BuildRequires: automake
+BuildRequires: gcc-c++
+BuildRequires: glib2-devel
 BuildRequires: libtool
 BuildRequires: sctplib-libsctplib-devel
 BuildRoot: %{_tmppath}/%{name}-%{version}-build
@@ -18,21 +20,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-build
 # %define _unpackaged_files_terminate_build 0
 
 %description
-The socketapi library is a fairly complete prototype implementation of the
-Stream Control Transmission Protocol (SCTP), a message-oriented reliable
-transport protocol that supports multi-homing, and multiple message streams
-multiplexed within an SCTP connection (also named association). SCTP is
-described in RFC 4960. This implementation is the product of a cooperation
-between Siemens AG (ICN), Munich, Germany and the Computer Networking
-Technology Group at the IEM of the University of Essen, Germany.
-The API of the library was modeled after Section 10 of RFC 4960, and most
-parameters and functions should be self-explanatory to the user familiar with
-this document. In addition to these interface functions between an Upper
-Layer Protocol (ULP) and an SCTP instance, the library also provides a number
-of helper functions that can be used to manage callback function routines to
-make them execute at a certain point of time (i.e. timer-based) or open and
-bind  UDP sockets on a configurable port, which may then be used for an
-asynchronous interprocess communication.
+SocketAPI is the socket API library for the SCTPLIB user-space
+SCTP implementation.
 
 %prep
 %setup -q
@@ -53,7 +42,7 @@ Group: System Environment/Libraries
 
 %description libsctpsocket
 Socket-API provides a socket API for the SCTP userland implementation sctplib,
-conforming to draft-ietf-tsvwg-sctpsocket.
+conforming to RFC 6458.
 This implementation is the product of a cooperation between Siemens AG (ICN),
 Munich, Germany and the Computer Networking Technology Group at the IEM of
 the University of Essen, Germany.
@@ -70,7 +59,7 @@ Requires: %{name}-libsctpsocket = %{version}-%{release}
 %description libsctpsocket-devel
 This package contains development files for  Socket-API.
 Socket-API provides a socket API for the SCTP userland implementation sctplib,
-conforming to draft-ietf-tsvwg-sctpsocket.
+conforming to RFC 6458.
 This implementation is the product of a cooperation between Siemens AG (ICN),
 Munich, Germany and the Computer Networking Technology Group at the IEM of
 the University of Essen, Germany.
