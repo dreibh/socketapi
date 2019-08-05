@@ -4,7 +4,7 @@ Version:        2.2.14~rc1.1
 Entered-date:   2018-12-17
 Description:    SocketAPI is the socket API library for the SCTPLIB user-space
                 SCTP implementation.
-Keywords:       Stream Control Transmission Protocol, SCTP, Networking, Userland
+Keywords:       Stream Control Transmission Protocol, SCTP, Networking, User-Space
                 Transport Protocol Implementation, Multi-Homing, Multi-Streaming
 Author:         dreibh@iem.uni-due.de (Thomas Dreibholz)
 Maintained-by:  dreibh@iem.uni-due.de (Thomas Dreibholz)

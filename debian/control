@@ -20,7 +20,7 @@ Depends: libsctplib1 (>= 1.0.9),
 Replaces: libsocketapi2
 Conflicts: libsocketapi2
 Description: Socket API library for sctplib
- Socket-API provides a socket API for the SCTP userland implementation sctplib,
+ Socket-API provides a socket API for the SCTP user-space implementation SCTPLIB,
  conforming to RFC 6458.
  .
  This implementation is the product of a cooperation between Siemens AG (ICN),
@@ -38,7 +38,7 @@ Conflicts: libsocketapi-dev
 Description: Development package for Socket-API
  This package contains development files for Socket-API.
  .
- Socket-API provides a socket API for the SCTP userland implementation sctplib,
+ Socket-API provides a socket API for the SCTP user-space implementation SCTPLIB,
  conforming to RFC 6458.
  .
  This implementation is the product of a cooperation between Siemens AG (ICN),
