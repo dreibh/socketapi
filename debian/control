@@ -19,8 +19,8 @@ Depends: libsctplib1 (>= 1.0.9),
          ${shlibs:Depends}
 Replaces: libsocketapi2
 Conflicts: libsocketapi2
-Description: socket API library for sctplib
- Socketapi provides a socket API for the SCTP userland implementation sctplib,
+Description: Socket API library for sctplib
+ Socket-API provides a socket API for the SCTP userland implementation sctplib,
  conforming to draft-ietf-tsvwg-sctpsocket.
  .
  This implementation is the product of a cooperation between Siemens AG (ICN),
@@ -35,10 +35,10 @@ Depends: libsctpsocket2 (= ${binary:Version}),
          ${shlibs:Depends}
 Replaces: libsocketapi-dev
 Conflicts: libsocketapi-dev
-Description: development package for socketapi2
- This package contains development files for socketapi.
+Description: Development package for Socket-API
+ This package contains development files for Socket-API.
  .
- Socketapi provides a socket API for the SCTP userland implementation sctplib,
+ Socket-API provides a socket API for the SCTP userland implementation sctplib,
  conforming to draft-ietf-tsvwg-sctpsocket.
  .
  This implementation is the product of a cooperation between Siemens AG (ICN),
