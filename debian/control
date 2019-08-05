@@ -21,7 +21,7 @@ Replaces: libsocketapi2
 Conflicts: libsocketapi2
 Description: Socket API library for sctplib
  Socket-API provides a socket API for the SCTP userland implementation sctplib,
- conforming to draft-ietf-tsvwg-sctpsocket.
+ conforming to RFC 6458.
  .
  This implementation is the product of a cooperation between Siemens AG (ICN),
  Munich, Germany and the Computer Networking Technology Group at the IEM of
@@ -39,7 +39,7 @@ Description: Development package for Socket-API
  This package contains development files for Socket-API.
  .
  Socket-API provides a socket API for the SCTP userland implementation sctplib,
- conforming to draft-ietf-tsvwg-sctpsocket.
+ conforming to RFC 6458.
  .
  This implementation is the product of a cooperation between Siemens AG (ICN),
  Munich, Germany and the Computer Networking Technology Group at the IEM of
