@@ -1,5 +1,5 @@
 Name: socketapi
-Version: 2.2.14~rc1.3
+Version: 2.2.14~rc1.4
 Release: 1
 Summary: Socket API library for the SCTPLIB user-space SCTP implementation
 License: GPL-3
