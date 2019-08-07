@@ -1,3 +1,51 @@
+commit 110fa29a1fb00f346037169110e00fd9f540e694
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 16:54:47 2019 +0200
+
+    A fix.
+
+commit 5bfa110ae84a9476bf72784259f125bc10bf2702
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 16:52:23 2019 +0200
+
+    Some clean-ups.
+
+commit 2480990053a2fc0db5f83238bec770613ec3dd7f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 16:39:35 2019 +0200
+
+    Removed RFC. It is publicly available from the IETF -> no need to package it.
+
+commit 041f57bae5f74137c4815e8ddbe9bda70220ffe7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 10:33:04 2019 +0200
+
+    Fixed some inconsistencies in different packaging files.
+
+commit 03f57ec3712a5dde967c15a43693dbc2f0618e15
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 10:04:34 2019 +0200
+
+    Updated build scripts.
+
+commit 9971e52f46f627c0824979e08715e1bd2f15529a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 6 16:50:36 2019 +0200
+
+    Removed leading / from Ubuntu/Debian install files.
+
+commit f2b27026f23d23913d2d83cee4c116f79b118bd4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 6 11:08:28 2019 +0200
+
+    Updated LSM entry.
+
+commit 73c55c7b217efc326e5cd3a4008269a2b23e0050
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 6 11:05:49 2019 +0200
+
+    New release socketapi-2.2.14.
+
 commit d1ebdfb384fbcb968f436a27b19e15829349db10
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Tue Aug 6 00:03:46 2019 +0200
