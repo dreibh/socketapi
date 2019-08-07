@@ -1,4 +1,4 @@
-EXTRA_DIST = rfc6458.txt
+EXTRA_DIST =
 
 
 clean:
