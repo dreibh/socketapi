@@ -14,5 +14,5 @@ Alternate-site: http://www.sctp.de
                 1273 KiB socketapi-2.2.14.tar.gz
 Original-site:  http://www.sctp.de
 Platforms:      Linux, FreeBSD, MacOS, Solaris
-Copying-policy: GPL
+Copying-policy: GPL-3+
 End

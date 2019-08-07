@@ -2,7 +2,7 @@ Name: socketapi
 Version: 2.2.14
 Release: 1
 Summary: Socket API library for the SCTPLIB user-space SCTP implementation
-License: GPL-3
+License: GPL-3+
 Group: Applications/Internet
 URL: https://www.uni-due.de/~be0001/sctplib/
 Source: https://www.uni-due.de/~be0001/sctplib/download/%{name}-%{version}.tar.gz
