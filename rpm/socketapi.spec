@@ -81,5 +81,3 @@ the University of Essen, Germany.
 %changelog
 * Tue Aug 06 2019 Thomas Dreibholz <dreibh@iem.uni-due.de> - 2.2.14
 - New upstream release.
-* Fri Jun 14 2019 Thomas Dreibholz <dreibh@iem.uni-due.de> - 2.2.14
-- New upstream release.
