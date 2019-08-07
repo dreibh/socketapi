@@ -1,3 +1,9 @@
+socketapi (2:2.2.15~rc0-1ubuntu1) disco; urgency=medium
+
+  * New upstream release.
+
+ -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Wed, 07 Aug 2019 16:38:47 +0200
+
 socketapi (2:2.2.14-1ubuntu1) disco; urgency=medium
 
   * New upstream version.

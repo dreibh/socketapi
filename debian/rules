@@ -1,14 +1,12 @@
 #!/usr/bin/make -f
 
-DPKG_EXPORT_BUILDFLAGS = 1
-include /usr/share/dpkg/buildflags.mk
-
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
 %:
 	dh $@
 
 override_dh_auto_configure:
-	dh_auto_configure --
+	dh_auto_configure -- --enable-sctp-over-udp
 
 override_dh_installchangelogs:
 	dh_installchangelogs -k ChangeLog
