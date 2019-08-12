@@ -571,7 +571,6 @@ int main(int argc, char** argv)
    // ====== Print information ==============================================
    std::cout << "SCTP Test - Copyright (C) 2001-2019 Thomas Dreibholz" << std::endl;
    std::cout << "----------------------------------------------------" << std::endl;
-   std::cout << "Version:           " << __DATE__ << ", " << __TIME__ << std::endl;
    std::cout << "Server Mode:       " << ((server == true) ? "on" : "off") << std::endl;
    std::cout << "Connection Mode:   " << ((connectionLess == false) ? "connection-oriented" : "connection-less") << std::endl;
    std::cout << "Local Addresses:   " << settings.LocalAddress[0] << std::endl;

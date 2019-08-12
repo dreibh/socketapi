@@ -294,7 +294,6 @@ int main(int argc, char** argv)
    // ====== Print information ==============================================
    std::cout << "SCTP TFTP - Copyright (C) 2001-2019 Thomas Dreibholz" << std::endl;
    std::cout << "----------------------------------------------------" << std::endl;
-   std::cout << "Version:               " << __DATE__ << ", " << __TIME__ << std::endl;
    std::cout << "Local Addresses:       " << *(localAddressArray[0]) << std::endl;
    for(cardinal i = 1;i < localAddresses;i++) {
       std::cout << "                       " << *(localAddressArray[i]) << std::endl;
