@@ -3280,7 +3280,12 @@ ssize_t sctp_sendmsg(int                    s,
 #endif
       tolen,
       &iov, 1,
-      cbuf, cmsglen,
+      cbuf,
+#ifdef __FreeBSD__
+      (socklen_t)cmsglen,
+#else
+      cmsglen,
+#endif
       (int)flags
    };
 
@@ -3319,7 +3324,12 @@ ssize_t sctp_send(int                           s,
    struct msghdr msg = {
       NULL, 0,
       &iov, 1,
-      cbuf, cmsglen,
+      cbuf,
+#ifdef __FreeBSD__
+      (socklen_t)cmsglen,
+#else
+      cmsglen,
+#endif
       flags
    };
 
@@ -3357,7 +3367,12 @@ ssize_t sctp_sendx(int                           sd,
 #endif
       (socklen_t)addrcnt,
       &iov, 1,
-      cbuf, cmsglen,
+      cbuf,
+#ifdef __FreeBSD__
+      (socklen_t)cmsglen,
+#else
+      cmsglen,
+#endif
       flags | MSG_MULTIADDRS,
    };
 
@@ -3400,7 +3415,12 @@ ssize_t sctp_recvmsg(int                     s,
 #endif
       (fromlen != NULL) ? *fromlen : 0,
       &iov, 1,
-      cbuf, cmsglen,
+      cbuf,
+#ifdef __FreeBSD__
+      (socklen_t)cmsglen,
+#else
+      cmsglen,
+#endif
       (msg_flags != NULL) ? *msg_flags : 0
    };
    int cc;
