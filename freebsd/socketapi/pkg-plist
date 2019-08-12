@@ -1,5 +1,5 @@
 usr/include/ext_socket.h
-usr/lib/*/libsctpsocket*.a
-usr/lib/*/libsctpsocket*.la
-usr/lib/*/libsctpsocket*.so
-usr/lib/*/libsctpsocket.so.*
+usr/lib/libsctpsocket.a
+usr/lib/libsctpsocket.la
+usr/lib/libsctpsocket.so
+usr/lib/libsctpsocket.so.*
