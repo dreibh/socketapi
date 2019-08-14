@@ -82,7 +82,6 @@ class EchoThread : public Thread
 
    Socket*  EchoSocket;
    cardinal Incoming;
-   cardinal Unreliable;
 };
 
 
