@@ -575,8 +575,6 @@ class DaytimeServer : public ServerSet
    // ====== Private data ===================================================
    private:
    void run();
-
-   bool TestMode;
 };
 
 
