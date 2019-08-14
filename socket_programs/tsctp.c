@@ -219,15 +219,17 @@ int main(int argc, char **argv)
          memset(&remote_addr, 0, sizeof(remote_addr));
          addr_len = sizeof(struct sockaddr_in);
          cfdptr = (int*)malloc(sizeof(int));
-         if ((*cfdptr = ext_accept(fd, (struct sockaddr *)&remote_addr, &addr_len)) < 0)
+         if ((*cfdptr = ext_accept(fd, (struct sockaddr *)&remote_addr, &addr_len)) < 0) {
             perror("accept");
+            break;
+         }
          if (verbose)
             fprintf(stdout,"Connection accepted from %s:%d\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port));
          server_info->addr = remote_addr;
          server_info->fd = *cfdptr;
          pthread_create(&tid, NULL, &handle_connection, (void*) server_info);
       }
-      close(fd);
+      ext_close(fd);
    } else {
       remote_addr.sin_family      = AF_INET;
 #ifdef HAVE_SIN_LEN
@@ -264,7 +266,7 @@ int main(int argc, char **argv)
       linger.l_linger = LINGERTIME;
       if (ext_setsockopt(fd, SOL_SOCKET, SO_LINGER,(char*)&linger, sizeof(struct linger))<0)
          perror("setsockopt");
-      close(fd);
+      ext_close(fd);
       gettimeofday(&now, NULL);
       timersub(&now, &start_time, &diff_time);
       seconds = diff_time.tv_sec + (double)diff_time.tv_usec/1000000;

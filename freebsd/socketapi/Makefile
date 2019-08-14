@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	socketapi
-PORTVERSION=	2.2.15
+PORTVERSION=	2.2.16~rc0
 CATEGORIES=	net
 MASTER_SITES=	https://www.uni-due.de/~be0001/sctplib/download/
 

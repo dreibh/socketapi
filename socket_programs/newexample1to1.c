@@ -82,7 +82,7 @@ static void handle_event(void *buf)
        break;
       case SCTP_SEND_FAILED:
          ssf = &snp->sn_send_failed;
-         printf("^^^ sendfailed: len=%hu err=%d\n", ssf->ssf_length, ssf->ssf_error);
+         printf("^^^ sendfailed: len=%u err=%d\n", ssf->ssf_length, ssf->ssf_error);
        break;
       case SCTP_PEER_ADDR_CHANGE:
          spc = &snp->sn_paddr_change;
