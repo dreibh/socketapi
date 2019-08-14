@@ -266,7 +266,7 @@ int main(int argc, char **argv)
       linger.l_linger = LINGERTIME;
       if (ext_setsockopt(fd, SOL_SOCKET, SO_LINGER,(char*)&linger, sizeof(struct linger))<0)
          perror("setsockopt");
-      close(fd);
+      ext_close(fd);
       gettimeofday(&now, NULL);
       timersub(&now, &start_time, &diff_time);
       seconds = diff_time.tv_sec + (double)diff_time.tv_usec/1000000;
