@@ -1,3 +1,131 @@
+commit 6f51b5bd47415b9ee3c56fb942a99cf498819287
+Merge: 6e00153 6142849
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 14 11:12:36 2019 +0200
+
+    Merge branch 'master' of https://github.com/dreibh/socketapi
+
+commit 61428499cf8c6321ba575129d426da545913a384
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 14 11:48:11 2019 +0200
+
+    Fixed another compiler warning: removed unused private attribute.
+
+commit 3bcee8093c3206864b7793d0754b674db8259553
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 14 11:47:18 2019 +0200
+
+    Fixed compiler warning: removed unused private attribute.
+
+commit 1df98965962a51847e4c87caec17cdec4bc4b2e0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 14 11:46:27 2019 +0200
+
+    Another bugfix: needs to call ext_close() instead of close().
+
+commit 2977dadaf5122e342d37c9246dd7fa402d983dd0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 14 11:45:08 2019 +0200
+
+    Bugfix: needs to call ext_close() instead of close().
+
+commit f84a221cd6f21dc4e9800c370b7c9d98b76f8730
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 14 11:42:26 2019 +0200
+
+    Fixed warnings: printf needs %u instead of %hu for 'unsigned int' length field.
+
+commit 6e001532c40678c40f4d39a7d7547f7c37b1b46d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 14 11:03:28 2019 +0200
+
+    A fix.
+
+commit d99e1596bd999d47e0ab6ab7fb24268f183f958f
+Merge: d1dabd1 918d7f9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 14 10:43:01 2019 +0200
+
+    Merge branch 'master' of https://github.com/dreibh/socketapi
+
+commit d1dabd1519b6c84d0ecaa850cff35da04340e179
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 14 10:42:49 2019 +0200
+
+    A fix.
+
+commit 918d7f9bddc25c0bedde23e5f0ad7903d09a26a7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 14 09:50:31 2019 +0200
+
+    Updated CI scripts.
+
+commit 59a20f47db6b52def07d2aebd4f604332941c6a8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 15:30:32 2019 +0200
+
+    Updated build script.
+
+commit f2d60446b2b944936f639d119411962ef6a30f22
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 15:29:48 2019 +0200
+
+    Removed Ubuntu Cosmic from Travis CI builds, since it is deprecated.
+
+commit 1967bfe1354caa087050b8efed7dbfd3b0dc3131
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 12:44:39 2019 +0200
+
+    Removed build date (__DATE__ and __TIME__) from programs, to get reproducible builds.
+
+commit 70ab4b3b11d3b8ba8a4eea51276614664527b1c5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 12:42:31 2019 +0200
+
+    Updated Travis CI configuration: added Fedora builds.
+
+commit 5f4a6345b3cb07a063d8a5f9d94e7f3ba797dca2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 11:45:20 2019 +0200
+
+    FreeBSD build fix: msg_controllen is socklen_t under FreeBSD -> added cast.
+
+commit 18a1c885bb94350244e74f3e53256aa4660f731c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 11:39:18 2019 +0200
+
+    Added missing file.
+
+commit 3d86fd5b229b1e4c3f4dba5b9a82fad81592e36b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 11:31:06 2019 +0200
+
+    Added initial FreeBSD port files.
+
+commit 0aad547992611e94025c41cc8e5ba3206798e19f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Aug 12 09:05:37 2019 +0200
+
+    Improved Travis CI configuration.
+
+commit 1d6e37d9042785edbd5b8b9f119bed2cbd2f8248
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Aug 8 14:05:25 2019 +0200
+
+    Build script update.
+
+commit 27d81eb24427694fc7d1171674947deb587d0a06
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 18:22:03 2019 +0200
+
+    Updated LSM entry.
+
+commit eb5afa319254a2393b0b81ba845728b59db3c1c8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 7 17:41:09 2019 +0200
+
+    New release socketapi-2.2.15.
+
 commit 110fa29a1fb00f346037169110e00fd9f540e694
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Aug 7 16:54:47 2019 +0200
