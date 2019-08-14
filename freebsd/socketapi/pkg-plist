@@ -2,4 +2,4 @@ include/ext_socket.h
 lib/libsctpsocket.a
 lib/libsctpsocket.la
 lib/libsctpsocket.so
-lib/libsctpsocket.so.*
+lib/libsctpsocket.so.2.0.2
