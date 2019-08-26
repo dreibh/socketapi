@@ -76,8 +76,6 @@ inline void debug(const char* string)
 
 #if BYTE_ORDER == BIG_ENDIAN
 
-#error BIG??
-
 // No byteorder translation for big endian necessary!
 inline card16 translate16(const card16 x) { return(x); }
 inline card32 translate32(const card32 x) { return(x); }
