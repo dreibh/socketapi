@@ -3,7 +3,7 @@
 # $Id$
 # ###########################################################################
 
-AC_INIT([socketapi], [2.2.16], [dreib@iem.uni-due.de])
+AC_INIT([socketapi], [2.2.17~rc0], [dreib@iem.uni-due.de])
 AM_INIT_AUTOMAKE
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_HOST
