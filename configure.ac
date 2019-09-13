@@ -112,7 +112,7 @@ bsdi*)
 freebsd*)
     CFLAGS="$CFLAGS -DFreeBSD -D_PTHREADS -pthread -I/usr/local/include"
     CXXFLAGS="$CXXFLAGS -DFreeBSD -D_PTHREADS -pthread -I/usr/local/include"
-    LDFLAGS="$LDFLAGS -L/usr/local/v6/lib"
+    LDFLAGS="$LDFLAGS -L/usr/local/lib"
     thread_LIBS=""
     ;;
 hpux*)
@@ -165,8 +165,12 @@ fi
 
 
 # ###### Check for sctplib ##################################################
-AC_CHECK_HEADERS([sctp.h])
-AC_SEARCH_LIBS([sctp_initLibrary], [sctplib])
+AC_CHECK_HEADERS([sctp.h], [], [
+   AC_MSG_ERROR([Unable to find sctplib header file])
+])
+AC_SEARCH_LIBS([sctp_initLibrary], [sctplib], [], [
+   AC_MSG_ERROR([Unable to find sctplib!])
+])
 
 
 # ###### Version information ################################################
@@ -190,7 +194,6 @@ echo ""
 echo "   Build with Maintainer Mode : $enable_maintainer_mode"
 echo "   Build with SCTP over UDP   : $enable_sctp_over_udp"
 echo ""
-echo "   sctplib libraries          : $sctplib_LIBS"
 echo "   glib_LIBS                  : $glib_LIBS"
 echo "   Thread Libraries           : $thread_LIBS"
 echo ""
