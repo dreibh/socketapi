@@ -9,7 +9,7 @@ Build-Depends: autoconf,
                libglib2.0-dev,
                libsctplib-dev (>= 1.0.9),
                libtool
-Standards-Version: 4.4.1.1
+Standards-Version: 4.4.1.2
 
 Package: libsctpsocket2
 Section: libs
