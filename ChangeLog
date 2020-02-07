@@ -1,3 +1,118 @@
+commit 1f909310be2d8057bc2abde536972ab4d008a53d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Feb 7 13:18:53 2020 +0100
+
+    Updated Debian standards version.
+
+commit 66f37bbc4afeed8e64054b5741c940e603493a13
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Feb 7 12:52:08 2020 +0100
+
+    Updated build scripts
+
+commit ab962f5851b5f2e99594ae83b40e9f36f00cda27
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 14:27:06 2019 +0100
+
+    Version bump.
+
+commit 72d2a56abd56b765f55c8350f0d92f29e5cb38b4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 13:37:12 2019 +0100
+
+    Updated Travis CI configuration: updated FreeBSD releases.
+
+commit 8b1f6647b74a3a7e248eab721a402f5fb0422d8e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 13:19:18 2019 +0100
+
+    Updated Travis CI configuration: added Ubuntu 20.04.
+
+commit f56777e9b7fb4931b54c60853353d7f0e708f9bb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 12:32:12 2019 +0100
+
+    Updated Travis CI configuration: removed Fedora 29, added Fedora 31.
+
+commit d930f3afaaa5ba8a4644e9b714dde8279ef7148a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 12:13:35 2019 +0100
+
+    Header updates.
+
+commit 8653075f7b2aa9271b945d83947d226d484e94c8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 12:09:42 2019 +0100
+
+    Updated build scripts
+
+commit 4648bfd9c304241b7a8ac239013b040998f2b294
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 12:09:42 2019 +0100
+
+    Updated build scripts
+
+commit 7ac92fe1348408c2e4a79477e5b80044d43cca51
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 12:06:18 2019 +0100
+
+    Removed obsolete files.
+
+commit 7e689ff2b7cb469069172909695a1619c2200b6c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Oct 28 14:41:24 2019 +0100
+
+    Updated Debian/Ubuntu packaging files.
+
+commit e73fb7e37b187ce7acf14e9e1c46f79bdccf9e0e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Oct 18 12:26:40 2019 +0200
+
+    Updated build scripts
+
+commit c2440849079a3481946a4ccbe0a80c76f0a931fa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Oct 16 13:52:29 2019 +0200
+
+    Updated build scripts
+
+commit f7d409823cbba4f06c937306bf5d3ed2e05dc0b8
+Merge: ca41c2e 5b9202a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 13 12:40:40 2019 +0300
+
+    Merge branch 'master' of github.com:dreibh/socketapi
+
+commit ca41c2e84686ad40eff13ba1390ce4f3c754a42d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 13 12:40:33 2019 +0300
+
+    Updated build scripts
+
+commit 5b9202ab3a2e8a591f479c3ee9e12742669e4386
+Author: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Date:   Fri Sep 13 10:14:28 2019 +0200
+
+    Build fix for FreeBSD 11.x with clang.
+
+commit 3db3612d12ef36c29032f75774fe398b6b39c0f1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Sep 12 12:03:48 2019 +0300
+
+    Updated build scripts
+
+commit 0a60e29872469ac354942ff06af0ef7d79c7dbf1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Sep 10 17:02:23 2019 +0300
+
+    Updated LSM entry.
+
+commit 59a993bf634f967128ddf39404f28f7e96ecd4bd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Sep 10 17:01:11 2019 +0300
+
+    New release socketapi-2.2.17.
+
 commit fb5b323f8ed7d75fdc7cc09e635a28dfe90e9b83
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Tue Sep 10 15:24:46 2019 +0300
