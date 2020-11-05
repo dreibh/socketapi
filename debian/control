@@ -10,6 +10,9 @@ Build-Depends: autoconf,
                libsctplib-dev (>= 1.0.9),
                libtool
 Standards-Version: 4.5.0.0
+Rules-Requires-Root: no
+Vcs-Git: https://github.com/dreibh/socketapi.git
+Vcs-Browser: https://github.com/dreibh/socketapi
 
 Package: libsctpsocket2
 Section: libs
