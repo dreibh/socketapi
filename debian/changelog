@@ -1,9 +1,9 @@
-socketapi (2:2.2.19~rc0-1ubuntu1) focal; urgency=medium
+socketapi (2:2.2.19~rc1-1ubuntu1) focal; urgency=medium
 
   * New upstream release.
   * debian/control: Updated standards version to 4.5.0.3.
 
- -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Thu, 05 Nov 2020 19:08:18 +0100
+ -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Tue, 10 Nov 2020 14:20:46 +0100
 
 socketapi (2:2.2.18-1ubuntu1) focal; urgency=medium
 
