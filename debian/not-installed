@@ -1,0 +1,6 @@
+usr/lib/*/libcppsocketapi.so.*
+usr/lib/*/libcppsocketapi*.a
+usr/lib/*/libcppsocketapi*.la
+usr/lib/*/libcppsocketapi*.so
+usr/include/cppsocketapi/*.h
+usr/include/cppsocketapi/*.icc
