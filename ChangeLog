@@ -1,3 +1,165 @@
+commit f015325ff1c64f320261260cd9f13a54c515a714
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 13 10:24:50 2020 +0100
+
+    Updated Travis CI configuration.
+
+commit a4ea2389831273a2015a45f75466c83e6a5c0d05
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 11 22:25:44 2020 +0100
+
+    Version bump.
+
+commit 7b9b2b36db57b6b1702351b50d3a857ceb267130
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 11 21:41:12 2020 +0100
+
+    Updated symbols file.
+
+commit cc80bbd5786a0ea4b23d7fbf328f9c106354135b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 11 20:58:35 2020 +0100
+
+    Added symbols file.
+
+commit 9a299b1281141c5e68820009d35437f4be61cc9f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 11 20:53:20 2020 +0100
+
+    More packaging clean-ups.
+
+commit bd6306b55dab2edd2b292dd1304983f77e2c1fed
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 11 13:01:17 2020 +0100
+
+    Updated build scripts
+
+commit 0cae08481e68c7a984805ec8abdc0efd1fb84712
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Nov 10 14:50:11 2020 +0100
+
+    Version bump.
+
+commit 725320eb7ad1a8d2868c21298a631180488a3f81
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 5 19:41:20 2020 +0100
+
+    Version bump.
+
+commit f607494a76480e583485d7d57908466c03d9c53b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 5 18:57:23 2020 +0100
+
+    Format update.
+
+commit 16cdcc39fb9afd86c4e9f65aa0f20c55e85b11f4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 5 18:54:04 2020 +0100
+
+    Packaging updates.
+
+commit 12a5e675d6abfc2d62e2cc54e57b3c3f5729c95c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 5 17:09:54 2020 +0100
+
+    Updated build scripts
+
+commit 2adab94586f0fbfff6128e7b6d05426595c07264
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Sep 30 16:55:42 2020 +0200
+
+    Updated build scripts
+
+commit 980f338689b8919eef647ef2f19140e344a38f51
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Sep 10 12:41:21 2020 +0200
+
+    Updated build scripts
+
+commit e53c2732fdf5224ba585d5713d8b0ae10ee35a58
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Sep 10 12:41:11 2020 +0200
+
+    Updated packaging configuration.
+
+commit 7e0d87182fecea8704ed3f25140c8c1533e88744
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Sep 10 12:36:38 2020 +0200
+
+    Updated signing key.
+
+commit 4e20c059972de772b4243db18701b60471374685
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 4 14:15:28 2020 +0200
+
+    Updated build scripts
+
+commit 2a3f625d0e64bbf94f440d2498d06a3306961453
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 4 14:11:58 2020 +0200
+
+    Updated Travis CI configuration.
+
+commit d5ff6a5e2fd9fe604a1d6f7ccb44b53067c49ffa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Sep 4 14:09:51 2020 +0200
+
+    Updated build scripts
+
+commit 5469bc0351bef14cb324137dd07d75099c8e04da
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Jul 18 15:55:56 2020 +0200
+
+    Updated build scripts
+
+commit 4a7fe030aac882ed0a0e24805d1eb19f9f94bc82
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed May 6 22:02:24 2020 +0200
+
+    Updated build scripts
+
+commit 596240b9d84bdfd8898a45cd5287608bf1cf11c9
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed May 6 22:02:23 2020 +0200
+
+    Updated build scripts
+
+commit b4749749548dd723faf0a30df15cc6c43f918012
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Apr 17 11:30:57 2020 +0200
+
+    Updated Travis CI configuration for Ubuntu builds.
+
+commit f986c7efb9160b4834d85a95725a4fc635a55131
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Apr 16 11:42:56 2020 +0200
+
+    Updated Travis CI configuration: Ubuntu 19.04 (Disco Dingo) is now obsolete.
+
+commit b03f18d404c1306d99cc958aa85a1cee93012ad1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Apr 14 19:04:43 2020 +0200
+
+    Updated build scripts
+
+commit 2b6bd0e5427c354a7037cf5e4eac95fd8e90aef0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 26 10:41:18 2020 +0100
+
+    Updated build scripts
+
+commit 25cb598d2e41d29f652fe8182e2f6e8f8723beb7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Feb 7 13:27:57 2020 +0100
+
+    Updated LSM entry.
+
+commit e2f3053e43a1f5aba302212d1c7d9e922f5f50e2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Feb 7 13:22:00 2020 +0100
+
+    New release socketapi-2.2.18.
+
 commit 1f909310be2d8057bc2abde536972ab4d008a53d
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Fri Feb 7 13:18:53 2020 +0100
