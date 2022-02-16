@@ -1,7 +1,7 @@
 Begin4
 Title:          socketapi
-Version:        2.2.19
-Entered-date:   2020-11-13
+Version:        2.2.20
+Entered-date:   2022-02-16
 Description:    SocketAPI is the socket API library for the SCTPLIB user-space
                 SCTP implementation.
 Keywords:       Stream Control Transmission Protocol, SCTP, Networking, User-Space
