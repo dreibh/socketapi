@@ -9,7 +9,7 @@ Build-Depends: autoconf,
                libglib2.0-dev,
                libsctplib-dev (>= 1.0.9),
                libtool
-Standards-Version: 4.5.0.3
+Standards-Version: 4.6.0.1
 Rules-Requires-Root: no
 Vcs-Git: https://github.com/dreibh/socketapi.git
 Vcs-Browser: https://github.com/dreibh/socketapi

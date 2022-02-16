@@ -1,3 +1,10 @@
+socketapi (2:2.2.20-1ubuntu1) hirsute; urgency=medium
+
+  * New upstream release.
+  * debian/control: Updated standards version to 4.6.0.1.
+
+ -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Wed, 16 Feb 2022 12:42:19 +0100
+
 socketapi (2:2.2.19-1ubuntu1) hirsute; urgency=medium
 
   * New upstream release.
