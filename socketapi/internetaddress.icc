@@ -100,7 +100,7 @@ inline bool InternetAddress::isLoopback() const
 inline bool InternetAddress::isUnspecified() const
 {
    for(cardinal i = 0;i < 8;i++) {
-      if(&AddrSpec.Host16[i] != 0x0000) {
+      if(AddrSpec.Host16[i] != 0x0000) {
          if(!((i == 5) && (AddrSpec.Host16[i] == 0xffff))) {
             return(false);
          }
