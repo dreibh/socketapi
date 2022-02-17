@@ -1,5 +1,5 @@
 Name: socketapi
-Version: 2.2.21~rc0
+Version: 2.2.21
 Release: 1
 Summary: Socket API library for the SCTPLIB user-space SCTP implementation
 License: GPL-3+
@@ -79,6 +79,8 @@ the University of Essen, Germany.
 
 
 %changelog
+* Thu Feb 17 2022 Thomas Dreibholz <dreibh@iem.uni-due.de> - 2.2.21
+- New upstream release.
 * Wed Feb 16 2022 Thomas Dreibholz <dreibh@iem.uni-due.de> - 2.2.20
 - New upstream release.
 * Fri Nov 13 2020 Thomas Dreibholz <dreibh@iem.uni-due.de> - 2.2.19

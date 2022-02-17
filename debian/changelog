@@ -1,9 +1,9 @@
-socketapi (2:2.2.21~rc0-1ubuntu1) jammy; urgency=medium
+socketapi (2:2.2.21-1ubuntu1) jammy; urgency=medium
 
   * New upstream release.
   * Closes: #1005916 (ITP).
 
- -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Thu, 17 Feb 2022 11:16:16 +0100
+ -- Thomas Dreibholz <dreibh@iem.uni-due.de>  Thu, 17 Feb 2022 12:25:45 +0100
 
 socketapi (2:2.2.20-1ubuntu1) hirsute; urgency=medium
 
