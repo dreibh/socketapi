@@ -1,3 +1,33 @@
+commit eef6782e26e181e173c48479b8c131bfdadd8bfe
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 31 11:48:17 2022 +0200
+
+    Removed Vcs-* fields from debian/control.
+
+commit 6891c0b8c3656d1e0fd07856abf6788a8199fbdf
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 31 11:19:51 2022 +0200
+
+    Updated CI scripts
+
+commit 0fcf8fc57de6ee3538febcdaeca9f3a31f1b6c56
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Aug 31 11:19:50 2022 +0200
+
+    Updated build scripts
+
+commit 484ceedaeac2996c8345f118191e0aef0eee60d4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 17 12:38:35 2022 +0100
+
+    Updated LSM entry.
+
+commit ec4d42bdb17b6dda91afafc51a1135c2feadf85c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Feb 17 12:25:47 2022 +0100
+
+    New release socketapi-2.2.21.
+
 commit fd34cf4b3af2cd34f18399e3dcc6adbced6432bb
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Thu Feb 17 11:34:46 2022 +0100
