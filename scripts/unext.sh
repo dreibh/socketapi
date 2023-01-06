@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact: discussion@sctp.de
-#          dreibh@iem.uni-due.de
+#          thomas.dreibholz@gmail.com
 #          tuexen@fh-muenster.de
 
 sed -f unext.sed $@

@@ -1,15 +1,15 @@
 Source: socketapi
 Section: net
 Priority: optional
-Maintainer: Thomas Dreibholz <dreibh@iem.uni-due.de>
-Homepage: https://www.uni-due.de/~be0001/sctplib/index.html
+Maintainer: Thomas Dreibholz <thomas.dreibholz@gmail.com>
+Homepage: https://www.nntb.no/~dreibh/sctplib/index.html
 Build-Depends: autoconf,
                automake,
                debhelper (>= 9),
                libglib2.0-dev,
                libsctplib-dev (>= 1.0.9),
                libtool
-Standards-Version: 4.6.1
+Standards-Version: 4.6.2
 Rules-Requires-Root: no
 
 Package: libsctpsocket2

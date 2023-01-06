@@ -28,7 +28,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Contact: discussion@sctp.de
- *          dreibh@iem.uni-due.de
+ *          thomas.dreibholz@gmail.com
  *          tuexen@fh-muenster.de
  *
  * Purpose: This file implements a portable address
@@ -50,7 +50,7 @@
   * make network transfer of InternetAddress objects problematic.
   *
   * @short   Portable Internet Address
-  * @author  Thomas Dreibholz (dreibh@iem.uni-due.de)
+  * @author  Thomas Dreibholz (thomas.dreibholz@gmail.com)
   * @version 1.0
   */
 class PortableAddress

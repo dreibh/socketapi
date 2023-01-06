@@ -28,7 +28,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Contact: discussion@sctp.de
- *          dreibh@iem.uni-due.de
+ *          thomas.dreibholz@gmail.com
  *          tuexen@fh-muenster.de
  *
  * Purpose: Multi Timer Thread Implementation
@@ -55,7 +55,7 @@
   * (Default is on at a maximum of 10 calls).
   *
   * @short   Multi Timer Thread
-  * @author  Thomas Dreibholz (dreibh@iem.uni-due.de)
+  * @author  Thomas Dreibholz (thomas.dreibholz@gmail.com)
   * @version 1.0
   * @see Thread
   */

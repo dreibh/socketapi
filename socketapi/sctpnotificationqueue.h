@@ -28,7 +28,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Contact: discussion@sctp.de
- *          dreibh@iem.uni-due.de
+ *          thomas.dreibholz@gmail.com
  *          tuexen@fh-muenster.de
  *
  * Purpose: Chunk Arrival Queue
@@ -62,7 +62,7 @@
   * SCTP Notification
   *
   * @short   SCTP Notification
-  * @author  Thomas Dreibholz (dreibh@iem.uni-due.de)
+  * @author  Thomas Dreibholz (thomas.dreibholz@gmail.com)
   * @version 1.0
   */
 struct SCTPNotification
@@ -115,7 +115,7 @@ enum UpdateConditionType {
   * This class is a queue for SCTP notifications.
   *
   * @short   SCTP Notification Queue
-  * @author  Thomas Dreibholz (dreibh@iem.uni-due.de)
+  * @author  Thomas Dreibholz (thomas.dreibholz@gmail.com)
   * @version 1.0
   */
 class SCTPNotificationQueue

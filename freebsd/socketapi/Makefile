@@ -1,12 +1,12 @@
-# Created by: Thomas Dreibholz <dreibh@iem.uni-due.de>
+# Created by: Thomas Dreibholz <thomas.dreibholz@gmail.com>
 # $FreeBSD: head/net/socketapi/Makefile 509202 2019-08-18 11:31:10Z pi $
 
 PORTNAME=	socketapi
-PORTVERSION=	2.2.22
+PORTVERSION=	2.2.23~rc0
 CATEGORIES=	net
-MASTER_SITES=	https://www.uni-due.de/~be0001/sctplib/download/
+MASTER_SITES=	https://www.nntb.no/~dreibh/sctplib/download/
 
-MAINTAINER=	dreibh@iem.uni-due.de
+MAINTAINER=	thomas.dreibholz@gmail.com
 COMMENT=	Socket API library for the SCTPLIB user-space SCTP implementation
 
 LICENSE=	GPLv3+

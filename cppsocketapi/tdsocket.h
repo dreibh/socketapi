@@ -28,7 +28,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Contact: discussion@sctp.de
- *          dreibh@iem.uni-due.de
+ *          thomas.dreibholz@gmail.com
  *          tuexen@fh-muenster.de
  *
  * Purpose: Socket Implementation
@@ -71,7 +71,7 @@ const cardinal IPv6HeaderSize = 40;
   * when supported by the system.
   *
   * @short   Socket
-  * @author  Thomas Dreibholz (dreibh@iem.uni-due.de)
+  * @author  Thomas Dreibholz (thomas.dreibholz@gmail.com)
   * @version 1.0
   */
 class Socket

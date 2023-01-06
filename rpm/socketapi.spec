@@ -1,11 +1,11 @@
 Name: socketapi
-Version: 2.2.22
+Version: 2.2.23~rc0
 Release: 1
 Summary: Socket API library for the SCTPLIB user-space SCTP implementation
 License: GPL-3+
 Group: Applications/Internet
-URL: https://www.uni-due.de/~be0001/sctplib/
-Source: https://www.uni-due.de/~be0001/sctplib/download/%{name}-%{version}.tar.gz
+URL: https://www.nntb.no/~dreibh/sctplib/
+Source: https://www.nntb.no/~dreibh/sctplib/download/%{name}-%{version}.tar.gz
 
 AutoReqProv: on
 BuildRequires: autoconf

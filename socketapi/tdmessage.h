@@ -28,7 +28,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Contact: discussion@sctp.de
- *          dreibh@iem.uni-due.de
+ *          thomas.dreibholz@gmail.com
  *          tuexen@fh-muenster.de
  *
  * Purpose: Socket Message
@@ -99,7 +99,7 @@ inline static const cmsghdr* CNextHeader(const msghdr* header, const cmsghdr* cm
   * of the control data block.
   *
   * @short   Socket Message
-  * @author  Thomas Dreibholz (dreibh@iem.uni-due.de)
+  * @author  Thomas Dreibholz (thomas.dreibholz@gmail.com)
   * @version 1.0
   */
 template<const size_t size> class SocketMessage
