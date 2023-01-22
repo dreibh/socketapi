@@ -1,10 +1,10 @@
-socketapi (2:2.2.23~rc0-1ubuntu1) jammy; urgency=medium
+socketapi (2:2.2.23-1ubuntu1) jammy; urgency=medium
 
   * New upstream release.
-  * Closes: #1005916 (ITP).
   * debian/control: Updated standards version to 4.6.2.
+  * Closes: #1005916 (ITP).
 
- -- Thomas Dreibholz <thomas.dreibholz@gmail.com>  Fri, 06 Jan 2023 21:27:42 +1100
+ -- Thomas Dreibholz <thomas.dreibholz@gmail.com>  Sun, 22 Jan 2023 22:49:12 +1100
 
 socketapi (2:2.2.22-1ubuntu1) jammy; urgency=medium
 

@@ -1,3 +1,33 @@
+commit dd930156e3fe894d233d21eb7a56a1e7a90bc139
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Jan 21 22:02:47 2023 +1100
+
+    Updated build scripts
+
+commit a5af990a9ff1eaf52379f1f60eaa1f0f8865d0c3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jan 6 21:38:01 2023 +1100
+
+    URL change from UDE to NNTB.
+
+commit fbe79a2cbee77398ef4c60a38433950555cfcdfd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jan 6 10:22:15 2023 +1100
+
+    Updated CI scripts
+
+commit 0a67e41ea9aacd7557aa4231dbfd35debb871222
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jan 6 10:21:46 2023 +1100
+
+    Updated build scripts
+
+commit 50d792a46bd22b61ab2d5d09b2d0a27a06637a77
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun Sep 11 13:06:10 2022 +0200
+
+    New release socketapi-2.2.22.
+
 commit eef6782e26e181e173c48479b8c131bfdadd8bfe
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Aug 31 11:48:17 2022 +0200
