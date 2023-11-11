@@ -5,8 +5,8 @@
  *
  * Realized in co-operation between
  * - Siemens AG
- * - University of Essen, Institute of Computer Networking Technology
- * - University of Applied Sciences, Muenster
+ * - University of Duisburg-Essen, Institute for Experimental Mathematics
+ * - Münster University of Applied Sciences, Burgsteinfurt
  *
  * Acknowledgement
  * This work was partially funded by the Bundesministerium fuer Bildung und
