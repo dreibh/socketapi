@@ -1,5 +1,4 @@
 /*
- *  $Id$
  *
  * SocketAPI implementation for the sctplib.
  * Copyright (C) 1999-2024 by Thomas Dreibholz
