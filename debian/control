@@ -5,7 +5,7 @@ Maintainer: Thomas Dreibholz <thomas.dreibholz@gmail.com>
 Homepage: https://www.nntb.no/~dreibh/sctplib/index.html
 Build-Depends: autoconf,
                automake,
-               debhelper (>= 9),
+               debhelper (>= 12),
                libglib2.0-dev,
                libsctplib-dev (>= 1.0.9),
                libtool
