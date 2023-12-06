@@ -11,7 +11,7 @@ if test "x$prefix" = "xNONE"; then
   prefix=$ac_default_prefix
   ac_configure_args="$ac_configure_args --prefix $prefix"
 fi
-AM_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS([config.h:config.h.in])
 
 
 # ###### Checks for programs ################################################
