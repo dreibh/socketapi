@@ -3172,7 +3172,7 @@ int sctp_getlpaddrs(int               sockfd,
                                  sizeof(sockaddr_storage),
                                  family) <= 0) {
                               result = -ENAMETOOLONG;
-                              delete addrs;
+                              delete [] addrs;
                               addrs = NULL;
                               break;
                            }
