@@ -1,3 +1,93 @@
+commit 8c0c84e4f266dd0d5aba8edc1e14c9b360b36120
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 6 12:51:36 2023 +0100
+
+    Another configure.ac update.
+
+commit dbe167ff9a2af1bb8bec4a621d2bc8808ab1395d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 6 12:50:34 2023 +0100
+
+    Updated configure.ac.
+
+commit 1cb86733ef6cef135881c92402d4f53af99889c1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 6 12:48:28 2023 +0100
+
+    Bugfix: delete [] instead of delete.
+
+commit fe37b7ec1f81404b010a7ed2fec1e0af43c8a010
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 6 12:17:23 2023 +0100
+
+    Updated autoconf/automake script.
+
+commit 8582d8a0074731d6efac249ff1b3fbe353d1f4b0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 6 12:16:31 2023 +0100
+
+    Adding packaging files to tarball.
+
+commit 596b93a0b2bc4872bd441d69a852f6333559f28f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 15 10:53:51 2023 +0100
+
+    Packaging clean-ups.
+
+commit f6b3f594d4449a4806f70fd226a63c75d524d3e1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 15 09:51:09 2023 +0100
+
+    Updated build scripts
+
+commit 5097bbb80d3e6f0239beec5c3d957667d44c0eae
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Nov 15 09:33:43 2023 +0100
+
+    Updated build scripts
+
+commit 8d26f8b63b41c83fbdb851b05ad80c8cb7d27862
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Nov 11 17:50:51 2023 +0100
+
+    Workflows update.
+
+commit 0d0bcc0579d353439dcbf8005d27bb86657e81fa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Nov 11 16:48:50 2023 +0100
+
+    Header updates.
+
+commit 8761e398f43f678abaefe24d61614fa52b2260bb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Nov 11 16:44:06 2023 +0100
+
+    Removed obsolete CVS $Id$ tag.
+
+commit daffe1cc8b76dfc9ed2c95ce832256eccd11e8fd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Nov 11 16:22:36 2023 +0100
+
+    Header updates.
+
+commit bc5237b971548e576f29b7bf6818f0b15195e634
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Nov 11 16:16:05 2023 +0100
+
+    Updated CI scripts
+
+commit b01ea73429c40f3097d851952fc094a0ccc60950
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sat Nov 11 16:15:53 2023 +0100
+
+    Updated build scripts
+
+commit 65493f616a268224f6951d36ff5f0396077be6ca
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Sun Jan 22 22:49:13 2023 +1100
+
+    New release socketapi-2.2.23.
+
 commit dd930156e3fe894d233d21eb7a56a1e7a90bc139
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Sat Jan 21 22:02:47 2023 +1100

@@ -2,7 +2,7 @@
 # $FreeBSD: head/net/socketapi/Makefile 509202 2019-08-18 11:31:10Z pi $
 
 PORTNAME=	socketapi
-PORTVERSION=	2.2.24~rc1
+PORTVERSION=	2.2.24
 CATEGORIES=	net
 MASTER_SITES=	https://www.nntb.no/~dreibh/sctplib/download/
 
