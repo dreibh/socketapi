@@ -1,6 +1,5 @@
 # ###########################################################################
 # socketapi package configuration
-# $Id$
 # ###########################################################################
 
 AC_INIT([socketapi], [2.2.24~rc1], [dreib@iem.uni-due.de])
@@ -36,44 +35,32 @@ AC_CHECK_SIZEOF(long, 4)
 AC_CHECK_SIZEOF(long long, 8)
 
 AC_MSG_CHECKING(for type socklen_t)
-AC_TRY_COMPILE([#include <sys/types.h>
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <netinet/in.h>],
-[socklen_t x; x = 0;],
-[AC_DEFINE(HAVE_SOCKLEN_T, 1, "[Define it socketlen_t is avaiable.])
- AC_MSG_RESULT(yes)],
-[AC_MSG_RESULT(no)])
+#include <netinet/in.h>]], [[socklen_t x; x = 0;]])],[AC_DEFINE(HAVE_SOCKLEN_T, 1, "[Define it socketlen_t is avaiable.])
+ AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
 
 AC_MSG_CHECKING([whether 'struct sockaddr' has sa_len])
-AC_TRY_COMPILE([#ifdef HAVE_SYS_TYPES_H
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#ifdef HAVE_SYS_TYPES_H
                 #include <sys/types.h>
                 #endif
-                #include <sys/socket.h>],
-               [static struct sockaddr sa; int i = sizeof(sa.sa_len);],
-               [AC_MSG_RESULT(yes)
-                AC_DEFINE(HAVE_SA_LEN,1,"Define this if you have sa_len in sockaddr struct.")],
-                AC_MSG_RESULT(no))
+                #include <sys/socket.h>]], [[static struct sockaddr sa; int i = sizeof(sa.sa_len);]])],[AC_MSG_RESULT(yes)
+                AC_DEFINE(HAVE_SA_LEN,1,"Define this if you have sa_len in sockaddr struct.")],[AC_MSG_RESULT(no)])
 
 AC_MSG_CHECKING([whether 'struct sockaddr_in' has sin_len])
-AC_TRY_COMPILE([#ifdef HAVE_SYS_TYPES_H
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#ifdef HAVE_SYS_TYPES_H
                 #include <sys/types.h>
                 #endif
-                #include <netinet/in.h>],
-               [static struct sockaddr_in in; int i = sizeof(in.sin_len);],
-               [AC_MSG_RESULT(yes)
-                AC_DEFINE(HAVE_SIN_LEN,1,"Define this if your IPv4 has sin_len in sockaddr_in struct.")],
-                AC_MSG_RESULT(no))
+                #include <netinet/in.h>]], [[static struct sockaddr_in in; int i = sizeof(in.sin_len);]])],[AC_MSG_RESULT(yes)
+                AC_DEFINE(HAVE_SIN_LEN,1,"Define this if your IPv4 has sin_len in sockaddr_in struct.")],[AC_MSG_RESULT(no)])
 
 AC_MSG_CHECKING([whether 'struct sockaddr_in6' has sin6_len])
-AC_TRY_COMPILE([#ifdef HAVE_SYS_TYPES_H
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#ifdef HAVE_SYS_TYPES_H
                 #include <sys/types.h>
                 #endif
-                #include <netinet/in.h>],
-               [static struct sockaddr_in6 in; int i = sizeof(in.sin6_len);],
-               [AC_MSG_RESULT(yes)
-                AC_DEFINE(HAVE_SIN6_LEN,1,"Define this if your IPv6 has sin6_len in sockaddr_in6 struct.")],
-                AC_MSG_RESULT(no))
+                #include <netinet/in.h>]], [[static struct sockaddr_in6 in; int i = sizeof(in.sin6_len);]])],[AC_MSG_RESULT(yes)
+                AC_DEFINE(HAVE_SIN6_LEN,1,"Define this if your IPv6 has sin6_len in sockaddr_in6 struct.")],[AC_MSG_RESULT(no)])
 
 
 # ###### Options ############################################################
@@ -184,7 +171,8 @@ AC_SUBST(SOCKETAPI_AGE)
 
 
 # ###### Makefiles ##########################################################
-AC_OUTPUT(Makefile socketapi/Makefile socketapi/docs/Makefile cppsocketapi/Makefile socket_programs/Makefile cppsocket_programs/Makefile scripts/Makefile )
+AC_CONFIG_FILES([Makefile socketapi/Makefile socketapi/docs/Makefile cppsocketapi/Makefile socket_programs/Makefile cppsocket_programs/Makefile scripts/Makefile ])
+AC_OUTPUT
 
 
 # ###### Configuration results ##############################################
