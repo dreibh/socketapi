@@ -15,12 +15,13 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 LIB_DEPENDS=	libsctplib.so:net/sctplib
 
 USES=		gnome libtool pkgconfig
-USE_LDCONFIG=	yes
 USE_GNOME=	glib20
+USE_LDCONFIG=	yes
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS+=	--enable-sctp-over-udp
-LDFLAGS+=	-L${LOCALBASE}/lib -lsctplib
 INSTALL_TARGET=	install-strip
+
+LDFLAGS+=	-L${LOCALBASE}/lib -lsctplib
 
 .include <bsd.port.mk>
