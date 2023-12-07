@@ -1,5 +1,4 @@
 # Created by: Thomas Dreibholz <thomas.dreibholz@gmail.com>
-# $FreeBSD: head/net/socketapi/Makefile 509202 2019-08-18 11:31:10Z pi $
 
 PORTNAME=	socketapi
 PORTVERSION=	2.2.24
@@ -8,6 +7,7 @@ MASTER_SITES=	https://www.nntb.no/~dreibh/sctplib/download/
 
 MAINTAINER=	thomas.dreibholz@gmail.com
 COMMENT=	Socket API library for the SCTPLIB user-space SCTP implementation
+WWW=		https://www.nntb.no/~dreibh/sctplib/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
