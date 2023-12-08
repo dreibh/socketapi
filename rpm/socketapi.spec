@@ -69,10 +69,8 @@ the University of Essen, Germany.
 %files libsctpsocket-devel
 %{_includedir}/ext_socket.h
 %{_libdir}/libsctpsocket*.a
-%{_libdir}/libsctpsocket*.la
 %{_libdir}/libsctpsocket*.so
 %ghost %{_libdir}/libcppsocketapi*.a
-%ghost %{_libdir}/libcppsocketapi*.la
 %ghost %{_libdir}/libcppsocketapi*.so
 %ghost %{_includedir}/cppsocketapi/*.h
 %ghost %{_includedir}/cppsocketapi/*.icc
