@@ -1,5 +1,3 @@
-# Created by: Thomas Dreibholz <thomas.dreibholz@gmail.com>
-
 PORTNAME=	socketapi
 PORTVERSION=	2.2.24
 CATEGORIES=	net
