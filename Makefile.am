@@ -2,7 +2,6 @@ SUBDIRS = socketapi cppsocketapi socket_programs cppsocket_programs scripts
 
 EXTRA_DIST = \
    debian/source/format \
-   debian/tests/control \
    debian/upstream/signing-key.asc \
    debian/upstream/metadata \
    debian/compat \
