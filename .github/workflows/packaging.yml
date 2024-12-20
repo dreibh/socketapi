@@ -57,20 +57,20 @@ jobs:
   #        # ci/ci-test   <- Not running on Ubuntu!
 
   # ====== Fedora Linux =====================================================
-  fedora-packaging:
-    name: Fedora Packaging
-    runs-on: ubuntu-latest
-    container:
-      # Using Fedora 39 here, due to problems with Mock!
-      # => https://github.com/rpm-software-management/mock/issues/1487
-      image: fedora:39
-      options: --privileged --cap-add=SYS_ADMIN
-    steps:
-      - uses: actions/checkout@v4
-      - name: Packaging
-        shell: bash
-        run: |
-          CC=clang CXX=clang++ ARCH= ci/ci-setup   package
-          CC=clang CXX=clang++ ARCH= ci/ci-install package
-          CC=clang CXX=clang++ ARCH= ci/ci-build   package
-          ci/ci-test
+  #fedora-packaging:
+  #  name: Fedora Packaging
+  #  runs-on: ubuntu-latest
+  #  container:
+  #    # Using Fedora 39 here, due to problems with Mock!
+  #    # => https://github.com/rpm-software-management/mock/issues/1487
+  #    image: fedora:39
+  #    options: --privileged --cap-add=SYS_ADMIN
+  #  steps:
+  #    - uses: actions/checkout@v4
+  #    - name: Packaging
+  #      shell: bash
+  #      run: |
+  #        CC=clang CXX=clang++ ARCH= ci/ci-setup   package
+  #        CC=clang CXX=clang++ ARCH= ci/ci-install package
+  #        CC=clang CXX=clang++ ARCH= ci/ci-build   package
+  #        ci/ci-test

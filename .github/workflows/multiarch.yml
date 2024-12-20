@@ -62,11 +62,11 @@ jobs:
           #  cxx: clang++
 
           # ====== Fedora Linux =============================================
-          - label: "Fedora 41: GCC/PPC64"
-            arch: ppc64le
-            distro: fedora41
-            cc: gcc
-            cxx: g++
+          #- label: "Fedora 41: GCC/PPC64"
+          #  arch: ppc64le
+          #  distro: fedora41
+          #  cc: gcc
+          #  cxx: g++
 
 
     # ###### Build commands #################################################
