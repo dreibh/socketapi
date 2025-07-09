@@ -7,11 +7,11 @@ Vcs-Git: https://github.com/dreibh/socketapi.git
 Vcs-Browser: https://github.com/dreibh/socketapi
 Build-Depends: autoconf,
                automake,
-               debhelper (>= 12),
+               debhelper (>= 9),
                libglib2.0-dev,
                libsctplib-dev (>= 1.0.9),
                libtool
-Standards-Version: 4.6.2
+Standards-Version: 4.7.2
 Rules-Requires-Root: no
 
 Package: libsctpsocket2
