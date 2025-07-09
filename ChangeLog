@@ -1,3 +1,214 @@
+commit 64bf5eff9209c58a04babc3bf72b3154b57ca1b1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 9 11:39:31 2025 +0200
+
+    Updated CI configuration
+
+commit b897f79ab99fd5d5e1aa7e49bfc3e5ffcfc25d8d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 9 11:39:30 2025 +0200
+
+    Updated CI scripts
+
+commit 452641b1e6b64a496398f19f8bb9daf22956b22b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 9 11:39:15 2025 +0200
+
+    Build fix.
+
+commit 1153a958350c13e3c2eba3d77391af00af8c7caa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 20 17:43:33 2024 +0100
+
+    Another workflows update.
+
+commit 9b87754f2420a289fde3c3ea1ac9da885f903aaa
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 20 17:33:06 2024 +0100
+
+    Header updates.
+
+commit 7d661fe908ac5b759bff35dbf9c4b607598a6ace
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 20 17:31:22 2024 +0100
+
+    Workflow updates.
+
+commit 0e5527ed31941ad619c898c1a7ea099edc8b0b82
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 13 23:51:51 2024 +0100
+
+    Removed obsolete build scripts.
+
+commit 5b105d1bb6c84c77f110c2be616184b23d88720a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 13 23:51:43 2024 +0100
+
+    Workflow update.
+
+commit 3a514a707ee2cd9c7b149b0507a4d204bfe2793b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 16:00:54 2024 +0100
+
+    Updated CI scripts
+
+commit 231ecee4fd3b114ab0ab0249694fb0cc3ef87bf5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 12:03:39 2024 +0100
+
+    Packaging updates.
+
+commit da08ea5263154d4890dce8f5e92bdf0f2858e0ed
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 12:02:13 2024 +0100
+
+    Updated CI configuration
+
+commit e37cc71afed5f939c61d04538dcdc75c5f060d29
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 5 12:02:12 2024 +0100
+
+    Updated build scripts
+
+commit 55d430f7847a28fe44a100b90a3b805ee78e689b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 4 12:13:30 2024 +0100
+
+    debian/control: added missing Vcs fields.
+
+commit ae202e7823f6a1106f0b91ee5ae4f21b6789215a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 29 10:27:28 2024 +0100
+
+    Updated workflow.
+
+commit 918b4ce2cbee472099940a38ad4acd5ce797e2fd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 28 17:31:58 2024 +0100
+
+    Improved CI script.
+
+commit 5aa0b0e94f686c99e92161f87322e6a914ffeffd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 21 09:34:05 2024 +0100
+
+    Updated RPM spec file.
+
+commit a05b16548b02249e527341922fd1264499053c1d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Nov 21 09:21:57 2024 +0100
+
+    Updated CI scripts.
+
+commit 843d4872d7cd5b88d1f0fbe43fee86c0bf05c06f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Nov 4 12:52:18 2024 +0100
+
+    Added build script.
+
+commit df574a04316e973a02b2722da10da8b3c7737175
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Nov 4 09:57:38 2024 +0100
+
+    Updated workflow.
+
+commit 9d5e3366edb78b17ae279530b94b41fa4892864a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Nov 4 09:48:04 2024 +0100
+
+    Updated CI scripts.
+
+commit ac7c7f9a1c61d8f182d6490e4553a1d93f4632d0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Oct 9 14:58:53 2024 +0200
+
+    Workflow update.
+
+commit efe47cce29ace8a2ec20e54e444e15ff95e84d8d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Oct 9 14:37:20 2024 +0200
+
+    Updated CI scripts
+
+commit 4c14e22c2ff84c0fb8a3be859e51ac14b4b42fc5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Oct 9 09:10:29 2024 +0200
+
+    Removed LSM file.
+
+commit 8a35a7a1fb172aedacf15d581692012e304a3215
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Oct 8 17:08:50 2024 +0200
+
+    Minor update.
+
+commit ba1c114666cf7562862752a7aa7299674041bbf5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Oct 8 16:58:38 2024 +0200
+
+    Minor clean-up.
+
+commit 8f92155009ac8454c54c005da5b92c73ddd56742
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Oct 8 16:58:11 2024 +0200
+
+    Yet another workflow update.
+
+commit 85e9c7b71897fac3525ba55554e7045f865bb0a5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Oct 8 16:56:17 2024 +0200
+
+    Updated CI scripts
+
+commit 4fadb6e70eaee7024a40da295242cec0c6f8a0e4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Oct 8 16:56:16 2024 +0200
+
+    Updated build scripts
+
+commit 6e31387e9a87993ea3f7bdc31f081f707eee5d39
+Merge: 86dc1e8 da3345c
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Dec 18 10:08:42 2023 +0100
+
+    Merge branch 'master' of https://github.com/dreibh/socketapi
+
+commit 86dc1e8c3f75c8eb9d22b7e4fb2ae9dac8fdadcd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Dec 18 10:06:46 2023 +0100
+
+    Updated FreeBSD packaging.
+
+commit da3345cea10bea95d339d44b6114b856e509ff35
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 8 15:06:34 2023 +0100
+
+    RPM spec fix.
+
+commit d4293664ea4029a621d761d289ea598abb5c86a4
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 7 13:20:40 2023 +0100
+
+    Packaging fix.
+
+commit c0b34c831cb936a36e27d2639c166fe7c87a4d90
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 7 12:56:53 2023 +0100
+
+    FreeBSD packaging update.
+
+commit 0bd5ced87c651b90ca35972bfea89bd84ff27aec
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 6 17:08:14 2023 +0100
+
+    Updated LSM entry.
+
+commit 433c8a5079aa352f35043c836f6b62f1f908e5c6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 6 16:54:21 2023 +0100
+
+    New release socketapi-2.2.24.
+
 commit 8c0c84e4f266dd0d5aba8edc1e14c9b360b36120
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Dec 6 12:51:36 2023 +0100
