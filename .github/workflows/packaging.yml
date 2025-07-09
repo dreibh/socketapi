@@ -1,5 +1,5 @@
 # GitHub Actions Scripts
-# Copyright (C) 2021-2024 by Thomas Dreibholz
+# Copyright (C) 2021-2025 by Thomas Dreibholz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,37 +40,37 @@ jobs:
         sudo ci/ci-test
 
   # ====== Debian Linux =====================================================
-  #debian-packaging:
-  #  name: Debian Packaging
-  #  runs-on: ubuntu-latest
-  #  container:
-  #    image: debian:unstable
-  #    options: --privileged
-  #  steps:
-  #    - uses: actions/checkout@v4
-  #    - name: Packaging
-  #      shell: bash
-  #      run: |
-  #        CC=gcc CXX=g++ OS=debian DIST=unstable ARCH= ci/ci-setup   package
-  #        CC=gcc CXX=g++ OS=debian DIST=unstable ARCH= ci/ci-install package
-  #        CC=gcc CXX=g++ OS=debian DIST=unstable ARCH= ci/ci-build   package
-  #        # ci/ci-test   <- Not running on Ubuntu!
+  debian-packaging:
+    name: Debian Packaging
+    runs-on: ubuntu-latest
+    container:
+      image: debian:unstable
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v4
+      - name: Packaging
+        shell: bash
+        run: |
+          CC=gcc CXX=g++ OS=debian DIST=unstable ARCH= ci/ci-setup   package
+          CC=gcc CXX=g++ OS=debian DIST=unstable ARCH= ci/ci-install package
+          CC=gcc CXX=g++ OS=debian DIST=unstable ARCH= ci/ci-build   package
+          # ci/ci-test   <- Not running on Ubuntu!
 
   # ====== Fedora Linux =====================================================
-  #fedora-packaging:
-  #  name: Fedora Packaging
-  #  runs-on: ubuntu-latest
-  #  container:
-  #    # Using Fedora 39 here, due to problems with Mock!
-  #    # => https://github.com/rpm-software-management/mock/issues/1487
-  #    image: fedora:39
-  #    options: --privileged --cap-add=SYS_ADMIN
-  #  steps:
-  #    - uses: actions/checkout@v4
-  #    - name: Packaging
-  #      shell: bash
-  #      run: |
-  #        CC=clang CXX=clang++ ARCH= ci/ci-setup   package
-  #        CC=clang CXX=clang++ ARCH= ci/ci-install package
-  #        CC=clang CXX=clang++ ARCH= ci/ci-build   package
-  #        ci/ci-test
+  fedora-packaging:
+    name: Fedora Packaging
+    runs-on: ubuntu-latest
+    container:
+      # Using Fedora 39 here, due to problems with Mock!
+      # => https://github.com/rpm-software-management/mock/issues/1487
+      image: fedora:39
+      options: --privileged --cap-add=SYS_ADMIN
+    steps:
+      - uses: actions/checkout@v4
+      - name: Packaging
+        shell: bash
+        run: |
+          CC=clang CXX=clang++ ARCH= ci/ci-setup   package
+          CC=clang CXX=clang++ ARCH= ci/ci-install package
+          CC=clang CXX=clang++ ARCH= ci/ci-build   package
+          ci/ci-test
