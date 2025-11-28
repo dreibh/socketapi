@@ -28,7 +28,7 @@ jobs:
   # ====== Ubuntu Linux =====================================================
   ubuntu-packaging:
     name: Ubuntu Packaging
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Packaging
@@ -61,9 +61,9 @@ jobs:
     name: Fedora Packaging
     runs-on: ubuntu-latest
     container:
-      # Using Fedora 39 here, due to problems with Mock!
+      # The GitHub runner issue with Mock seems to be fixed now:
       # => https://github.com/rpm-software-management/mock/issues/1487
-      image: fedora:39
+      image: fedora:42
       options: --privileged --cap-add=SYS_ADMIN
     steps:
       - uses: actions/checkout@v4
