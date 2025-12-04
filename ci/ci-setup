@@ -52,7 +52,7 @@ if [ "${ID}" == "ubuntu" ] || [ "${ID}" == "debian" ] ; then
    fi
    if [ ${USE_PACKAGING} -eq 1 ] ; then
       # Need to install pbuilder as well:
-      PACKAGES="${PACKAGES} build-essential debian-archive-keyring debian-ports-archive-keyring devscripts distro-info eatmydata fakeroot gpg-agent pbuilder qemu-user qemu-user-binfmt sudo"
+      PACKAGES="${PACKAGES} build-essential debian-archive-keyring debian-ports-archive-keyring devscripts distro-info eatmydata fakeroot pbuilder qemu-user qemu-user-binfmt sudo"
    fi
 
    apt-get update -qq
@@ -158,8 +158,7 @@ EOF
       if [ "${OS}" == "ubuntu" ] ; then
          # Add PPA dreibh/ppa for Ubuntu:
          OS="${OS}" DISTRIBUTION="${DIST}" ARCHITECTURE="${ARCH}" pbuilder login --save-after-login <<EOF
-DEBIAN_FRONTEND=noninteractive apt-get install -qqy -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef --no-install-recommends \
-software-properties-common
+DEBIAN_FRONTEND=noninteractive apt-get install -qqy -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef --no-install-recommends gpg-agent software-properties-common
 apt-add-repository -y ppa:dreibh/ppa
 apt-get update -q
 EOF
