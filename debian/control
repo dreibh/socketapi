@@ -34,8 +34,7 @@ Package: libsctpsocket-dev
 Section: libdevel
 Architecture: any
 Depends: libsctpsocket2 (= ${binary:Version}),
-         ${misc:Depends},
-         ${shlibs:Depends}
+         ${misc:Depends}
 Replaces: libsocketapi-dev
 Conflicts: libsocketapi-dev
 Description: Development package for Socket-API
