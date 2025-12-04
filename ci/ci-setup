@@ -52,7 +52,7 @@ if [ "${ID}" == "ubuntu" ] || [ "${ID}" == "debian" ] ; then
    fi
    if [ ${USE_PACKAGING} -eq 1 ] ; then
       # Need to install pbuilder as well:
-      PACKAGES="${PACKAGES} build-essential debian-archive-keyring debian-ports-archive-keyring devscripts distro-info eatmydata fakeroot pbuilder qemu-user qemu-user-binfmt sudo"
+      PACKAGES="${PACKAGES} build-essential debian-archive-keyring debian-ports-archive-keyring devscripts distro-info eatmydata fakeroot gpg-agent pbuilder qemu-user qemu-user-binfmt sudo"
    fi
 
    apt-get update -qq
@@ -61,6 +61,8 @@ if [ "${ID}" == "ubuntu" ] || [ "${ID}" == "debian" ] ; then
    DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef --no-install-recommends \
       ${PACKAGES}
 
+   # ====== Enable PPA ======================================================
+   # This is only available for Ubuntu:
    if [ "${ID}" == "ubuntu" ] ; then
       # Add PPA dreibh/ppa for Ubuntu:
       DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef --no-install-recommends \
