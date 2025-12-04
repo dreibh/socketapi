@@ -1,6 +1,9 @@
 SUBDIRS = socketapi cppsocketapi socket_programs cppsocket_programs scripts
 
 EXTRA_DIST = \
+   AUTHORS \
+   ChangeLog \
+   COPYING \
    debian/changelog \
    debian/control \
    debian/copyright \
@@ -19,6 +22,8 @@ EXTRA_DIST = \
    freebsd/socketapi/pkg-descr \
    freebsd/socketapi/pkg-plist \
    freebsd/socketapi/test-packaging \
+   INSTALL \
+   README.md \
    rpm/socketapi.spec
 
 ACLOCAL_AMFLAGS = -I m4
