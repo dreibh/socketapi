@@ -193,7 +193,7 @@ elif [ "${ID}" == "fedora" ] ; then
 
       if ! grep "^\[copr-dreibh-ppa\]" "/etc/mock/${OS}-${DIST}-${ARCH}.cfg" ; then
          shopt -s extglob
-         ppa="config_opts['dnf.conf'] += \"\"\"\n[copr-dreibh-ppa]\nname=Copr repo for ppa owned by dreibh\nbaseurl=https://copr-be.cloud.fedoraproject.org/results/dreibh/ppa/fedora-\$releasever-\$basearch/\ntype=rpm-md\nskip_if_unavailable=True\ngpgcheck=1\ngpgkey=https://copr-be.cloud.fedoraproject.org/results/dreibh/ppa/pubkey.gpg\nrepo_gpgcheck=0\nenabled=1\n\"\"\""
+         ppa="config_opts['dnf.conf'] += \"\"\"\n[copr-dreibh-ppa]\nname=Copr repo for ppa owned by dreibh\nbaseurl=https://download.copr.fedorainfracloud.org/results/dreibh/ppa/fedora-\$releasever-\$basearch/\ntype=rpm-md\nskip_if_unavailable=True\ngpgcheck=1\ngpgkey=https://copr-be.cloud.fedoraproject.org/results/dreibh/ppa/pubkey.gpg\nrepo_gpgcheck=0\nenabled=1\nenabled_metadata=1\n\"\"\""
          ppa="${ppa//+( )$/\\n}"
          echo -e "${ppa}" | tee -a "/etc/mock/${OS}-${DIST}-${ARCH}.cfg"
          if ! grep "^\[copr-dreibh-ppa\]" "/etc/mock/${OS}-${DIST}-${ARCH}.cfg" ; then
