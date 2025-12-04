@@ -7,7 +7,7 @@ Vcs-Git: https://github.com/dreibh/socketapi.git
 Vcs-Browser: https://github.com/dreibh/socketapi
 Build-Depends: autoconf,
                automake,
-               debhelper (>= 9),
+               debhelper-compat (= 13),
                libglib2.0-dev,
                libsctplib-dev (>= 1.0.9),
                libtool
