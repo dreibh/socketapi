@@ -1,23 +1,24 @@
 SUBDIRS = socketapi cppsocketapi socket_programs cppsocket_programs scripts
 
 EXTRA_DIST = \
-   debian/source/format \
-   debian/upstream/signing-key.asc \
-   debian/upstream/metadata \
-   debian/compat \
-   debian/libsctpsocket-dev.install \
-   debian/libsctpsocket2.install \
-   debian/rules \
-   debian/not-installed \
-   debian/control \
-   debian/watch \
-   debian/copyright \
    debian/changelog \
+   debian/control \
+   debian/copyright \
+   debian/libsctpsocket2.install \
+   debian/libsctpsocket2.symbols \
+   debian/libsctpsocket-dev.install \
+   debian/not-installed \
+   debian/rules \
+   debian/source/format \
+   debian/source/lintian-overrides \
+   debian/upstream/metadata \
+   debian/upstream/signing-key.asc \
+   debian/watch \
    freebsd/socketapi/distinfo \
-   freebsd/socketapi/pkg-plist \
-   freebsd/socketapi/pkg-descr \
-   freebsd/socketapi/test-packaging \
    freebsd/socketapi/Makefile \
+   freebsd/socketapi/pkg-descr \
+   freebsd/socketapi/pkg-plist \
+   freebsd/socketapi/test-packaging \
    rpm/socketapi.spec
 
 ACLOCAL_AMFLAGS = -I m4
