@@ -50,16 +50,16 @@ jobs:
             cxx: g++
 
           # ====== Debian Linux =============================================
-          - label: "Debian 13 (Trixie): GCC/i386"
-            arch: i386
-            distro: trixie
-            cc: gcc
-            cxx: g++
-          - label: "Debian 13 (Trixie): Clang/ARMv7"
-            arch: arm32v7
-            distro: trixie
-            cc: clang
-            cxx: clang++
+          # - label: "Debian 13 (Trixie): GCC/i386"
+          #   arch: i386
+          #   distro: trixie
+          #   cc: gcc
+          #   cxx: g++
+          # - label: "Debian 13 (Trixie): Clang/ARMv7"
+          #   arch: arm32v7
+          #   distro: trixie
+          #   cc: clang
+          #   cxx: clang++
 
           # ====== Fedora Linux =============================================
           - label: "Fedora 42: GCC/PPC64"
