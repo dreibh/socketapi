@@ -16,8 +16,9 @@ BuildRequires: libtool
 BuildRequires: sctplib-libsctplib-devel
 BuildRoot: %{_tmppath}/%{name}-%{version}-build
 
-# TEST ONLY:
-# define _unpackaged_files_terminate_build 0
+Requires: %{name}-libsctpsocket
+Requires: %{name}-libsctpsocket-devel
+
 
 %description
 SocketAPI is the socket API library for the SCTPLIB user-space
@@ -35,6 +36,8 @@ make %{?_smp_mflags}
 %install
 make DESTDIR=%{buildroot} install
 
+%files
+
 
 %package libsctpsocket
 Summary: Socket API library for sctplib
@@ -50,7 +53,7 @@ the University of Essen, Germany.
 
 %files libsctpsocket
 %{_libdir}/libsctpsocket.so.*
-%ghost %{_libdir}/libcppsocketapi.so.*
+%{_libdir}/libcppsocketapi.so.*
 
 
 %package libsctpsocket-devel
@@ -68,12 +71,12 @@ the University of Essen, Germany.
 
 %files libsctpsocket-devel
 %{_includedir}/ext_socket.h
+%{_includedir}/cppsocketapi/*.h
+%{_includedir}/cppsocketapi/*.icc
 %{_libdir}/libsctpsocket*.a
 %{_libdir}/libsctpsocket*.so
-%ghost %{_libdir}/libcppsocketapi*.a
-%ghost %{_libdir}/libcppsocketapi*.so
-%ghost %{_includedir}/cppsocketapi/*.h
-%ghost %{_includedir}/cppsocketapi/*.icc
+%{_libdir}/libcppsocketapi*.a
+%{_libdir}/libcppsocketapi*.so
 
 
 %changelog
