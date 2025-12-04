@@ -61,12 +61,10 @@ if [ "${ID}" == "ubuntu" ] || [ "${ID}" == "debian" ] ; then
    DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef --no-install-recommends \
       ${PACKAGES}
 
-   # ====== Enable PPA ======================================================
-   # This is only available for Ubuntu:
    if [ "${ID}" == "ubuntu" ] ; then
       # Add PPA dreibh/ppa for Ubuntu:
       DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef --no-install-recommends \
-         software-properties-common gpg-agent
+         software-properties-common
       apt-add-repository -y ppa:dreibh/ppa || true
       apt-get update -q
    fi
@@ -148,16 +146,18 @@ EOF
       OS="${OS}" DISTRIBUTION="${DIST}" ARCHITECTURE="${ARCH}" pbuilder create \
          --debootstrapopts --variant=buildd \
          | grep -v "^I: Retrieving\|^I: Validating\|^I: Unpacking\|^I: Extracting\|^I: Configuring\|^I: new cache content"
+         # --debootstrapopts --keyring=/etc/apt/trusted.gpg
 
       # Speed up pbuilder:
-      echo "echo \"force-unsafe-io\" >/etc/dpkg/dpkg.cfg.d/02apt-speedup" | \
+      echo "echo \"force-unsafe-io\" > /etc/dpkg/dpkg.cfg.d/02apt-speedup" | \
          OS="${OS}" DISTRIBUTION="${DIST}" ARCHITECTURE="${ARCH}" pbuilder login --save-after-exec
 
       # ====== Add ppa:dreibh/ppa, updates and backports =================
       if [ "${OS}" == "ubuntu" ] ; then
          # Add PPA dreibh/ppa for Ubuntu:
          OS="${OS}" DISTRIBUTION="${DIST}" ARCHITECTURE="${ARCH}" pbuilder login --save-after-login <<EOF
-DEBIAN_FRONTEND=noninteractive apt-get install -qqy -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef --no-install-recommends gpg-agent software-properties-common
+DEBIAN_FRONTEND=noninteractive apt-get install -qqy -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef --no-install-recommends \
+software-properties-common
 apt-add-repository -y ppa:dreibh/ppa
 apt-get update -q
 EOF
