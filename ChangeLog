@@ -1,3 +1,252 @@
+commit dabd9f09b5019c716486cc4084c77a43e599acc6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Dec 9 16:37:06 2025 +0100
+
+    Updated CI scripts
+
+commit 1ed512ce6717f9a96707a4af2c6bcbb0e0e08f79
+Merge: c7be92a 7be59d8
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Dec 8 22:33:45 2025 +0100
+
+    Merge branch 'master' of github.com:dreibh/socketapi
+
+commit c7be92a2f33dd2454f405afe77859992a7eb1767
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Dec 8 22:33:36 2025 +0100
+
+    Updated CI scripts
+
+commit 7be59d8dbfbec898d2c674e6da2d11b1250a9654
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Dec 8 15:18:37 2025 +0100
+
+    Updated workflow.
+
+commit 5e9dc647becb899f5be64aefaa3ec4a9db6cc716
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Dec 8 09:54:22 2025 +0100
+
+    Updated README.md.
+
+commit 644efc38754552e74ac7928e313f2cd27a1e0494
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 5 15:47:58 2025 +0100
+
+    Updated CI scripts
+
+commit 499ccdc08fcb2c0e4375831be424ccf77abe14f5
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 5 13:37:20 2025 +0100
+
+    Updated CI configuration
+
+commit e100811f1f44da01ffd687c332976292af99d7b3
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 5 13:37:16 2025 +0100
+
+    Updated CI scripts
+
+commit e0b1eaafd856c4aefaa9976c01cae1c016c52166
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 5 11:37:26 2025 +0100
+
+    Updated build helper script.
+
+commit b23d92a180e0abb65d83decb886cdb9679abb2ba
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 5 11:34:36 2025 +0100
+
+    Updated CI configuration
+
+commit cb19b1ab80864362585a02d6ff56c44a89acb19a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Dec 5 11:34:19 2025 +0100
+
+    Updated CI scripts
+
+commit ea41a65bd57ef399b6a2dfd45b177feb0dc1ec2a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 17:25:03 2025 +0100
+
+    Yet another try.
+
+commit c14a5102204ef1e5bb88bb97e7eccb11666e43c2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 17:23:22 2025 +0100
+
+    Updated CI configuration
+
+commit ecd4f1626193a767ef134869e9ef8866fb1bfc39
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 17:23:20 2025 +0100
+
+    Updated CI scripts
+
+commit 9cf10201882c2f0b2e8a9fe19cb42d0a20ac39a2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 17:19:19 2025 +0100
+
+    Trying again.
+
+commit d851161f9947a0cf2c65db74aaed1336b21f7d6f
+Merge: a01b94c 8bbf90e
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 17:00:22 2025 +0100
+
+    Merge branch 'master' of https://github.com/dreibh/socketapi
+
+commit a01b94c9e97db077b3e47f6e644966427c671b6f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 17:00:07 2025 +0100
+
+    Updated RPM spec.
+
+commit 8bbf90ed3a181d7e60e5fc0a53e753566f040d75
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 16:10:09 2025 +0100
+
+    Trying again.
+
+commit d9c350466ec3ae174eaac750b71d3dec66a1aa8d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 15:57:24 2025 +0100
+
+    Yet another try.
+
+commit b4dd29c7bcb39ff2649e6390e502c8e78cb33ff5
+Merge: 4a433b8 f8b6693
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 15:19:29 2025 +0100
+
+    Merge branch 'master' of github.com:dreibh/socketapi
+
+commit 4a433b8530a32fe163e695b8540c2f8a952d2369
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 15:19:21 2025 +0100
+
+    Updated README.md.
+
+commit f8b6693b75429a144ac443e732f4ae437fd3d575
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 15:06:42 2025 +0100
+
+    Another try.
+
+commit 0b75eea3b9a09e8bc3bcd4504a9d6d0dc3aaf6fc
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 15:02:17 2025 +0100
+
+    Updated workflows.
+
+commit 329d066d6efd085f32943a5d96097aafebe61b18
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 14:58:41 2025 +0100
+
+    Updated CI script.
+
+commit 19cd5360d810d51026db1d534cf564b92079c706
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 14:16:00 2025 +0100
+
+    Updated README -> README.md.
+
+commit 7d42de2f4fd3a16ac9d96fefb719e639b94c4b72
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 13:53:56 2025 +0100
+
+    Updated workflows.
+
+commit 5bf59fe520916950557136228e6b2d09874366b1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 13:49:12 2025 +0100
+
+    Header updates.
+
+commit 0fb2d250a37bc32b0452deed463a3850b1446f01
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 13:49:00 2025 +0100
+
+    Packaging updates.
+
+commit 5602c94d5aa6d37375bd26457b6ddec24d7b340f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 13:48:47 2025 +0100
+
+    Minor update.
+
+commit f853eb9ebd0c5e6bd2190cdb33f4fafda54a5bbb
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 13:34:48 2025 +0100
+
+    Updated CI configuration
+
+commit c3b41a3aab21382de7b6fdc90e530c269fbcb95d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 13:34:46 2025 +0100
+
+    Updated CI scripts
+
+commit 0218ec8d87ae88cb62e02c7f785e2d78542c9798
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Dec 4 13:34:17 2025 +0100
+
+    Packaging update.
+
+commit 1f206f7c0b7d57db2203ff859ef5329a4f69c476
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 3 15:46:40 2025 +0100
+
+    Updated CI scripts
+
+commit 92ae86389f4d0a0d92fc887bc146b57053c0419a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 28 15:58:06 2025 +0100
+
+    Updated CI scripts
+
+commit 591f9eca48bf4a2ec381d84d80412634c343cfbd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 28 11:27:10 2025 +0100
+
+    Updated CI configuration
+
+commit b4cdad407f02f27101966de13119f285836143d2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Nov 28 11:27:04 2025 +0100
+
+    Updated CI scripts
+
+commit 72929bb1e0eb08ebdfe80cf8b62644ae7435c85d
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 12 14:25:15 2025 +0200
+
+    Updated CI scripts
+
+commit d50b1035d27e48e6e36baa94c6ca6b169acbf78a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Aug 12 11:35:49 2025 +0200
+
+    Updated workflows.
+
+commit 9f94929f7306f8807b9a842989ce9cb59faec0ae
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Aug 1 17:44:59 2025 +0200
+
+    Updated workflows.
+
+commit 646a9d1ee7b67c8dfe711649d573d3252bc8c7df
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 9 14:11:11 2025 +0200
+
+    Updated FreeBSD port.
+
+commit 9dd3049951644cf7c3e8940b464c97202d70d630
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Jul 9 11:39:52 2025 +0200
+
+    New release socketapi-2.2.25.
+
 commit 64bf5eff9209c58a04babc3bf72b3154b57ca1b1
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Wed Jul 9 11:39:31 2025 +0200
