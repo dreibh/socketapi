@@ -1,7 +1,14 @@
-socketapi (2:2.2.26-1ubuntu1) questing; urgency=medium
+socketapi (2:2.2.27-1ubuntu1) questing; urgency=medium
 
   * New upstream release.
   * Closes: #1005916 (ITP).
+  * debian/control: Updated standards version to 4.7.4.
+
+ -- Thomas Dreibholz <thomas.dreibholz@gmail.com>  Wed, 29 Apr 2026 17:06:12 +0200
+
+socketapi (2:2.2.26-1ubuntu1) questing; urgency=medium
+
+  * New upstream release.
 
  -- Thomas Dreibholz <thomas.dreibholz@gmail.com>  Tue, 09 Dec 2025 17:17:15 +0100
 

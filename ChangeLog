@@ -1,3 +1,45 @@
+commit 187ecf2993842dcbc28c34fc1ae5fc048fc8b687
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 27 11:44:12 2026 +0200
+
+    Updated build script.
+
+commit d9ad414dbe4d29bf76adc92bbbef4b53646a0e5f
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 27 11:42:21 2026 +0200
+
+    Updated CI configuration
+
+commit 65b879cd11701e9b20bd85e2709aa083bbf77f98
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Apr 27 11:42:19 2026 +0200
+
+    Updated CI scripts
+
+commit 2a635066dfee2a106b8714441d11c8cf1ea5a160
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Mar 12 11:13:14 2026 +0100
+
+    Updated URLs.
+
+commit b5fa581786d734514c16e87715f5308b4f9764cd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Dec 10 09:38:56 2025 +0100
+
+    Updated FreeBSD port.
+
+commit 99e6dd8538bf46c249d8fd7db3320efdd20e1568
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Dec 9 17:33:08 2025 +0100
+
+    Configuration update.
+
+commit 50badb9c61b6f5ecd24a9efd78179e3ecf1537e7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Tue Dec 9 17:17:18 2025 +0100
+
+    New release socketapi-2.2.26.
+
 commit dabd9f09b5019c716486cc4084c77a43e599acc6
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Tue Dec 9 16:37:06 2025 +0100
