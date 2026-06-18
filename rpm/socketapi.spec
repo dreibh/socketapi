@@ -28,6 +28,9 @@ SCTP implementation.
 %setup -q
 
 %build
+export CFLAGS="%{optflags} -ffat-lto-objects"
+export CXXFLAGS="%{optflags} -ffat-lto-objects"
+export LDFLAGS="%{build_ldflags}"
 autoreconf -i
 
 %configure --prefix=/usr --enable-sctp-over-udp --disable-maintainer-mode
@@ -55,6 +58,12 @@ the University of Essen, Germany.
 %{_libdir}/libsctpsocket.so.*
 %{_libdir}/libcppsocketapi.so.*
 
+%post libsctpsocket
+ldconfig
+
+%postun libsctpsocket
+ldconfig
+
 
 %package libsctpsocket-devel
 Summary: Development package for Socket-API
@@ -74,8 +83,10 @@ the University of Essen, Germany.
 %{_includedir}/cppsocketapi/*.h
 %{_includedir}/cppsocketapi/*.icc
 %{_libdir}/libsctpsocket*.a
+%{_libdir}/libsctpsocket*.la
 %{_libdir}/libsctpsocket*.so
 %{_libdir}/libcppsocketapi*.a
+%{_libdir}/libcppsocketapi*.la
 %{_libdir}/libcppsocketapi*.so
 
 
