@@ -80,6 +80,7 @@ the University of Essen, Germany.
 
 %files libsctpsocket-devel
 %{_includedir}/ext_socket.h
+%dir %attr(0755, root, root) %{_includedir}/cppsocketapi
 %{_includedir}/cppsocketapi/*.h
 %{_includedir}/cppsocketapi/*.icc
 %{_libdir}/libsctpsocket*.a
