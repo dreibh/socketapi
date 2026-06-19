@@ -49,7 +49,6 @@ find %{buildroot} -name "*.la" -delete
 %package libsctpsocket
 Summary: Socket API library for sctplib
 Group: System Environment/Libraries
-Requires: sctplib-libsctplib
 
 %description libsctpsocket
 Socket-API provides a socket API for the SCTP user-space implementation SCTPLIB,
