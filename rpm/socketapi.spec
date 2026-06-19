@@ -39,6 +39,9 @@ make %{?_smp_mflags}
 %install
 make DESTDIR=%{buildroot} install
 
+# Remove .la files:
+find %{buildroot} -name "*.la" -delete
+
 %files
 
 
@@ -84,10 +87,8 @@ the University of Essen, Germany.
 %{_includedir}/cppsocketapi/*.h
 %{_includedir}/cppsocketapi/*.icc
 %{_libdir}/libsctpsocket*.a
-%{_libdir}/libsctpsocket*.la
 %{_libdir}/libsctpsocket*.so
 %{_libdir}/libcppsocketapi*.a
-%{_libdir}/libcppsocketapi*.la
 %{_libdir}/libcppsocketapi*.so
 
 
