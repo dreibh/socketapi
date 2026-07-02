@@ -3356,23 +3356,16 @@ ssize_t sctp_sendx(int                           sd,
    sctp_sndrcvinfo* sri;
    struct iovec     iov = { (char*)data, len };
    struct cmsghdr*  cmsg;
-   size_t           cmsglen = CSpace(sizeof(struct sctp_sndrcvinfo));
-   char             cbuf[CSpace(sizeof(struct sctp_sndrcvinfo))];
+   const socklen_t  cmsglen = CSpace(sizeof(struct sctp_sndrcvinfo));
+   char             cbuf[cmsglen];
    struct msghdr msg = {
-#ifdef __APPLE__
-      (char*)addrs,
-#else
-      (struct sockaddr*)addrs,
-#endif
-      (socklen_t)addrcnt,
-      &iov, 1,
-      cbuf,
-#ifdef __FreeBSD__
-      (socklen_t)cmsglen,
-#else
-      cmsglen,
-#endif
-      flags | MSG_MULTIADDRS,
+      .msg_name       = (void*)addrs,
+      .msg_namelen    = (socklen_t)addrcnt,
+      .msg_iov        = &iov,
+      .msg_iovlen     = 1,
+      .msg_control    = cbuf,
+      .msg_controllen = cmsglen,
+      .msg_flags      = flags | MSG_MULTIADDRS
    };
 
    cmsg = (struct cmsghdr*)CFirstHeader(&msg);
@@ -3404,23 +3397,16 @@ ssize_t sctp_recvmsg(int                     s,
 {
    struct iovec    iov = { (char*)data, len };
    struct cmsghdr* cmsg;
-   size_t          cmsglen = CSpace(sizeof(struct sctp_sndrcvinfo));
-   char            cbuf[CSpace(sizeof(struct sctp_sndrcvinfo))];
+   const socklen_t cmsglen = CSpace(sizeof(struct sctp_sndrcvinfo));
+   char            cbuf[cmsglen];
    struct msghdr msg = {
-#ifdef __APPLE__
-      (char*)from,
-#else
-      from,
-#endif
-      (fromlen != NULL) ? *fromlen : 0,
-      &iov, 1,
-      cbuf,
-#ifdef __FreeBSD__
-      (socklen_t)cmsglen,
-#else
-      cmsglen,
-#endif
-      (msg_flags != NULL) ? *msg_flags : 0
+      .msg_name       = (void*)from,
+      .msg_namelen    = (fromlen != NULL) ? *fromlen : 0,
+      .msg_iov        = &iov,
+      .msg_iovlen     = 1,
+      .msg_control    = cbuf,
+      .msg_controllen = cmsglen,
+      .msg_flags      = (msg_flags != NULL) ? *msg_flags : 0
    };
    int cc;
 
