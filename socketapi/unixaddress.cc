@@ -165,7 +165,7 @@ cardinal UnixAddress::getSystemAddress(sockaddr*       buffer,
          sockaddr_un* address = (sockaddr_un*)buffer;
          if(sizeof(sockaddr_un) <= (size_t)length) {
             address->sun_family = AF_UNIX;
-            strncpy((char*)&address->sun_path,(char*)&Name,MaxNameLength);
+            memcpy((char*)&address->sun_path, (char*)&Name, MaxNameLength);
             return(sizeof(sockaddr_un));
          }
          else {
@@ -193,7 +193,7 @@ bool UnixAddress::setSystemAddress(const sockaddr* address, const socklen_t leng
    sockaddr_un* unixAddress = (sockaddr_un*)address;
    switch(unixAddress->sun_family) {
       case AF_UNIX:
-         strncpy((char*)&Name,(char*)&unixAddress->sun_path,MaxNameLength);
+         memcpy((char*)&Name, (char*)&unixAddress->sun_path, MaxNameLength);
          Name[MaxNameLength] = 0x00;
          return(true);
        break;

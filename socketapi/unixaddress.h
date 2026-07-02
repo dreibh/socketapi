@@ -221,7 +221,7 @@ class UnixAddress : virtual public SocketAddress
 
    // ====== Private data ===================================================
    private:
-   static const cardinal MaxNameLength = 108 - 1;
+   static const cardinal MaxNameLength = sizeof(sockaddr_un::sun_path);
 
    char Name[MaxNameLength + 1];
 };
