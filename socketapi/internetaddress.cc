@@ -363,7 +363,6 @@ String InternetAddress::getAddressString(const cardinal format) const
 
    // ====== Generate hostname string =======================================
    if(format & PF_Hostname) {
-#if (SYSTEM != OS_Darwin)
       char             cname[NI_MAXHOST];
       char             sname[NI_MAXSERV];
       sockaddr_storage socketAddress;
@@ -382,9 +381,6 @@ String InternetAddress::getAddressString(const cardinal format) const
             snprintf((char*)&hostString,sizeof(hostString),"%s",cname);
          }
       }
-#else
-#warning DNS reverse lookup unter Darwin ist noch nicht implementiert!
-#endif
    }
 
    // ====== Generate address string ========================================
