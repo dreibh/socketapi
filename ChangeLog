@@ -1,3 +1,147 @@
+commit ea991e37cdfc644d8ed985423f8afd27692d28c0
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 2 15:09:34 2026 +0200
+
+    Removed unnecessary #ifdef.
+
+commit b2bc2139b5d9b7d724d5f95df81d369021ca6767
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 2 15:09:17 2026 +0200
+
+    Removed redundant library specification.
+
+commit 00b4ee92d2256cef986ca2fa7ed09bf1d5d56e47
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 2 15:09:06 2026 +0200
+
+    Improved compiler options.
+
+commit 2c33100c69ebc0994b57ce41253d84067f33bff7
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 2 14:27:40 2026 +0200
+
+    Improved length handling in UnixAddress.
+
+commit 184ff1df37ac463a3656c0bc953f0660725b0599
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 2 12:25:41 2026 +0000
+
+    Minor clean-ups.
+
+commit e5a3467384451b10900e9c7c9a34a807005a7f02
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 2 12:25:23 2026 +0000
+
+    Bugfix: Fixed possibly too small buffer.
+
+commit 7a291e41025f1e4e6290dfcc1fb3f4f8d438a7ed
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 2 14:19:14 2026 +0200
+
+    Yet another update.
+
+commit 6e06cf288e9152a618a4badaad0757c2b67e6385
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 2 14:13:19 2026 +0200
+
+    Include clean-up: sys/fcntl.h -> fcntl.h.
+
+commit f6db306cf417763a204d5fed6b10577f7691a1fd
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 2 14:12:16 2026 +0200
+
+    Further Alpine Linux updates.
+
+commit 4e2bdbf93e3ea3097c47b4cdf0dde47f458bbd76
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 2 14:02:38 2026 +0200
+
+    Some updates for build under Alpine Linux.
+
+commit ce63d60c39425f759c4aff8870170e48f6024a2b
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 2 13:34:07 2026 +0200
+
+    Improved #ifdefs.
+
+commit d8bdb8f2530b7b0f2417daf10ea0b06793f8c608
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jul 2 13:08:37 2026 +0200
+
+    Improved bootstrap script.
+
+commit 15aa93ca9e1359e1dacba2053933d5b66a9fa573
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jun 29 15:43:11 2026 +0200
+
+    Updated CI configuration
+
+commit 0e11c04b2f10dd68a71ad01a4d96825c4e9e67b2
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jun 29 15:43:08 2026 +0200
+
+    Updated CI scripts
+
+commit 58aeb3b2d4242b5ab968a8480f4fe5e9f65fdee6
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Mon Jun 29 15:41:40 2026 +0200
+
+    Updated FreeBSD workflow.
+
+commit ffa4e03a7c407fa6de26eee69ac7f3572be81c69
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 26 13:32:34 2026 +0200
+
+    Added initial APKBUILD file.
+
+commit eff19d61033b01eaa69ccbd2a130b8d6d179951a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 19 16:00:48 2026 +0200
+
+    RPM spec update.
+
+commit a902d593822090b42e41235d85a80cf32dac0c9a
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 19 14:32:52 2026 +0200
+
+    Minor RPM spec clean-up.
+
+commit 8617b7bec5c764c52e87bb49ec5ce025f053a829
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 19 14:32:34 2026 +0200
+
+    Build script update.
+
+commit 3a9292edcddeabbe6ed882c0186bc3fa528c9912
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 19 10:54:54 2026 +0200
+
+    Updated CI scripts
+
+commit dad20e72bcc15ffea5106a29f9f7cc21589f23d1
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Fri Jun 19 10:49:35 2026 +0200
+
+    RPM spec improvements.
+
+commit 1ea28b22961c12a96be9b77ce75268e1e7517848
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jun 18 17:28:14 2026 +0200
+
+    Improved RPM spec.
+
+commit a864d04729b6d22114142fb7a0b3b6b0a4845e39
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Thu Jun 18 16:07:03 2026 +0200
+
+    RPM spec improvements.
+
+commit 92e9de5b1463ca3f4aaa1bb7517b685328f25427
+Author: Thomas Dreibholz <dreibh@simula.no>
+Date:   Wed Apr 29 17:06:15 2026 +0200
+
+    New release socketapi-2.2.27.
+
 commit 187ecf2993842dcbc28c34fc1ae5fc048fc8b687
 Author: Thomas Dreibholz <dreibh@simula.no>
 Date:   Mon Apr 27 11:44:12 2026 +0200
