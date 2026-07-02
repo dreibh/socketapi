@@ -728,15 +728,13 @@ ssize_t Socket::recvFrom(int              fd,
    char          cbuf[1024];
    struct iovec  iov = { (char*)buf, len };
    struct msghdr msg = {
-#if (SYSTEM == OS_Darwin)
-      (char*)addr,
-#else
-      addr,
-#endif
-      *addrlen,
-      &iov, 1,
-      cbuf, sizeof(cbuf),
-      flags
+      .msg_name       = (void*)addr,
+      .msg_namelen    = *addrlen,
+      .msg_iov        = &iov,
+      .msg_iovlen     = 1,
+      .msg_control    = cbuf,
+      .msg_controllen = sizeof(cbuf),
+      .msg_flags      = flags
    };
 
    cc = receiveMsg(&msg,flags,true);
