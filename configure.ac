@@ -151,6 +151,10 @@ else
 fi
 
 
+# ###### Compiler flags #####################################################
+CXXFLAGS="$CXXFLAGS -Wno-vla-cxx-extension"
+
+
 # ###### Check for sctplib ##################################################
 AC_CHECK_HEADERS([sctp.h], [], [
    AC_MSG_ERROR([Unable to find sctplib header file])
