@@ -2025,15 +2025,13 @@ ssize_t ext_recvfrom(int sockfd, void* buf, size_t len, int flags,
                struct iovec  iov = { (char*)buf, len };
                char          cbuf[1024];
                struct msghdr msg = {
-#if (SYSTEM == OS_Darwin)
-                  (char*)from,
-#else
-                  from,
-#endif
-                  (fromlen != NULL) ? *fromlen : 0,
-                  &iov, 1,
-                  cbuf, sizeof(cbuf),
-                  flags
+                  .msg_name       = (void*)from,
+                  .msg_namelen    = (fromlen != NULL) ? *fromlen : 0,
+                  .msg_iov        = &iov,
+                  .msg_iovlen     = 1,
+                  .msg_control    = cbuf,
+                  .msg_controllen = sizeof(cbuf),
+                  .msg_flags      = flags
                };
                int cc = ext_recvmsg2(sockfd,&msg,flags,0);
                if(fromlen != NULL) {
@@ -2244,7 +2242,7 @@ ssize_t ext_send(int sockfd, const void* msg, size_t len, int flags)
 
 // ###### sendto() wrapper ####################################################
 ssize_t ext_sendto(int sockfd, const void* buf, size_t len, int flags,
-               const struct sockaddr* to, socklen_t tolen)
+                   const struct sockaddr* to, socklen_t tolen)
 {
    ExtSocketDescriptor* tdSocket = ExtSocketDescriptorMaster::getSocket(sockfd);
    if(tdSocket != NULL) {
@@ -2253,15 +2251,13 @@ ssize_t ext_sendto(int sockfd, const void* buf, size_t len, int flags,
             {
                struct iovec  iov = { (char*)buf, len };
                struct msghdr msg = {
-#if (SYSTEM == OS_Darwin)
-                  (char*)to,
-#else
-                  (void*)to,
-#endif
-                  tolen,
-                  &iov, 1,
-                  NULL, 0,
-                  flags
+                  .msg_name       = (void*)to,
+                  .msg_namelen    = tolen,
+                  .msg_iov        = &iov,
+                  .msg_iovlen     = 1,
+                  .msg_control    = NULL,
+                  .msg_controllen = 0,
+                  .msg_flags      = flags
                };
                return(ext_sendmsg(sockfd,&msg,flags));
             }
@@ -3269,23 +3265,16 @@ ssize_t sctp_sendmsg(int                    s,
    sctp_sndrcvinfo* sri;
    struct iovec     iov = { (char*)data, len };
    struct cmsghdr*  cmsg;
-   size_t           cmsglen = CSpace(sizeof(struct sctp_sndrcvinfo));
-   char             cbuf[CSpace(sizeof(struct sctp_sndrcvinfo))];
+   const socklen_t  cmsglen = CSpace(sizeof(struct sctp_sndrcvinfo));
+   char             cbuf[cmsglen];
    struct msghdr msg = {
-#ifdef __APPLE__
-      (char*)to,
-#else
-      (struct sockaddr*)to,
-#endif
-      tolen,
-      &iov, 1,
-      cbuf,
-#ifdef __FreeBSD__
-      (socklen_t)cmsglen,
-#else
-      cmsglen,
-#endif
-      (int)flags
+      .msg_name       = (void*)to,
+      .msg_namelen    = tolen,
+      .msg_iov        = &iov,
+      .msg_iovlen     = 1,
+      .msg_control    = cbuf,
+      .msg_controllen = cmsglen,
+      .msg_flags      = (int)flags
    };
 
    cmsg = (struct cmsghdr*)CFirstHeader(&msg);
@@ -3318,18 +3307,16 @@ ssize_t sctp_send(int                           s,
    sctp_sndrcvinfo* sri;
    struct iovec     iov = { (char*)data, len };
    struct cmsghdr*  cmsg;
-   size_t           cmsglen = CSpace(sizeof(struct sctp_sndrcvinfo));
-   char             cbuf[CSpace(sizeof(struct sctp_sndrcvinfo))];
+   const socklen_t  cmsglen = CSpace(sizeof(struct sctp_sndrcvinfo));
+   char             cbuf[cmsglen];
    struct msghdr msg = {
-      NULL, 0,
-      &iov, 1,
-      cbuf,
-#ifdef __FreeBSD__
-      (socklen_t)cmsglen,
-#else
-      cmsglen,
-#endif
-      flags
+      .msg_name       = NULL,
+      .msg_namelen    = 0,
+      .msg_iov        = &iov,
+      .msg_iovlen     = 1,
+      .msg_control    = cbuf,
+      .msg_controllen = cmsglen,
+      .msg_flags      = flags
    };
 
    cmsg = (struct cmsghdr*)CFirstHeader(&msg);
