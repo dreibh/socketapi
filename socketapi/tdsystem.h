@@ -65,17 +65,14 @@
 #define OS_Darwin  3
 #define OS_SOLARIS 4
 
-#ifdef LINUX
+#if defined(__linux__)
  #define SYSTEM OS_Linux
-#endif
-#ifdef FreeBSD
+#elif defined(__FreeBSD__)
  #define SYSTEM OS_FreeBSD
-#endif
-#ifdef DARWIN
+#elif defined(__APPLE__)
  #define SYSTEM OS_Darwin
  #define MAXDNAME 256
-#endif
-#ifdef SOLARIS
+#elif defined(__sun)
  #define SYSTEM OS_SOLARIS
 #endif
 
