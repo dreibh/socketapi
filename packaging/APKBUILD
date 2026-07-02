@@ -1,6 +1,6 @@
 # Maintainer: Thomas Dreibholz <thomas.dreibholz@gmail.com>
 pkgname=socketapi
-pkgver=2.2.27
+pkgver=2.2.28
 pkgrel=1
 pkgdesc="Socket API library for the SCTPLIB user-space SCTP implementation"
 url="https://www.nntb.no/~dreibh/sctplib/"
@@ -20,7 +20,7 @@ prepare() {
 build() {
 	export CFLAGS="$CFLAGS -ffat-lto-objects"
 	export CXXFLAGS="$CXXFLAGS -ffat-lto-objects"
-	
+
 	./configure \
 		--prefix=/usr \
 		--sysconfdir=/etc \
@@ -32,11 +32,11 @@ build() {
 
 package() {
 	make DESTDIR="$pkgdir" install
-	
+
 	# Delete libtool archive files as per Alpine policy
 	find "$pkgdir" -name "*.la" -delete
 }
 
 sha512sums="
-2561ffae2789e2594c2b14bc53887cd95fcb82011b081db4250fad61e778841f5203433fa3bc95253d7d33a8cad99410ee8221f3f04f8f1c4854980d326a0c04  socketapi-2.2.27.tar.gz
+49b131e13b2859086c78cdb3f28ace004ae4760c3685148aeadb090067a715e5ea2d4dd85a73b95e28826975d2e958822acc08124e3d0c20a4f1dbf0b453a284  socketapi-2.2.28.tar.gz
 "
