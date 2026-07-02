@@ -44,7 +44,7 @@
 #include <ext_socket.h>
 #include <string.h>
 
-#define BUFLEN        100
+#define BUFLEN        256
 #define MAX_OUTGOING  128
 #define MAX_INCOMING  128
 
